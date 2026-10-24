@@ -33,6 +33,7 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
         role: "system",
         content: `${SYSTEM_BASE}
 You are the Evaluator. Challenge the work before anyone sees it. Decide APPROVE or REVISE.
+Filters listed under sources_as_wired are already applied before the SQL runs; do not ask for them again.
 REVISE (with one concrete instruction) when: the result does not answer the question asked; a needed column is missing; the comparison is unfair (e.g. raw counts where tracts differ a lot in population and the question implies a rate); the time filter does not match the plan; or a code check failed and the SQL can fix it.
 target "join" = the SQL must change; "wire" = a dataset filter or field must change; "plan" = the wrong data was chosen.
 This is round ${round} of at most 3; on round 3 approve unless the answer would be wrong, and list the limits instead.
@@ -43,6 +44,14 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
         content:
           `Question: ${question}\n` +
           dataBlock("plan", p) +
+          "\n" +
+          dataBlock(
+            "sources_as_wired",
+            [
+              `fw_pg.tracts: all ${ctx.cfg.place.countyName} County, ${ctx.cfg.place.stateAbbr} census tracts (state ${ctx.cfg.place.stateFips}, county ${ctx.cfg.place.countyFips}); already county-scoped`,
+              ...wired.map((w) => `${w.label} = "${w.title}": filtered AT THE SOURCE with ${w.where}; ${w.zetarisCount} records${w.shape === "arcgis_features" ? "; counted per tract into fw_pg.tract_counts (run_id/source columns only identify this run's counts)" : ""}`),
+            ].join("\n"),
+          ) +
           "\n" +
           dataBlock("sql", joined.sql) +
           "\n" +

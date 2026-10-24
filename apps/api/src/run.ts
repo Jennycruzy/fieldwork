@@ -80,8 +80,9 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
       return out;
     }
 
+    let wiring = 1;
     let chosen = await find(ctx, p);
-    let wired = await wire(ctx, p, chosen);
+    let wired = await wire(ctx, p, chosen, undefined, wiring);
     let bridged = await bridgeAll(ctx, p, wired);
     let joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
 
@@ -99,11 +100,11 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
         out.plan = p;
         await trace.log({ agent: "planner", action: "replan", status: "ok", note: summarisePlan(p) });
         chosen = await find(ctx, p);
-        wired = await wire(ctx, p, chosen);
+        wired = await wire(ctx, p, chosen, undefined, ++wiring);
         bridged = await bridgeAll(ctx, p, wired);
         joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
       } else if (ev.verdict.target === "wire") {
-        wired = await wire(ctx, p, chosen, why);
+        wired = await wire(ctx, p, chosen, why, ++wiring);
         bridged = await bridgeAll(ctx, p, wired);
         joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
       } else {

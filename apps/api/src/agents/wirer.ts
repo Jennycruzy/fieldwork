@@ -24,7 +24,8 @@ export interface Wired {
 const PAGE = 2000;
 const MAX_PAGES = 15;
 
-export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string): Promise<Wired[]> {
+// Each wiring round gets its own table names (Zetaris refuses to redefine a session table).
+export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string, version = 1): Promise<Wired[]> {
   const { value } = await ctx.models.wirer.json(
     [
       {
@@ -58,7 +59,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     if (!c) continue;
     const known = new Set(c.fields.map((f) => f.name));
     const fields = w.fields.filter((f) => known.has(f));
-    const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}`;
+    const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
     out.push(c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field ?? undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
   }
   return out;
