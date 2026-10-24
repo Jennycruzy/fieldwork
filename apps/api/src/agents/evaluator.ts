@@ -40,11 +40,16 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     excludedTestRecords: wired.reduce((n, w) => n + w.excludedTestRecords, 0),
   });
   if(zeroProof)checks.push(zeroProof);
+  for(const w of wired) {
+    if(w.accessedAt)checks.push({id:`source_accessed_${w.label}`,ok:true,detail:`${w.title}: retrieved ${w.accessedAt.slice(0,10)}. Catalog updated ${w.catalogUpdatedAt?.slice(0,10)??"date not published"}; retrieval is not an event or inspection date.`});
+    if(w.catalogDescription)checks.push({id:`source_definition_${w.label}`,ok:true,detail:`Published description for ${w.title}: ${w.catalogDescription}`});
+    if(w.valueField&&/^Call_Count_By_Origin$/i.test(w.valueField))checks.push({id:`call_units_${w.label}`,ok:true,detail:"This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates."});
+  }
   for(const w of wired.filter(w=>w.coverage)) {
     const c=w.coverage!;
     const period=(value:number|null)=>value==null?"unknown":`${Math.floor(value/100)}-${String(value%100).padStart(2,"0")}`;
-    const expected=p.years?.from&&p.years.from===p.years.to&&p.years.from<ctx.today.getUTCFullYear()?12:undefined;
-    checks.push({id:`source_dates_${w.label}`,ok:true,detail:`${w.title}: event dates ${c.earliest??"not published"} to ${c.latest??"not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected&&c.periods<expected?` Incomplete annual coverage: ${expected-c.periods} missing months; do not present a complete year.`:""}`});
+    const expected=p.years?.from&&(!p.years.to||p.years.from===p.years.to)&&p.years.from<ctx.today.getUTCFullYear()?12:undefined;
+    checks.push({id:`source_dates_${w.label}`,ok:true,detail:`${w.title}: event dates ${c.earliest??"not published"} to ${c.latest??"not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected&&c.periods<expected?` Only ${c.periods} calendar months contain records; ${expected-c.periods} have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.`:""}`});
   }
   checks.push(...analysisChecks(p, joined.sql, joined.result));
   for (const c of checks) await ctx.trace.log({ agent: "evaluator", action: `check:${c.id}`, status: c.ok ? "ok" : "error", note: c.detail });

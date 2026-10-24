@@ -221,7 +221,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
       JSON.stringify({
         question,
         answer: out.answer,
-        sources: out.wired.map((w) => ({ licence:w.licence, licenceUrl:w.licenceUrl, label:w.label, title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
+        sources: out.wired.map((w) => ({ accessedAt:w.accessedAt, catalogUpdatedAt:w.catalogUpdatedAt, description:w.catalogDescription, licence:w.licence, licenceUrl:w.licenceUrl, label:w.label, title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
         memoryWrites: ctx.writtenMemories, intervals: ctx.intervals, world: world.context(), tracts: ctx.tractShapes, memories: ctx.recalled.map(({ id, kind, content, confidence }) => ({ id, kind, content, confidence })),
         plan: out.plan,
         sql: out.joined?.sql,

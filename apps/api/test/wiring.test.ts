@@ -32,3 +32,11 @@ test("a nonspatial source cannot silently become tract counts", async () => {
     const { ctx } = context([]);
     await expect(wire(ctx, plan, [{ ...choice, geometryType: undefined }])).rejects.toMatchObject({ code: "NO_SOURCE" });
 });
+
+test("personal fields cannot enter grouped counts",async()=>{
+ const {ctx}=context(["200"]);
+ ctx.models.wirer.json=vi.fn(async()=>({value:{sources:[{measure_id:"city",where:"1=1",fields:["OwnerName"],group_field:"OwnerName"}]},calls:[]})) as unknown as typeof ctx.models.wirer.json;
+ const [result]=await wire(ctx,plan,[{...choice,fields:[...choice.fields,{name:"OwnerName",type:"string"}]}]);
+ expect(result?.groupField).toBeUndefined();expect(result?.fields).not.toContain("OwnerName");
+ expect(JSON.stringify(vi.mocked(ctx.zetaris.query).mock.calls)).not.toContain("OwnerName");
+});

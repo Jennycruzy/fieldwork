@@ -37,12 +37,14 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
  if(["Q03","Q16"].includes(q.id)) {const j=has("Population-adjusted rate",/per_?(?:1_?000|10_?000)|rate/i);check("Rate ranking order",sorted(j,q.id==="Q16"));has("Resident denominator",/population|residents|denominator/i);has("Raw count",/count|violat|pharmac/i);check("Resident population used",/totalpopulation/i.test(sql));}
  if(["Q04","Q05","Q10","Q20"].includes(q.id)) {check("Rates chosen on purpose",a.plan?.analysis?.basis==="rates"&&a.plan.analysis.relationship);check("Resident denominator",(a.plan?.analysis?.denominator==="residents"&&/totalpopulation/i.test(sql))||(q.id==="Q04"&&a.plan?.analysis?.denominator==="adults"&&/totalpop18plus/i.test(sql)));check("Raw source count",countCol(/count|violat|request|facilit/i)>=0);has("Rate per resident",/per_?1_?000.*(?:resident|adult|total_?population)|per_?1000.*(?:resident|adult|total_?population)/i);const j=has("Correlation statistic",/corr/i);const n=has("Full paired sample size",/paired_tracts|paired_count/i);check("Paired size agrees with full result",n>=0&&vals(n).every(v=>v===rows.length));check("Valid correlation range",j>=0&&vals(j).every(v=>Number.isFinite(v)&&Math.abs(v)<=1));}
  if(q.id==="Q06") {const a=has("2024 count",/2024/),b=has("2025 count",/2025/),d=has("Absolute change",/change|increase|difference/i);check("Correct differences",a>=0&&b>=0&&d>=0&&rows.every(r=>Math.abs(Number(r[b])-Number(r[a])-Number(r[d]))<1e-6));check("Changes descending",sorted(d));}
- if(["Q07","Q12"].includes(q.id)) {const j=has("Month column",/month|period/i);has("Monthly count",/count|violat|calls/i);const months=rows.map(r=>{const s=r[j]??"";return /^\d{4}-/.test(s)?s.slice(0,7):s.match(/^\d{1,2}/)?.[0]?.padStart(2,"0")??s;});check("Months chronological",j>=0&&months.every((v,i)=>!i||v>=months[i-1]!));if(q.id==="Q07")check("Current period marked incomplete",/so far|partial|in progress/i.test(text));}
+ if(["Q07","Q12"].includes(q.id)) {const j=has("Month column",/month|period/i);has("Monthly count",/count|violat|calls/i);const months=rows.map(r=>monthNumber(r[j]));check("Months chronological",j>=0&&months.every((v,i)=>!i||v>=months[i-1]!));if(q.id==="Q07")check("Current period marked incomplete",/so far|partial|in progress/i.test(text));}
  if(q.id==="Q09") {has("Request type",/type|category|kind|grp/i);check("Request-type counts descending",sorted(has("Type counts",/count|requests|^n$/i)));has("Shares with denominator",/share|percent|pct/i);check("Source dates stated",/2025/.test(text));}
+ if(["Q13","Q14"].includes(q.id))check("Score threshold applied after latest inspection selection",!sources.some(s=>/\bScore(?:_1)?\s*[<>=]/i.test(s.filter)));
  if(q.id==="Q13") {const j=has("Average inspection score",/avg|average|mean/i);has("Establishment sample count",/count|establishments|sample|^n$/i);check("Low scores first",sorted(j,true));check("Latest inspection selection",/row_number|latest|max\s*\([^)]*date/i.test(sql));check("Inspection score not geocoder confidence",/Score_1/i.test(sql)||/inspection_score/i.test(sql));}
  if(q.id==="Q14") {const j=has("Establishment count",/count|establishments|below/i);check("Below-threshold counts descending",sorted(j));has("Total inspected establishments",/total.*(?:inspect|establish)|(?:inspect|establish).*total/i);check("Threshold is 85",/85/.test(sql));check("Latest inspection selection",/row_number|latest|max\s*\([^)]*date/i.test(sql));check("Inspection score not geocoder confidence",/Score_1|inspection_score/i.test(sql));}
  if(q.id==="Q15") {const j=has("Pharmacy count",/pharma|count|^n$/i);check("Only verified zero counts",j>=0&&vals(j).every(v=>v===0));check("Listed-source coverage limit stated",/list|coverage|source/i.test(text));}
  if(q.id==="Q19") check("Diabetes rates descending",sorted(has("Diabetes column",/diabet/i)));
+ if(q.id==="Q12")check("Call activity is not confirmed incidents or crime",/not.*(?:crime|incident)|(?:crime|incident).*not/i.test(text));
  if(q.id==="Q20")check("Registry is not exposure",/not.*(?:emission|exposure)|(?:emission|exposure).*not/i.test(text));
  if(reference) {
   if(!["Q07","Q09","Q12"].includes(q.id))check("Independent tract geography captured",reference.tracts.length>0);
@@ -59,17 +61,22 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
   }
   const pop=col(a.plan?.analysis?.denominator==="adults" ? /^(?:totalpop18plus|adult_population|adults|denominator)$/i : /^(?:totalpopulation|total_population|population|resident_population|residents|denominator)$/i);const populationField=a.plan?.analysis?.denominator==="adults"?"totalpop18plus":"totalpopulation";const health=reference.health.find(v=>v.headers.includes(populationField));
   if(pop>=0&&health) {const j=health.headers.indexOf(populationField),values=new Map(health.rows.map(r=>[r[0],Number(r[j])]));check("Resident denominators match source",rows.every(r=>Number(r[pop])===values.get(id(r)!)));}
-  const rateCols=h.map((v,i)=>({v,i})).filter(({v})=>/per_?(?:1_?000|10_?000).*(?:resident|adult|total_?population)/i.test(v));
+  const rateCols=h.map((v,i)=>({v,i})).filter(({v})=>/per_?(?:1_?000|10_?000).*(?:resident|adult|total_?population)/i.test(v)||(["Q03","Q16"].includes(q.id)&&/rate/i.test(v)));
   for(const {v,i} of rateCols) {
-    const pattern=/pharma/i.test(v)?/pharma/i:/facilit|epa/i.test(v)?/facilit|epa/i:/311|request/i.test(v)?/311|request/i:/violat|code/i;
-    const numerator=countCol(pattern);const divisor=/10_?000/.test(v)?10000:1000;
+    const pattern=q.id==="Q16"||/pharma/i.test(v)?/pharma/i:/facilit|epa/i.test(v)?/facilit|epa/i:/311|request/i.test(v)?/311|request/i:/violat|code/i;
+    const numerator=countCol(pattern);const divisor=q.id==="Q16"||/10_?000/.test(v)?10000:1000;
     check(`Rate arithmetic ${v}`,numerator>=0&&pop>=0&&rows.every(r=>Number(r[pop])>0&&Math.abs(Number(r[i])-Number(r[numerator])/Number(r[pop])*divisor)<1e-5));
   }
   const observation=reference.observations?.find(o=>sourceRequired[q.id]?.test(o.title));
   if(observation) {
+    const months2025=new Set(observation.months.filter(r=>Number(r[0])===2025&&r[1]!=null).map(r=>Number(r[1])));
+    if(fullYear&&months2025.size>0&&months2025.size<12) {
+      const last=Math.max(...months2025),monthName=["January","February","March","April","May","June","July","August","September","October","November","December"][last-1]!;
+      check("Incomplete source year disclosed",/incomplete|partial|missing|gaps?|coverage|only.*months?/i.test(text)||text.includes(`2025-${String(last).padStart(2,"0")}`)||new RegExp(`\\b${monthName}\\b`,"i").test(text));
+    }
     if(["Q07","Q12"].includes(q.id)) {
       const month=col(/month|period/i),count=countCol(/count|violat|calls/i);const expected=new Map(observation.months.map(r=>[Number(r[1]),Number(q.id==="Q12"?r[3]:r[2])]));
-      const parseMonth=(v:string|null|undefined)=>/^\d{4}-/.test(v??"")?Number(v!.slice(5,7)):Number(v?.match(/^\d{1,2}/)?.[0]);
+      const parseMonth=monthNumber;
       check("Monthly totals match independent source aggregation",month>=0&&count>=0&&rows.every(r=>Number(r[count])===expected.get(parseMonth(r[month])))&&rows.length===expected.size);
       if(q.id==="Q12"&&expected.size<12)check("Missing source months disclosed",/gap|missing|incomplete|not.*(?:month|year)|coverage/i.test(text));
     }
@@ -89,12 +96,17 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
     if(q.id==="Q14") {
       const count=countCol(/count|establishments|below/i);const expected=new Map(observation.below.map(r=>[r[0],Number(r[1])]));
       check("Latest-score threshold counts match independent query",count>=0&&rows.every(r=>Number(r[count])===(expected.get(id(r)!)??0)));
+      const total=col(/total.*(?:inspect|establish)|(?:inspect|establish).*total/i);const samples=new Map(observation.latest.map(r=>[r[0],Number(r[2])]));
+      check("Total inspected establishment samples match independent query",total>=0&&rows.every(r=>Number(r[total])===(samples.get(id(r)!)??0)));
     }
   } else if(["Q06","Q07","Q09","Q12","Q13","Q14"].includes(q.id))check("Independent aggregation reference captured",false);
   if(["Q04","Q05","Q10","Q20"].includes(q.id)) {
     const x=rateCols[0]?.i??-1;const y=q.id==="Q10"?(rateCols[1]?.i??-1):col(q.id==="Q20"?/asthma/i:/blood|bp|hypertens/i);const c=col(/corr/i);
     const xs=vals(x),ys=vals(y),n=rows.length,sx=xs.reduce((a,b)=>a+b,0),sy=ys.reduce((a,b)=>a+b,0);const num=n*xs.reduce((a,b,i)=>a+b*ys[i]!,0)-sx*sy;const den=Math.sqrt((n*xs.reduce((a,b)=>a+b*b,0)-sx*sx)*(n*ys.reduce((a,b)=>a+b*b,0)-sy*sy));const expected=num/den;
-    if(health) {
+    const pairedHealth=reference.health.find(v=>v.headers.includes(populationField)&&(q.id==="Q10"||v.headers.includes(q.id==="Q20"?"casthma_crudeprev":"bphigh_crudeprev")));
+    check("Independent full-pair health reference captured",!!pairedHealth);
+    if(pairedHealth) {
+      const health=pairedHealth;
       const population=health.headers.indexOf(populationField);
       const prevalence=q.id==="Q10"?-1:health.headers.findIndex(f=>q.id==="Q20"?/^casthma_crudeprev$/i.test(f):/^bphigh_crudeprev$/i.test(f));
       const tracts=new Set(reference.tracts.map(r=>r[0]));
@@ -108,3 +120,12 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
  return {passed:reasons.length===0,reasons,checks};
 }
 export function quantile(values:number[],p:number):number {if(!values.length)return 0;const s=[...values].sort((a,b)=>a-b);return s[Math.max(0,Math.ceil(p*s.length)-1)]!;}
+
+export function monthNumber(value:string|null|undefined):number {
+ const text=(value??"").trim().toLowerCase();
+ const iso=text.match(/^\d{4}[-/]?(\d{2})(?:[-/]|$)/);if(iso)return Number(iso[1]);
+ const number=text.match(/^(\d{1,2})(?:\D|$)/);if(number)return Number(number[1]);
+ const names=["january","february","march","april","may","june","july","august","september","october","november","december"];
+ const index=names.findIndex(name=>new RegExp(`\\b(?:${name}|${name.slice(0,3)})\\b`,"i").test(text));
+ return index<0?NaN:index+1;
+}

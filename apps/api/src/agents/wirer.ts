@@ -27,6 +27,9 @@ export interface Wired {
   entityLocationField?:string;
   valueKind?:string;
   normalized?:boolean;
+  accessedAt?:string;
+  catalogUpdatedAt?:string;
+  catalogDescription?:string;
   coverage?:{earliest:string|null;latest:string|null;firstPeriod:number|null;lastPeriod:number|null;periods:number};
   where: string;
   sourceCount: number;
@@ -37,6 +40,7 @@ export interface Wired {
 }
 
 const PAGE = 2000;
+const privateField=/owner|contractor|address|phone|email|complaint|remark|description/i;
 
 // Each wiring round gets its own table names (Zetaris refuses to redefine a session table).
 export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string, version = 1): Promise<Wired[]> {
@@ -51,7 +55,7 @@ You are the Wirer. For each chosen dataset decide the filter and the fields need
 ArcGIS layers use SQL-92 where clauses on their own fields (e.g. Year = '2025' when Year is a string, CaseDate >= DATE '2025-01-01' for dates).
 Socrata (CDC) datasets use SoQL where clauses (e.g. countyfips = '01101'). The county restriction is added for you; do not add it.
 Do not add postal City/STATE restrictions: the spatial bridge determines county tract membership. Do not remove null statuses or categories unless the request explicitly asks for them.
-Choose only fields that exist in the dataset's field list. For city records include a field to group counts by if the question asks about kinds of records (e.g. a type field), else null.
+For latest-inspection questions, retrieve all inspections in the requested period. Apply any score threshold only after selecting the latest inspection per establishment in the analysis query. Choose only fields that exist in the dataset's field list. For city records include a field to group counts by if the question asks about kinds of records (e.g. a type field), else null.
 Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "group_field": "..." | null}]}`,
       },
       {
@@ -76,13 +80,14 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const c = chosen.find((x) => x.measureId === w.measure_id);
     if (!c) continue;
     const known = new Set(c.fields.map((f) => f.name));
-    const fields = w.fields.filter((f) => known.has(f) && !/owner|contractor|address|phone|email|complaint|remark|description/i.test(f));
+    const fields = w.fields.filter((f) => known.has(f) && !privateField.test(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
     if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", `${c.candidate.title} publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.`);
-    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field && known.has(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
+    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
   }
   for(const w of out) {
     const c=chosen.find((c)=>c.measureId===w.measureId);
+    w.accessedAt=new Date().toISOString();w.catalogUpdatedAt=c?.candidate.modified;w.catalogDescription=c?.candidate.description;
     w.licence=c?.candidate.licence ?? "No license statement supplied by the source API";
     w.licenceUrl=c?.candidate.licenceUrl ?? c?.candidate.url;
   }
@@ -121,7 +126,7 @@ async function wireSocrata(ctx: Ctx, c: Chosen, modelWhere: string, fields: stri
   return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: "socrata_list", tables: [table], fields: select, where, sourceCount, zetarisCount, capped: false, excludedTestRecords: 0, sourceUrl: c.candidate.url };
 }
 
-async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: string[], groupField: string | undefined, label: string): Promise<Wired> {
+export async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: string[], groupField: string | undefined, label: string): Promise<Wired> {
   const layer = normaliseLayerUrl(c.candidate.url);
   const objectIdField=c.fields.find((f)=>f.type === "oid")?.name ?? "OBJECTID";
   const pageSize=Math.min(PAGE,c.maxRecordCount ?? PAGE);

@@ -8,7 +8,8 @@
       "valueField": "Score_1",
       "valueKind": "score",
       "entityField": "Establishment",
-      "entityLocationField": "Address"
+      "entityLocationField": "Address",
+      "objectIdField": "ObjectID"
     },
     "coverage": {
       "earliest": "2025-06-17T00:00:00.000Z",
@@ -17,8 +18,10 @@
       "lastPeriod": 202606,
       "periods": 13
     },
+    "filter": "1=1",
+    "excluded_test_records": 0,
     "aggregate": {
-      "sql": "WITH ordered AS (SELECT geoid,value,ROW_NUMBER() OVER(PARTITION BY entity_key ORDER BY event_date DESC,record_id) AS rn FROM fw_pg.tract_observations WHERE run_id='r_20261024_0f047e' AND source='probe') SELECT geoid,AVG(value) AS average_inspection_score,COUNT(*) AS establishments_count,SUM(CASE WHEN value<85 THEN 1 ELSE 0 END) AS below_85 FROM ordered WHERE rn=1 AND geoid IS NOT NULL GROUP BY geoid ORDER BY average_inspection_score,geoid",
+      "sql": "WITH ordered AS (SELECT geoid,value,ROW_NUMBER() OVER(PARTITION BY entity_key ORDER BY event_date DESC,record_id) AS rn FROM fw_pg.tract_observations WHERE run_id='r_20261024_052306' AND source='probe') SELECT geoid,AVG(value) AS average_inspection_score,COUNT(*) AS establishments_count,SUM(CASE WHEN value<85 THEN 1 ELSE 0 END) AS below_85 FROM ordered WHERE rn=1 AND geoid IS NOT NULL GROUP BY geoid ORDER BY average_inspection_score,geoid",
       "headers": [
         "geoid",
         "average_inspection_score",
@@ -442,10 +445,27 @@
         ]
       ]
     },
+    "categories": {
+      "sql": "SELECT category,COUNT(*) AS records_count,SUM(value) AS unit_total FROM fw_pg.tract_observations WHERE run_id='r_20261024_052306' AND source='probe' GROUP BY category ORDER BY records_count DESC",
+      "headers": [
+        "category",
+        "records_count",
+        "unit_total"
+      ],
+      "rows": [
+        [
+          "Unknown",
+          "1336",
+          "127438.0"
+        ]
+      ]
+    },
     "source_count": 1336,
+    "zetaris_count": 1336,
+    "duplicates_removed": 0,
     "placed": 1334,
     "missing_location": 0,
-    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_0f047e' AND source='probe'",
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_052306' AND source='probe'",
     "headers": [
       "observations",
       "earliest",
@@ -464,7 +484,7 @@
         "1336"
       ]
     ],
-    "observed_at": "2026-10-24T21:25:49.179Z"
+    "observed_at": "2026-10-24T21:46:18.440Z"
   },
   {
     "term": "911",
@@ -475,7 +495,8 @@
       "monthField": "Month",
       "categoryField": "Call_Category",
       "valueField": "Call_Count_By_Origin",
-      "valueKind": "count"
+      "valueKind": "count",
+      "objectIdField": "FID"
     },
     "coverage": {
       "earliest": null,
@@ -484,12 +505,14 @@
       "lastPeriod": 202511,
       "periods": 11
     },
+    "filter": "Year=2025",
+    "excluded_test_records": 0,
     "aggregate": {
-      "sql": "SELECT year,month,SUM(value) AS calls_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_be1265' AND source='probe' GROUP BY year,month ORDER BY year,month",
+      "sql": "SELECT year,month,SUM(value) AS records_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_aec4d3' AND source='probe' GROUP BY year,month ORDER BY year,month",
       "headers": [
         "year",
         "month",
-        "calls_count"
+        "records_count"
       ],
       "rows": [
         [
@@ -549,10 +572,37 @@
         ]
       ]
     },
+    "categories": {
+      "sql": "SELECT category,COUNT(*) AS records_count,SUM(value) AS unit_total FROM fw_pg.tract_observations WHERE run_id='r_20261024_aec4d3' AND source='probe' GROUP BY category ORDER BY records_count DESC",
+      "headers": [
+        "category",
+        "records_count",
+        "unit_total"
+      ],
+      "rows": [
+        [
+          "Emergency",
+          "44",
+          "270792.0"
+        ],
+        [
+          "Non-Emergency",
+          "44",
+          "289494.0"
+        ],
+        [
+          "Other",
+          "44",
+          "0.0"
+        ]
+      ]
+    },
     "source_count": 132,
+    "zetaris_count": 132,
+    "duplicates_removed": 0,
     "placed": 0,
     "missing_location": 132,
-    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_be1265' AND source='probe'",
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_aec4d3' AND source='probe'",
     "headers": [
       "observations",
       "earliest",
@@ -571,6 +621,333 @@
         "132"
       ]
     ],
-    "observed_at": "2026-10-24T21:25:50.576Z"
+    "observed_at": "2026-10-24T21:46:20.387Z"
+  },
+  {
+    "term": "311",
+    "source": "Received 311 Service Requests",
+    "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+    "roles": {
+      "dateField": "Create_Date",
+      "yearField": "Year",
+      "categoryField": "Request_Type",
+      "valueKind": "count",
+      "objectIdField": "OBJECTID",
+      "caseIdField": "Request_ID"
+    },
+    "coverage": {
+      "earliest": "2025-01-01T23:07:00.000Z",
+      "latest": "2025-09-30T23:26:00.000Z",
+      "firstPeriod": 202501,
+      "lastPeriod": 202509,
+      "periods": 9
+    },
+    "filter": "Year=2025",
+    "excluded_test_records": 0,
+    "aggregate": {
+      "sql": "SELECT year,month,SUM(value) AS records_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_a57886' AND source='probe' GROUP BY year,month ORDER BY year,month",
+      "headers": [
+        "year",
+        "month",
+        "records_count"
+      ],
+      "rows": [
+        [
+          "2025",
+          "1",
+          "2276.0"
+        ],
+        [
+          "2025",
+          "2",
+          "2068.0"
+        ],
+        [
+          "2025",
+          "3",
+          "2713.0"
+        ],
+        [
+          "2025",
+          "4",
+          "3337.0"
+        ],
+        [
+          "2025",
+          "5",
+          "3649.0"
+        ],
+        [
+          "2025",
+          "6",
+          "3622.0"
+        ],
+        [
+          "2025",
+          "7",
+          "4004.0"
+        ],
+        [
+          "2025",
+          "8",
+          "3130.0"
+        ],
+        [
+          "2025",
+          "9",
+          "3018.0"
+        ]
+      ]
+    },
+    "source_count": 27817,
+    "zetaris_count": 27817,
+    "duplicates_removed": 0,
+    "placed": 22307,
+    "missing_location": 5510,
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_a57886' AND source='probe'",
+    "headers": [
+      "observations",
+      "earliest",
+      "latest",
+      "min_value",
+      "max_value",
+      "entities"
+    ],
+    "rows": [
+      [
+        "27817",
+        "2025-01-01T23:07:00.000Z",
+        "2025-09-30T23:26:00.000Z",
+        "1.0",
+        "1.0",
+        "27817"
+      ]
+    ],
+    "observed_at": "2026-10-24T21:41:10.281Z"
+  },
+  {
+    "term": "pharmacy",
+    "source": "Pharmacy Locator",
+    "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer",
+    "roles": {
+      "valueKind": "count",
+      "objectIdField": "OBJECTID"
+    },
+    "coverage": {
+      "earliest": null,
+      "latest": null,
+      "firstPeriod": null,
+      "lastPeriod": null,
+      "periods": 0
+    },
+    "filter": "1=1",
+    "excluded_test_records": 0,
+    "aggregate": {
+      "sql": "SELECT year,month,SUM(value) AS records_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_d409c3' AND source='probe' GROUP BY year,month ORDER BY year,month",
+      "headers": [
+        "year",
+        "month",
+        "records_count"
+      ],
+      "rows": [
+        [
+          null,
+          null,
+          "33.0"
+        ]
+      ]
+    },
+    "source_count": 33,
+    "zetaris_count": 33,
+    "duplicates_removed": 0,
+    "placed": 33,
+    "missing_location": 0,
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_d409c3' AND source='probe'",
+    "headers": [
+      "observations",
+      "earliest",
+      "latest",
+      "min_value",
+      "max_value",
+      "entities"
+    ],
+    "rows": [
+      [
+        "33",
+        null,
+        null,
+        "1.0",
+        "1.0",
+        "33"
+      ]
+    ],
+    "observed_at": "2026-10-24T21:41:12.983Z"
+  },
+  {
+    "term": "shelter",
+    "source": "Tornado Shelter",
+    "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Tornado_Shelter/FeatureServer",
+    "roles": {
+      "categoryField": "TYPE",
+      "valueKind": "count",
+      "objectIdField": "OBJECTID"
+    },
+    "coverage": {
+      "earliest": null,
+      "latest": null,
+      "firstPeriod": null,
+      "lastPeriod": null,
+      "periods": 0
+    },
+    "filter": "1=1",
+    "excluded_test_records": 0,
+    "aggregate": {
+      "sql": "SELECT year,month,SUM(value) AS records_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_b404d0' AND source='probe' GROUP BY year,month ORDER BY year,month",
+      "headers": [
+        "year",
+        "month",
+        "records_count"
+      ],
+      "rows": [
+        [
+          null,
+          null,
+          "6.0"
+        ]
+      ]
+    },
+    "source_count": 6,
+    "zetaris_count": 6,
+    "duplicates_removed": 0,
+    "placed": 6,
+    "missing_location": 0,
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_b404d0' AND source='probe'",
+    "headers": [
+      "observations",
+      "earliest",
+      "latest",
+      "min_value",
+      "max_value",
+      "entities"
+    ],
+    "rows": [
+      [
+        "6",
+        null,
+        null,
+        "1.0",
+        "1.0",
+        "6"
+      ]
+    ],
+    "observed_at": "2026-10-24T21:41:15.379Z"
+  },
+  {
+    "term": "permit",
+    "source": "Construction Permit Data",
+    "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Construction_Permits/FeatureServer/0",
+    "roles": {
+      "dateField": "IssuedDate",
+      "yearField": "Year",
+      "monthField": "Month",
+      "categoryField": "PermitCode",
+      "valueKind": "count",
+      "objectIdField": "OBJECTID",
+      "caseIdField": "PermitNo"
+    },
+    "coverage": {
+      "earliest": "2025-01-02T00:00:00.000Z",
+      "latest": "2025-10-02T00:00:00.000Z",
+      "firstPeriod": 202501,
+      "lastPeriod": 202510,
+      "periods": 10
+    },
+    "filter": "Year='2025'",
+    "excluded_test_records": 0,
+    "aggregate": {
+      "sql": "SELECT year,month,SUM(value) AS records_count FROM fw_pg.tract_observations WHERE run_id='r_20261024_656f36' AND source='probe' GROUP BY year,month ORDER BY year,month",
+      "headers": [
+        "year",
+        "month",
+        "records_count"
+      ],
+      "rows": [
+        [
+          "2025",
+          "1",
+          "624.0"
+        ],
+        [
+          "2025",
+          "2",
+          "726.0"
+        ],
+        [
+          "2025",
+          "3",
+          "729.0"
+        ],
+        [
+          "2025",
+          "4",
+          "803.0"
+        ],
+        [
+          "2025",
+          "5",
+          "728.0"
+        ],
+        [
+          "2025",
+          "6",
+          "738.0"
+        ],
+        [
+          "2025",
+          "7",
+          "583.0"
+        ],
+        [
+          "2025",
+          "8",
+          "677.0"
+        ],
+        [
+          "2025",
+          "9",
+          "656.0"
+        ],
+        [
+          "2025",
+          "10",
+          "10.0"
+        ]
+      ]
+    },
+    "source_count": 6286,
+    "zetaris_count": 6286,
+    "duplicates_removed": 12,
+    "placed": 6022,
+    "missing_location": 252,
+    "sql": "SELECT COUNT(*) AS observations,MIN(event_date) AS earliest,MAX(event_date) AS latest,MIN(value) AS min_value,MAX(value) AS max_value,COUNT(DISTINCT entity_key) AS entities FROM fw_pg.tract_observations WHERE run_id='r_20261024_656f36' AND source='probe'",
+    "headers": [
+      "observations",
+      "earliest",
+      "latest",
+      "min_value",
+      "max_value",
+      "entities"
+    ],
+    "rows": [
+      [
+        "6274",
+        "2025-01-02T00:00:00.000Z",
+        "2025-10-02T00:00:00.000Z",
+        "1.0",
+        "1.0",
+        "6274"
+      ]
+    ],
+    "observed_at": "2026-10-24T21:41:21.061Z"
   }
 ]
