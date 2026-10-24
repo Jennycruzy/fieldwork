@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { z } from "zod";
-import { BudgetExceeded, ModelChain, ProviderError, parseJson, type ChatRequest, type ChatResult, type Provider } from "@fieldwork/llm";
+import { BudgetExceeded, ModelChain, OpenRouterProvider, ProviderError, parseJson, type ChatRequest, type ChatResult, type Provider } from "@fieldwork/llm";
 
 // A scripted provider for unit tests only: replies are given by the test, nothing is called over the network.
 class ScriptedProvider implements Provider {
@@ -65,5 +65,12 @@ describe("parseJson", () => {
   it("ignores think blocks and code fences", () => {
     const r = parseJson('<think>hmm</think>```json\n{"a":1}\n```', z.object({ a: z.number() }));
     expect(r).toEqual({ ok: true, value: { a: 1 } });
+  });
+});
+
+describe("OpenRouterProvider", () => {
+  it("refuses paid models unless allowed, before any network call", async () => {
+    const p = new OpenRouterProvider("sk-or-test");
+    await expect(p.chat({ model: "nvidia/nemotron-3.5-lightning", messages: [] })).rejects.toMatchObject({ status: 402, retryable: false });
   });
 });

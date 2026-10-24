@@ -5,15 +5,18 @@ export class OpenRouterProvider implements Provider {
 
   constructor(
     private readonly apiKey: string,
-    private readonly baseUrl = "https://openrouter.ai/api/v1",
-    private readonly timeoutMs = 180_000,
+    private readonly opts: { baseUrl?: string; timeoutMs?: number; allowPaid?: boolean } = {},
   ) {}
 
   async chat(req: ChatRequest): Promise<ChatResult> {
+    // Credit on the account only raises the free-model allowance; paid models need an explicit opt-in.
+    if (!this.opts.allowPaid && !req.model.endsWith(":free")) {
+      throw new ProviderError(`Refused paid model ${req.model} (set FW_ALLOW_PAID_MODELS=1 to allow)`, this.id, 402, false);
+    }
     const started = Date.now();
     let res: Response;
     try {
-      res = await fetch(`${this.baseUrl}/chat/completions`, {
+      res = await fetch(`${this.opts.baseUrl ?? "https://openrouter.ai/api/v1"}/chat/completions`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
@@ -28,7 +31,7 @@ export class OpenRouterProvider implements Provider {
           temperature: req.temperature ?? 0,
           ...(req.reasoning === "off" ? { reasoning: { enabled: false } } : {}),
         }),
-        signal: AbortSignal.timeout(this.timeoutMs),
+        signal: AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),
       });
     } catch (e) {
       throw new ProviderError(`OpenRouter did not answer: ${(e as Error).message}`, this.id, 0, true);

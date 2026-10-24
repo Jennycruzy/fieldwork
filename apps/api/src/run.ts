@@ -49,7 +49,7 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
 
   if (!cfg.openrouterKey) throw new Error("No model provider key set (OPENROUTER_API_KEY).");
   const budget: Budget = dbBudget(db, cfg.dailyCalls);
-  const provider = new OpenRouterProvider(cfg.openrouterKey);
+  const provider = new OpenRouterProvider(cfg.openrouterKey, { allowPaid: process.env.FW_ALLOW_PAID_MODELS === "1" });
   const models = Object.fromEntries(
     (Object.keys(MODELS) as Role[]).map((role) => {
       const routes: Route[] = MODELS[role].map((model) => ({ provider, model }));
