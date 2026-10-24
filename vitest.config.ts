@@ -10,6 +10,7 @@ export default defineConfig({
       "@fieldwork/zetaris": p("./packages/zetaris/src/index.ts"),
       "@fieldwork/llm": p("./packages/llm/src/index.ts"),
       "@fieldwork/sources": p("./packages/sources/src/index.ts"),
+      "@fieldwork/hmem": p("./packages/hmem/src/index.ts"),
     },
   },
   test: { include: ["packages/*/test/**/*.test.ts", "apps/*/test/**/*.test.ts"] },

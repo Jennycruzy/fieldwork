@@ -12,7 +12,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "ask": "tsx apps/api/src/cli.ts ask",
-    "wordscan": "node scripts/wordscan.mjs"
+    "wordscan": "node scripts/wordscan.mjs",
+    "conformance:hmem": "HMEM_IMPL=$PWD/packages/hmem/src/index.ts tsx packages/hmem/conformance/runner.ts"
   },
   "devDependencies": {
     "@types/node": "22.10.2",

@@ -8,14 +8,32 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@fieldwork/core": ["packages/core/src/index.ts"],
-      "@fieldwork/zetaris": ["packages/zetaris/src/index.ts"],
-      "@fieldwork/llm": ["packages/llm/src/index.ts"],
-      "@fieldwork/sources": ["packages/sources/src/index.ts"]
+      "@fieldwork/core": [
+        "packages/core/src/index.ts"
+      ],
+      "@fieldwork/zetaris": [
+        "packages/zetaris/src/index.ts"
+      ],
+      "@fieldwork/llm": [
+        "packages/llm/src/index.ts"
+      ],
+      "@fieldwork/sources": [
+        "packages/sources/src/index.ts"
+      ],
+      "@fieldwork/hmem": [
+        "packages/hmem/src/index.ts"
+      ]
     }
   },
-  "include": ["packages/*/src", "packages/*/test", "apps/*/src", "apps/*/test"]
+  "include": [
+    "packages/*/src",
+    "packages/*/test",
+    "apps/*/src",
+    "apps/*/test"
+  ]
 }
