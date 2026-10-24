@@ -33,6 +33,8 @@ export class ProviderError extends Error {
     readonly provider: string,
     readonly status: number,
     readonly retryable: boolean,
+    // false = the provider gave a real answer (a typed refusal); don't try another provider instead.
+    readonly fallback = true,
   ) {
     super(message);
     this.name = "ProviderError";

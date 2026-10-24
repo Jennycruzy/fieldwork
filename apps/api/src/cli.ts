@@ -4,12 +4,14 @@
 import { config, loadEnvFile } from "./config.js";
 import { openDb } from "./db.js";
 import { ask } from "./run.js";
+import { MeterlessProvider, autoDetect } from "@fieldwork/llm";
 
 async function main(): Promise<number> {
   loadEnvFile();
   const [cmd, ...rest] = process.argv.slice(2);
+  if (cmd === "runtime") return runtimeStatus(rest[0] === "--detect");
   if (cmd !== "ask" || rest.length === 0) {
-    console.error('Usage: fieldwork ask "<question about Montgomery, AL>"');
+    console.error('Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect]');
     return 2;
   }
   const question = rest.join(" ");
@@ -41,6 +43,19 @@ async function main(): Promise<number> {
   }
   await db.end();
   return outcome.status === "answered" || outcome.status === "partial" || outcome.status === "refused" ? 0 : 1;
+}
+
+// fieldwork runtime [--detect]: is Meterless Runtime reachable, and which classes can it serve?
+async function runtimeStatus(detect: boolean): Promise<number> {
+  const token = process.env.METERLESS_RUNTIME_TOKEN || undefined;
+  const base = process.env.METERLESS_BASE_URL ?? "http://127.0.0.1:8088/v1";
+  const s = detect ? ((await autoDetect(token)) ?? (await new MeterlessProvider(base, token).status())) : await new MeterlessProvider(base, token).status();
+  console.log(`Meterless Runtime: ${s.state} at ${s.baseUrl} (checked ${s.checkedAt})`);
+  console.log(`  ${s.reason}`);
+  if (s.state !== "online") return 1;
+  console.log(`  Routing modes: ${s.modes.join(", ")}`);
+  for (const c of await new MeterlessProvider(s.baseUrl, token).classes()) console.log(`  ${c.id.padEnd(10)} ${c.state}${c.why ? ` (${c.why})` : ""}`);
+  return 0;
 }
 
 main().then(

@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { checkDraft, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
-import { ModelChain, OpenRouterProvider, BudgetExceeded, type Budget, type Route } from "@fieldwork/llm";
+import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, type Budget, type Route } from "@fieldwork/llm";
 import { ZetarisClient } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
 import { learnFromRun } from "./memory.js";
@@ -50,12 +50,26 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
   const trace = new Trace(db, runId);
   if (opts.onTrace) trace.onEvent(opts.onTrace);
 
-  if (!cfg.openrouterKey) throw new Error("No model provider key set (OPENROUTER_API_KEY).");
+  // Meterless Runtime (Nightshift) is the primary provider whenever it answers at run start;
+  // OpenRouter's Nemotron models are the fallback, and the trace says which one served each call.
+  const runtime = new MeterlessProvider(cfg.meterless.baseUrl, cfg.meterless.token);
+  const rt = await runtime.status();
+  const primary: Route[] = rt.state === "online" ? [{ provider: runtime, model: cfg.meterless.model }] : [];
+  await trace.log({
+    agent: "runtime",
+    action: "provider",
+    status: rt.state === "online" ? "ok" : "info",
+    note:
+      rt.state === "online"
+        ? `Meterless Runtime online at ${rt.baseUrl} (${rt.reason}); every agent asks ${cfg.meterless.model} first`
+        : `Meterless Runtime ${rt.state} at ${rt.baseUrl}: ${rt.reason} Using OpenRouter Nemotron.`,
+  });
+  if (!primary.length && !cfg.openrouterKey) throw new Error(`Meterless Runtime is ${rt.state} at ${rt.baseUrl} and no OPENROUTER_API_KEY is set.`);
   const budget: Budget = dbBudget(db, cfg.dailyCalls);
-  const provider = new OpenRouterProvider(cfg.openrouterKey, { allowPaid: process.env.FW_ALLOW_PAID_MODELS === "1" });
+  const cloud = cfg.openrouterKey ? new OpenRouterProvider(cfg.openrouterKey, { allowPaid: process.env.FW_ALLOW_PAID_MODELS === "1" }) : undefined;
   const models = Object.fromEntries(
     (Object.keys(MODELS) as Role[]).map((role) => {
-      const routes: Route[] = MODELS[role].map((model) => ({ provider, model }));
+      const routes: Route[] = [...primary, ...(cloud ? MODELS[role].map((model) => ({ provider: cloud, model })) : [])];
       return [role, new ModelChain(routes, { budget, reasoning: REASONING[role], onCall: trace.modelCall(role) })];
     }),
   ) as Record<Role, ModelChain>;

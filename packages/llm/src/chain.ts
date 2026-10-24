@@ -78,6 +78,7 @@ export class ModelChain {
             ok: false,
             error: (e as Error).message.slice(0, 300),
           });
+          if (err && !err.fallback) throw err; // a typed refusal goes back to the caller with its real reason
           if (!err?.retryable) break; // not worth retrying this route; try the next one
           if (err.status === 204 && i >= 1) break; // empty twice: switch model rather than wait
           const wait = this.backoff[i];
