@@ -7,7 +7,7 @@ export function observation(id:string,geoid:string|null,fields:{date?:string|nul
  const names=["january","february","march","april","may","june","july","august","september","october","november","december"];
  const month=valid?date.getUTCMonth()+1:fields.month&&/^\d+/.test(fields.month)?parseInt(fields.month,10):fields.month?names.findIndex(n=>fields.month!.toLowerCase().includes(n))+1:null;
  const key=fields.entity?.trim()?`${fields.entity.trim().toLowerCase()}|${fields.entityLocation?.trim().toLowerCase()??""}`:id;
- const value=fields.valueKind==="count" ? fields.value==null?1:Number(fields.value) : fields.value==null?null:Number(fields.value);
+ const value=fields.value===undefined ? ((fields.valueKind??"count")==="count"?1:null) : fields.value==null||fields.value.trim()===""?null:Number(fields.value);
  return {record_id:hash(id),geoid,entity_key:hash(key),event_date:valid?date.toISOString():null,year,month:month&&month>=1&&month<=12?month:null,category:fields.category?.trim()||"Unknown",value:value!=null&&Number.isFinite(value)?value:null,value_kind:fields.valueKind??"count"};
 }
 

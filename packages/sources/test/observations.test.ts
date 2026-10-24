@@ -21,3 +21,10 @@ test("invalid dates and values stay missing rather than becoming zero",()=>{
  expect(observation("id",null,{date:"invalid",value:"invalid",valueKind:"score"})).toMatchObject({event_date:null,year:null,month:null,value:null});
  expect(observation("id",null,{date:"1750118400000",value:"0",valueKind:"score"})).toMatchObject({event_date:"2025-06-17T00:00:00.000Z",value:0});
 });
+
+test("missing aggregate values are not substituted with event counts",()=>{
+ expect(observation("id",null,{valueKind:"count"}).value).toBe(1);
+ expect(observation("id",null,{value:null,valueKind:"count"}).value).toBeNull();
+ expect(observation("id",null,{value:"",valueKind:"score"}).value).toBeNull();
+ expect(observation("id",null,{value:"0",valueKind:"count"}).value).toBe(0);
+});

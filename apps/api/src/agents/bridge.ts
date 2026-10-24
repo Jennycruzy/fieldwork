@@ -44,7 +44,7 @@ export async function bridgeToTracts(ctx: Ctx, w: Wired, place=true): Promise<Br
     const result=await ctx.zetaris.query(sql,2500);
     for(const row of result.rows) {
       const id=row[0]!;points.push({id,lon:row[1]==null?NaN:Number(row[1]),lat:row[2]==null?NaN:Number(row[2]),group:row[3]??undefined,caseId:row[4]??undefined});
-      details.set(id,observation(id,null,{date:row[5],year:row[6],month:row[7],category:row[8],value:row[9],entity:row[10],entityLocation:row[11],valueKind:w.valueKind}));
+      details.set(id,observation(id,null,{date:row[5],year:row[6],month:row[7],category:row[8],value:w.valueField?row[9]:undefined,entity:row[10],entityLocation:row[11],valueKind:w.valueKind}));
     }
   }
   const res = placeInTracts(shapes, points);
