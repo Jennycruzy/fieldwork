@@ -2,12 +2,14 @@ import { randomBytes } from "node:crypto";
 import { checkDraft, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { ModelChain, OpenRouterProvider, BudgetExceeded, type Budget, type Route } from "@fieldwork/llm";
 import { ZetarisClient } from "@fieldwork/zetaris";
+import { loadMemory } from "@fieldwork/hmem";
+import { learnFromRun } from "./memory.js";
 import type { Config } from "./config.js";
 import { dbBudget, migrate, type Db } from "./db.js";
 import { Trace } from "./trace.js";
 import type { Ctx, Role } from "./agents/context.js";
 import { plan } from "./agents/planner.js";
-import { find } from "./agents/finder.js";
+import { find, type Chosen } from "./agents/finder.js";
 import { wire, type Wired } from "./agents/wirer.js";
 import { bridgeToTracts, type Bridged } from "./agents/bridge.js";
 import { join, type Joined } from "./agents/joiner.js";
@@ -32,6 +34,7 @@ export interface RunOutcome {
   status: "answered" | "partial" | "refused" | "failed" | "budget";
   rounds: number;
   plan?: Plan;
+  chosen: Chosen[];
   wired: Wired[];
   bridged: Bridged[];
   joined?: Joined;
@@ -57,6 +60,13 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     }),
   ) as Record<Role, ModelChain>;
 
+  const memory = await loadMemory(db);
+  const ledgerLoaded = memory.ledger.all().length;
+  const repairs: string[] = [];
+  trace.onEvent((e) => {
+    if (e.agent === "joiner" && e.action === "repair") repairs.push(e.note);
+  });
+
   const ctx: Ctx = {
     cfg,
     db,
@@ -66,9 +76,11 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     runId,
     runShort: runId.slice(-6),
     today: new Date(),
+    memory,
+    recalled: [],
   };
 
-  const out: RunOutcome = { runId, status: "failed", rounds: 0, wired: [], bridged: [], checks: [] };
+  const out: RunOutcome = { runId, status: "failed", rounds: 0, chosen: [], wired: [], bridged: [], checks: [] };
   try {
     await trace.log({ agent: "run", action: "start", status: "info", note: question });
     let p = await plan(ctx, question);
@@ -82,7 +94,9 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
 
     let wiring = 1;
     let chosen = await find(ctx, p);
+    out.chosen = chosen;
     let wired = await wire(ctx, p, chosen, undefined, wiring);
+    out.wired = wired;
     let bridged = await bridgeAll(ctx, p, wired);
     let joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
 
@@ -100,6 +114,7 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
         out.plan = p;
         await trace.log({ agent: "planner", action: "replan", status: "ok", note: summarisePlan(p) });
         chosen = await find(ctx, p);
+        out.chosen = chosen;
         wired = await wire(ctx, p, chosen, undefined, ++wiring);
         bridged = await bridgeAll(ctx, p, wired);
         joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
@@ -138,6 +153,11 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     await trace.log({ agent: "run", action: "error", status: "error", note: out.message });
     return out;
   } finally {
+    try {
+      await learnFromRun(ctx, { question, status: out.status, chosen: out.chosen, wired: out.wired, joinSql: out.joined?.sql, repairs }, ledgerLoaded);
+    } catch (e) {
+      await trace.log({ agent: "memory", action: "remember", status: "error", note: `Could not save memory: ${(e as Error).message}` });
+    }
     await db.query(`UPDATE runs SET status = $2, rounds = $3, finished_at = now(), answer = $4 WHERE id = $1`, [
       runId,
       out.status,

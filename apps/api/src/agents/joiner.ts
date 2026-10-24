@@ -1,5 +1,6 @@
 import { SqlSchema, type Plan } from "@fieldwork/core";
 import { checkSql, ZetarisError, type QueryResult } from "@fieldwork/zetaris";
+import { recall } from "@fieldwork/hmem";
 import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Wired } from "./wirer.js";
 
@@ -41,6 +42,8 @@ export async function join(ctx: Ctx, question: string, p: Plan, wired: Wired[], 
 }
 
 async function joinOnce(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: string[], feedback: string): Promise<Joined> {
+  const examples = recall(ctx.memory, `working Zetaris join for: ${question}`, { kinds: ["join", "repair"], topN: 2 });
+  ctx.recalled.push(...examples);
   const { value } = await ctx.models.joiner.json(
     [
       {
@@ -57,6 +60,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
           dataBlock("plan", p) +
           "\n" +
           dataBlock("tables", tableCatalog(ctx, wired, bridged).join("\n")) +
+          (examples.length ? "\n" + dataBlock("memory_from_earlier_runs (adapt table names and run_id; never copy them)", examples.map((e) => e.content)) : "") +
           feedback,
       },
     ],

@@ -1,5 +1,6 @@
 import type { ZetarisClient } from "@fieldwork/zetaris";
 import type { ModelChain } from "@fieldwork/llm";
+import type { HMEM, Recalled } from "@fieldwork/hmem";
 import type { Config } from "../config.js";
 import type { Db } from "../db.js";
 import type { Trace } from "../trace.js";
@@ -15,6 +16,8 @@ export interface Ctx {
   runId: string;
   runShort: string;
   today: Date;
+  memory: HMEM;
+  recalled: Recalled[]; // every memory an agent used in this run, for feedback at the end
 }
 
 export const SYSTEM_BASE = [

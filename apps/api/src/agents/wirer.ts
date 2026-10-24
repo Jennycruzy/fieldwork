@@ -1,6 +1,7 @@
 import { WiringSchema, looksLikeTestValue, type Plan } from "@fieldwork/core";
 import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
 import { featurePageUrl, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
+import { recall } from "@fieldwork/hmem";
 import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
 
@@ -26,6 +27,8 @@ const MAX_PAGES = 15;
 
 // Each wiring round gets its own table names (Zetaris refuses to redefine a session table).
 export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string, version = 1): Promise<Wired[]> {
+  const remembered = chosen.flatMap((c) => recall(ctx.memory, `Dataset "${c.candidate.title}" wiring filter fields`, { kinds: ["wiring", "quality"], topN: 2 }));
+  ctx.recalled.push(...remembered);
   const { value } = await ctx.models.wirer.json(
     [
       {
@@ -46,6 +49,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
             "datasets",
             chosen.map((c) => ({ measure_id: c.measureId, measure: c.measure, title: c.candidate.title, kind: c.candidate.kind, fields: c.fields.slice(0, 80) })),
           ) +
+          (remembered.length ? "\n" + dataBlock("memory_from_earlier_runs", remembered.map((r) => r.content)) : "") +
           (revision ? `\nThe Evaluator asked: ${revision}` : ""),
       },
     ],

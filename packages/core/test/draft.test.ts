@@ -57,3 +57,24 @@ describe("ranking words (live run r_20261024_72d843)", () => {
     expect(claimedRank("has 13.2% asthma rate")).toBeUndefined();
   });
 });
+
+describe("live runs r_20261024_430abd and r_20261024_7d973f", () => {
+  it("catches the invented 'Eleven tracts share the third-highest rate' (names no row)", () => {
+    const r = checkDraft(["Eleven tracts share the third-highest rate of 13.2%, all with population counts ranging from 1,261 to 3,754"], headers, rows);
+    expect(r.ok).toBe(false);
+  });
+
+  it("treats a share and its percent as the same figure", () => {
+    const h = ["name", "code_violations_2025", "population", "high_bp_share"];
+    const rr = [["Census Tract 11", "1125", "2684.0", "0.601"], ["Census Tract 25", "955", "2315.0", "0.523"]];
+    const r = checkDraft(["Census Tract 11 had 1,125 code violations, and 60.1% of adults there have high blood pressure.", "52.3% of adults in Census Tract 25 have high blood pressure"], h, rr);
+    expect(r.missingNumbers).toEqual([]);
+  });
+
+  it("does not read a tract's name as a value claim", () => {
+    const h = ["name", "n"];
+    const rr = [["Census Tract 11", "1125"]];
+    expect(checkDraft(["Tract 11 had 1,125 violations"], h, rr).ok).toBe(true);
+    expect(checkDraft(["Tract 11 had 1,126 violations"], h, rr).ok).toBe(false);
+  });
+});

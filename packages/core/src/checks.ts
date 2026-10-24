@@ -84,16 +84,25 @@ export interface DraftCheck {
 }
 
 export function checkDraft(texts: string[], headers: string[], rows: string[][]): DraftCheck {
+  // Values come from every column except the first (the row's name, e.g. "Census Tract 11").
+  // A share and its percent are the same figure (0.601 and 60.1%).
   const values = new Set<string>();
-  for (const r of rows) for (const v of r) for (const n of numbersIn(v)) values.add(n);
+  for (const r of rows) for (const v of r.slice(1)) for (const n of numbersIn(v)) {
+    values.add(n);
+    const x = Number(n);
+    if (Math.abs(x) <= 1) values.add(normaliseNumber(String(Number((x * 100).toFixed(4)))));
+    if (Math.abs(x) <= 100) values.add(normaliseNumber(String(Number((x / 100).toFixed(6)))));
+  }
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
+  const names = rows.map((r) => r[0] ?? "");
   const missing: string[] = [];
-  for (const t of texts) for (const n of numbersIn(t)) if (!values.has(n) && !isYearOrSmallOrdinal(n)) missing.push(n);
+  for (const t of texts) {
+    for (const n of numbersIn(withoutNames(spellNumbers(t), names))) if (!values.has(n) && !isYear(n) && !nearAny(n, values)) missing.push(n);
+  }
 
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
   // numeric column) share a rank, e.g. two tracts at 13.1% tie for 4th.
   const order: string[] = [];
-  const names = rows.map((r) => r[0] ?? "");
   const keyCol = rows[0] ? rows[0].findIndex((v, i) => i > 0 && /^-?\d+(\.\d+)?$/.test(v)) : -1;
   const rankOf = (idx: number): number => {
     if (keyCol < 0) return idx + 1;
@@ -101,9 +110,13 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][])
     return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
   };
   for (const t of texts) {
-    const said = names.reduce((best, n, i) => (n && t.includes(n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
-    if (said < 0) continue;
+    const said = names.reduce((best, n, i) => (n && mentions(t, n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
     const claimed = claimedRank(t);
+    if (said < 0) {
+      // A rank claim about no row in particular ("eleven tracts share the third-highest rate") can't be checked.
+      if (claimed !== undefined && !/top \w+ tracts? (by|are)|^the top/i.test(t)) order.push(`"${t}" makes a ranking claim that names no row`);
+      continue;
+    }
     if (claimed !== undefined && claimed !== rankOf(said)) {
       order.push(`"${t}" puts ${names[said]} at rank ${claimed}, but in the rows it is rank ${rankOf(said)}`);
     }
@@ -120,9 +133,41 @@ function normaliseNumber(n: string): string {
   return Number.isInteger(x) ? String(x) : String(Number(x.toFixed(6)));
 }
 
-function isYearOrSmallOrdinal(n: string): boolean {
+function isYear(n: string): boolean {
   const x = Number(n);
-  return (Number.isInteger(x) && x >= 1900 && x <= 2100) || (Number.isInteger(x) && x >= 1 && x <= 10);
+  return Number.isInteger(x) && x >= 1900 && x <= 2100;
+}
+
+// Rounding in text (13.7% for 13.65) is fine; a different number is not.
+function nearAny(n: string, values: Set<string>): boolean {
+  const x = Number(n);
+  const places = (n.split(".")[1] ?? "").length;
+  const tol = 0.5 * 10 ** -places;
+  for (const v of values) if (Math.abs(Number(v) - x) <= tol + 1e-9) return true;
+  return false;
+}
+
+const WORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20 };
+
+function spellNumbers(t: string): string {
+  return t.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b(?=\s+(tracts?|neighborhoods?|areas?|records?))/gi, (w) => String(WORDS[w.toLowerCase()]));
+}
+
+// "Census Tract 11" or "Tract 11" in the text names a row; its number is not a value claim.
+function withoutNames(t: string, names: string[]): string {
+  let s = t;
+  for (const n of names) {
+    if (!n) continue;
+    const short = n.replace(/^Census\s+/i, "");
+    s = s.split(n).join(" ").split(short).join(" ");
+  }
+  return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,|and)\s*\d+(?:\.\d+)?)*/gi, " ");
+}
+
+function mentions(t: string, name: string): boolean {
+  if (t.includes(name)) return true;
+  const short = name.replace(/^Census\s+/i, "");
+  return short !== name && new RegExp(`\\b${short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(t);
 }
 
 const ORDINALS: Record<string, number> = { first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9, tenth: 10 };
