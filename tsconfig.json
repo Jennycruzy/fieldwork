@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@fieldwork/core": ["packages/core/src/index.ts"],
+      "@fieldwork/zetaris": ["packages/zetaris/src/index.ts"],
+      "@fieldwork/llm": ["packages/llm/src/index.ts"],
+      "@fieldwork/sources": ["packages/sources/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src", "packages/*/test", "apps/*/src", "apps/*/test"]
+}

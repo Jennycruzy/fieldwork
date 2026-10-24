@@ -1,0 +1,30 @@
+{
+  "name": "fieldwork",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Ask a question about a Montgomery neighborhood; agents find the public data, join it in Zetaris, and show the record behind every number.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "ask": "tsx apps/api/src/cli.ts ask",
+    "wordscan": "node scripts/wordscan.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/pg": "8.11.10",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
+  },
+  "dependencies": {
+    "@turf/boolean-point-in-polygon": "7.1.0",
+    "@turf/helpers": "7.1.0",
+    "pg": "8.13.1",
+    "zod": "3.24.1"
+  }
+}
