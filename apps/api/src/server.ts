@@ -52,7 +52,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
 
   const sample = loadSamples(deps.sampleDir);
 
-  app.get("/api/health", async () => ({ ok: true, mode: deps.live ? "live" : "sample", recorded: sample.size, questionManifest: existsSync(resolve(deps.sampleDir, "../questions.json")) ? createHash("sha256").update(readFileSync(resolve(deps.sampleDir, "../questions.json"))).digest("hex") : null }));
+  app.get("/api/health", async () => ({ ok: true, mode: deps.live ? "live" : "sample", recorded: sample.size, evaluation: existsSync(resolve(deps.sampleDir,"../question-set/latest.json")) ? JSON.parse(readFileSync(resolve(deps.sampleDir,"../question-set/latest.json"),"utf8")) : null, questionManifest: existsSync(resolve(deps.sampleDir, "../questions.json")) ? createHash("sha256").update(readFileSync(resolve(deps.sampleDir, "../questions.json"))).digest("hex") : null }));
 
   app.get("/api/runtime", async () => {
     if (!deps.live) return { state: "offline", reason: "Sample mode: no model provider is used.", baseUrl: "", modes: [], fallback: "none" };

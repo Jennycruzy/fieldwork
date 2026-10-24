@@ -19,7 +19,8 @@
     "dev:web": "vite apps/web",
     "start": "tsx apps/api/src/serve.ts",
     "sample": "vite build apps/web && FW_SAMPLE=1 tsx apps/api/src/serve.ts",
-    "conformance:world": "WORLD_MODEL_IMPL=$PWD/packages/world/src/index.ts tsx packages/world/conformance/runner.ts"
+    "conformance:world": "WORLD_MODEL_IMPL=$PWD/packages/world/src/index.ts tsx packages/world/conformance/runner.ts",
+    "questions": "tsx scripts/question-set.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",
