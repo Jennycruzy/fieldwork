@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { checkDraft, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
-import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, type Budget, type Route } from "@fieldwork/llm";
+import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
 import { learnFromRun } from "./memory.js";
@@ -40,6 +40,7 @@ export interface RunOutcome {
   joined?: Joined;
   checks: CheckResult[];
   answer?: Answer;
+  providerFailed?: boolean; // the run stopped because a model provider failed, not because of the data
   view?: string; // the answer saved in Zetaris, e.g. fieldwork_answers.answer_b552f2
   message?: string;
 }
@@ -170,12 +171,13 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     } else {
       out.status = "failed";
       out.message = (e as Error).message;
+      out.providerFailed = e instanceof ProviderError;
     }
     await trace.log({ agent: "run", action: "error", status: "error", note: out.message });
     return out;
   } finally {
     try {
-      await learnFromRun(ctx, { question, status: out.status, chosen: out.chosen, wired: out.wired, joinSql: out.joined?.sql, repairs }, ledgerLoaded);
+      await learnFromRun(ctx, { question, status: out.status, providerFailed: out.providerFailed, chosen: out.chosen, wired: out.wired, joinSql: out.joined?.sql, repairs }, ledgerLoaded);
     } catch (e) {
       await trace.log({ agent: "memory", action: "remember", status: "error", note: `Could not save memory: ${(e as Error).message}` });
     }

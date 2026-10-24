@@ -8,6 +8,7 @@ import type { Wired } from "./agents/wirer.js";
 export interface RunLessons {
   question: string;
   status: string;
+  providerFailed?: boolean;
   chosen: Chosen[];
   wired: Wired[];
   joinSql?: string;
@@ -54,9 +55,10 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
     added.push(remember(ctx.memory, { kind: "repair", runId: ctx.runId, content: `Zetaris rejected a Joiner query with: ${r.slice(0, 300)}. Avoid repeating it.`, confidence: 0.7 }).id);
   }
 
-  // Memories that agents used in this run: helpful if the run was answered, not helpful only if it failed.
+  // Memories that agents used in this run: helpful if the run was answered, not helpful only if it failed
+  // for a reason the memories could be part of (a model provider failing says nothing about them).
   const used = [...new Set(ctx.recalled.map((r) => r.id))];
-  const verdict = ok ? "helpful" : l.status === "failed" ? "not_helpful" : undefined;
+  const verdict = ok ? "helpful" : l.status === "failed" && !l.providerFailed ? "not_helpful" : undefined;
   if (verdict) feedback(ctx.memory, used, verdict);
 
   const saved = await saveMemory(ctx.db, ctx.memory, ledgerLoaded);

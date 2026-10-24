@@ -29,7 +29,8 @@ export class OpenRouterProvider implements Provider {
           messages: req.messages,
           max_tokens: req.maxTokens ?? 2000,
           temperature: req.temperature ?? 0,
-          ...(req.reasoning === "off" ? { reasoning: { enabled: false } } : {}),
+          // Thinking gets at most 60% of the budget, so the answer itself always has room.
+          reasoning: req.reasoning === "off" ? { enabled: false } : { max_tokens: Math.floor((req.maxTokens ?? 2000) * 0.6) },
         }),
         signal: AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),
       });

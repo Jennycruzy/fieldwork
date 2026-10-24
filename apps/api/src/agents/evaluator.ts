@@ -62,7 +62,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
       },
     ],
     VerdictSchema,
-    4000,
+    8000,
   );
   await ctx.trace.log({
     agent: "evaluator",

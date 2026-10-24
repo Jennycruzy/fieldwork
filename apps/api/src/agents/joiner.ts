@@ -65,7 +65,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
       },
     ],
     SqlSchema,
-    4000,
+    8000,
   );
   const sql = value.sql.trim().replace(/;\s*$/, "");
   const chk = checkSql(sql, "reader");

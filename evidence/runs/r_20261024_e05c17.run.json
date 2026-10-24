@@ -1,0 +1,538 @@
+{
+  "id": "r_20261024_e05c17",
+  "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
+  "created_at": "2026-10-24T15:19:07.878Z",
+  "finished_at": "2026-10-24T15:22:50.711Z",
+  "status": "partial",
+  "rounds": 2,
+  "mode": "live",
+  "answer": {
+    "sql": "WITH per_tract AS (\n  SELECT\n    t.name AS tract_name,\n    tc.n AS code_violations_2026,\n    CAST(cdc.bphigh_crudeprev AS DOUBLE) * CAST(cdc.totalpopulation AS DOUBLE) / 100 AS estimated_adults_with_high_blood_pressure\n  FROM fw_pg.tracts AS t\n  LEFT JOIN fw_pg.tract_counts AS tc\n    ON tc.geoid = t.geoid\n   AND tc.run_id = 'r_20261024_e05c17'\n   AND tc.source = 'm1_city'\n   AND tc.grp = 'all'\n  LEFT JOIN session.fw_e05c17_m2_cdc AS cdc\n    ON cdc.tractfips = t.geoid\n)\nSELECT\n  tract_name,\n  code_violations_2026,\n  estimated_adults_with_high_blood_pressure,\n  CORR(code_violations_2026, estimated_adults_with_high_blood_pressure) OVER () AS correlation_coefficient\nFROM per_tract",
+    "plan": {
+      "years": {
+        "to": 2026,
+        "from": 2026
+      },
+      "output": "comparison",
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "number of code violations in 2026 by census tract",
+          "search_terms": [
+            "code violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "estimated adults with high blood pressure by census tract",
+          "search_terms": [
+            "high blood pressure",
+            "hypertension"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Census Tract 57",
+        "4",
+        "780.7669999999999",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 51.02",
+        "513",
+        "2301.777",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 55.04",
+        null,
+        "634.663",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.07",
+        "57",
+        "1612.62",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 6",
+        "258",
+        "1077.193",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 19",
+        "250",
+        "1359.07",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.13",
+        "289",
+        "2367.68",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 33.04",
+        "102",
+        "1530.1530000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 53.02",
+        "33",
+        "971.5160000000001",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 14",
+        "139",
+        "1180.2600000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 55.02",
+        null,
+        "1194.93",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 29.02",
+        "178",
+        "2119.625",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 60",
+        "57",
+        "1614.1269999999997",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.04",
+        "2",
+        "1515.5479999999998",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.12",
+        "125",
+        "2622.5910000000003",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 23",
+        "809",
+        "1513.105",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 10",
+        "329",
+        "669.6",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 51.01",
+        "158",
+        "1647.0280000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 3",
+        "591",
+        "702.377",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 21",
+        "266",
+        "1880.8239999999998",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 15",
+        "467",
+        "1299.392",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 30",
+        "506",
+        "1079.568",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.08",
+        null,
+        "630.3380000000001",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 26",
+        "440",
+        "2494.306",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 22.01",
+        "1085",
+        "2211.106",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 27",
+        "177",
+        "1974.4460000000001",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 32",
+        "265",
+        "3100.14",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 59.03",
+        null,
+        "944.298",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 59.02",
+        "260",
+        "1885.4440000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 16",
+        "478",
+        "1960.96",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.02",
+        "364",
+        "2638.7660000000005",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.13",
+        "60",
+        "1823.6069999999997",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 1",
+        "62",
+        "350.574",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 17",
+        "651",
+        "2302.449",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 31",
+        "297",
+        "1852.004",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 11",
+        "1633",
+        "1613.0839999999998",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 61",
+        "272",
+        "1235.138",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 5",
+        "369",
+        "1305.9",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 53.01",
+        null,
+        "225.03",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.10",
+        "24",
+        "652.4",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 58",
+        null,
+        "947.492",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.14",
+        "104",
+        "1463.595",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 18",
+        "301",
+        "1630.125",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 33.01",
+        "204",
+        "1509.45",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.05",
+        "121",
+        "1666.6879999999999",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 2",
+        "222",
+        "777.6",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 29.01",
+        "78",
+        "1749.264",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 13",
+        "343",
+        "1013.4959999999999",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.07",
+        "25",
+        "1945.8",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.11",
+        "44",
+        "1258.4440000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 33.03",
+        "167",
+        "1270.308",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.09",
+        "108",
+        "1721.6280000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 22.02",
+        "474",
+        "510.952",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.09",
+        "75",
+        "943.95",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 7",
+        "366",
+        "595.2090000000001",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 59.04",
+        "69",
+        "1175.0240000000001",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.06",
+        "220",
+        "2237.13",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.11",
+        "28",
+        "1344.636",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 20",
+        "211",
+        "2037.75",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 55.01",
+        "15",
+        "1363.5479999999998",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.14",
+        "73",
+        "1322.5680000000002",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 9",
+        null,
+        "686.826",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 12",
+        "939",
+        "861.36",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 4",
+        "659",
+        "2282.845",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 56.12",
+        "43",
+        "741.5879999999999",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 28",
+        "208",
+        "2370.0919999999996",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 25",
+        "465",
+        "1210.745",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 24",
+        "602",
+        "1112.8139999999999",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 55.03",
+        "32",
+        "2186.304",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.10",
+        "126",
+        "1977.3",
+        "0.08348176251978676"
+      ],
+      [
+        "Census Tract 54.03",
+        "117",
+        "1503.425",
+        "0.08348176251978676"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_e05c17",
+    "answer": {
+      "points": [
+        "The correlation coefficient across all 71 tracts is 0.0835, indicating a slight positive association.",
+        "Census Tract 22.01 has the most code violations (1,085) and an estimated 2,211.1 adults with high blood pressure.",
+        "Census Tract 3 has 591 code violations and an estimated 702.4 adults with high blood pressure, ranking 8th highest by violations.",
+        "Census Tract 55.04 has null code violations but an estimated 634.7 adults with high blood pressure, showing the relationship is not deterministic.",
+        "Estimated CDC figures are model-based from survey data and may not reflect individual tract-level realities.",
+        "Code violations data for 2026 is still in progress (through 2026-10-24) and counts are not compared with full years."
+      ],
+      "caveats": [
+        "CDC PLACES values are model-based estimates from survey data, not direct counts per tract.",
+        "Code violations counts for 2026 are partial (through October 24) and may change.",
+        "Null code violation values exist (e.g., Tract 55.04, 56.08, 59.03) and are treated as zero for sorting purposes.",
+        "Correlation does not imply causation; other neighborhood factors may influence both variables."
+      ],
+      "headline": "Census tracts with more code violations this year tend to have more estimated adults with high blood pressure, but the relationship is weak (correlation coefficient 0.0835).",
+      "how_sure": "The correlation coefficient of 0.0835 is consistent across all rows, but the weak value means the overall tendency is a slight positive association only; 71 CDC records were matched to 18,009 located code violation records (97.8%); 2026 figures are so far."
+    },
+    "checks": [
+      {
+        "id": "bridge_match",
+        "ok": true,
+        "detail": "18,009 of 18,407 located records fell inside a tract (97.8%); 398 outside, 0 without a location"
+      },
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 18,407 vs source's own count 18,407"
+      },
+      {
+        "id": "rows_m2_cdc",
+        "ok": true,
+        "detail": "m2_cdc: Zetaris rows 71 vs source's own count 71"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "71 result rows"
+      },
+      {
+        "id": "partial_period",
+        "ok": true,
+        "detail": "2026 is still in progress: its figures are \"so far\" (to 2026-10-24) and are not compared with full years without saying so"
+      }
+    ],
+    "headers": [
+      "tract_name",
+      "code_violations_2026",
+      "estimated_adults_with_high_blood_pressure",
+      "correlation_coefficient"
+    ],
+    "sources": [
+      {
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "title": "Code Violations",
+        "filter": "Year = '2026'",
+        "records": 18407,
+        "sourceCount": 18407
+      },
+      {
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "filter": "countyfips = '01101' AND (stateabbr = 'AL' AND bphigh_crudeprev IS NOT NULL)",
+        "records": 71,
+        "sourceCount": 71
+      }
+    ],
+    "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?"
+  }
+}
