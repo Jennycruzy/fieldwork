@@ -3,6 +3,7 @@
 
 import { config, loadEnvFile } from "./config.js";
 import { openDb } from "./db.js";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { ask } from "./run.js";
 import { MeterlessProvider, autoDetect } from "@fieldwork/llm";
 
@@ -10,8 +11,9 @@ async function main(): Promise<number> {
   loadEnvFile();
   const [cmd, ...rest] = process.argv.slice(2);
   if (cmd === "runtime") return runtimeStatus(rest[0] === "--detect");
+  if (cmd === "export" && rest[0]) return exportRun(rest[0]);
   if (cmd !== "ask" || rest.length === 0) {
-    console.error('Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect]');
+    console.error('Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect] | fieldwork export <run id>');
     return 2;
   }
   const question = rest.join(" ");
@@ -43,6 +45,24 @@ async function main(): Promise<number> {
   }
   await db.end();
   return outcome.status === "answered" || outcome.status === "partial" || outcome.status === "refused" ? 0 : 1;
+}
+
+// fieldwork export <run id>: writes the run and its full trace to evidence/runs/ (no secrets are ever stored in a trace).
+async function exportRun(runId: string): Promise<number> {
+  const db = openDb(config().pgUrl);
+  const run = await db.query(`SELECT * FROM runs WHERE id = $1`, [runId]);
+  if (!run.rows[0]) {
+    console.error(`No run ${runId}`);
+    await db.end();
+    return 1;
+  }
+  const events = await db.query(`SELECT seq, ts, agent, action, status, note, model_provider, model_requested, model_served, tokens_in, tokens_out, latency_ms, sql, zetaris_ms, rows FROM events WHERE run_id = $1 ORDER BY seq`, [runId]);
+  mkdirSync("evidence/runs", { recursive: true });
+  writeFileSync(`evidence/runs/${runId}.run.json`, JSON.stringify(run.rows[0], null, 2) + "\n");
+  writeFileSync(`evidence/runs/${runId}.events.jsonl`, events.rows.map((e) => JSON.stringify(e)).join("\n") + "\n");
+  console.log(`evidence/runs/${runId}: ${events.rows.length} events`);
+  await db.end();
+  return 0;
 }
 
 // fieldwork runtime [--detect]: is Meterless Runtime reachable, and which classes can it serve?

@@ -1,0 +1,389 @@
+{
+  "id": "r_20261024_72540e",
+  "question": "Which Montgomery census tracts had the most code violations in 2025, and what share of adults there have diabetes?",
+  "created_at": "2026-10-24T14:08:32.893Z",
+  "finished_at": "2026-10-24T14:10:13.023Z",
+  "status": "answered",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "WITH violations AS (\n  SELECT geoid, n AS code_violations\n  FROM fw_pg.tract_counts\n  WHERE run_id = 'r_20261024_72540e'\n    AND source = 'm1_city'\n    AND grp = 'all'\n),\ndiabetes AS (\n  SELECT tractfips AS geoid,\n         CAST(totalpopulation AS DOUBLE) AS totalpopulation,\n         CAST(diabetes_crudeprev AS DOUBLE) AS diabetes_share\n  FROM session.fw_72540e_m2_cdc\n)\nSELECT t.name,\n       v.code_violations,\n       d.diabetes_share,\n       d.totalpopulation\nFROM fw_pg.tracts t\nJOIN violations v ON v.geoid = t.geoid\nJOIN diabetes d ON d.geoid = t.geoid\nORDER BY v.code_violations DESC\nLIMIT 50",
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "number of code violations per census tract in 2025",
+          "search_terms": [
+            "code violations",
+            "code enforcement",
+            "violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "share of adults with diabetes per census tract",
+          "search_terms": [
+            "diabetes"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Census Tract 11",
+        "1125",
+        "27.6",
+        "2684.0"
+      ],
+      [
+        "Census Tract 25",
+        "955",
+        "22.5",
+        "2315.0"
+      ],
+      [
+        "Census Tract 12",
+        "818",
+        "28.0",
+        "1455.0"
+      ],
+      [
+        "Census Tract 22.01",
+        "765",
+        "26.3",
+        "3754.0"
+      ],
+      [
+        "Census Tract 3",
+        "702",
+        "24.6",
+        "1261.0"
+      ],
+      [
+        "Census Tract 17",
+        "670",
+        "13.5",
+        "5469.0"
+      ],
+      [
+        "Census Tract 23",
+        "657",
+        "27.2",
+        "2501.0"
+      ],
+      [
+        "Census Tract 4",
+        "515",
+        "22.7",
+        "4267.0"
+      ],
+      [
+        "Census Tract 24",
+        "515",
+        "31.5",
+        "1758.0"
+      ],
+      [
+        "Census Tract 16",
+        "473",
+        "21.5",
+        "3830.0"
+      ],
+      [
+        "Census Tract 26",
+        "374",
+        "14.8",
+        "5458.0"
+      ],
+      [
+        "Census Tract 54.02",
+        "364",
+        "17.4",
+        "5486.0"
+      ],
+      [
+        "Census Tract 15",
+        "350",
+        "9.9",
+        "4112.0"
+      ],
+      [
+        "Census Tract 30",
+        "313",
+        "25.2",
+        "1904.0"
+      ],
+      [
+        "Census Tract 18",
+        "274",
+        "17.9",
+        "3375.0"
+      ],
+      [
+        "Census Tract 10",
+        "265",
+        "25.3",
+        "1200.0"
+      ],
+      [
+        "Census Tract 51.02",
+        "248",
+        "22.2",
+        "4239.0"
+      ],
+      [
+        "Census Tract 21",
+        "239",
+        "17.6",
+        "3886.0"
+      ],
+      [
+        "Census Tract 7",
+        "237",
+        "28.2",
+        "997.0"
+      ],
+      [
+        "Census Tract 22.02",
+        "234",
+        "24.5",
+        "884.0"
+      ],
+      [
+        "Census Tract 29.02",
+        "230",
+        "22.3",
+        "3875.0"
+      ],
+      [
+        "Census Tract 13",
+        "226",
+        "17.7",
+        "2094.0"
+      ],
+      [
+        "Census Tract 54.10",
+        "219",
+        "12.2",
+        "5070.0"
+      ],
+      [
+        "Census Tract 56.13",
+        "218",
+        "20.2",
+        "4832.0"
+      ],
+      [
+        "Census Tract 59.02",
+        "211",
+        "26.3",
+        "3212.0"
+      ],
+      [
+        "Census Tract 32",
+        "208",
+        "21.9",
+        "5741.0"
+      ],
+      [
+        "Census Tract 56.06",
+        "204",
+        "17.0",
+        "4770.0"
+      ],
+      [
+        "Census Tract 5",
+        "189",
+        "17.3",
+        "2902.0"
+      ],
+      [
+        "Census Tract 6",
+        "185",
+        "28.5",
+        "1763.0"
+      ],
+      [
+        "Census Tract 2",
+        "183",
+        "22.1",
+        "1440.0"
+      ],
+      [
+        "Census Tract 51.01",
+        "173",
+        "15.3",
+        "3604.0"
+      ],
+      [
+        "Census Tract 28",
+        "171",
+        "17.4",
+        "4948.0"
+      ],
+      [
+        "Census Tract 20",
+        "163",
+        "13.4",
+        "4750.0"
+      ],
+      [
+        "Census Tract 14",
+        "156",
+        "9.1",
+        "3555.0"
+      ],
+      [
+        "Census Tract 54.03",
+        "156",
+        "11.6",
+        "3905.0"
+      ],
+      [
+        "Census Tract 19",
+        "153",
+        "13.9",
+        "3110.0"
+      ],
+      [
+        "Census Tract 33.04",
+        "153",
+        "12.9",
+        "3723.0"
+      ],
+      [
+        "Census Tract 54.12",
+        "152",
+        "12.5",
+        "6381.0"
+      ],
+      [
+        "Census Tract 31",
+        "151",
+        "21.8",
+        "3436.0"
+      ],
+      [
+        "Census Tract 27",
+        "149",
+        "14.6",
+        "4349.0"
+      ],
+      [
+        "Census Tract 33.01",
+        "138",
+        "13.5",
+        "3470.0"
+      ],
+      [
+        "Census Tract 61",
+        "128",
+        "26.4",
+        "2062.0"
+      ],
+      [
+        "Census Tract 29.01",
+        "107",
+        "21.6",
+        "3313.0"
+      ],
+      [
+        "Census Tract 54.09",
+        "91",
+        "12.5",
+        "2325.0"
+      ],
+      [
+        "Census Tract 54.14",
+        "86",
+        "10.7",
+        "3945.0"
+      ],
+      [
+        "Census Tract 60",
+        "81",
+        "19.4",
+        "3209.0"
+      ],
+      [
+        "Census Tract 33.03",
+        "76",
+        "16.2",
+        "2652.0"
+      ],
+      [
+        "Census Tract 56.05",
+        "72",
+        "14.4",
+        "3712.0"
+      ],
+      [
+        "Census Tract 56.09",
+        "70",
+        "9.6",
+        "5034.0"
+      ],
+      [
+        "Census Tract 55.03",
+        "60",
+        "10.2",
+        "6176.0"
+      ]
+    ],
+    "answer": {
+      "points": [
+        "Tract 11 had 1,125 code violations, the highest count in 2025",
+        "Tract 25 had 955 violations, the second-highest count",
+        "Tract 12 had 818 violations, the third-highest count",
+        "27.6% of adults in Tract 11 have diabetes",
+        "22.5% of adults in Tract 25 have diabetes",
+        "28.0% of adults in Tract 12 have diabetes"
+      ],
+      "caveats": [
+        "CDC diabetes figures are model-based estimates from survey data, not direct measurements",
+        "Code violation counts come from the 2025 code enforcement dataset with 15,439 total records",
+        "Tracts with equal violation counts share rankings; the top three tracts have distinct violation counts"
+      ],
+      "headline": "Census Tract 11 had the most code violations in 2025 with 1,125 violations, and 27.6% of adults there have diabetes.",
+      "how_sure": "All 15,103 located code violation records and 71 PLACES diabetes records were successfully matched to tracts; 97.8% of records were located, and all result rows passed validation checks."
+    },
+    "checks": [
+      {
+        "id": "bridge_match",
+        "ok": true,
+        "detail": "15,103 of 15,439 located records fell inside a tract (97.8%); 336 outside, 0 without a location"
+      },
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 15,439 vs source's own count 15,439"
+      },
+      {
+        "id": "rows_m2_cdc",
+        "ok": true,
+        "detail": "m2_cdc: Zetaris rows 71 vs source's own count 71"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "50 result rows"
+      }
+    ],
+    "headers": [
+      "name",
+      "code_violations",
+      "diabetes_share",
+      "totalpopulation"
+    ]
+  }
+}

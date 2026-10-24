@@ -1,0 +1,445 @@
+{
+  "id": "r_20261024_f1e7f5",
+  "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations were reported in each this year?",
+  "created_at": "2026-10-24T14:18:49.598Z",
+  "finished_at": "2026-10-24T14:20:11.191Z",
+  "status": "answered",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT t.name AS tract_name, t.geoid, CAST(c.casthma_crudeprev AS DOUBLE) AS adult_asthma_rate, CAST(c.totalpopulation AS DOUBLE) AS population, COALESCE(v.n, 0) AS code_violations_2026 FROM fw_pg.tracts AS t LEFT JOIN session.fw_f1e7f5_m1_cdc AS c ON c.tractfips = t.geoid LEFT JOIN fw_pg.tract_counts AS v ON v.geoid = t.geoid AND v.run_id = 'r_20261024_f1e7f5' AND v.source = 'm2_city' AND v.grp = 'all' WHERE c.casthma_crudeprev IS NOT NULL ORDER BY adult_asthma_rate DESC LIMIT 50",
+    "plan": {
+      "years": {
+        "to": 2026,
+        "from": 2026
+      },
+      "output": "ranking",
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "health_estimate",
+          "describe": "Adult asthma prevalence rate by census tract",
+          "search_terms": [
+            "asthma",
+            "adult asthma",
+            "CDC PLACES"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "city_records",
+          "describe": "Count of code violations reported in 2026 by census tract",
+          "search_terms": [
+            "code violations",
+            "code enforcement",
+            "violations"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Census Tract 12",
+        "01101001200",
+        "14.0",
+        "1455.0",
+        "939"
+      ],
+      [
+        "Census Tract 10",
+        "01101001000",
+        "13.7",
+        "1200.0",
+        "329"
+      ],
+      [
+        "Census Tract 3",
+        "01101000300",
+        "13.2",
+        "1261.0",
+        "591"
+      ],
+      [
+        "Census Tract 56.14",
+        "01101005614",
+        "13.1",
+        "2808.0",
+        "73"
+      ],
+      [
+        "Census Tract 24",
+        "01101002400",
+        "13.1",
+        "1758.0",
+        "602"
+      ],
+      [
+        "Census Tract 29.01",
+        "01101002901",
+        "12.8",
+        "3313.0",
+        "78"
+      ],
+      [
+        "Census Tract 11",
+        "01101001100",
+        "12.7",
+        "2684.0",
+        "1633"
+      ],
+      [
+        "Census Tract 7",
+        "01101000700",
+        "12.7",
+        "997.0",
+        "366"
+      ],
+      [
+        "Census Tract 30",
+        "01101003000",
+        "12.6",
+        "1904.0",
+        "506"
+      ],
+      [
+        "Census Tract 22.01",
+        "01101002201",
+        "12.5",
+        "3754.0",
+        "1085"
+      ],
+      [
+        "Census Tract 6",
+        "01101000600",
+        "12.4",
+        "1763.0",
+        "258"
+      ],
+      [
+        "Census Tract 23",
+        "01101002300",
+        "12.4",
+        "2501.0",
+        "809"
+      ],
+      [
+        "Census Tract 59.02",
+        "01101005902",
+        "12.4",
+        "3212.0",
+        "260"
+      ],
+      [
+        "Census Tract 31",
+        "01101003100",
+        "12.4",
+        "3436.0",
+        "297"
+      ],
+      [
+        "Census Tract 25",
+        "01101002500",
+        "12.4",
+        "2315.0",
+        "465"
+      ],
+      [
+        "Census Tract 15",
+        "01101001500",
+        "12.3",
+        "4112.0",
+        "467"
+      ],
+      [
+        "Census Tract 32",
+        "01101003200",
+        "12.2",
+        "5741.0",
+        "265"
+      ],
+      [
+        "Census Tract 16",
+        "01101001600",
+        "12.2",
+        "3830.0",
+        "478"
+      ],
+      [
+        "Census Tract 61",
+        "01101006100",
+        "12.2",
+        "2062.0",
+        "272"
+      ],
+      [
+        "Census Tract 56.13",
+        "01101005613",
+        "12.1",
+        "4832.0",
+        "289"
+      ],
+      [
+        "Census Tract 4",
+        "01101000400",
+        "12.1",
+        "4267.0",
+        "659"
+      ],
+      [
+        "Census Tract 51.02",
+        "01101005102",
+        "12.0",
+        "4239.0",
+        "513"
+      ],
+      [
+        "Census Tract 29.02",
+        "01101002902",
+        "12.0",
+        "3875.0",
+        "178"
+      ],
+      [
+        "Census Tract 22.02",
+        "01101002202",
+        "12.0",
+        "884.0",
+        "474"
+      ],
+      [
+        "Census Tract 56.06",
+        "01101005606",
+        "12.0",
+        "4770.0",
+        "220"
+      ],
+      [
+        "Census Tract 54.02",
+        "01101005402",
+        "11.9",
+        "5486.0",
+        "364"
+      ],
+      [
+        "Census Tract 28",
+        "01101002800",
+        "11.7",
+        "4948.0",
+        "208"
+      ],
+      [
+        "Census Tract 57",
+        "01101005700",
+        "11.6",
+        "1417.0",
+        "4"
+      ],
+      [
+        "Census Tract 21",
+        "01101002100",
+        "11.4",
+        "3886.0",
+        "266"
+      ],
+      [
+        "Census Tract 18",
+        "01101001800",
+        "11.3",
+        "3375.0",
+        "301"
+      ],
+      [
+        "Census Tract 54.03",
+        "01101005403",
+        "11.1",
+        "3905.0",
+        "117"
+      ],
+      [
+        "Census Tract 54.10",
+        "01101005410",
+        "11.0",
+        "5070.0",
+        "126"
+      ],
+      [
+        "Census Tract 5",
+        "01101000500",
+        "10.9",
+        "2902.0",
+        "369"
+      ],
+      [
+        "Census Tract 13",
+        "01101001300",
+        "10.9",
+        "2094.0",
+        "343"
+      ],
+      [
+        "Census Tract 53.02",
+        "01101005302",
+        "10.7",
+        "2198.0",
+        "33"
+      ],
+      [
+        "Census Tract 51.01",
+        "01101005101",
+        "10.7",
+        "3604.0",
+        "158"
+      ],
+      [
+        "Census Tract 17",
+        "01101001700",
+        "10.6",
+        "5469.0",
+        "651"
+      ],
+      [
+        "Census Tract 56.05",
+        "01101005605",
+        "10.6",
+        "3712.0",
+        "121"
+      ],
+      [
+        "Census Tract 33.03",
+        "01101003303",
+        "10.6",
+        "2652.0",
+        "167"
+      ],
+      [
+        "Census Tract 33.04",
+        "01101003304",
+        "10.5",
+        "3723.0",
+        "102"
+      ],
+      [
+        "Census Tract 54.14",
+        "01101005414",
+        "10.5",
+        "3945.0",
+        "104"
+      ],
+      [
+        "Census Tract 2",
+        "01101000200",
+        "10.5",
+        "1440.0",
+        "222"
+      ],
+      [
+        "Census Tract 59.04",
+        "01101005904",
+        "10.5",
+        "2369.0",
+        "69"
+      ],
+      [
+        "Census Tract 60",
+        "01101006000",
+        "10.4",
+        "3209.0",
+        "57"
+      ],
+      [
+        "Census Tract 56.10",
+        "01101005610",
+        "10.4",
+        "1400.0",
+        "24"
+      ],
+      [
+        "Census Tract 58",
+        "01101005800",
+        "10.2",
+        "1918.0",
+        "0"
+      ],
+      [
+        "Census Tract 54.09",
+        "01101005409",
+        "10.2",
+        "2325.0",
+        "75"
+      ],
+      [
+        "Census Tract 19",
+        "01101001900",
+        "10.0",
+        "3110.0",
+        "250"
+      ],
+      [
+        "Census Tract 55.02",
+        "01101005502",
+        "10.0",
+        "3195.0",
+        "0"
+      ],
+      [
+        "Census Tract 26",
+        "01101002600",
+        "10.0",
+        "5458.0",
+        "440"
+      ]
+    ],
+    "answer": {
+      "points": [
+        "Census Tract 12 leads with a 14.0% adult asthma rate and 939 code violations in 2026.",
+        "Census Tract 10 follows with a 13.7% asthma rate and 329 code violations.",
+        "Census Tract 3 has a 13.2% asthma rate and 591 code violations.",
+        "Census Tract 56.14 and Tract 24 are tied at 13.1% asthma rates, with 73 and 602 code violations respectively."
+      ],
+      "caveats": [
+        "CDC asthma rates are model-based estimates from survey data, not direct measurements.",
+        "2026 code violation figures are \"so far\" as the year is still in progress (as of 2026-10-24).",
+        "Some tracts share identical asthma rates; rankings use the order shown in the result rows."
+      ],
+      "headline": "Census Tract 12 has the highest adult asthma rate at 14.0%, with 939 code violations reported this year.",
+      "how_sure": "The data covers 18,009 of 18,407 records located inside tracts (97.8% coverage); CDC asthma figures are model-based estimates from survey data, so they are described as estimated. Code violation counts come from 18,407 records filtered to 2026."
+    },
+    "checks": [
+      {
+        "id": "bridge_match",
+        "ok": true,
+        "detail": "18,009 of 18,407 located records fell inside a tract (97.8%); 398 outside, 0 without a location"
+      },
+      {
+        "id": "rows_m1_cdc",
+        "ok": true,
+        "detail": "m1_cdc: Zetaris rows 71 vs source's own count 71"
+      },
+      {
+        "id": "rows_m2_city",
+        "ok": true,
+        "detail": "m2_city: Zetaris rows 18,407 vs source's own count 18,407"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "50 result rows"
+      },
+      {
+        "id": "partial_period",
+        "ok": true,
+        "detail": "2026 is still in progress: its figures are \"so far\" (to 2026-10-24) and are not compared with full years without saying so"
+      }
+    ],
+    "headers": [
+      "tract_name",
+      "geoid",
+      "adult_asthma_rate",
+      "population",
+      "code_violations_2026"
+    ]
+  }
+}
