@@ -75,3 +75,59 @@ describe("API in live mode (limits)", () => {
     expect(third.json().code).toBe("RATE_LIMITED");
   });
 });
+
+describe("live progress over SSE", () => {
+  it("streams steps that happen after the viewer connects, then the end", async () => {
+    const run = { id: "", question: "q", created_at: new Date().toISOString(), finished_at: null, status: "running", rounds: 0, mode: "live", answer: null };
+    const db = {
+      query: async (sql: string, params?: string[]) => {
+        if (/FROM runs WHERE id/.test(sql)) return { rows: [{ ...run, id: params?.[0] }] };
+        return { rows: [] };
+      },
+    } as never;
+    const cfg = { meterless: { baseUrl: "http://127.0.0.1:9", model: "meterless/auto" }, openrouterKey: "x" } as never;
+    let emit: (e: never) => void = () => {};
+    let finish = () => {};
+    const runner = (_q: string, runId: string, onTrace: (e: never) => void) =>
+      new Promise<never>((_, reject) => {
+        emit = onTrace;
+        finish = () => reject(new Error("done"));
+        void runId;
+      });
+    const app = await buildServer({ sampleDir: "/nonexistent", live: { cfg, db, runner } });
+    await app.listen({ port: 0, host: "127.0.0.1" });
+    const base = `http://127.0.0.1:${(app.server.address() as { port: number }).port}`;
+    const { runId } = (await (await fetch(`${base}/api/ask`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: "Which tracts had the most code violations?" }) })).json()) as { runId: string };
+
+    const res = await fetch(`${base}/api/runs/${runId}/events`);
+    const reader = res.body!.getReader();
+    await new Promise((r) => setTimeout(r, 50));
+    const step = (seq: number) => ({ runId, seq, ts: new Date().toISOString(), agent: "planner", action: "plan", status: "ok", note: `step ${seq}` }) as never;
+    emit(step(1));
+    emit(step(2));
+    finish();
+    let body = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      body += new TextDecoder().decode(value);
+    }
+    expect(body).toContain("step 1");
+    expect(body).toContain("step 2");
+    expect(body).toContain("event: end");
+    await app.close();
+  });
+});
+
+describe("starting a run", () => {
+  it("creates the run row before replying, so the browser can open the run at once", async () => {
+    const queries: string[] = [];
+    const db = { query: async (sql: string) => (queries.push(sql), { rows: [] }) } as never;
+    const cfg = { meterless: { baseUrl: "http://127.0.0.1:9", model: "meterless/auto" }, openrouterKey: "x" } as never;
+    const runner = () => new Promise<never>(() => {});
+    const app = await buildServer({ sampleDir: "/nonexistent", live: { cfg, db, runner } });
+    const res = await app.inject({ method: "POST", url: "/api/ask", payload: { question: "Which tracts had the most code violations in 2025?" } });
+    expect(res.statusCode).toBe(200);
+    expect(queries.some((q) => /^INSERT INTO runs/.test(q))).toBe(true);
+  });
+});

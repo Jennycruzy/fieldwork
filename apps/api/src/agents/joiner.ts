@@ -21,7 +21,7 @@ export function tableCatalog(ctx: Ctx, wired: Wired[], bridged: string[]): strin
   for (const label of bridged) {
     const w = wired.find((x) => x.label === label)!;
     lines.push(
-      `fw_pg.tract_counts(run_id STRING, source STRING, geoid STRING, grp STRING, n INT): counts of "${w.title}" records per tract${w.groupField ? ` and per ${w.groupField} (grp)` : " (grp = 'all')"}. ALWAYS filter run_id = '${ctx.runId}' AND source = '${label}'. Filter: ${w.where}`,
+      `fw_pg.tract_counts(run_id STRING, source STRING, geoid STRING, grp STRING, n INT): counts of "${w.title}" records per tract: grp = 'all' is the total per tract${w.groupField ? `; other grp values split it by ${w.groupField}` : ""}. ALWAYS filter run_id = '${ctx.runId}' AND source = '${label}'. Filter: ${w.where}`,
     );
   }
   return lines;

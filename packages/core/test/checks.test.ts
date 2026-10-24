@@ -45,3 +45,16 @@ describe("PlanSchema", () => {
     expect(ok.success).toBe(true);
   });
 });
+
+describe("measure values", () => {
+  it("fails a measure that is 0 in every row (live run r_20261024_12ef8e joined on a group that did not exist)", () => {
+    const result = { headers: ["tract_name", "adult_asthma_rate", "code_violations_2026"], rows: [["Census Tract 12", "14.0", "0"], ["Census Tract 10", "13.7", "0"], ["Census Tract 3", "13.2", null]] };
+    const c = runChecks({ sourceCounts: [], resultRows: 3, result }).find((x) => x.id === "measure_values")!;
+    expect(c.ok).toBe(false);
+    expect(c.detail).toContain("code_violations_2026");
+  });
+  it("passes when some rows are 0 and others are not", () => {
+    const result = { headers: ["tract_name", "code_violations_2026"], rows: [["Census Tract 12", "939"], ["Census Tract 57", "0"]] };
+    expect(runChecks({ sourceCounts: [], resultRows: 2, result }).find((x) => x.id === "measure_values")!.ok).toBe(true);
+  });
+});

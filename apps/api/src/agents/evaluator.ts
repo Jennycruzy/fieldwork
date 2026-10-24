@@ -19,6 +19,7 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     bridge: bridged.length ? b : undefined,
     sourceCounts: wired.map((w) => ({ label: w.label, source: w.sourceCount, zetaris: w.zetarisCount, capped: w.capped })),
     resultRows: joined.result.rows.length,
+    result: joined.result,
     years: p.years,
     today: ctx.today,
     excludedTestRecords: wired.reduce((n, w) => n + w.excludedTestRecords, 0),
@@ -64,6 +65,14 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     VerdictSchema,
     8000,
   );
+  // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
+  const empty = checks.find((c) => c.id === "measure_values" && !c.ok);
+  if (empty && value.verdict === "APPROVE") {
+    value.verdict = "REVISE";
+    value.target = "join";
+    value.instruction = `${empty.detail}. Check the join keys and filter values against the table descriptions (for tract_counts, grp = 'all' is the total per tract).`;
+    value.reasons = [empty.detail, ...value.reasons].slice(0, 6);
+  }
   await ctx.trace.log({
     agent: "evaluator",
     action: "verdict",

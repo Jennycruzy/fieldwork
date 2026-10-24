@@ -42,8 +42,16 @@ export async function bridgeToTracts(ctx: Ctx, w: Wired): Promise<Bridged> {
   const res = placeInTracts(shapes, points);
 
   await ctx.db.query(`DELETE FROM tract_counts WHERE run_id = $1 AND source = $2`, [ctx.runId, w.label]);
+  // grp = 'all' always holds the tract's total; grouped sources add one row per group value as well.
   for (const [geoid, byGroup] of res.counts) {
+    const rows = new Map<string, number>();
+    let total = 0;
     for (const [grp, n] of byGroup) {
+      total += n;
+      if (grp !== "all") rows.set(grp, n);
+    }
+    rows.set("all", total);
+    for (const [grp, n] of rows) {
       await ctx.db.query(`INSERT INTO tract_counts (run_id, source, geoid, grp, n) VALUES ($1,$2,$3,$4,$5)`, [ctx.runId, w.label, geoid, grp, n]);
     }
   }

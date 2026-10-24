@@ -89,7 +89,9 @@ export function RunView({ id }: { id: string }) {
   }, [ended]);
 
   const reached = useMemo(() => new Set(events.map(stepOf).filter(Boolean)), [events]);
-  const current = events.length ? stepOf([...events].reverse().find((e) => stepOf(e))!) : undefined;
+  // The first events of a live run (provider check, run start) belong to no step yet.
+  const lastStep = [...events].reverse().find((e) => stepOf(e));
+  const current = lastStep ? stepOf(lastStep) : undefined;
   const last = events[events.length - 1];
   const waited = last ? Math.max(0, (tick - Date.parse(last.ts)) / 1000) : 0;
   const isRecorded = run?.mode === "recorded";

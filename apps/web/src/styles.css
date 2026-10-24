@@ -87,7 +87,7 @@ button.link { background: none; border: 0; padding: 0; color: var(--accent); fon
 .samples li { margin: 8px 0; }
 .samples button.link { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--ink); background: var(--bg); }
 .samples button.link:hover { border-color: var(--accent); }
-.samples li, .history li, .sources li { margin: 8px 0; }
+.history li, .sources li { margin: 8px 0; }
 details { margin-top: 14px; }
 summary { cursor: pointer; font-weight: 600; }
 pre { background: var(--code); padding: 12px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; font-size: .85rem; }

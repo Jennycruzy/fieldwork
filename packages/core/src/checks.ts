@@ -10,6 +10,7 @@ export interface CheckInput {
   bridge?: { matched: number; total: number; unmatched: number; invalid: number };
   sourceCounts: { label: string; source: number; zetaris: number; capped: boolean }[];
   resultRows: number;
+  result?: { headers: string[]; rows: (string | null)[][] }; // to catch a measure that is 0 or empty everywhere
   minGroupSize?: number; // smallest count behind any rate in the result
   years?: { from?: number | null; to?: number | null } | null;
   today?: Date;
@@ -40,6 +41,22 @@ export function runChecks(c: CheckInput): CheckResult[] {
   }
 
   out.push({ id: "has_rows", ok: c.resultRows > 0, detail: `${c.resultRows} result rows` });
+
+  // A numeric column that is 0 or empty in every row almost always means a join matched nothing.
+  if (c.result && c.result.rows.length > 1) {
+    const { headers, rows } = c.result;
+    const empty = headers.filter((_, j) => {
+      if (j === 0) return false;
+      const vals = rows.map((r) => r[j] ?? null);
+      const numeric = vals.every((v) => v === null || /^-?\d+(\.\d+)?$/.test(v));
+      return numeric && vals.every((v) => v === null || Number(v) === 0);
+    });
+    out.push({
+      id: "measure_values",
+      ok: empty.length === 0,
+      detail: empty.length === 0 ? "every measure column has real values" : `${empty.join(", ")} is 0 or empty in every row: the join most likely matched nothing`,
+    });
+  }
 
   if (c.minGroupSize !== undefined) {
     out.push({

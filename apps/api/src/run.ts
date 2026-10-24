@@ -52,7 +52,7 @@ export function newRunId(): string {
 export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace?: (e: RunEvent) => void; runId?: string } = {}): Promise<RunOutcome> {
   await migrate(db);
   const runId = opts.runId ?? newRunId();
-  await db.query(`INSERT INTO runs (id, question) VALUES ($1, $2)`, [runId, question]);
+  await db.query(`INSERT INTO runs (id, question) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING`, [runId, question]);
   const trace = new Trace(db, runId);
   if (opts.onTrace) trace.onEvent(opts.onTrace);
 

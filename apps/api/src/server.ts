@@ -72,6 +72,8 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
 
     const runId = newRunId();
     active = runId;
+    // The row exists before the reply, so the browser can open the run straight away.
+    await deps.live.db.query(`INSERT INTO runs (id, question) VALUES ($1, $2)`, [runId, question]);
     const emit = (e: RunEvent | "end") => listeners.get(runId)?.forEach((fn) => fn(e));
     deps.live
       .runner(question, runId, emit)
@@ -125,13 +127,19 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     if (active === id) {
       if (!listeners.has(id)) listeners.set(id, new Set());
       listeners.get(id)!.add(fn);
-      req.raw.on("close", () => listeners.get(id)?.delete(fn));
+      // The response closes when the viewer leaves; the request "closes" as soon as it has been read.
+      reply.raw.on("close", () => listeners.get(id)?.delete(fn));
     }
     const got = await getRun(id);
     if (!got) return reply.code(404).send({ code: "NOT_FOUND", message: "No run with that id." });
 
     reply.hijack();
     reply.raw.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive", "x-accel-buffering": "no" });
+    // Headers and a first line go out at once, so the viewer is connected even before the next step happens.
+    reply.raw.write(": connected\n\n");
+    // A comment every 20 s keeps proxies from closing a quiet stream during long model calls.
+    const keepAlive = setInterval(() => reply.raw.write(": still working\n\n"), 20_000);
+    reply.raw.on("close", () => clearInterval(keepAlive));
     const speed = got.run.mode === "recorded" ? Math.min(Math.max(Number(req.query.speed ?? 0) || 0, 0), 16) : 0;
     let last: number | undefined;
     let maxSeq = 0;
