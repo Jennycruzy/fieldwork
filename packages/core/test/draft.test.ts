@@ -23,6 +23,11 @@ describe("checkDraft", () => {
     expect(r.orderProblems[0]).toContain("rank 2, but in the rows it is rank 3");
   });
 
+  it("reads a LEFT JOIN row with an empty cell instead of crashing (live run 24 Oct)", () => {
+    const withNull = [...rows, ["Census Tract 54.06", "9.1", null]];
+    expect(checkDraft(["Census Tract 12 has the highest adult asthma rate at 14.0%, with 818 code violations in 2025"], headers, withNull).ok).toBe(true);
+  });
+
   it("catches a number that is not in the rows", () => {
     const r = checkDraft(["Census Tract 12 has 900 code violations"], headers, rows);
     expect(r.missingNumbers).toEqual(["900"]);

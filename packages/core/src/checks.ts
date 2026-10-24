@@ -84,7 +84,8 @@ export interface DraftCheck {
 }
 
 // `facts` are other numbers the run established and the Writer may quote (e.g. "15,103 of 15,439 records placed").
-export function checkDraft(texts: string[], headers: string[], rows: string[][], facts: string[] = []): DraftCheck {
+// Cells can be null (a LEFT JOIN row with no match), so every cell is read as possibly empty.
+export function checkDraft(texts: string[], headers: string[], rows: (string | null)[][], facts: string[] = []): DraftCheck {
   // Values come from every column except the first (the row's name, e.g. "Census Tract 11").
   // A share and its percent are the same figure (0.601 and 60.1%).
   const values = new Set<string>();
@@ -96,7 +97,7 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][],
   }
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
   for (const f of facts) for (const n of numbersIn(f)) values.add(n);
-  const names = rows.map((r) => r[0] ?? "");
+  const names = rows.map((r) => String(r[0] ?? ""));
   const missing: string[] = [];
   for (const t of texts) {
     for (const n of numbersIn(withoutNames(spellNumbers(t), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
@@ -105,7 +106,7 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][],
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
   // numeric column) share a rank, e.g. two tracts at 13.1% tie for 4th.
   const order: string[] = [];
-  const keyCol = rows[0] ? rows[0].findIndex((v, i) => i > 0 && /^-?\d+(\.\d+)?$/.test(v)) : -1;
+  const keyCol = rows[0] ? rows[0].findIndex((v, i) => i > 0 && /^-?\d+(\.\d+)?$/.test(v ?? "")) : -1;
   const rankOf = (idx: number): number => {
     if (keyCol < 0) return idx + 1;
     const v = rows[idx]![keyCol];
@@ -126,8 +127,8 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][],
   return { ok: missing.length === 0 && order.length === 0, missingNumbers: [...new Set(missing)], orderProblems: order };
 }
 
-function numbersIn(s: string): string[] {
-  return (s.replace(/,(?=\d{3}\b)/g, "").match(/-?\d+(?:\.\d+)?/g) ?? []).map(normaliseNumber);
+function numbersIn(s: string | null | undefined): string[] {
+  return ((s ?? "").replace(/,(?=\d{3}\b)/g, "").match(/-?\d+(?:\.\d+)?/g) ?? []).map(normaliseNumber);
 }
 
 function normaliseNumber(n: string): string {

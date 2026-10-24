@@ -1,6 +1,6 @@
 // CONTRACT TEST SERVER, not Meterless Nightshift. It answers the Meterless Runtime 1.4 provider contract
 // (v4) so Fieldwork's provider can be tested without a real runtime, as Meterless's own prompt asks
-// ("Build the mock runtime the spec describes first"). Every response carries x-fieldwork-contract-test: true.
+// ("Build the mock runtime ... first"). Every response carries x-fieldwork-contract-test: true.
 // Behaviour is chosen by the requested model id, e.g. "meterless/test.sse".
 
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
