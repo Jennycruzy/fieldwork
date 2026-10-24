@@ -1,0 +1,25 @@
+# Fieldwork Desk + API. Listens on loopback only; nginx serves it publicly.
+# Install: cp deploy/fieldwork.service /etc/systemd/system/ && systemctl daemon-reload && systemctl enable --now fieldwork
+[Unit]
+Description=Fieldwork Desk and API
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/fieldwork
+ExecStartPre=/usr/local/bin/npm run -s build
+ExecStart=/usr/local/bin/node --import tsx apps/api/src/serve.ts
+Environment=NODE_ENV=production
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=120
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/root/fieldwork
+ProtectKernelTunables=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

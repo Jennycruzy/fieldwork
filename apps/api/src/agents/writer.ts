@@ -30,6 +30,8 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     AnswerSchema,
     1500,
   );
+  // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
+  value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });
   return value;
 }

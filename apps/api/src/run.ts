@@ -43,9 +43,13 @@ export interface RunOutcome {
   message?: string;
 }
 
-export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace?: (e: RunEvent) => void } = {}): Promise<RunOutcome> {
+export function newRunId(): string {
+  return `r_${new Date().toISOString().slice(0, 10).replace(/-/g, "")}_${randomBytes(3).toString("hex")}`;
+}
+
+export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace?: (e: RunEvent) => void; runId?: string } = {}): Promise<RunOutcome> {
   await migrate(db);
-  const runId = `r_${new Date().toISOString().slice(0, 10).replace(/-/g, "")}_${randomBytes(3).toString("hex")}`;
+  const runId = opts.runId ?? newRunId();
   await db.query(`INSERT INTO runs (id, question) VALUES ($1, $2)`, [runId, question]);
   const trace = new Trace(db, runId);
   if (opts.onTrace) trace.onEvent(opts.onTrace);
@@ -177,7 +181,12 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
       runId,
       out.status,
       out.rounds,
-      JSON.stringify({ answer: out.answer, plan: out.plan, sql: out.joined?.sql, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
+      JSON.stringify({
+        question,
+        answer: out.answer,
+        sources: out.wired.map((w) => ({ title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
+        plan: out.plan,
+        sql: out.joined?.sql, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
     ]);
     await trace.log({ agent: "run", action: "finish", status: out.status === "answered" ? "ok" : "info", note: `status ${out.status} after ${out.rounds} round(s)` });
   }

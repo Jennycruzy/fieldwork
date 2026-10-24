@@ -1,0 +1,454 @@
+{
+  "id": "r_20261024_b552f2",
+  "question": "Which Montgomery census tracts had the most code violations in 2025, and what share of adults there have diabetes?",
+  "created_at": "2026-10-24T14:49:24.028Z",
+  "finished_at": "2026-10-24T14:50:11.197Z",
+  "status": "answered",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT t.name AS tract_name, t.geoid, CAST(c.n AS DOUBLE) AS code_violations_2025, CAST(h.diabetes_crudeprev AS DOUBLE) AS diabetes_share_adults, CAST(h.totalpopulation AS DOUBLE) AS total_population FROM fw_pg.tracts t JOIN fw_pg.tract_counts c ON c.geoid = t.geoid AND c.run_id = 'r_20261024_b552f2' AND c.source = 'm1_city' AND c.grp = 'all' JOIN session.fw_b552f2_m2_cdc h ON h.tractfips = t.geoid ORDER BY c.n DESC LIMIT 50",
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "number of code violations in each census tract in 2025",
+          "search_terms": [
+            "code violations",
+            "violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "share of adults with diabetes in each census tract",
+          "search_terms": [
+            "diabetes"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Census Tract 11",
+        "01101001100",
+        "1125.0",
+        "27.6",
+        "2684.0"
+      ],
+      [
+        "Census Tract 25",
+        "01101002500",
+        "955.0",
+        "22.5",
+        "2315.0"
+      ],
+      [
+        "Census Tract 12",
+        "01101001200",
+        "818.0",
+        "28.0",
+        "1455.0"
+      ],
+      [
+        "Census Tract 22.01",
+        "01101002201",
+        "765.0",
+        "26.3",
+        "3754.0"
+      ],
+      [
+        "Census Tract 3",
+        "01101000300",
+        "702.0",
+        "24.6",
+        "1261.0"
+      ],
+      [
+        "Census Tract 17",
+        "01101001700",
+        "670.0",
+        "13.5",
+        "5469.0"
+      ],
+      [
+        "Census Tract 23",
+        "01101002300",
+        "657.0",
+        "27.2",
+        "2501.0"
+      ],
+      [
+        "Census Tract 4",
+        "01101000400",
+        "515.0",
+        "22.7",
+        "4267.0"
+      ],
+      [
+        "Census Tract 24",
+        "01101002400",
+        "515.0",
+        "31.5",
+        "1758.0"
+      ],
+      [
+        "Census Tract 16",
+        "01101001600",
+        "473.0",
+        "21.5",
+        "3830.0"
+      ],
+      [
+        "Census Tract 26",
+        "01101002600",
+        "374.0",
+        "14.8",
+        "5458.0"
+      ],
+      [
+        "Census Tract 54.02",
+        "01101005402",
+        "364.0",
+        "17.4",
+        "5486.0"
+      ],
+      [
+        "Census Tract 15",
+        "01101001500",
+        "350.0",
+        "9.9",
+        "4112.0"
+      ],
+      [
+        "Census Tract 30",
+        "01101003000",
+        "313.0",
+        "25.2",
+        "1904.0"
+      ],
+      [
+        "Census Tract 18",
+        "01101001800",
+        "274.0",
+        "17.9",
+        "3375.0"
+      ],
+      [
+        "Census Tract 10",
+        "01101001000",
+        "265.0",
+        "25.3",
+        "1200.0"
+      ],
+      [
+        "Census Tract 51.02",
+        "01101005102",
+        "248.0",
+        "22.2",
+        "4239.0"
+      ],
+      [
+        "Census Tract 21",
+        "01101002100",
+        "239.0",
+        "17.6",
+        "3886.0"
+      ],
+      [
+        "Census Tract 7",
+        "01101000700",
+        "237.0",
+        "28.2",
+        "997.0"
+      ],
+      [
+        "Census Tract 22.02",
+        "01101002202",
+        "234.0",
+        "24.5",
+        "884.0"
+      ],
+      [
+        "Census Tract 29.02",
+        "01101002902",
+        "230.0",
+        "22.3",
+        "3875.0"
+      ],
+      [
+        "Census Tract 13",
+        "01101001300",
+        "226.0",
+        "17.7",
+        "2094.0"
+      ],
+      [
+        "Census Tract 54.10",
+        "01101005410",
+        "219.0",
+        "12.2",
+        "5070.0"
+      ],
+      [
+        "Census Tract 56.13",
+        "01101005613",
+        "218.0",
+        "20.2",
+        "4832.0"
+      ],
+      [
+        "Census Tract 59.02",
+        "01101005902",
+        "211.0",
+        "26.3",
+        "3212.0"
+      ],
+      [
+        "Census Tract 32",
+        "01101003200",
+        "208.0",
+        "21.9",
+        "5741.0"
+      ],
+      [
+        "Census Tract 56.06",
+        "01101005606",
+        "204.0",
+        "17.0",
+        "4770.0"
+      ],
+      [
+        "Census Tract 5",
+        "01101000500",
+        "189.0",
+        "17.3",
+        "2902.0"
+      ],
+      [
+        "Census Tract 6",
+        "01101000600",
+        "185.0",
+        "28.5",
+        "1763.0"
+      ],
+      [
+        "Census Tract 2",
+        "01101000200",
+        "183.0",
+        "22.1",
+        "1440.0"
+      ],
+      [
+        "Census Tract 51.01",
+        "01101005101",
+        "173.0",
+        "15.3",
+        "3604.0"
+      ],
+      [
+        "Census Tract 28",
+        "01101002800",
+        "171.0",
+        "17.4",
+        "4948.0"
+      ],
+      [
+        "Census Tract 20",
+        "01101002000",
+        "163.0",
+        "13.4",
+        "4750.0"
+      ],
+      [
+        "Census Tract 14",
+        "01101001400",
+        "156.0",
+        "9.1",
+        "3555.0"
+      ],
+      [
+        "Census Tract 54.03",
+        "01101005403",
+        "156.0",
+        "11.6",
+        "3905.0"
+      ],
+      [
+        "Census Tract 19",
+        "01101001900",
+        "153.0",
+        "13.9",
+        "3110.0"
+      ],
+      [
+        "Census Tract 33.04",
+        "01101003304",
+        "153.0",
+        "12.9",
+        "3723.0"
+      ],
+      [
+        "Census Tract 54.12",
+        "01101005412",
+        "152.0",
+        "12.5",
+        "6381.0"
+      ],
+      [
+        "Census Tract 31",
+        "01101003100",
+        "151.0",
+        "21.8",
+        "3436.0"
+      ],
+      [
+        "Census Tract 27",
+        "01101002700",
+        "149.0",
+        "14.6",
+        "4349.0"
+      ],
+      [
+        "Census Tract 33.01",
+        "01101003301",
+        "138.0",
+        "13.5",
+        "3470.0"
+      ],
+      [
+        "Census Tract 61",
+        "01101006100",
+        "128.0",
+        "26.4",
+        "2062.0"
+      ],
+      [
+        "Census Tract 29.01",
+        "01101002901",
+        "107.0",
+        "21.6",
+        "3313.0"
+      ],
+      [
+        "Census Tract 54.09",
+        "01101005409",
+        "91.0",
+        "12.5",
+        "2325.0"
+      ],
+      [
+        "Census Tract 54.14",
+        "01101005414",
+        "86.0",
+        "10.7",
+        "3945.0"
+      ],
+      [
+        "Census Tract 60",
+        "01101006000",
+        "81.0",
+        "19.4",
+        "3209.0"
+      ],
+      [
+        "Census Tract 33.03",
+        "01101003303",
+        "76.0",
+        "16.2",
+        "2652.0"
+      ],
+      [
+        "Census Tract 56.05",
+        "01101005605",
+        "72.0",
+        "14.4",
+        "3712.0"
+      ],
+      [
+        "Census Tract 56.09",
+        "01101005609",
+        "70.0",
+        "9.6",
+        "5034.0"
+      ],
+      [
+        "Census Tract 55.03",
+        "01101005503",
+        "60.0",
+        "10.2",
+        "6176.0"
+      ]
+    ],
+    "answer": {
+      "points": [
+        "Census Tract 11 had 1,125 code violations in 2025, the highest count among all tracts.",
+        "Census Tract 25 had 955 violations, the second-highest, with 22.5% of adults having diabetes.",
+        "Census Tract 12 had 818 violations and 28.0% of adults with diabetes, the third-highest violation count.",
+        "The top three tracts by violations—Tract 11, Tract 25, and Tract 12—also have diabetes shares ranging from 22.5% to 28.0%."
+      ],
+      "caveats": [
+        "CDC diabetes values are model-based estimates from survey data, not direct measurements.",
+        "Tracts with equal violation counts share ranks; the ordering follows the result row sequence.",
+        "Some records were excluded from the source data; 336 records fell outside any tract."
+      ],
+      "headline": "Census Tract 11 had the most code violations in 2025 with 1,125, and 27.6% of its adults have diabetes.",
+      "how_sure": "All 15,103 located records matched to tracts (97.8%); CDC diabetes figures are model-based estimates from survey data for 71 records."
+    },
+    "checks": [
+      {
+        "id": "bridge_match",
+        "ok": true,
+        "detail": "15,103 of 15,439 located records fell inside a tract (97.8%); 336 outside, 0 without a location"
+      },
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 15,439 vs source's own count 15,439"
+      },
+      {
+        "id": "rows_m2_cdc",
+        "ok": true,
+        "detail": "m2_cdc: Zetaris rows 71 vs source's own count 71"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "50 result rows"
+      }
+    ],
+    "headers": [
+      "tract_name",
+      "geoid",
+      "code_violations_2025",
+      "diabetes_share_adults",
+      "total_population"
+    ],
+    "sources": [
+      {
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "title": "Code Violations",
+        "filter": "Year = '2025'",
+        "records": 15439,
+        "sourceCount": 15439
+      },
+      {
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "filter": "countyfips = '01101' AND (diabetes_crudeprev IS NOT NULL)",
+        "records": 71,
+        "sourceCount": 71
+      }
+    ],
+    "question": "Which Montgomery census tracts had the most code violations in 2025, and what share of adults there have diabetes?"
+  }
+}

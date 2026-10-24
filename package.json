@@ -9,24 +9,35 @@
     "node": ">=22"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json",
     "test": "vitest run",
     "ask": "tsx apps/api/src/cli.ts ask",
     "runtime": "tsx apps/api/src/cli.ts runtime",
     "wordscan": "node scripts/wordscan.mjs",
-    "conformance:hmem": "HMEM_IMPL=$PWD/packages/hmem/src/index.ts tsx packages/hmem/conformance/runner.ts"
+    "conformance:hmem": "HMEM_IMPL=$PWD/packages/hmem/src/index.ts tsx packages/hmem/conformance/runner.ts",
+    "build": "vite build apps/web",
+    "dev:web": "vite apps/web",
+    "start": "tsx apps/api/src/serve.ts",
+    "sample": "vite build apps/web && FW_SAMPLE=1 tsx apps/api/src/serve.ts"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
     "@types/pg": "8.11.10",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
     "tsx": "4.19.2",
     "typescript": "5.7.2",
+    "vite": "5.4.11",
     "vitest": "2.1.8"
   },
   "dependencies": {
+    "@fastify/static": "8.0.3",
     "@turf/boolean-point-in-polygon": "7.1.0",
     "@turf/helpers": "7.1.0",
+    "fastify": "5.2.0",
     "pg": "8.13.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "zod": "3.24.1"
   }
 }
