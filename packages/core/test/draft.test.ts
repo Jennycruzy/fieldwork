@@ -78,3 +78,13 @@ describe("live runs r_20261024_430abd and r_20261024_7d973f", () => {
     expect(checkDraft(["Tract 11 had 1,126 violations"], h, rr).ok).toBe(false);
   });
 });
+
+describe("live run r_20261024_72540e", () => {
+  it("accepts numbers the run's own checks established, and small counts", () => {
+    const h = ["name", "n", "diabetes_pct"];
+    const rr = [["Census Tract 11", "1125", "27.6"], ["Census Tract 25", "955", "22.5"]];
+    const facts = ["15,103 of 15,439 located records fell inside a tract (97.8%)"];
+    const r = checkDraft(["15,103 of 15,439 records (97.8%) were placed in tracts; the top 5 tracts follow"], h, rr, facts);
+    expect(r.missingNumbers).toEqual([]);
+  });
+});

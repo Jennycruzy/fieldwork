@@ -131,12 +131,13 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     out.joined = joined;
     // The draft is checked against the rows; a slip goes back to the Writer once with the exact problems.
     let draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds);
-    let dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows);
+    const facts = out.checks.map((c) => c.detail);
+    let dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows, facts);
     if (!dc.ok) {
       const problems = [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems].join("; ");
       await trace.log({ agent: "evaluator", action: "check:draft", status: "error", note: `Sent the draft back to the Writer: ${problems}` });
       draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds, problems);
-      dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows);
+      dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows, facts);
     }
     await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
     if (!dc.ok) out.status = "partial";

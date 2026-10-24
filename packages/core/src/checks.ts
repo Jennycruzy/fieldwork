@@ -83,7 +83,8 @@ export interface DraftCheck {
   orderProblems: string[];
 }
 
-export function checkDraft(texts: string[], headers: string[], rows: string[][]): DraftCheck {
+// `facts` are other numbers the run established and the Writer may quote (e.g. "15,103 of 15,439 records placed").
+export function checkDraft(texts: string[], headers: string[], rows: string[][], facts: string[] = []): DraftCheck {
   // Values come from every column except the first (the row's name, e.g. "Census Tract 11").
   // A share and its percent are the same figure (0.601 and 60.1%).
   const values = new Set<string>();
@@ -94,10 +95,11 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][])
     if (Math.abs(x) <= 100) values.add(normaliseNumber(String(Number((x / 100).toFixed(6)))));
   }
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
+  for (const f of facts) for (const n of numbersIn(f)) values.add(n);
   const names = rows.map((r) => r[0] ?? "");
   const missing: string[] = [];
   for (const t of texts) {
-    for (const n of numbersIn(withoutNames(spellNumbers(t), names))) if (!values.has(n) && !isYear(n) && !nearAny(n, values)) missing.push(n);
+    for (const n of numbersIn(withoutNames(spellNumbers(t), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
   }
 
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
@@ -131,6 +133,12 @@ function numbersIn(s: string): string[] {
 function normaliseNumber(n: string): string {
   const x = Number(n);
   return Number.isInteger(x) ? String(x) : String(Number(x.toFixed(6)));
+}
+
+// "top 5", "3 tracts": small counting numbers are not data claims.
+function isSmallCount(n: string): boolean {
+  const x = Number(n);
+  return Number.isInteger(x) && x >= 1 && x <= 10;
 }
 
 function isYear(n: string): boolean {
