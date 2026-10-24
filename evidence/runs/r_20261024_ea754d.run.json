@@ -1,0 +1,38 @@
+{
+  "id": "r_20261024_ea754d",
+  "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
+  "created_at": "2026-10-24T21:01:05.993Z",
+  "finished_at": "2026-10-24T21:01:06.134Z",
+  "status": "budget",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_ea754d",
+          "type": "run",
+          "attrs": {
+            "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?"
+          },
+          "source": {
+            "at": "2026-10-24T21:01:06.028Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Today's live model calls are used up.",
+    "sources": [],
+    "memories": [],
+    "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-178",
+        "content": "World state for Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?: [{\"id\":\"run:fieldwork:r_20261024_ea754d\",\"type\":\"run\",\"attrs\":{\"question\":\"Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?\"}}]"
+      }
+    ]
+  }
+}

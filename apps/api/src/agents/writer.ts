@@ -11,6 +11,7 @@ export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[],
         content: `${SYSTEM_BASE}
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
 Use only numbers that appear in the result rows. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
+Mention CDC or model-based health estimates only if a listed source is CDC. For relationship comparisons, report the correlation and paired sample size; do not introduce tract rankings or named examples.
 Use the supplied primary_measure_ranks exactly if you mention an ordinal rank; omit other rank claims.
 The how_sure line is checked too: no claims of certainty, statistical significance, causation or a universal pattern. A correlation is a descriptive association, not proof. Quote the paired_tracts value for correlation sample size, not the preview length. State the plan's choice of counts or rates and correct denominator in the answer. Never treat a repeated correlation column as evidence of consistency. Do not add ranking claims for supporting measures.
 Keep the order of the result rows when you describe a ranking ("next" means the next row; equal values share a rank). Caveats must come from the checks listed or from the nature of the sources (e.g. CDC values are model-based estimates from survey data); never invent limits such as sample sizes that no check reported. If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
@@ -20,7 +21,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
         role: "user",
         content:
           `Question: ${question}\n` +
-          dataBlock("primary_measure_ranks", p.output === "ranking" ? joined.result.rows.slice(0,12).map((r)=>({name:r[0],measure:joined.result.headers[1],value:r[1],rank:1+joined.result.rows.filter((other)=>other[1]!=null && r[1]!=null && (/lowest|fewest|smallest|ascending/i.test(p.analysis?.rank_measure ?? "") ? Number(other[1])<Number(r[1]) : Number(other[1])>Number(r[1]))).length})) : []) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", [joined.result.headers, ...joined.result.rows]) +
+          dataBlock("primary_measure_ranks", p.output === "ranking" ? joined.result.rows.slice(0,12).map((r)=>({name:r[0],measure:joined.result.headers[1],value:r[1],rank:1+joined.result.rows.filter((other)=>other[1]!=null && r[1]!=null && (/lowest|fewest|smallest|ascending/i.test(p.analysis?.rank_measure ?? "") ? Number(other[1])<Number(r[1]) : Number(other[1])>Number(r[1]))).length})) : []) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : [joined.result.headers, ...joined.result.rows]) +
           "\n" +
           dataBlock("checks", checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`)) +
           "\n" +

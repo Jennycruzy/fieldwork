@@ -26,6 +26,8 @@ export interface BridgeResult {
   total: number;
   duplicates: number;
   outside: PointRec[];
+  assignments: Map<string,string>;
+  retained: Set<string>;
 }
 
 // ArcGIS polygons list outer rings clockwise and holes counter-clockwise; turf wants GeoJSON polygons.
@@ -53,11 +55,14 @@ export function bridge(tracts: Tract[], points: PointRec[]): BridgeResult {
   const counts = new Map<string, Map<string, number>>();
   let matched = 0, unmatched = 0, invalid = 0, duplicates = 0;
   const seen=new Set<string>();
+  const retained=new Set<string>();
+  const assignments=new Map<string,string>();
   const outside: PointRec[]=[];
   for (const p of points) {
     const key=p.caseId?.trim() || p.id;
     if(seen.has(key)) { duplicates++; continue; }
     seen.add(key);
+    retained.add(p.id);
     if (!Number.isFinite(p.lon) || !Number.isFinite(p.lat) || Math.abs(p.lon)>180 || Math.abs(p.lat)>90) {
       invalid++;
       continue;
@@ -70,12 +75,13 @@ export function bridge(tracts: Tract[], points: PointRec[]): BridgeResult {
       continue;
     }
     matched++;
+    assignments.set(p.id,hit.geoid);
     const group = p.group ?? "all";
     const byGroup = counts.get(hit.geoid) ?? new Map<string, number>();
     byGroup.set(group, (byGroup.get(group) ?? 0) + 1);
     counts.set(hit.geoid, byGroup);
   }
-  return { counts, matched, unmatched, invalid, total: points.length-duplicates, duplicates, outside };
+  return { counts, matched, unmatched, invalid, total: points.length-duplicates, duplicates, outside, assignments, retained };
 }
 
 type Box = [number, number, number, number];

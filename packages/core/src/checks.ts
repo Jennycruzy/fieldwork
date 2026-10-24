@@ -10,6 +10,7 @@ export interface CheckInput {
   bridge?: { matched: number; total: number; unmatched: number; invalid: number };
   sourceCounts: { label: string; source: number; zetaris: number; capped: boolean }[];
   resultRows: number;
+  verifiedZeroColumns?: string[];
   result?: { headers: string[]; rows: (string | null)[][] }; // to catch a measure that is 0 or empty everywhere
   minGroupSize?: number; // smallest count behind any rate in the result
   years?: { from?: number | null; to?: number | null } | null;
@@ -47,7 +48,7 @@ export function runChecks(c: CheckInput): CheckResult[] {
   if (c.result && c.result.rows.length > 1) {
     const { headers, rows } = c.result;
     const empty = headers.filter((_, j) => {
-      if (j === 0) return false;
+      if (j === 0 || c.verifiedZeroColumns?.includes(headers[j]!)) return false;
       const vals = rows.map((r) => r[j] ?? null);
       const numeric = vals.every((v) => v === null || /^-?\d+(\.\d+)?$/.test(v));
       return numeric && vals.every((v) => v === null || Number(v) === 0);
@@ -118,7 +119,8 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   for (const f of facts) for (const n of numbersIn(f.replace(/\b(?:countyfips|tractfips|geoid)\s*[:=]\s*['"]?\d+['"]?/gi," ")) ) values.add(n);
   const names = rows.map((r) => String(r[0] ?? ""));
   const missing: string[] = [];
-  for (const t of texts) {
+  for (const original of texts) {
+    const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
     for (const n of numbersIn(withoutNames(spellNumbers(knownIdentifiers(t, facts)), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
   }
 
@@ -131,9 +133,17 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     const v = rows[idx]![keyCol];
     return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
   };
-  for (const t of texts) {
-    if (/\b(causes?|caused|proves?|guarantees?|statistically significant|certain|conclusive)\b/i.test(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
+  for (const original of texts) {
+    const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
+    if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     if (UNIVERSAL.test(t)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
+    if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
+      for(let i=0;i<names.length;i++) if(mentions(t,names[i]!)) {
+        const errors=columnRankProblems(t,i,names,headers,rows);
+        if(errors) order.push(...errors);
+        else {const rank=claimedRank(t);if(rank!==undefined && rank!==rankOf(i)) order.push(`The stated tie for ${names[i]} is not supported by its actual rank.`);}
+      }
+    }
     const said = names.reduce((best, n, i) => (n && mentions(t, n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
     // A rank claim next to one of the row's own values is checked against that value's column
     // ("the highest blood pressure rate at 59.2%" -> rank of 59.2 in its column), not the row order.
@@ -198,15 +208,18 @@ function withoutNames(t: string, names: string[]): string {
   for (const n of names) {
     if (!n) continue;
     const short = n.replace(/^Census\s+/i, "");
-    s = s.split(n).join(" ").split(short).join(" ");
+    for(const name of [n,short]) {
+      const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+      s=s.replace(new RegExp(`(?<![\\w.])${escaped}(?![\\w.])`,"gi")," ");
+    }
   }
   return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,|and)\s*\d+(?:\.\d+)?)*/gi, " ");
 }
 
 function mentions(t: string, name: string): boolean {
-  if (t.includes(name)) return true;
-  const short = name.replace(/^Census\s+/i, "");
-  return short !== name && new RegExp(`\\b${short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(t);
+  const escaped=(v:string)=>v.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const short=name.replace(/^Census\s+/i,"");
+  return [name,short].some(n=>new RegExp(`(?<![\\w.])${escaped(n)}(?![\\w.])`,"i").test(t));
 }
 
 // "in every row", "consistently", "without exception": claims a correlation can't support.
@@ -289,4 +302,19 @@ function knownIdentifiers(text: string, facts: string[]): string {
     const expression=new RegExp(`\\b${field}\\s*[:=]\\s*['"]?${id}['"]?`,"i");
     return facts.some((f)=>expression.test(f)) ? " " : match;
   });
+}
+
+function expandTractLists(text:string):string {
+ return text.replace(/\b(?:Census\s+)?Tracts\s+(\d+(?:\.\d+)?(?:\s*(?:,|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
+}
+
+function unsupportedCertainty(text:string):boolean {
+ for(const clause of text.split(/\bbut\b|[;!?]|(?<=[.])\s+(?=[A-Z])/i)) {
+  for(const match of clause.matchAll(/\b(causes?|caused|proves?|guarantees?|statistically significant|certain|conclusive)\b/gi)) {
+   const prior=clause.slice(0,match.index);
+   const negated=/\b(?:does not|do not|cannot|can't|doesn't)\s+(?:establish|show|prove|demonstrate|imply|mean|confirm)\b[^;!?]*$/i.test(prior)||/\b(?:does|do|did|is|are)\s+not\s*$/i.test(prior);
+   if(!negated)return true;
+  }
+ }
+ return false;
 }

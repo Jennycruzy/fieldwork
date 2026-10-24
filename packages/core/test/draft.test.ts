@@ -121,3 +121,24 @@ describe("checkDraft on a correlation answer", () => {
     expect(checkDraft(["Tracts with more code violations tend to have higher blood pressure rates (correlation 0.641)"], h, r).ok).toBe(true);
   });
 });
+
+it("checks every tract in a plural tie against the ranked column",()=>{
+ const headers=["name","count"];const rows=[["Census Tract 11","1125"],["Census Tract 25","955"],["Census Tract 12","818"],["Census Tract 16","700"],["Census Tract 17","650"],["Census Tract 22","600"],["Census Tract 3","591"],["Census Tract 24","515"],["Census Tract 4","515"]];
+ expect(checkDraft(["Census Tracts 24 and 4 each had 515 violations, sharing the 8th rank."],headers,rows).ok).toBe(true);
+ expect(checkDraft(["Census Tracts 24 and 4 each had 515 violations, sharing the 7th rank."],headers,rows).ok).toBe(false);
+ expect(checkDraft(["Census Tracts 24 and 3 each had 515 violations, sharing the 8th rank."],headers,rows).ok).toBe(false);
+});
+
+it("recognizes lowercase tract names and Unicode rank punctuation",()=>{
+ const rows=[["Census Tract 12","14"],["Census Tract 10","13.7"]];
+ expect(checkDraft(["tract 12 has the highest rate (14)."],["name","rate"],rows).ok).toBe(true);
+ expect(checkDraft(["tract 10 has the 2nd‑highest rate (13.7)."],["name","rate"],rows).ok).toBe(true);
+});
+it("allows an explicit denial of causation while rejecting a positive causal claim",()=>{
+ expect(checkDraft(["The correlation does not establish that violations cause higher prevalence."],["name","value"],[["A","1"]]).ok).toBe(true);
+ expect(checkDraft(["Violations cause prevalence, but not in every place."],["name","value"],[["A","1"]]).ok).toBe(false);
+});
+
+it("a negation cannot excuse a later causal claim",()=>{
+ expect(checkDraft(["This does not establish a relationship. Code violations cause hypertension."],["name","count"],[["Census Tract 1","100"]]).ok).toBe(false);
+});

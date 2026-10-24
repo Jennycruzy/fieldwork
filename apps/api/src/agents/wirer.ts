@@ -1,6 +1,6 @@
 import { WiringSchema, looksLikeTestValue, notice, FieldworkError, type Plan } from "@fieldwork/core";
 import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
-import { featurePageUrl, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
+import { featurePageUrl, observationRoles, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
 import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
@@ -18,6 +18,16 @@ export interface Wired {
   licenceUrl?: string;
   caseIdField?: string;
   groupField?: string;
+  dateField?:string;
+  yearField?:string;
+  monthField?:string;
+  categoryField?:string;
+  valueField?:string;
+  entityField?:string;
+  entityLocationField?:string;
+  valueKind?:string;
+  normalized?:boolean;
+  coverage?:{earliest:string|null;latest:string|null;firstPeriod:number|null;lastPeriod:number|null;periods:number};
   where: string;
   sourceCount: number;
   zetarisCount: number;
@@ -27,7 +37,6 @@ export interface Wired {
 }
 
 const PAGE = 2000;
-const MAX_PAGES = 15;
 
 // Each wiring round gets its own table names (Zetaris refuses to redefine a session table).
 export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string, version = 1): Promise<Wired[]> {
@@ -41,6 +50,7 @@ export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: strin
 You are the Wirer. For each chosen dataset decide the filter and the fields needed to answer the plan.
 ArcGIS layers use SQL-92 where clauses on their own fields (e.g. Year = '2025' when Year is a string, CaseDate >= DATE '2025-01-01' for dates).
 Socrata (CDC) datasets use SoQL where clauses (e.g. countyfips = '01101'). The county restriction is added for you; do not add it.
+Do not add postal City/STATE restrictions: the spatial bridge determines county tract membership. Do not remove null statuses or categories unless the request explicitly asks for them.
 Choose only fields that exist in the dataset's field list. For city records include a field to group counts by if the question asks about kinds of records (e.g. a type field), else null.
 Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "group_field": "..." | null}]}`,
       },
@@ -66,7 +76,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const c = chosen.find((x) => x.measureId === w.measure_id);
     if (!c) continue;
     const known = new Set(c.fields.map((f) => f.name));
-    const fields = w.fields.filter((f) => known.has(f));
+    const fields = w.fields.filter((f) => known.has(f) && !/owner|contractor|address|phone|email|complaint|remark|description/i.test(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
     if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", `${c.candidate.title} publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.`);
     out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field && known.has(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
@@ -116,6 +126,8 @@ async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: strin
   const objectIdField=c.fields.find((f)=>f.type === "oid")?.name ?? "OBJECTID";
   const pageSize=Math.min(PAGE,c.maxRecordCount ?? PAGE);
   let where = modelWhere?.trim() || "1=1";
+  const aligned=withoutPostalFilters(where);
+  if(aligned!==where) {where=aligned||"1=1";await ctx.trace.log({agent:"wirer",action:"filter_alignment",status:"info",note:"Postal city/state labels do not define tract geography; membership is checked against the county tract boundaries."});}
 
   // Data-quality rule: exclude values that look like test records in status/type fields (one DEBUG_TEST record seen live).
   let excluded = 0;
@@ -133,9 +145,11 @@ async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: strin
   }
 
   const sourceCount = await layerCount(layer, where);
-  const pages = Math.min(Math.ceil(sourceCount / pageSize), MAX_PAGES);
-  const caseIdField=c.fields.find((f)=>/^(OffenceNum|CaseID|CaseNumber|CaseNo|RequestID|IncidentID)$/i.test(f.name))?.name;
-  const outFields = [...new Set([objectIdField, ...(caseIdField ? [caseIdField] : []), ...fields, ...(groupField ? [groupField] : [])])];
+  const pages = Math.ceil(sourceCount / pageSize);
+  const caseIdField=c.fields.find((f)=>/^(OffenceNum|CaseID|CaseNumber|CaseNo|Request_?ID|IncidentID|PermitNo)$/i.test(f.name))?.name;
+  const {dateField,yearField,monthField,categoryField,valueField,valueKind,entityField,entityLocationField}=observationRoles(c.fields,!!c.geometryType,groupField);
+  const roles=[dateField,yearField,monthField,categoryField,valueField,entityField,entityLocationField].filter((x):x is string=>!!x);
+  const outFields = [...new Set([objectIdField, ...roles, ...(caseIdField ? [caseIdField] : []), ...fields, ...(groupField ? [groupField] : [])])];
   const tables: string[] = [];
   let zetarisCount = 0;
   for (let i = 0; i < pages; i++) {
@@ -154,7 +168,7 @@ async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: strin
     note: `${label}: ${zetarisCount.toLocaleString("en-US")} records read through Zetaris in ${pages} page(s); the city's server reports ${sourceCount.toLocaleString("en-US")}${capped ? " (more than Fieldwork reads in one run)" : ""}`,
     rows: zetarisCount,
   });
-  return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: c.geometryType ? "arcgis_features" : "arcgis_table", objectIdField, tables, fields: outFields, caseIdField, groupField, where, sourceCount, zetarisCount, capped, excludedTestRecords: excluded, sourceUrl: layer };
+  return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: c.geometryType ? "arcgis_features" : "arcgis_table", dateField,yearField,monthField,categoryField,valueField,valueKind,entityField,entityLocationField, objectIdField, tables, fields: outFields, caseIdField, groupField, where, sourceCount, zetarisCount, capped, excludedTestRecords: excluded, sourceUrl: layer };
 }
 
 // Test the request first; only then create the table Zetaris will query.

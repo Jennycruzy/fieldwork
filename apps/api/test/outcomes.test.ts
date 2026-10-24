@@ -20,7 +20,7 @@ vi.mock("../src/agents/writer.js",()=>({write:vi.fn()}));
 vi.mock("../src/memory.js",()=>({learnFromRun:vi.fn(async()=>{})}));
 vi.mock("@fieldwork/hmem",async(original)=>{const mod=await original<typeof import("@fieldwork/hmem")>();return {...mod,loadMemory:async()=>new mod.HMEM()};});
 const cfg={openrouterKey:"unit-test-key",dailyCalls:300,meterless:{baseUrl:"http://127.0.0.1:8088/v1",model:"unit"},zetaris:{url:"http://127.0.0.1:3000",email:"unit",password:"unit"},place:{name:"Montgomery, AL",countyName:"Montgomery",stateAbbr:"AL",stateFips:"01",countyFips:"101"}} as Config;
-const db={query:vi.fn(async()=>({rows:[],rowCount:1}))} as unknown as Db;
+const db={connect:vi.fn(async()=>({query:vi.fn(async()=>({rows:[{held:true}]})),release:vi.fn()})),query:vi.fn(async()=>({rows:[],rowCount:1}))} as unknown as Db;
 const p:Plan={in_scope:true,geography:"city",measures:[],output:"list",analysis:{basis:"counts",denominator:"none",relationship:false,reason:"Count records",rank_measure:"none"}};
 beforeEach(()=>{
  vi.clearAllMocks();

@@ -9,12 +9,12 @@ export function analysisChecks(plan: Plan, sql: string, result: {
     const out: CheckResult[] = [];
     if (!a)
         return [{ id: "analysis_basis", ok: false, detail: "Choose counts or rates, with a denominator and a reason before answering." }];
-    out.push({ id: "analysis_basis", ok: !!a.reason && (a.basis === "counts" ? a.denominator === "none" : a.denominator !== "none"), detail: `${a.basis}; denominator: ${a.denominator}. ${a.reason}` });
+    out.push({ id: "analysis_basis", ok: !!a.reason && (["counts","scores"].includes(a.basis) ? a.denominator === "none" : a.denominator !== "none"), detail: `${a.basis}; denominator: ${a.denominator}. ${a.reason}` });
     if (a.relationship) {
         const rate = result.headers.findIndex((h) => /per_?1000|per_?1_000|rate/i.test(h) && !/blood|bp|asthma|prevalence/i.test(h));
         const corr = result.headers.findIndex((h) => /corr/i.test(h));
         const paired = result.headers.findIndex((h) => /paired_tracts/i.test(h));
-        const correctLabel = rate >= 0 && (a.denominator === "adults" ? /adult/i : /resident/i).test(result.headers[rate]!);
+        const correctLabel = rate >= 0 && (a.denominator === "adults" ? /adult|18plus/i : /resident|total_?population/i).test(result.headers[rate]!);
         const denom = a.denominator === "adults" ? /totalpop18plus/i : /totalpopulation/i;
         out.push({ id: "relationship_rates", ok: a.basis === "rates" && correctLabel && denom.test(sql) && /\//.test(sql) && corr >= 0 && paired >= 0 && !/\bLIMIT\s+50\b/i.test(sql), detail: "Relationships need labeled per-resident or per-adult rates, the matching population field, correlation, and the full paired_tracts count before any display limit." });
     }

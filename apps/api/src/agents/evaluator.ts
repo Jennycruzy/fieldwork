@@ -15,17 +15,37 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     (acc, x) => ({ matched: acc.matched + x.matched, total: acc.total + x.total, unmatched: acc.unmatched + x.unmatched, invalid: acc.invalid + x.invalid }),
     { matched: 0, total: 0, unmatched: 0, invalid: 0 },
   );
+  const zeroColumns:string[]=[];
+  let zeroProof:CheckResult|undefined;
+  if(p.geography==="tract" && /\b(no|zero|without)\b/i.test(question) && bridged.length===1 && !wired.find(w=>w.label===bridged[0]!.label)?.capped) {
+    const source=bridged[0]!;
+    const all=await ctx.zetaris.query("SELECT geoid,name FROM fw_pg.tracts",500);
+    const present=await ctx.zetaris.query(`SELECT geoid FROM fw_pg.tract_counts WHERE run_id='${ctx.runId}' AND source='${source.label}' AND grp='all' AND n>0`,500);
+    const positive=new Set(present.rows.map(r=>r[0]));const expected=all.rows.filter(r=>!positive.has(r[0])).map(r=>r[0]).sort();
+    const j=joined.result.headers.findIndex(h=>/^(geoid|tractfips)$/i.test(h));const actual=joined.result.rows.map(r=>r[j]).sort();
+    const verified=j>=0&&source.matched>0&&JSON.stringify(actual)===JSON.stringify(expected);
+    zeroProof={id:"zero_membership",ok:verified,detail:verified?"Zero-count tracts exactly match the complete tract list minus tracts with located source records.":"Zero-count tract membership did not match independent source counts."};
+    if(verified) joined.result.headers.forEach((h,i)=>{if(i>0&&joined.result.rows.every(r=>r[i]!=null&&Number(r[i])===0))zeroColumns.push(h);});
+  }
   const checks = runChecks({
+    verifiedZeroColumns:zeroColumns,
     bridge: bridged.length ? b : undefined,
     sourceCounts: wired.map((w) => ({ label: w.label, source: w.sourceCount, zetaris: w.zetarisCount, capped: w.capped })),
     resultRows: joined.result.rows.length,
     duplicatesRemoved: bridged.reduce((n,b)=>n+b.duplicates,0),
-    minGroupSize: p.analysis?.basis === "rates" ? minimumDenominator(joined) : undefined,
+    minGroupSize: p.analysis?.basis === "rates" ? minimumDenominator(joined) : wired.some(w=>w.valueKind === "score") ? minimumSample(joined) : undefined,
     result: joined.result,
     years: p.years,
     today: ctx.today,
     excludedTestRecords: wired.reduce((n, w) => n + w.excludedTestRecords, 0),
   });
+  if(zeroProof)checks.push(zeroProof);
+  for(const w of wired.filter(w=>w.coverage)) {
+    const c=w.coverage!;
+    const period=(value:number|null)=>value==null?"unknown":`${Math.floor(value/100)}-${String(value%100).padStart(2,"0")}`;
+    const expected=p.years?.from&&p.years.from===p.years.to&&p.years.from<ctx.today.getUTCFullYear()?12:undefined;
+    checks.push({id:`source_dates_${w.label}`,ok:true,detail:`${w.title}: event dates ${c.earliest??"not published"} to ${c.latest??"not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected&&c.periods<expected?` Incomplete annual coverage: ${expected-c.periods} missing months; do not present a complete year.`:""}`});
+  }
   checks.push(...analysisChecks(p, joined.sql, joined.result));
   for (const c of checks) await ctx.trace.log({ agent: "evaluator", action: `check:${c.id}`, status: c.ok ? "ok" : "error", note: c.detail });
 
@@ -74,7 +94,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     8000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
-  const empty = checks.find((c) => ["measure_values", "analysis_basis", "relationship_rates", "ranking_order"].includes(c.id) && !c.ok);
+  const empty = checks.find((c) => ["measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership"].includes(c.id) && !c.ok);
   if (empty && value.verdict === "APPROVE") {
     value.verdict = "REVISE";
     value.target = empty.id === "analysis_basis" ? "plan" : "join";
@@ -98,7 +118,13 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
 }
 
 function minimumDenominator(joined: Joined): number | undefined {
-  const j=joined.result.headers.findIndex((h)=>/^(population|totalpopulation|totalpop18plus|denominator|sample_size)$/i.test(h));
+  const j=joined.result.headers.findIndex((h)=>/^(population|total_population|totalpopulation|totalpop18plus|resident_population|adult_population|denominator|sample_size)$/i.test(h));
   const values=j<0 ? []:joined.result.rows.map((r)=>r[j]==null ? NaN:Number(r[j])).filter(Number.isFinite);
   return values.length ? Math.min(...values):undefined;
+}
+
+function minimumSample(joined:Joined):number|undefined {
+ const j=joined.result.headers.findIndex(h=>/establishment.*count|count.*establishment|sample_size|inspected_count/i.test(h));
+ const values=j<0?[]:joined.result.rows.map(r=>r[j]==null?NaN:Number(r[j])).filter(Number.isFinite);
+ return values.length?Math.min(...values):undefined;
 }

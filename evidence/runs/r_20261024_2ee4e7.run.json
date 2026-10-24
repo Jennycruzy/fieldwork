@@ -1,0 +1,38 @@
+{
+  "id": "r_20261024_2ee4e7",
+  "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+  "created_at": "2026-10-24T21:01:06.715Z",
+  "finished_at": "2026-10-24T21:01:06.862Z",
+  "status": "budget",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_2ee4e7",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?"
+          },
+          "source": {
+            "at": "2026-10-24T21:01:06.749Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Today's live model calls are used up.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+    "memoryWrites": [
+      {
+        "id": "mem-184",
+        "content": "World state for Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?: [{\"id\":\"run:fieldwork:r_20261024_2ee4e7\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?\"}}]"
+      }
+    ]
+  }
+}

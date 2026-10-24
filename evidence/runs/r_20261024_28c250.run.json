@@ -1,0 +1,38 @@
+{
+  "id": "r_20261024_28c250",
+  "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+  "created_at": "2026-10-24T21:01:07.809Z",
+  "finished_at": "2026-10-24T21:01:07.930Z",
+  "status": "budget",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_28c250",
+          "type": "run",
+          "attrs": {
+            "question": "Diagnose my chest pain and tell me what prescription medicine to take."
+          },
+          "source": {
+            "at": "2026-10-24T21:01:07.839Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Today's live model calls are used up.",
+    "sources": [],
+    "memories": [],
+    "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+    "memoryWrites": [
+      {
+        "id": "mem-193",
+        "content": "World state for Diagnose my chest pain and tell me what prescription medicine to take.: [{\"id\":\"run:fieldwork:r_20261024_28c250\",\"type\":\"run\",\"attrs\":{\"question\":\"Diagnose my chest pain and tell me what prescription medicine to take.\"}}]"
+      }
+    ]
+  }
+}

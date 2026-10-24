@@ -48,6 +48,12 @@ CREATE TABLE IF NOT EXISTS sources (
   last_ok timestamptz,
   last_error text
 );
+CREATE TABLE IF NOT EXISTS tract_observations (
+ run_id text NOT NULL, source text NOT NULL, record_id text NOT NULL,
+ geoid text, entity_key text NOT NULL, event_date text, year int, month int,
+ category text NOT NULL, value double precision, value_kind text NOT NULL,
+ PRIMARY KEY (run_id, source, record_id)
+);
 CREATE TABLE IF NOT EXISTS tract_counts (
   run_id text NOT NULL,
   source text NOT NULL,

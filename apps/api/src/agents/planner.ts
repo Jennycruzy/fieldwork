@@ -7,7 +7,7 @@ const SHAPE = `{
  "geography": "tract" | "council_district" | "city",
  "years": {"from": number | null, "to": number | null} | null,
  "measures": [{"id": "m1", "describe": "what to measure, in plain words", "kind": "health_estimate" | "city_records" | "environmental_records", "search_terms": ["2-4 short catalog search phrases"]}],
- "analysis": {"basis": "counts" | "rates" | "mixed", "denominator": "none" | "residents" | "adults", "relationship": boolean, "reason": "why these units answer this question", "rank_measure": "measure and direction for sorting"},
+ "analysis": {"basis": "counts" | "rates" | "mixed" | "scores", "denominator": "none" | "residents" | "adults", "relationship": boolean, "reason": "why these units answer this question", "rank_measure": "measure and direction for sorting"},
  "output": "ranking" | "comparison" | "trend" | "list"
 }`;
 
@@ -21,6 +21,7 @@ What data exists for ${ctx.cfg.place.name}:
 - city_records: the City of Montgomery's open data hub (records such as code violations, service requests, calls, inspections, permits, facilities), as map points with dates and types.
 - environmental_records: EPA ECHO regulated facility registry, scoped to Montgomery County; listings are not emissions or exposure measurements.
 - health_estimate: CDC PLACES estimates for adults by census tract (e.g. asthma, diabetes, housing insecurity, food insecurity, lack of transportation, depression), with tract population.
+Use one measure per data series, not separate measures for individual years or months. Time comparisons use years and group the source observations by year/month.
 Use "tract" geography when city records must be compared with health estimates (city records are placed into census tracts by location).
 A question is out of scope if it is about another place, a person, a prediction, or needs data not listed above.
 A ranking with a supporting measure is NOT a relationship question: do not add a correlation unless the question asks about association, correlation, or whether more X accompanies more Y. Set relationship false for ordinary rankings.
@@ -32,8 +33,9 @@ Shape: ${SHAPE}`,
   ];
   const { value } = await ctx.models.planner.json(messages, PlanSchema, 3000);
   if(value.analysis) {
+    if(/\b(average|mean)\b.*\bscore/i.test(question)) {value.analysis.basis="scores";value.analysis.denominator="none";value.analysis.reason+=" Inspection scores are measured in source score points; establishment counts describe sample size, not population rates.";}
     const asksRelationship=/\b(correlat\w*|associat\w*|relationship|related|connection)\b|\b(do|does|are)\b[\s\S]*\balso\b|\b(more|higher|lower)\b[\s\S]*\b(more|higher|lower)\b/i.test(question);
-    value.analysis.relationship=asksRelationship || (value.output!=="ranking" && value.analysis.relationship);
+    value.analysis.relationship=asksRelationship;
     if(!asksRelationship && value.measures.some((m)=>m.kind==="health_estimate") && value.measures.some((m)=>m.kind==="city_records") && !/\bper\b/i.test(question)) {
       value.analysis.basis="mixed";value.analysis.denominator="adults";
       value.analysis.reason += " CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.";

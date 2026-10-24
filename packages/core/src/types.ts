@@ -17,7 +17,7 @@ export const PlanSchema = z.object({
     )
     .max(4),
   analysis: z.object({
-    basis: z.enum(["counts", "rates", "mixed"]),
+    basis: z.enum(["counts", "rates", "mixed", "scores"]),
     denominator: z.enum(["none", "residents", "adults"]),
     relationship: z.boolean(),
     reason: z.string(),

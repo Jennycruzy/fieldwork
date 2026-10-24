@@ -51,6 +51,19 @@ export function newRunId(): string {
 }
 
 export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace?: (e: RunEvent) => void; runId?: string } = {}): Promise<RunOutcome> {
+  const lease=await db.connect();let held=false;
+  try {
+    held=(await lease.query("SELECT pg_try_advisory_lock(hashtext('fieldwork-live-question')) AS held")).rows[0]?.held===true;
+    if(!held) {
+      const runId=opts.runId??newRunId();const message="Another Fieldwork question is running. Wait for it to finish, then retry.";
+      await migrate(db);await db.query(`INSERT INTO runs (id,question,status,finished_at,answer) VALUES ($1,$2,'failed',now(),$3) ON CONFLICT (id) DO UPDATE SET status='failed',finished_at=now(),answer=EXCLUDED.answer`,[runId,question,JSON.stringify({question,message})]);
+      return {runId,status:"failed",rounds:0,chosen:[],wired:[],bridged:[],checks:[],message};
+    }
+    return await askWithLease(cfg,db,question,opts);
+  } finally {if(held)await lease.query("SELECT pg_advisory_unlock(hashtext('fieldwork-live-question'))");lease.release();}
+}
+
+async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTrace?: (e: RunEvent) => void; runId?: string } = {}): Promise<RunOutcome> {
   await migrate(db);
   const runId = opts.runId ?? newRunId();
   await db.query(`INSERT INTO runs (id, question) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING`, [runId, question]);
@@ -236,10 +249,9 @@ async function saveAnswerView(ctx: Ctx, sql: string): Promise<string | undefined
 }
 
 async function bridgeAll(ctx: Ctx, p: Plan, wired: Wired[]): Promise<Bridged[]> {
-  if (p.geography !== "tract") return [];
   const out: Bridged[] = [];
-  for (const w of wired.filter((x) => x.shape === "arcgis_features")) out.push(await bridgeToTracts(ctx, w));
-  for (const w of wired.filter((x) => x.shape === "epa_facilities")) out.push(await bridgeEpa(ctx,w));
+  for (const w of wired.filter((x) => x.shape === "arcgis_features" || x.shape === "arcgis_table")) {const result=await bridgeToTracts(ctx,w,p.geography === "tract");if(p.geography === "tract")out.push(result);}
+  for (const w of wired.filter((x) => x.shape === "epa_facilities" && p.geography === "tract")) out.push(await bridgeEpa(ctx,w));
   return out;
 }
 
