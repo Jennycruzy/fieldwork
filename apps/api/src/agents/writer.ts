@@ -11,7 +11,7 @@ export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[],
         content: `${SYSTEM_BASE}
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
 Use only numbers that appear in the result rows. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
-Keep the order of the result rows when you describe a ranking ("next" means the next row). If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
+Keep the order of the result rows when you describe a ranking ("next" means the next row; equal values share a rank). Caveats must come from the checks listed or from the nature of the sources (e.g. CDC values are model-based estimates from survey data); never invent limits such as sample sizes that no check reported. If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
 Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting facts with numbers"], "how_sure": "one sentence: match rates, sample sizes, checks passed, rounds", "caveats": ["plain-language limits"]}`,
       },
       {

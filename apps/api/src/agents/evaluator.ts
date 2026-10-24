@@ -26,7 +26,7 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
   for (const c of checks) await ctx.trace.log({ agent: "evaluator", action: `check:${c.id}`, status: c.ok ? "ok" : "error", note: c.detail });
 
   const failed = checks.filter((c) => !c.ok);
-  const rowsPreview = [joined.result.headers, ...joined.result.rows.slice(0, 25)];
+  const rowsPreview = [joined.result.headers, ...joined.result.rows.slice(0, 12)]; // enough to judge; fewer tokens keeps the Evaluator fast
   const { value } = await ctx.models.evaluator.json(
     [
       {
@@ -36,7 +36,7 @@ You are the Evaluator. Challenge the work before anyone sees it. Decide APPROVE 
 Filters listed under sources_as_wired are already applied before the SQL runs; do not ask for them again.
 REVISE (with one concrete instruction) when: the result does not answer the question asked; a needed column is missing; the comparison is unfair (e.g. raw counts where tracts differ a lot in population and the question implies a rate); the time filter does not match the plan; or a code check failed and the SQL can fix it.
 target "join" = the SQL must change; "wire" = a dataset filter or field must change; "plan" = the wrong data was chosen.
-This is round ${round} of at most 3; on round 3 approve unless the answer would be wrong, and list the limits instead.
+Be brief: judge, do not re-derive the whole analysis. This is round ${round} of at most 3; on round 3 approve unless the answer would be wrong, and list the limits instead.
 Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | null, "instruction": "..." | null, "reasons": ["short reasons"]}`,
       },
       {

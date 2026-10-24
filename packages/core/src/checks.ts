@@ -90,14 +90,23 @@ export function checkDraft(texts: string[], headers: string[], rows: string[][])
   const missing: string[] = [];
   for (const t of texts) for (const n of numbersIn(t)) if (!values.has(n) && !isYearOrSmallOrdinal(n)) missing.push(n);
 
-  // Ranking words: "X follows", "second", "next" must point at the row that comes next.
+  // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
+  // numeric column) share a rank, e.g. two tracts at 13.1% tie for 4th.
   const order: string[] = [];
   const names = rows.map((r) => r[0] ?? "");
+  const keyCol = rows[0] ? rows[0].findIndex((v, i) => i > 0 && /^-?\d+(\.\d+)?$/.test(v)) : -1;
+  const rankOf = (idx: number): number => {
+    if (keyCol < 0) return idx + 1;
+    const v = rows[idx]![keyCol];
+    return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
+  };
   for (const t of texts) {
-    const m = t.match(/^(.*?)\s+(follows|is second|ranks second|comes next|is next)\b/i);
-    if (!m) continue;
-    const said = names.findIndex((n) => n && m[1]!.includes(n));
-    if (said > 1) order.push(`"${t}" calls ${names[said]} next, but row 2 is ${names[1]}`);
+    const said = names.reduce((best, n, i) => (n && t.includes(n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
+    if (said < 0) continue;
+    const claimed = claimedRank(t);
+    if (claimed !== undefined && claimed !== rankOf(said)) {
+      order.push(`"${t}" puts ${names[said]} at rank ${claimed}, but in the rows it is rank ${rankOf(said)}`);
+    }
   }
   return { ok: missing.length === 0 && order.length === 0, missingNumbers: [...new Set(missing)], orderProblems: order };
 }
@@ -114,4 +123,20 @@ function normaliseNumber(n: string): string {
 function isYearOrSmallOrdinal(n: string): boolean {
   const x = Number(n);
   return (Number.isInteger(x) && x >= 1900 && x <= 2100) || (Number.isInteger(x) && x >= 1 && x <= 10);
+}
+
+const ORDINALS: Record<string, number> = { first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9, tenth: 10 };
+
+// "follows" / "is next" = rank 2; "third-highest", "ranks fourth", "ties for third", "5th" = that rank; "leads" / "highest" = 1.
+export function claimedRank(t: string): number | undefined {
+  const s = t.toLowerCase();
+  const ord = s.match(/\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d{1,2}(?:st|nd|rd|th))\b(?:[\s-]*(?:highest|lowest|most|fewest|place|ranked))?/);
+  if (ord) {
+    const w = ord[1]!;
+    const n = ORDINALS[w] ?? Number(w.replace(/\D/g, ""));
+    if (/\b(rank|ranks|ranked|ties?|tied|is|at|place|highest|lowest|most|fewest)\b/.test(s) && n >= 1 && n <= 10) return n;
+  }
+  if (/\b(follows|comes next|is next|runner-up)\b/.test(s)) return 2;
+  if (/\b(leads|has the highest|has the most|tops)\b/.test(s)) return 1;
+  return undefined;
 }
