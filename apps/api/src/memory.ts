@@ -55,12 +55,18 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
     added.push(remember(ctx.memory, { kind: "repair", runId: ctx.runId, content: `Zetaris rejected a Joiner query with: ${r.slice(0, 300)}. Avoid repeating it.`, confidence: 0.7 }).id);
   }
 
+  if(ctx.world) {
+    const facts=ctx.world.entities().filter((e)=>e.type!=="tract");
+    added.push(remember(ctx.memory,{kind:"quality",runId:ctx.runId,content:`World state for ${l.question}: ${JSON.stringify(facts.map((e)=>({id:e.id,type:e.type,attrs:e.attrs}))).slice(0,6000)}`,confidence:ok ? 0.8:0.4,refs:facts.map((e)=>`world:${e.id}`)}).id);
+    await ctx.trace.log({agent:"memory",action:"world_sync",status:"ok",note:`World Model shared ${ctx.world.entities().length} entities and ${ctx.world.edges().length} relationships; run-end state saved to H-MEM with world provenance.`});
+  }
   // Memories that agents used in this run: helpful if the run was answered, not helpful only if it failed
   // for a reason the memories could be part of (a model provider failing says nothing about them).
   const used = [...new Set(ctx.recalled.map((r) => r.id))];
   const verdict = ok ? "helpful" : l.status === "failed" && !l.providerFailed ? "not_helpful" : undefined;
   if (verdict) feedback(ctx.memory, used, verdict);
 
+  ctx.writtenMemories = added.map((id)=>ctx.memory.store.get(id)).filter((m)=>m!==undefined).map((m)=>({id:m!.id,content:m!.content}));
   const saved = await saveMemory(ctx.db, ctx.memory, ledgerLoaded);
   await ctx.trace.log({
     agent: "memory",

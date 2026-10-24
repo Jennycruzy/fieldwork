@@ -7,6 +7,8 @@ import { RunView } from "./pages/RunView";
 import { AnswerPage } from "./pages/AnswerPage";
 import { Settings } from "./pages/Settings";
 
+import { History, How, Check } from "./pages/Records";
+
 export function App() {
   const route = useRoute();
   const [health, setHealth] = useState<Health | "offline" | undefined>();
@@ -24,6 +26,8 @@ export function App() {
         </Link>
         <nav>
           <Link href="/">Ask</Link>
+          <Link href="/history">History</Link>
+          <Link href="/check">Check</Link>
           <Link href="/settings">Settings</Link>
         </nav>
       </header>
@@ -36,6 +40,9 @@ export function App() {
         {route.page === "home" && <Home sample={sample} />}
         {route.page === "run" && <RunView id={route.id} />}
         {route.page === "answer" && <AnswerPage id={route.id} />}
+        {route.page === "history" && <History />}
+        {route.page === "check" && <Check />}
+        {route.page === "how" && <How id={route.id} />}
         {route.page === "settings" && <Settings />}
         {route.page === "missing" && (
           <section className="card">

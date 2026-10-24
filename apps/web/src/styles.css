@@ -143,3 +143,7 @@ code { font-size: .88em; background: var(--code); padding: 1px 5px; border-radiu
 
 .foot { max-width: 860px; margin: 0 auto; padding: 0 16px 32px; color: var(--muted); font-size: .85rem; }
 .saved { margin: 12px 0 0; padding: 10px 12px; border: 1px dashed var(--accent); border-radius: 8px; overflow-wrap: anywhere; }
+
+.number-link{font:inherit;color:var(--accent,#147d92);padding:0;border:0;background:none;text-decoration:underline;cursor:pointer;display:inline}.tract-map{height:360px;isolation:isolate;border-radius:12px}.chart{width:100%;min-width:0;color:#243746}.hash{overflow-wrap:anywhere}.top nav{display:flex;flex-wrap:wrap;gap:12px}select,input{max-width:100%}.row{flex-wrap:wrap}form input{display:block;width:100%;box-sizing:border-box;margin:8px 0}.table-wrap td{max-width:480px;overflow-wrap:anywhere}@media(max-width:480px){.top{flex-wrap:wrap;gap:10px}.tract-map{height:280px}}
+
+.memory-details { overflow-wrap: anywhere; min-width: 0; }

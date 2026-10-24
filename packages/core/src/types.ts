@@ -11,11 +11,18 @@ export const PlanSchema = z.object({
       z.object({
         id: z.string(),
         describe: z.string(),
-        kind: z.enum(["health_estimate", "city_records"]),
+        kind: z.enum(["health_estimate", "city_records", "environmental_records"]),
         search_terms: z.array(z.string()).min(1).max(4),
       }),
     )
     .max(4),
+  analysis: z.object({
+    basis: z.enum(["counts", "rates", "mixed"]),
+    denominator: z.enum(["none", "residents", "adults"]),
+    relationship: z.boolean(),
+    reason: z.string(),
+    rank_measure: z.string(),
+  }).optional(),
   output: z.enum(["ranking", "comparison", "trend", "list"]),
 });
 export type Plan = z.infer<typeof PlanSchema>;

@@ -2,7 +2,7 @@
 
 import { opt } from "./sql.js";
 
-export type Shape = "socrata_list" | "arcgis_features" | "arcgis_stats";
+export type Shape = "socrata_list" | "arcgis_features" | "arcgis_stats" | "arcgis_table" | "epa_facilities";
 
 // Option list shared by TEST REST REQUEST and CREATE REST SESSION TABLE (syntax from the Lightning command reference, 6.1 and 6.6).
 const OPTIONS = (endpoint: string) =>
@@ -23,6 +23,7 @@ export function rowsFrom(table: string, shape: Shape): { from: string; field: (n
   if (shape === "socrata_list") {
     return { from: `session.${table}`, field: (n) => quoteIdent(n) };
   }
+  if(shape === "epa_facilities") return {from:`session.${table} LATERAL VIEW explode(Results.Facilities) AS f`,field:(n)=>`f.${quoteIdent(n)}`};
   return {
     from: `session.${table} LATERAL VIEW explode(features) AS f`,
     field: (n) => `f.attributes.${quoteIdent(n)}`,

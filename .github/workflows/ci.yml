@@ -13,4 +13,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run conformance:hmem
+      - run: npm run conformance:world
+      - run: npm run build
       - run: npm run wordscan

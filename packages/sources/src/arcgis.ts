@@ -41,6 +41,7 @@ export interface FeatureQuery {
   outFields: string[];
   offset?: number;
   pageSize?: number;
+  objectIdField?: string;
 }
 
 // One page of point features in WGS84 (lat/lon), stable order so pages never overlap.
@@ -50,7 +51,7 @@ export function featurePageUrl(layerUrl: string, q: FeatureQuery): string {
     outFields: q.outFields.join(","),
     outSR: "4326",
     returnGeometry: "true",
-    orderByFields: "OBJECTID",
+    orderByFields: q.objectIdField ?? "OBJECTID",
     resultOffset: String(q.offset ?? 0),
     resultRecordCount: String(q.pageSize ?? 2000),
     f: "json",

@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-24T19:11:08.335Z",
+  "command": "npm run conformance:world",
+  "passed": 8,
+  "total": 8,
+  "implementation_sha256": "b1f4f559fdd9bc19d0e75f090d93fff31b8202a12ffe0b4e82bb7fe30fe2a255",
+  "runner_sha256": "7cd3b80d62d45d16f3342c62a91c89abf819c9b46970187d2f36fb9e3050da82",
+  "upstream": "https://github.com/meterless/meterless/tree/main/engines/world-model/conformance"
+}

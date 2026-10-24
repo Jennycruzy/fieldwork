@@ -1,5 +1,5 @@
-import { ChoiceSchema, type Plan } from "@fieldwork/core";
-import { layerInfo, searchMontgomeryHub, searchSocrata, socrataColumns, type Candidate } from "@fieldwork/sources";
+import { ChoiceSchema, FieldworkError, type Plan } from "@fieldwork/core";
+import { getJson, layerInfo, searchEpa, searchMontgomeryHub, searchSocrata, socrataColumns, type Candidate } from "@fieldwork/sources";
 import { recall, type Recalled } from "@fieldwork/hmem";
 import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 
@@ -8,7 +8,9 @@ export interface Chosen {
   measure: string;
   candidate: Candidate;
   reason: string;
-  fields: { name: string; type: string }[];
+  geometryType?: string;
+  maxRecordCount?: number;
+  fields: { name: string; type: string; alias?: string }[];
 }
 
 // Searches the catalogs live, then lets the model choose one dataset per measure, with a reason.
@@ -17,17 +19,20 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
   for (const m of p.measures) {
     const seen = new Set<string>();
     const cands: Candidate[] = [];
-    const terms = m.kind === "health_estimate" && p.geography === "tract" ? ["PLACES census tract", ...m.search_terms] : m.search_terms;
+    const terms = m.kind === "health_estimate" && p.geography === "tract" ? ["PLACES census tract", ...m.search_terms] : m.kind === "environmental_records" ? m.search_terms.slice(0,1) : m.search_terms;
     for (const term of terms) {
       const found =
         m.kind === "health_estimate"
           ? await searchSocrata(p.geography === "tract" && !/census tract/i.test(term) ? `${term} census tract` : term, ["data.cdc.gov"], 6)
-          : await searchMontgomeryHub(term, 6);
+          : m.kind === "environmental_records" ? await searchEpa(ctx.cfg.place.stateAbbr,ctx.cfg.place.countyName) : await searchMontgomeryHub(term, 6);
       for (const c of found) if (!seen.has(c.id)) (seen.add(c.id), cands.push(c));
     }
     await ctx.trace.log({ agent: "finder", action: "search", status: cands.length ? "ok" : "error", note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${m.search_terms.map((t) => `"${t}"`).join(", ")}` });
     perMeasure.push({ id: m.id, describe: m.describe, kind: m.kind, candidates: cands.slice(0, 8) });
   }
+
+  const absent = perMeasure.find((m) => m.candidates.length === 0);
+  if (absent) throw new FieldworkError("NO_SOURCE", absent.describe);
 
   // H-MEM: what earlier runs chose for similar measures. A confident memory whose dataset the live search
   // found again is reused without a model call; otherwise the memories go to the model as hints.
@@ -87,13 +92,20 @@ Prefer current, official, record-level or tract-level data. When several release
     const m = perMeasure.find((x) => x.id === c.measure_id);
     const cand = m?.candidates[c.candidate_index];
     if (!m || !cand) continue;
+    const info = cand.kind === "arcgis_layer" ? await layerInfo(cand.url) : undefined;
     const fields =
       cand.kind === "arcgis_layer"
-        ? (await layerInfo(cand.url)).fields.map((f) => ({ name: f.name, type: f.type.replace("esriFieldType", "").toLowerCase() }))
-        : (await socrataColumns(cand.url)).map((name) => ({ name, type: "text" }));
-    chosen.push({ measureId: m.id, measure: m.describe, candidate: cand, reason: c.reason, fields });
+        ? info!.fields.map((f) => ({ name: f.name, alias:f.alias, type: f.type.replace("esriFieldType", "").toLowerCase() }))
+        : cand.kind === "epa_facilities" ? (cand.fields ?? []).map((name)=>({name,type:"text"})) : (await socrataColumns(cand.url)).map((name) => ({ name, type: "text" }));
+    if(cand.kind === "socrata_resource") {
+      const metadataUrl=cand.url.replace("/resource/","/api/views/");
+      const metadata=await getJson(metadataUrl) as {license?:{name?:string};licenseId?:string};
+      cand.licence=metadata.license?.name ?? metadata.licenseId ?? "No license statement supplied in metadata";cand.licenceUrl=metadataUrl;
+    }
+    chosen.push({ measureId: m.id, measure: m.describe, candidate: cand, reason: c.reason, fields, geometryType:info?.geometryType, maxRecordCount:info?.maxRecordCount });
     await ctx.trace.log({ agent: "finder", action: "choose", status: "ok", note: `${m.describe} → "${cand.title}" (${fields.length} fields). ${c.reason}` });
   }
+  if (chosen.length !== p.measures.length) throw new FieldworkError("NO_SOURCE", "all of the requested measures. Review the discovered candidates in the trace.");
   return chosen;
 }
 

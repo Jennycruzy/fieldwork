@@ -15,6 +15,7 @@ export interface CheckInput {
   years?: { from?: number | null; to?: number | null } | null;
   today?: Date;
   excludedTestRecords?: number;
+  duplicatesRemoved?: number;
 }
 
 export function runChecks(c: CheckInput): CheckResult[] {
@@ -72,6 +73,7 @@ export function runChecks(c: CheckInput): CheckResult[] {
   if (c.excludedTestRecords) {
     out.push({ id: "test_records", ok: true, detail: `${c.excludedTestRecords} test records excluded from the city data` });
   }
+  if (c.duplicatesRemoved !== undefined) out.push({id:"duplicates",ok:true,detail:`${c.duplicatesRemoved} duplicate case IDs removed before tract counting.`});
   return out;
 }
 
@@ -113,11 +115,11 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     if (Math.abs(x) <= 100) values.add(normaliseNumber(String(Number((x / 100).toFixed(6)))));
   }
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
-  for (const f of facts) for (const n of numbersIn(f)) values.add(n);
+  for (const f of facts) for (const n of numbersIn(f.replace(/\b(?:countyfips|tractfips|geoid)\s*[:=]\s*['"]?\d+['"]?/gi," ")) ) values.add(n);
   const names = rows.map((r) => String(r[0] ?? ""));
   const missing: string[] = [];
   for (const t of texts) {
-    for (const n of numbersIn(withoutNames(spellNumbers(t), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
+    for (const n of numbersIn(withoutNames(spellNumbers(knownIdentifiers(t, facts)), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
   }
 
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
@@ -130,6 +132,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
   };
   for (const t of texts) {
+    if (/\b(causes?|caused|proves?|guarantees?|statistically significant|certain|conclusive)\b/i.test(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     if (UNIVERSAL.test(t)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     const said = names.reduce((best, n, i) => (n && mentions(t, n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
     // A rank claim next to one of the row's own values is checked against that value's column
@@ -279,4 +282,11 @@ export function claimedRank(t: string): number | undefined {
   if (/\b(follows|comes next|is next|runner-up)\b/.test(s)) return 2;
   if (/\b(leads|has the highest|has the most|tops)\b/.test(s)) return 1;
   return undefined;
+}
+
+function knownIdentifiers(text: string, facts: string[]): string {
+  return text.replace(/\b(countyfips|tractfips|geoid)\s*[:=]\s*['"]?(\d+)['"]?/gi,(match,field:string,id:string)=>{
+    const expression=new RegExp(`\\b${field}\\s*[:=]\\s*['"]?${id}['"]?`,"i");
+    return facts.some((f)=>expression.test(f)) ? " " : match;
+  });
 }

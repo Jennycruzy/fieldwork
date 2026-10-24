@@ -9,6 +9,7 @@ export interface RunEvent {
   status: "ok" | "error" | "info";
   note: string;
   modelProvider?: string;
+  modelRequested?: string;
   modelServed?: string;
   latencyMs?: number;
   sql?: string;
@@ -24,6 +25,9 @@ export interface Answer {
 }
 
 export interface Source {
+  licence?: string;
+  licenceUrl?: string;
+  label?: string;
   title: string;
   url: string;
   records: number;
@@ -40,6 +44,11 @@ export interface RunRecord {
   rounds: number;
   mode: "live" | "recorded";
   answer: {
+    memoryWrites?: {id:string;content:string}[];
+    world?: {entities:{id:string;type:string;attrs:Record<string,unknown>}[];edges:{from:string;to:string;type:string}[]};
+    intervals?: {source: string; headers: string[]; rows: (string | null)[][]}[];
+    tracts?: { geoid: string; rings: number[][][] }[];
+    memories?: { id: string; kind: string; content: string; confidence: number }[];
     answer?: Answer;
     sources?: Source[];
     sql?: string;

@@ -1,0 +1,49 @@
+import { expect, test, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { HMEM } from "@fieldwork/hmem";
+import { find } from "../src/agents/finder.js";
+import { searchMontgomeryHub, searchSocrata, socrataColumns, layerInfo, getJson } from "@fieldwork/sources";
+import type { Ctx } from "../src/agents/context.js";
+vi.mock("@fieldwork/sources", async (importOriginal) => ({ ...await importOriginal<typeof import("@fieldwork/sources")>(), searchMontgomeryHub: vi.fn(), getJson: vi.fn(async()=>({license:{name:"Public Domain"}})), searchSocrata: vi.fn(), socrataColumns: vi.fn(), layerInfo: vi.fn() }));
+test("empty source cache and empty memory still discover the live-captured 311 dataset", async () => {
+    const fixture = JSON.parse(readFileSync("evidence/sources/live-probes.json", "utf8"))[0];
+    vi.mocked(searchMontgomeryHub).mockResolvedValue([fixture.candidate]);
+    vi.mocked(layerInfo).mockResolvedValue({ url: fixture.candidate.url, name: fixture.candidate.title, fields: fixture.fields, maxRecordCount: 1000, geometryType: fixture.geometry });
+    const memory = new HMEM();
+    const db = { query: vi.fn(async () => ({ rows: [] })) };
+    const ctx = { cfg: { place: { name: "Montgomery, AL" } }, db, memory, recalled: [], trace: { log: vi.fn() }, models: { finder: { json: vi.fn(async () => ({ value: { choices: [{ measure_id: "requests", candidate_index: 0, reason: "Matches requested service requests" }] } })) } } } as unknown as Ctx;
+    const result = await find(ctx, { in_scope: true, geography: "tract", measures: [{ id: "requests", describe: "311 requests", kind: "city_records", search_terms: ["311"] }], output: "ranking" });
+    expect(result[0]?.candidate.id).toBe(fixture.candidate.id);
+    expect(searchMontgomeryHub).toHaveBeenCalledWith("311", 6);
+    expect(ctx.recalled).toHaveLength(0);
+    expect(db.query).not.toHaveBeenCalled();
+});
+test("empty live discovery reaches NO_SOURCE instead of choosing a remembered dataset", async () => {
+    vi.mocked(searchMontgomeryHub).mockResolvedValue([]);
+    const ctx = { cfg: { place: { name: "Montgomery, AL" } }, memory: new HMEM(), recalled: [], trace: { log: vi.fn() } } as unknown as Ctx;
+    await expect(find(ctx, { in_scope: true, geography: "tract", measures: [{ id: "m", describe: "missing measure", kind: "city_records", search_terms: ["missing"] }], output: "ranking" })).rejects.toMatchObject({ code: "NO_SOURCE" });
+});
+for (const file of ["f1e7f5", "58bb8f", "217d18"])
+    test(`recorded sample plan ${file} rediscovers sources with both caches empty`, async () => {
+        const fixture = JSON.parse(readFileSync("evidence/sources/catalogs.json", "utf8"));
+        const plan = JSON.parse(readFileSync(`evidence/runs/r_20261024_${file}.run.json`, "utf8")).answer.plan;
+        vi.mocked(searchMontgomeryHub).mockResolvedValue(fixture.city);
+        vi.mocked(searchSocrata).mockResolvedValue(fixture.cdc);
+        vi.mocked(layerInfo).mockImplementation(async (url) => fixture.cityInfo[fixture.city.find((c: {
+            url: string;
+        }) => c.url === url).id]);
+        vi.mocked(socrataColumns).mockImplementation(async (url) => fixture.cdcFields[fixture.cdc.find((c: {
+            url: string;
+        }) => c.url === url).id]);
+        const memory = new HMEM();
+        const db = { query: vi.fn(async () => ({ rows: [] })) };
+        const ctx = { cfg: { place: { name: "Montgomery, AL" } }, db, memory, recalled: [], trace: { log: vi.fn() }, models: { finder: { json: async () => ({ value: { choices: plan.measures.map((m: {
+                                id: string;
+                                kind: string;
+                            }) => ({ measure_id: m.id, candidate_index: 0, reason: "Live catalog candidate matches the plan" })) } }) } } } as unknown as Ctx;
+        const result = await find(ctx, plan);
+        expect(result).toHaveLength(plan.measures.length);
+        expect(ctx.recalled).toHaveLength(0);
+        expect(db.query).not.toHaveBeenCalled();
+        expect(searchSocrata).toHaveBeenCalled();
+    });

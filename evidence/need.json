@@ -1,0 +1,29 @@
+[
+  {
+    "title": "Code Violations",
+    "url": "https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899",
+    "retrieved_from": "https://www.arcgis.com/sharing/rest/content/items/e58056aeb8354e0d80483dab81ee2899?f=json",
+    "observed_at": "2026-10-24",
+    "excerpt": "This layer displays the locations of code violations across the city.",
+    "supported_claim": "The city publishes locations of code violations, allowing neighborhood comparisons.",
+    "limits": "This establishes an official public-data use case; it does not establish usage of Fieldwork or measured benefit."
+  },
+  {
+    "title": "Received 311 Service Requests",
+    "url": "https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e",
+    "retrieved_from": "https://www.arcgis.com/sharing/rest/content/items/46a3ffb5bd244363a6f90bc17a37ea7e?f=json",
+    "observed_at": "2026-10-24",
+    "excerpt": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+    "supported_claim": "The city publishes received service requests. These describe reported demand, not all neighborhood needs.",
+    "limits": "This establishes an official public-data use case; it does not establish usage of Fieldwork or measured benefit."
+  },
+  {
+    "title": "Food Scores",
+    "url": "https://www.arcgis.com/home/item.html?id=e9c926feae0444cc88d83a378e7526b9",
+    "retrieved_from": "https://www.arcgis.com/sharing/rest/content/items/e9c926feae0444cc88d83a378e7526b9?f=json",
+    "observed_at": "2026-10-24",
+    "excerpt": "This dataset is useful for residents, business owners, and researchers to track food safety compliance",
+    "supported_claim": "The city identifies residents, business owners and researchers as users of food inspection data.",
+    "limits": "This establishes an official public-data use case; it does not establish usage of Fieldwork or measured benefit."
+  }
+]

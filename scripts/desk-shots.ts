@@ -15,6 +15,9 @@ const pages = [
   ["answer", `/a/${id}`],
   ["run", `/run/${id}`],
   ["settings", "/settings"],
+  ["history", "/history"],
+  ["check", "/check"],
+  ["how", `/how/${id}`],
   ["missing", "/nope"],
 ];
 
@@ -38,3 +41,5 @@ for (const [w, h, label] of [[360, 780, "phone"], [1280, 900, "desktop"]] as con
 }
 await browser.close();
 console.log(errors.length ? errors.join("\n") : "no console errors, no sideways scroll");
+
+if(errors.length) process.exitCode=1;

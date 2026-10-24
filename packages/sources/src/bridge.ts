@@ -14,6 +14,7 @@ export interface PointRec {
   id: string;
   lon: number;
   lat: number;
+  caseId?: string;
   group?: string; // e.g. case type
 }
 
@@ -23,6 +24,8 @@ export interface BridgeResult {
   unmatched: number;
   invalid: number;
   total: number;
+  duplicates: number;
+  outside: PointRec[];
 }
 
 // ArcGIS polygons list outer rings clockwise and holes counter-clockwise; turf wants GeoJSON polygons.
@@ -48,9 +51,14 @@ function signedArea(ring: number[][]): number {
 export function bridge(tracts: Tract[], points: PointRec[]): BridgeResult {
   const geos = tracts.map((t) => ({ geoid: t.geoid, geo: tractToGeo(t), bbox: bbox(t.rings) }));
   const counts = new Map<string, Map<string, number>>();
-  let matched = 0, unmatched = 0, invalid = 0;
+  let matched = 0, unmatched = 0, invalid = 0, duplicates = 0;
+  const seen=new Set<string>();
+  const outside: PointRec[]=[];
   for (const p of points) {
-    if (!Number.isFinite(p.lon) || !Number.isFinite(p.lat)) {
+    const key=p.caseId?.trim() || p.id;
+    if(seen.has(key)) { duplicates++; continue; }
+    seen.add(key);
+    if (!Number.isFinite(p.lon) || !Number.isFinite(p.lat) || Math.abs(p.lon)>180 || Math.abs(p.lat)>90) {
       invalid++;
       continue;
     }
@@ -58,6 +66,7 @@ export function bridge(tracts: Tract[], points: PointRec[]): BridgeResult {
     const hit = geos.find((g) => inBox(p, g.bbox) && booleanPointInPolygon<Polygon | MultiPolygon>(pt, g.geo));
     if (!hit) {
       unmatched++;
+      outside.push(p);
       continue;
     }
     matched++;
@@ -66,7 +75,7 @@ export function bridge(tracts: Tract[], points: PointRec[]): BridgeResult {
     byGroup.set(group, (byGroup.get(group) ?? 0) + 1);
     counts.set(hit.geoid, byGroup);
   }
-  return { counts, matched, unmatched, invalid, total: points.length };
+  return { counts, matched, unmatched, invalid, total: points.length-duplicates, duplicates, outside };
 }
 
 type Box = [number, number, number, number];

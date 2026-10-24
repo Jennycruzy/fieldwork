@@ -22,7 +22,7 @@ export function Settings() {
   return (
     <section className="card">
       <h1>Model providers</h1>
-      <p className="muted">Every agent asks Meterless Runtime (Nightshift) first. If it isn't reachable when a run starts, the run says so in its trace and uses the fallback.</p>
+      <p className="muted">Meterless Runtime is the primary provider when it is online at run start. Nightshift is not hosted here. If it isn't reachable when a run starts, the run says so in its trace and uses the fallback.</p>
 
       <div className="provider">
         <div className="provider-head">
@@ -74,8 +74,8 @@ export function Settings() {
 
       <div className="provider">
         <div className="provider-head">
-          <span className={`light ${s?.fallback && s.fallback !== "none" ? "online" : "offline"}`} aria-hidden="true" />
-          <strong>Fallback</strong>
+          <span className="light offline" aria-hidden="true" />
+          <strong>Fallback</strong><span className="muted">Configured status; availability is checked by live calls</span>
         </div>
         <p>{s?.fallback && s.fallback !== "none" ? s.fallback : "None configured"}</p>
       </div>

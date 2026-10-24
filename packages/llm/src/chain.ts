@@ -33,6 +33,7 @@ export interface ChainOptions {
   budget?: Budget;
   reasoning?: "on" | "off";
   backoffMs?: number[];
+  onSlow?: (seconds: number) => void;
   onCall?: (rec: CallRecord) => void | Promise<void>;
   sleep?: (ms: number) => Promise<void>;
 }
@@ -59,8 +60,12 @@ export class ModelChain {
       for (let i = 0; i <= this.backoff.length; i++) {
         attempt++;
         if (!(await (this.opts.budget ?? unlimited).take())) throw new BudgetExceeded();
+        const started = Date.now();
         try {
-          const res = await route.provider.chat({ model: route.model, messages, maxTokens, reasoning: this.opts.reasoning });
+          const timer = setInterval(() => this.opts.onSlow?.(Math.round((Date.now() - started) / 1000)), 30000);
+          let res: ChatResult;
+          try { res = await route.provider.chat({ model: route.model, messages, maxTokens, reasoning: this.opts.reasoning }); }
+          finally { clearInterval(timer); }
           await this.opts.onCall?.({ ...res, attempt, ok: true });
           return res;
         } catch (e) {
@@ -73,14 +78,14 @@ export class ModelChain {
             modelServed: route.model,
             tokensIn: 0,
             tokensOut: 0,
-            ms: 0,
+            ms: Date.now()-started,
             attempt,
             ok: false,
             error: (e as Error).message.slice(0, 300),
           });
           if (err && !err.fallback) throw err; // a typed refusal goes back to the caller with its real reason
           if (!err?.retryable) break; // not worth retrying this route; try the next one
-          if (err.status === 204 && i >= 1) break; // empty twice: switch model rather than wait
+          if ((err.status === 204 || err.status === 502) && i >= 1) break; // empty twice: switch model rather than wait
           const wait = this.backoff[i];
           if (wait === undefined) break;
           await this.sleep(wait);

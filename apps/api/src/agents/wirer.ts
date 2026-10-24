@@ -1,8 +1,8 @@
-import { WiringSchema, looksLikeTestValue, type Plan } from "@fieldwork/core";
+import { WiringSchema, looksLikeTestValue, notice, FieldworkError, type Plan } from "@fieldwork/core";
 import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
 import { featurePageUrl, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
-import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
 
 export interface Wired {
@@ -13,6 +13,10 @@ export interface Wired {
   shape: Shape;
   tables: string[]; // one per page for paged sources
   fields: string[];
+  objectIdField?: string;
+  licence?: string;
+  licenceUrl?: string;
+  caseIdField?: string;
   groupField?: string;
   where: string;
   sourceCount: number;
@@ -43,7 +47,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
       {
         role: "user",
         content:
-          dataBlock("plan", p) +
+          shared(ctx) + dataBlock("plan", p) +
           "\n" +
           dataBlock(
             "datasets",
@@ -64,7 +68,19 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const known = new Set(c.fields.map((f) => f.name));
     const fields = w.fields.filter((f) => known.has(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
-    out.push(c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field ?? undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
+    if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", `${c.candidate.title} publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.`);
+    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field && known.has(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
+  }
+  for(const w of out) {
+    const c=chosen.find((c)=>c.measureId===w.measureId);
+    w.licence=c?.candidate.licence ?? "No license statement supplied by the source API";
+    w.licenceUrl=c?.candidate.licenceUrl ?? c?.candidate.url;
+  }
+  if(ctx.world) for (const w of out) {
+    const source=provenance(ctx,"wirer");
+    const entity=await ctx.world.upsertEntity({type:"source",externalKey:{system:ctx.runId,id:w.label},attrs:{title:w.title,url:w.sourceUrl,tables:w.tables,filter:w.where,fields:w.fields,records:w.zetarisCount},source});
+    const measure=ctx.world.entities().find((e)=>e.type==="measure"&&e.id.endsWith(`:${w.measureId}`));
+    if(measure) await ctx.world.relate({from:measure.id,type:"wired as",to:entity.id,source});
   }
   return out;
 }
@@ -78,20 +94,27 @@ async function wireSocrata(ctx: Ctx, c: Chosen, modelWhere: string, fields: stri
       : undefined;
   const parts = [county, modelWhere && modelWhere.trim() !== "1=1" ? `(${modelWhere})` : undefined].filter(Boolean);
   const where = parts.join(" AND ");
-  const keyFields = ["tractfips", "locationname", "countyfips", "totalpopulation"].filter((f) => names.has(f));
-  const select = [...new Set([...keyFields, ...fields])];
+  const keyFields = ["tractfips", "locationname", "countyfips", "countyname", "stateabbr", "totalpopulation", "totalpop18plus"].filter((f) => names.has(f));
+  const intervals = fields.flatMap((f) => f.endsWith("_crudeprev") ? [f.replace(/_crudeprev$/, "_crude95ci")] : []).filter((f) => names.has(f));
+  const select = [...new Set([...keyFields, ...fields, ...intervals])];
   const url = soqlUrl(c.candidate.url, { where: where || undefined, select: select.join(","), limit: 50000 });
   const sourceCount = await socrataCount(c.candidate.url, where || undefined);
   const table = tableName(ctx.runShort, label);
   await register(ctx, table, url, label);
   const z = await ctx.zetaris.query(`SELECT COUNT(*) FROM session.${table}`);
   const zetarisCount = Number(z.rows[0]?.[0] ?? 0);
+  if(intervals.length) {
+    const ci=await ctx.zetaris.query(`SELECT tractfips, ${intervals.join(", ")} FROM session.${table}`,200);
+    (ctx.intervals ??= []).push({source:c.candidate.title,headers:ci.headers,rows:ci.rows});
+  }
   await ctx.trace.log({ agent: "wirer", action: "count", status: zetarisCount === sourceCount ? "ok" : "error", note: `${label}: ${zetarisCount} rows in Zetaris, ${sourceCount} at the source`, sql: `SELECT COUNT(*) FROM session.${table}`, zetarisMs: z.ms, rows: zetarisCount });
   return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: "socrata_list", tables: [table], fields: select, where, sourceCount, zetarisCount, capped: false, excludedTestRecords: 0, sourceUrl: c.candidate.url };
 }
 
 async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: string[], groupField: string | undefined, label: string): Promise<Wired> {
   const layer = normaliseLayerUrl(c.candidate.url);
+  const objectIdField=c.fields.find((f)=>f.type === "oid")?.name ?? "OBJECTID";
+  const pageSize=Math.min(PAGE,c.maxRecordCount ?? PAGE);
   let where = modelWhere?.trim() || "1=1";
 
   // Data-quality rule: exclude values that look like test records in status/type fields (one DEBUG_TEST record seen live).
@@ -110,19 +133,20 @@ async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: strin
   }
 
   const sourceCount = await layerCount(layer, where);
-  const pages = Math.min(Math.ceil(sourceCount / PAGE), MAX_PAGES);
-  const outFields = [...new Set(["OBJECTID", ...fields, ...(groupField ? [groupField] : [])])];
+  const pages = Math.min(Math.ceil(sourceCount / pageSize), MAX_PAGES);
+  const caseIdField=c.fields.find((f)=>/^(OffenceNum|CaseID|CaseNumber|CaseNo|RequestID|IncidentID)$/i.test(f.name))?.name;
+  const outFields = [...new Set([objectIdField, ...(caseIdField ? [caseIdField] : []), ...fields, ...(groupField ? [groupField] : [])])];
   const tables: string[] = [];
   let zetarisCount = 0;
   for (let i = 0; i < pages; i++) {
-    const url = featurePageUrl(layer, { where, outFields, offset: i * PAGE, pageSize: PAGE });
+    const url = featurePageUrl(layer, { where, outFields, offset: i * pageSize, pageSize, objectIdField });
     const table = tableName(ctx.runShort, `${label}_p${i}`);
     await register(ctx, table, url, `${label} page ${i + 1} of ${pages}`, i === 0);
     const z = await ctx.zetaris.query(`SELECT COUNT(*) FROM session.${table} LATERAL VIEW explode(features) AS f`);
     zetarisCount += Number(z.rows[0]?.[0] ?? 0);
     tables.push(table);
   }
-  const capped = sourceCount > pages * PAGE;
+  const capped = sourceCount > pages * pageSize;
   await ctx.trace.log({
     agent: "wirer",
     action: "count",
@@ -130,21 +154,38 @@ async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: strin
     note: `${label}: ${zetarisCount.toLocaleString("en-US")} records read through Zetaris in ${pages} page(s); the city's server reports ${sourceCount.toLocaleString("en-US")}${capped ? " (more than Fieldwork reads in one run)" : ""}`,
     rows: zetarisCount,
   });
-  return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: "arcgis_features", tables, fields: outFields, groupField, where, sourceCount, zetarisCount, capped, excludedTestRecords: excluded, sourceUrl: layer };
+  return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: c.geometryType ? "arcgis_features" : "arcgis_table", objectIdField, tables, fields: outFields, caseIdField, groupField, where, sourceCount, zetarisCount, capped, excludedTestRecords: excluded, sourceUrl: layer };
 }
 
 // Test the request first; only then create the table Zetaris will query.
 async function register(ctx: Ctx, table: string, url: string, what: string, test = true): Promise<void> {
   if (test) {
     const tsql = testRequest(url);
-    const t = await ctx.zetaris.query(tsql, 50);
+    let t = await ctx.zetaris.query(tsql, 50);
+    const initial = t.rows.find((r) => r[0] === "STATUS" && r[1] === "code")?.[2];
+    if (initial !== "200") {
+      await ctx.trace.log({ agent: "wirer", action: "SOURCE_DOWN", status: "info", note: notice("SOURCE_DOWN", `${what}: HTTP ${initial ?? "unknown"}; retrying.`).message });
+      t = await ctx.zetaris.query(tsql, 50);
+      if (t.rows.find((r) => r[0] === "STATUS" && r[1] === "code")?.[2] === "200") await ctx.trace.log({ agent: "wirer", action: "SOURCE_REPAIRED", status: "ok", note: notice("SOURCE_REPAIRED", what).message });
+    }
     const status = t.rows.find((r) => r[0] === "STATUS" && r[1] === "code")?.[2];
     await ctx.trace.log({ agent: "wirer", action: "test_request", status: status === "200" ? "ok" : "error", note: `${what}: source answered HTTP ${status ?? "?"} through Zetaris`, sql: tsql, zetarisMs: t.ms });
-    if (status !== "200") throw new ZetarisError(`${what}: the source answered HTTP ${status ?? "?"}`, Number(status ?? 0), tsql);
+    if (status !== "200") throw new FieldworkError("SOURCE_DOWN", `${what}: HTTP ${status ?? "unknown"}.`);
   }
   const csql = createSessionTable(table, url);
   const check = checkSql(csql, "wirer");
   if (!check.ok) throw new Error(`refused to send SQL: ${check.reason}`);
   const r = await ctx.zetaris.query(csql);
   await ctx.trace.log({ agent: "wirer", action: "create_table", status: "ok", note: `${what}: registered in Zetaris as session.${table}`, sql: csql, zetarisMs: r.ms });
+}
+
+async function wireEpa(ctx: Ctx,p: Plan,c: Chosen,label: string): Promise<Wired> {
+  if(p.years?.from || p.years?.to) throw new FieldworkError("NO_SOURCE","EPA ECHO is a current registry snapshot; this source does not establish the requested historical period.");
+  const table=tableName(ctx.runShort,label);await register(ctx,table,c.candidate.url,label);
+  const sql=`SELECT COUNT(*) AS n FROM session.${table} LATERAL VIEW explode(Results.Facilities) AS f`;
+  const result=await ctx.zetaris.query(sql);const n=Number(result.rows[0]?.[0] ?? 0);
+  const expected=Number(c.candidate.description.match(/(\d+) source records/)?.[1] ?? n);
+  if(n!==expected) throw new FieldworkError("NO_SOURCE",`EPA returned ${n} of ${expected} records; incomplete registry coverage cannot support a tract ranking.`);
+  await ctx.trace.log({agent:"wirer",action:"count",status:"ok",note:`EPA ECHO: ${n} of ${expected} records through Zetaris; current county registry, not historical emissions.`,sql,rows:n});
+  return {measureId:c.measureId,measure:c.measure,label,title:c.candidate.title,shape:"epa_facilities",tables:[table],fields:c.fields.map((f)=>f.name),where:"current county registry",sourceCount:expected,zetarisCount:n,capped:false,excludedTestRecords:0,sourceUrl:c.candidate.url};
 }

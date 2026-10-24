@@ -1,0 +1,34 @@
+import { useEffect, useState } from "react";
+import { api, type RunSummary, type RunRecord, type RunEvent } from "../api";
+import { Link } from "../Link";
+import { when } from "../format";
+import need from "../../../../evidence/need.json";
+import questions from "../../../../evidence/questions.json";
+export function History() {
+    const [runs, setRuns] = useState<RunSummary[]>([]);
+    const [error, setError] = useState("");
+    const [local, setLocal] = useState(false);
+    useEffect(() => { api.runs().then((v) => setRuns(v.runs), (e) => setError(e.message)); }, []);
+    let ids: string[] = [];
+    try {
+        ids = JSON.parse(localStorage.getItem("fieldwork-history") ?? "[]");
+    }
+    catch { /* storage may be disabled */ }
+    return <section className="card"><h1>Earlier answers</h1><label><input type="checkbox" checked={local} onChange={(e) => setLocal(e.target.checked)}/> This browser only</label>{error && <p role="alert">{error}</p>}<ul>{runs.filter((v) => !local || ids.includes(v.id)).map((v) => <li key={v.id}><Link href={`/a/${v.id}`}>{v.question}</Link><p className="muted">{v.mode === "recorded" ? "Recorded run" : "Live run"} · {when(v.created_at)} · {v.status}</p></li>)}</ul>{local && ids.length === 0 && <p>No answers saved in this browser yet.</p>}</section>;
+}
+export function How({ id }: {
+    id: string;
+}) {
+    const [data, setData] = useState<{
+        run: RunRecord;
+        events: RunEvent[];
+    }>();
+    const [error, setError] = useState("");
+    useEffect(() => { api.run(id).then(setData, (e) => setError(e.message)); }, [id]);
+    return <><section className="card"><h1>How it worked</h1><p>{data?.run.question}</p>{error && <p role="alert">{error}</p>}<Link href={`/a/${id}`}>Answer</Link> · <Link href={`/run/${id}`}>Step graph</Link></section><section className="card"><h2>Full trace</h2><div className="table-wrap"><table><thead><tr>{["Step", "Time", "Agent", "Action", "Model served", "Duration", "Rows", "What happened"].map((h) => <th key={h}>{h}</th>)}</tr></thead><tbody>{data?.events.map((e) => <tr key={e.seq}><td>{e.seq}</td><td>{e.ts}</td><td>{e.agent}</td><td>{e.action}</td><td>{e.modelServed ?? "—"}</td><td>{e.latencyMs ?? e.zetarisMs ?? "—"} ms</td><td>{e.rows ?? "—"}</td><td>{e.note}{e.sql && <details><summary>Zetaris query</summary><pre>{e.sql}</pre></details>}</td></tr>)}</tbody></table></div></section><section className="card memory-details"><h2>H-MEM memories used</h2>{data?.run.answer?.memories?.length ? <ul>{data.run.answer.memories.map((m, i) => <li key={`${m.id}-${i}`}><strong>{m.kind}</strong> · {m.id}<p>{m.content}</p></li>)}</ul> : <p>This recording has no saved memory contents. Recall events below show what was recorded.</p>}<h2>Memories written</h2>{data?.run.answer?.memoryWrites?.length ? <ul>{data.run.answer.memoryWrites.map((m) => <li key={m.id}>{m.id}<p>{m.content}</p></li>)}</ul> : <p>This recording includes no saved memory-write contents.</p>}<h2>Memory reads and writes</h2>{data?.events.filter((e) => e.agent === "memory").map((e) => <p key={e.seq}>{e.note}</p>)}<h2>Shared World Model</h2>{data?.run.answer?.world ? <><p>{data.run.answer.world.entities.length} entities, {data.run.answer.world.edges.length} relationships, persisted with this run.</p><details><summary>Entities and relationships</summary><pre>{JSON.stringify(data.run.answer.world, null, 2)}</pre></details></> : <p>This earlier recording has no shared-state snapshot.</p>}<h2>Source repairs</h2>{data?.events.some((e) => /repair|doctor/i.test(e.action)) ? data.events.filter((e) => /repair|doctor/i.test(e.action)).map((e) => <p key={e.seq}>{e.note}</p>) : <p>No source repair was recorded for this run.</p>}</section></>;
+}
+export function Check() {
+    const [hash, setHash] = useState("");
+    useEffect(() => { fetch("/api/health").then((v) => v.json()).then((v) => setHash(v.questionManifest ?? "Unavailable")); }, []);
+    return <section className="card"><h1>Check it yourself</h1><h2>Why these questions</h2>{need.map((n) => <p key={n.url}><a href={n.url}>{n.title}</a>: “{n.excerpt}.” {n.supported_claim}</p>)}<p className="muted">These are documented public-data uses, not evidence of Fieldwork adoption or measured benefit.</p><p>The dated question set contains {questions.questions.length} questions. The complete live evaluation is pending. Pass rate: not measured (0 evaluated); historical answers are not counted as verified passes.</p><p>Question manifest SHA-256: <code className="hash">{hash || "Loading…"}</code></p><p>From the repository, run <code>npm ci</code>, then <code>npm run ask -- "your question"</code>. Export a run with <code>npx tsx apps/api/src/cli.ts export RUN_ID</code>. Compare its source filters, rows, units and ordering with the expected answer shape.</p><div className="table-wrap"><table><thead><tr><th>Question</th><th>Expected answer</th><th>Result</th></tr></thead><tbody>{questions.questions.map((q) => <tr key={q.id}><td>{q.question}</td><td>{q.answer_shape}</td><td>Not evaluated</td></tr>)}</tbody></table></div></section>;
+}

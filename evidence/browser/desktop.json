@@ -1,0 +1,24 @@
+{
+  "base": "https://fieldwork.38-49-216-59.sslip.io",
+  "phone": false,
+  "runId": "r_20261024_35996b",
+  "answerUrl": "https://fieldwork.38-49-216-59.sslip.io/a/r_20261024_35996b",
+  "errors": [],
+  "overflow": false,
+  "finished_at": "2026-10-24T19:17:24.454Z",
+  "checks": [
+    "live question to answer",
+    "number to rows and query",
+    "tract map",
+    "CSV export",
+    "PNG export",
+    "text citations",
+    "Markdown citations",
+    "full trace",
+    "history",
+    "question set",
+    "provider connection",
+    "browser errors",
+    "horizontal overflow on settings"
+  ]
+}

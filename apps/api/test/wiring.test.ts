@@ -1,0 +1,34 @@
+import { expect, test, vi } from "vitest";
+import { HMEM } from "@fieldwork/hmem";
+import { wire } from "../src/agents/wirer.js";
+import { layerCount } from "@fieldwork/sources";
+import type { Ctx } from "../src/agents/context.js";
+import type { Chosen } from "../src/agents/finder.js";
+vi.mock("@fieldwork/sources", async (importOriginal) => ({ ...await importOriginal<typeof import("@fieldwork/sources")>(), layerCount: vi.fn(async () => 1) }));
+const choice: Chosen = { measureId: "city", measure: "records", candidate: { catalog: "montgomery_hub", id: "unit", title: "City records", description: "", url: "https://example.invalid/FeatureServer/0", kind: "arcgis_layer" }, reason: "unit", geometryType: "esriGeometryPoint", fields: [{ name: "OBJECTID", type: "oid" }] };
+const plan = { in_scope: true, geography: "tract" as const, measures: [], output: "ranking" as const };
+function context(statuses: string[]) {
+    const log = vi.fn();
+    let index = 0;
+    const ctx = { runId: "r_20261024_abcdef", runShort: "abcdef", memory: new HMEM(), recalled: [], trace: { log }, models: { wirer: { json: async () => ({ value: { sources: [{ measure_id: "city", where: "1=1", fields: ["OBJECTID", "tractfips"], group_field: "tractfips" }] } }) } }, zetaris: { query: vi.fn(async (sql: string) => sql.startsWith("TEST") ? { rows: [["STATUS", "code", statuses[index++] ?? "200"]], ms: 0 } : { rows: [["1"]], ms: 0 }) } } as unknown as Ctx;
+    return { ctx, log };
+}
+test("unknown grouping and ordinary fields never reach the city query", async () => {
+    const { ctx } = context(["200"]);
+    const result = await wire(ctx, plan, [choice]);
+    expect(result[0]?.groupField).toBeUndefined();
+    expect(result[0]?.fields).not.toContain("tractfips");
+    expect(JSON.stringify(vi.mocked(ctx.zetaris.query).mock.calls)).not.toContain("tractfips");
+});
+test("source failures and a successful retry reach the corresponding notices", async () => {
+    const bad = context(["503", "503"]);
+    await expect(wire(bad.ctx, plan, [choice])).rejects.toMatchObject({ code: "SOURCE_DOWN" });
+    expect(bad.log.mock.calls.some(([e]) => e.action === "SOURCE_DOWN")).toBe(true);
+    const fixed = context(["503", "200"]);
+    await wire(fixed.ctx, plan, [choice]);
+    expect(fixed.log.mock.calls.some(([e]) => e.action === "SOURCE_REPAIRED")).toBe(true);
+});
+test("a nonspatial source cannot silently become tract counts", async () => {
+    const { ctx } = context([]);
+    await expect(wire(ctx, plan, [{ ...choice, geometryType: undefined }])).rejects.toMatchObject({ code: "NO_SOURCE" });
+});

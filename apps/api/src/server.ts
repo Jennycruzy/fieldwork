@@ -1,11 +1,12 @@
 // The Desk's API. Live mode runs questions through the agents; sample mode (no Zetaris, no keys) serves
 // recorded runs from evidence/runs/ so the Desk works from a clean clone.
 
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
 import fastifyStatic from "@fastify/static";
-import type { RunEvent } from "@fieldwork/core";
+import { checkDraft, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider } from "@fieldwork/llm";
 import type { Config } from "./config.js";
 import { migrate, type Db } from "./db.js";
@@ -51,7 +52,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
 
   const sample = loadSamples(deps.sampleDir);
 
-  app.get("/api/health", async () => ({ ok: true, mode: deps.live ? "live" : "sample", recorded: sample.size }));
+  app.get("/api/health", async () => ({ ok: true, mode: deps.live ? "live" : "sample", recorded: sample.size, questionManifest: existsSync(resolve(deps.sampleDir, "../questions.json")) ? createHash("sha256").update(readFileSync(resolve(deps.sampleDir, "../questions.json"))).digest("hex") : null }));
 
   app.get("/api/runtime", async () => {
     if (!deps.live) return { state: "offline", reason: "Sample mode: no model provider is used.", baseUrl: "", modes: [], fallback: "none" };
@@ -90,7 +91,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     const recorded = [...sample.values()].map(({ run }) => summary(run));
     if (!deps.live) return { runs: recorded };
     const r = await deps.live.db.query(`SELECT * FROM runs WHERE status IN ('answered', 'partial') ORDER BY created_at DESC LIMIT 20`);
-    return { runs: [...r.rows.map((x) => summary(x as RunRecord)), ...recorded.filter((s) => !r.rows.some((x) => x.id === s.id))], active };
+    return { runs: [...r.rows.map((x) => summary(reviewRun(x as RunRecord))), ...recorded.filter((s) => !r.rows.some((x) => x.id === s.id))], active };
   });
 
   app.get<{ Params: { id: string } }>("/api/runs/:id", async (req, reply) => {
@@ -144,7 +145,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     let last: number | undefined;
     let maxSeq = 0;
     for (const e of got.events) {
-      if (speed > 0 && last !== undefined) await sleep(Math.min((Date.parse(e.ts) - last) / speed, 1500));
+      if (speed > 0 && last !== undefined) await sleep(speed === 1 ? Math.max(0,Date.parse(e.ts)-last) : Math.min(Math.max(0,Date.parse(e.ts) - last) / speed, 1500));
       last = Date.parse(e.ts);
       maxSeq = Math.max(maxSeq, e.seq);
       if (req.raw.destroyed) return;
@@ -171,7 +172,7 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
     const r = await deps.live.db.query(`SELECT * FROM runs WHERE id = $1`, [id]);
     if (!r.rows[0]) return sample.get(id);
     const ev = await deps.live.db.query(`SELECT * FROM events WHERE run_id = $1 ORDER BY seq`, [id]);
-    return { run: r.rows[0] as RunRecord, events: ev.rows.map(fromRow) };
+    return { run: reviewRun(r.rows[0] as RunRecord), events: ev.rows.map(fromRow) };
   }
 
   return app;
@@ -198,7 +199,7 @@ export function loadSamples(dir: string): Map<string, { run: RunRecord; events: 
     if (!existsSync(evFile)) continue;
     const run = { ...(JSON.parse(readFileSync(join(dir, f), "utf8")) as RunRecord), mode: "recorded" as const };
     const events = readFileSync(evFile, "utf8").split("\n").filter(Boolean).map((l) => fromRow({ run_id: id, ...JSON.parse(l) }));
-    out.set(id, { run, events });
+    out.set(id, { run: reviewRun(run), events });
   }
   return out;
 }
@@ -224,4 +225,16 @@ function fromRow(r: Record<string, unknown>): RunEvent {
     zetarisMs: n(r.zetaris_ms),
     rows: n(r.rows),
   };
+}
+
+// Preserve original recordings on disk; withhold prose that fails the current checks when serving it.
+function reviewRun(run: RunRecord): RunRecord {
+  const a=run.answer;
+  const draft=a?.answer as {headline:string;points:string[];how_sure:string;caveats:string[]} | undefined;
+  if(!draft || !Array.isArray(a?.headers) || !Array.isArray(a?.rows)) return run;
+  const facts=((a.checks ?? []) as {detail:string}[]).map((c)=>c.detail).concat(`Evaluator rounds: ${run.rounds}`, ...((a.sources ?? []) as {filter:string}[]).map((s)=>s.filter));
+  const check=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],a.headers as string[],a.rows as (string|null)[][],facts);
+  const oldLocation=((a.checks ?? []) as {id?:string;detail:string}[]).some((c)=>c.id === "bridge_match" && /[1-9]\d* outside, 0 without a location/.test(c.detail));
+  if(check.ok && !oldLocation) return run;
+  return {...run,status:"partial",answer:{...a,answer:undefined,message:"This earlier draft failed the current answer checks. Its prose is withheld; inspect the source rows and query below, or re-run live.",checks:[...((a.checks??[]) as {id?:string;ok:boolean;detail:string}[]).map((c)=>oldLocation && c.id === "bridge_match" ? {...c,ok:false,detail:"This older location check did not distinguish missing coordinates from outside points. See the dated location verification; re-run for the corrected classification."}:c),{ok:false,detail:"Unsupported or outdated claims were found in the recorded draft."}]}};
 }

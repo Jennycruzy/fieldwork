@@ -1,5 +1,6 @@
+import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
-import { checkDraft, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
+import { checkDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
@@ -11,7 +12,7 @@ import type { Ctx, Role } from "./agents/context.js";
 import { plan } from "./agents/planner.js";
 import { find, type Chosen } from "./agents/finder.js";
 import { wire, type Wired } from "./agents/wirer.js";
-import { bridgeToTracts, type Bridged } from "./agents/bridge.js";
+import { bridgeEpa, bridgeToTracts, type Bridged } from "./agents/bridge.js";
 import { join, type Joined } from "./agents/joiner.js";
 import { evaluate } from "./agents/evaluator.js";
 import { write } from "./agents/writer.js";
@@ -76,7 +77,7 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
   const models = Object.fromEntries(
     (Object.keys(MODELS) as Role[]).map((role) => {
       const routes: Route[] = [...primary, ...(cloud ? MODELS[role].map((model) => ({ provider: cloud, model })) : [])];
-      return [role, new ModelChain(routes, { budget, reasoning: REASONING[role], onCall: trace.modelCall(role) })];
+      return [role, new ModelChain(routes, { budget, reasoning: REASONING[role], onSlow: (seconds) => { void trace.log({ agent: role, action: "MODEL_SLOW", status: "info", note: notice("MODEL_SLOW", `${seconds} s elapsed.`).message }); }, onCall: trace.modelCall(role) })];
     }),
   ) as Record<Role, ModelChain>;
 
@@ -87,7 +88,11 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     if (e.agent === "joiner" && e.action === "repair") repairs.push(e.note);
   });
 
+  const persisted = await db.query<{entry: Entry}>(`SELECT entry FROM world_events WHERE run_id = $1 ORDER BY seq`, [runId]);
+  const world = new WorldModel({ namespace: runId, entries: persisted.rows.map((r)=>r.entry), append: async(entry) => { await db.query(`INSERT INTO world_events (run_id, seq, entry) VALUES ($1,$2,$3)`, [runId,entry.seq,JSON.stringify(entry)]); } });
+  await world.upsertContext({type:"run",externalKey:{system:"fieldwork",id:runId},attrs:{question},source:{kind:"run",at:new Date().toISOString()}});
   const ctx: Ctx = {
+    world,
     cfg,
     db,
     zetaris: new ZetarisClient(cfg.zetaris),
@@ -108,7 +113,7 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     await trace.log({ agent: "planner", action: "plan", status: "ok", note: summarisePlan(p) });
     if (!p.in_scope) {
       out.status = "refused";
-      out.message = p.out_of_scope_reason ?? "This question is outside what Fieldwork's sources cover.";
+      out.message = notice("OUT_OF_SCOPE", p.out_of_scope_reason ?? "data outside these sources.").message;
       return out;
     }
 
@@ -129,6 +134,12 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
         break;
       }
       const why = ev.verdict.instruction ?? ev.verdict.reasons.join("; ");
+      if (ev.verdict.target !== "plan") {
+        const reviewed = await plan(ctx, question, why);
+        const keys = (x: Plan) => JSON.stringify(x.measures.map((m)=>[m.kind,m.search_terms]));
+        if (keys(reviewed) !== keys(p)) ev.verdict.target = "plan";
+        else { p=reviewed; out.plan=p; }
+      }
       if (ev.verdict.target === "plan") {
         p = await plan(ctx, question, why);
         out.plan = p;
@@ -151,16 +162,24 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     out.joined = joined;
     // The draft is checked against the rows; a slip goes back to the Writer once with the exact problems.
     let draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds);
-    const facts = out.checks.map((c) => c.detail);
-    let dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows, facts);
+    const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), `Evaluator rounds: ${out.rounds}`];
+    let dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     if (!dc.ok) {
       const problems = [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems].join("; ");
       await trace.log({ agent: "evaluator", action: "check:draft", status: "error", note: `Sent the draft back to the Writer: ${problems}` });
       draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds, problems);
-      dc = checkDraft([draft.headline, ...draft.points], joined.result.headers, joined.result.rows, facts);
+      dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     }
     await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
-    if (!dc.ok) out.status = "partial";
+    if (!dc.ok) {
+      out.status = "partial";
+      const supported = (text: string) => checkDraft([text],joined.result.headers,joined.result.rows,facts).ok;
+      draft.points=draft.points.filter(supported);
+      draft.caveats=draft.caveats.filter(supported);
+      if(!supported(draft.how_sure)) draft.how_sure="Some draft statements could not be checked. Only supported statements are shown; review the flagged checks.";
+      out.checks.push({id:"answer_draft",ok:false,detail:"Unsupported statements were omitted after the Writer rewrite; the answer remains partial."});
+    }
+    if (out.status === "partial") draft.caveats.push(notice("PARTIAL", "Review the flagged checks below.").message);
     out.answer = draft;
     out.view = await saveAnswerView(ctx, joined.sql);
     return out;
@@ -170,7 +189,8 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
       out.message = "Today's live model calls are used up.";
     } else {
       out.status = "failed";
-      out.message = (e as Error).message;
+      if (e instanceof ZetarisError) await trace.log({agent:"run",action:"query_error",status:"error",note:e.message,sql:e.sql});
+      out.message = e instanceof FieldworkError ? e.message : e instanceof ZetarisError && (e.status >= 500 || !e.sql) ? notice("ZETARIS_DOWN", "The failed query is recorded in the trace.").message : (e as Error).message;
       out.providerFailed = e instanceof ProviderError;
     }
     await trace.log({ agent: "run", action: "error", status: "error", note: out.message });
@@ -188,7 +208,8 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
       JSON.stringify({
         question,
         answer: out.answer,
-        sources: out.wired.map((w) => ({ title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
+        sources: out.wired.map((w) => ({ licence:w.licence, licenceUrl:w.licenceUrl, label:w.label, title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
+        memoryWrites: ctx.writtenMemories, intervals: ctx.intervals, world: world.context(), tracts: ctx.tractShapes, memories: ctx.recalled.map(({ id, kind, content, confidence }) => ({ id, kind, content, confidence })),
         plan: out.plan,
         sql: out.joined?.sql,
         view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
@@ -218,6 +239,7 @@ async function bridgeAll(ctx: Ctx, p: Plan, wired: Wired[]): Promise<Bridged[]> 
   if (p.geography !== "tract") return [];
   const out: Bridged[] = [];
   for (const w of wired.filter((x) => x.shape === "arcgis_features")) out.push(await bridgeToTracts(ctx, w));
+  for (const w of wired.filter((x) => x.shape === "epa_facilities")) out.push(await bridgeEpa(ctx,w));
   return out;
 }
 

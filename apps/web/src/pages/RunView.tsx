@@ -49,6 +49,7 @@ function stepOf(e: RunEvent): string | undefined {
 }
 
 export function RunView({ id }: { id: string }) {
+  const [replaySpeed, setReplaySpeed] = useState(4);
   const [run, setRun] = useState<RunRecord>();
   const [events, setEvents] = useState<RunEvent[]>([]);
   const [ended, setEnded] = useState<string>();
@@ -66,7 +67,7 @@ export function RunView({ id }: { id: string }) {
         setRun(run);
         setWatchedLive(run.status === "running");
         // Recorded runs replay at 4x their real pace; live ones stream as they happen.
-        const speed = run.mode === "recorded" ? 4 : 0;
+        const speed = run.mode === "recorded" ? replaySpeed : 0;
         stop = watch(
           id,
           speed,
@@ -80,7 +81,7 @@ export function RunView({ id }: { id: string }) {
       () => setMissing(true),
     );
     return () => stop();
-  }, [id]);
+  }, [id, replaySpeed]);
 
   useEffect(() => {
     if (ended) return;
@@ -95,6 +96,8 @@ export function RunView({ id }: { id: string }) {
   const last = events[events.length - 1];
   const waited = last ? Math.max(0, (tick - Date.parse(last.ts)) / 1000) : 0;
   const isRecorded = run?.mode === "recorded";
+  const pageEvents = events.filter((e)=>e.agent === "wirer" && /page \d+ of \d+/.test(e.note));
+  const visibleEvents=events.filter((e)=>!pageEvents.includes(e));
 
   if (missing)
     return (
@@ -110,8 +113,9 @@ export function RunView({ id }: { id: string }) {
     <>
       <section className="card">
         <div className="eyebrow">
-          {isRecorded ? "Recorded run, replayed at 4× speed" : ended ? "Live run, finished" : "Live run"} · {id}
+          {isRecorded ? `Recorded run, ${replaySpeed}× replay${replaySpeed === 4 ? "; long waits shortened" : ""}` : ended ? "Live run, finished" : "Live run"} · {id}
         </div>
+        {isRecorded && <label>Replay speed <select value={replaySpeed} onChange={(e)=>setReplaySpeed(Number(e.target.value))}><option value={4}>4× with shorter waits</option><option value={1}>Original timing</option></select></label>}
         <h1 className="q">{run?.question ?? "…"}</h1>
         <ol className="graph" aria-label="Steps">
           {STEPS.map((s) => (
@@ -131,9 +135,9 @@ export function RunView({ id }: { id: string }) {
       </section>
 
       <section className="card">
-        <h2>Every step</h2>
+        <h2>Every step</h2>{pageEvents.length>0 && <details><summary>Wiring pages: {pageEvents.length} recorded steps</summary><ul>{pageEvents.map((e)=><li key={e.seq}>{e.note}{e.sql && <details><summary>Zetaris SQL</summary><pre>{e.sql}</pre></details>}</li>)}</ul></details>}
         <ol className="steps">
-          {events.map((e) => (
+          {visibleEvents.map((e) => (
             <li key={e.seq} className={`step ${e.status}`}>
               <div className="step-head">
                 <span className="agent">{AGENT_LABEL[e.agent] ?? e.agent}</span>
@@ -143,6 +147,7 @@ export function RunView({ id }: { id: string }) {
                     {modelName(e.modelServed)} · {e.modelProvider} · {secs(e.latencyMs)}
                   </span>
                 )}
+                {!e.modelServed && e.modelRequested && <span className="badge">{modelName(e.modelRequested)} requested · no response{e.latencyMs ? ` · ${secs(e.latencyMs)}` : ""}</span>}
                 {e.zetarisMs !== undefined && <span className="badge z">Zetaris · {e.zetarisMs} ms</span>}
               </div>
               <p className="note">{e.note}</p>

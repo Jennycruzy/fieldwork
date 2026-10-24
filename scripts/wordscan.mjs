@@ -3,7 +3,7 @@ import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
 const banned = [/\bspec\b/i, /\bmilestone\b/i, /\bgate\s*\d/i, /\bG\d{1,2}\b/, /\bR[0-3]\b/, /\bcodex\b/i, /\bclaude\b/i, /co-authored-by/i, /ai-generated/i, /\bhandover\b/i];
-const allow = [/^package-lock\.json$/, /^scripts\/wordscan\.mjs$/, /\/fixtures\//, /^packages\/hmem\/(engine|conformance)\//, /^packages\/hmem\/src\/engine\//, /LICENSE-meterless/];
+const allow = [/^packages\/world\/conformance\//,/^package-lock\.json$/, /^scripts\/wordscan\.mjs$/, /\/fixtures\//, /^packages\/hmem\/(engine|conformance)\//, /^packages\/hmem\/src\/engine\//, /LICENSE-meterless/];
 const files = execSync("git ls-files", { encoding: "utf8" }).split("\n").filter(Boolean).filter((f) => !allow.some((a) => a.test(f)));
 let bad = 0;
 for (const f of files) {

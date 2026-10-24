@@ -32,6 +32,12 @@ CREATE TABLE IF NOT EXISTS events (
   sql text, zetaris_ms int, rows int,
   PRIMARY KEY (run_id, seq)
 );
+CREATE TABLE IF NOT EXISTS world_events (
+  run_id text NOT NULL REFERENCES runs(id),
+  seq int NOT NULL,
+  entry jsonb NOT NULL,
+  PRIMARY KEY (run_id, seq)
+);
 CREATE TABLE IF NOT EXISTS sources (
   id text PRIMARY KEY,
   catalog text NOT NULL,

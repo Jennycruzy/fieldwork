@@ -5,6 +5,7 @@ import { config, loadEnvFile } from "./config.js";
 import { openDb } from "./db.js";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ask } from "./run.js";
+import { serializeRun } from "./evidence.js";
 import { MeterlessProvider, autoDetect } from "@fieldwork/llm";
 
 async function main(): Promise<number> {
@@ -58,7 +59,7 @@ async function exportRun(runId: string): Promise<number> {
   }
   const events = await db.query(`SELECT seq, ts, agent, action, status, note, model_provider, model_requested, model_served, tokens_in, tokens_out, latency_ms, sql, zetaris_ms, rows FROM events WHERE run_id = $1 ORDER BY seq`, [runId]);
   mkdirSync("evidence/runs", { recursive: true });
-  writeFileSync(`evidence/runs/${runId}.run.json`, JSON.stringify(run.rows[0], null, 2) + "\n");
+  writeFileSync(`evidence/runs/${runId}.run.json`, serializeRun(run.rows[0]));
   writeFileSync(`evidence/runs/${runId}.events.jsonl`, events.rows.map((e) => JSON.stringify(e)).join("\n") + "\n");
   console.log(`evidence/runs/${runId}: ${events.rows.length} events`);
   await db.end();

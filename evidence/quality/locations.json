@@ -1,0 +1,42 @@
+[
+  {
+    "year": 2025,
+    "run_id": "r_20261024_11b2fe",
+    "raw_records": 15439,
+    "coordinate_problems": {
+      "missing": 336,
+      "nonnumeric": 0,
+      "out_of_range": 0
+    },
+    "county_tracts": 71,
+    "matched": 15103,
+    "outside": 0,
+    "invalid": 336,
+    "other_alabama_counties": [],
+    "inside_city_but_outside_county": 0,
+    "unplaced_in_alabama": 0,
+    "city_shapes": 1,
+    "common_outside_coordinates": [],
+    "observed_at": "2026-10-24T16:21:42.718Z"
+  },
+  {
+    "year": 2026,
+    "run_id": "r_20261024_5e4647",
+    "raw_records": 18407,
+    "coordinate_problems": {
+      "missing": 398,
+      "nonnumeric": 0,
+      "out_of_range": 0
+    },
+    "county_tracts": 71,
+    "matched": 18009,
+    "outside": 0,
+    "invalid": 398,
+    "other_alabama_counties": [],
+    "inside_city_but_outside_county": 0,
+    "unplaced_in_alabama": 0,
+    "city_shapes": 1,
+    "common_outside_coordinates": [],
+    "observed_at": "2026-10-24T16:21:43.800Z"
+  }
+]

@@ -1,3 +1,4 @@
+import type { WorldModel } from "../../../../packages/world/src/index.js";
 import type { ZetarisClient } from "@fieldwork/zetaris";
 import type { ModelChain } from "@fieldwork/llm";
 import type { HMEM, Recalled } from "@fieldwork/hmem";
@@ -8,6 +9,7 @@ import type { Trace } from "../trace.js";
 export type Role = "planner" | "finder" | "wirer" | "joiner" | "evaluator" | "writer";
 
 export interface Ctx {
+  world?: WorldModel;
   cfg: Config;
   db: Db;
   zetaris: ZetarisClient;
@@ -17,6 +19,9 @@ export interface Ctx {
   runShort: string;
   today: Date;
   memory: HMEM;
+  writtenMemories?: {id:string;content:string}[];
+  intervals?: {source: string; headers: string[]; rows: (string | null)[][]}[];
+  tractShapes?: { geoid: string; rings: number[][][] }[];
   recalled: Recalled[]; // every memory an agent used in this run, for feedback at the end
 }
 
@@ -30,3 +35,10 @@ export const SYSTEM_BASE = [
 export function dataBlock(label: string, value: unknown): string {
   return `<data label="${label}">\n${typeof value === "string" ? value : JSON.stringify(value, null, 1)}\n</data>`;
 }
+
+export function shared(ctx: Ctx): string {
+  if(!ctx.world) return "";
+  const state=ctx.world.context();
+  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>e.type!=="tract"),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
+}
+export function provenance(ctx: Ctx, role: string) { return {kind: role, at: ctx.today.toISOString(), run:ctx.runId}; }

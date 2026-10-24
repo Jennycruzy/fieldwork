@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-10-24T19:25:58.829078+00:00",
+  "base": "https://fieldwork.38-49-216-59.sslip.io",
+  "viewports": [
+    360,
+    1280
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "pages": [
+    "home",
+    "answer",
+    "run",
+    "settings",
+    "history",
+    "check",
+    "how",
+    "missing"
+  ],
+  "screenshots": 32,
+  "console_errors": 0,
+  "horizontal_overflow": false,
+  "command": "npx tsx scripts/desk-shots.ts https://fieldwork.38-49-216-59.sslip.io OUTPUT_DIRECTORY"
+}

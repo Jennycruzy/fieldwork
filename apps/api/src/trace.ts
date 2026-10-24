@@ -1,4 +1,4 @@
-import type { RunEvent } from "@fieldwork/core";
+import { notice, type RunEvent } from "@fieldwork/core";
 import type { CallRecord } from "@fieldwork/llm";
 import { writeEvent, type Db } from "./db.js";
 
@@ -24,19 +24,27 @@ export class Trace {
 
   // Hook for the model chain: one event per model call, with the model that actually answered.
   modelCall(agent: string) {
-    return async (r: CallRecord) =>
-      this.log({
+    let failed: {provider:string;model:string} | undefined;
+    return async (r: CallRecord) => {
+      if (r.ok && failed) {
+        const switched=failed.provider!==r.provider || failed.model!==r.modelRequested;
+        await this.log({agent,action:switched ? "MODEL_DOWN":"provider_retry",status:"info",note:switched ? notice("MODEL_DOWN",r.modelServed).message : "The retried model request answered."});
+        failed=undefined;
+      }
+      if (!r.ok) failed = {provider:r.provider,model:r.modelRequested};
+      await this.log({
         agent,
         action: "model_call",
         status: r.ok ? "ok" : "error",
         note: r.ok ? `answered by ${r.modelServed}` : `attempt ${r.attempt} failed: ${r.error ?? "error"}`,
         modelProvider: r.provider,
         modelRequested: r.modelRequested,
-        modelServed: r.modelServed,
+        modelServed: r.ok ? r.modelServed : undefined,
         tokensIn: r.tokensIn,
         tokensOut: r.tokensOut,
         latencyMs: r.ms,
       });
+    };
   }
 }
 
