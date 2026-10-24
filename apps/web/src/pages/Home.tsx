@@ -28,6 +28,8 @@ export function Home({ sample }: { sample: boolean }) {
   }, []);
 
   const featured = runs?.find((r) => r.status === "answered" && r.headline);
+  // The same question asked again shows once, newest first.
+  const earlier = runs?.filter((r, i) => r.headline && runs.findIndex((x) => x.question.toLowerCase() === r.question.toLowerCase()) === i);
 
   async function ask(q: string) {
     setError(undefined);
@@ -128,11 +130,11 @@ export function Home({ sample }: { sample: boolean }) {
         </details>
       </section>
 
-      {runs && runs.length > 1 && (
+      {earlier && earlier.length > 1 && (
         <section className="card">
           <h2>Earlier answers</h2>
           <ul className="history">
-            {runs.slice(0, 8).map((r) => (
+            {earlier.slice(0, 8).map((r) => (
               <li key={r.id}>
                 <Link href={`/a/${r.id}`}>{r.headline ?? r.question}</Link>
                 <span className="muted">

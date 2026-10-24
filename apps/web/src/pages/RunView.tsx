@@ -54,6 +54,8 @@ export function RunView({ id }: { id: string }) {
   const [ended, setEnded] = useState<string>();
   const [missing, setMissing] = useState(false);
   const [tick, setTick] = useState(Date.now());
+  // Only a run watched while it was going moves on to its answer by itself; a finished run stays here to be read.
+  const [watchedLive, setWatchedLive] = useState(false);
 
   useEffect(() => {
     let stop = () => {};
@@ -62,6 +64,7 @@ export function RunView({ id }: { id: string }) {
     api.run(id).then(
       ({ run }) => {
         setRun(run);
+        setWatchedLive(run.status === "running");
         // Recorded runs replay at 4x their real pace; live ones stream as they happen.
         const speed = run.mode === "recorded" ? 4 : 0;
         stop = watch(
@@ -122,7 +125,7 @@ export function RunView({ id }: { id: string }) {
             {!isRecorded && waited >= 60 && " (Nemotron calls can take a minute; still working)"}
           </p>
         )}
-        {ended && <Outcome id={id} status={ended} message={run?.answer?.message} />}
+        {ended && <Outcome id={id} status={ended} message={run?.answer?.message} watchedLive={watchedLive} />}
       </section>
 
       <section className="card">
@@ -155,13 +158,13 @@ export function RunView({ id }: { id: string }) {
   );
 }
 
-function Outcome({ id, status, message }: { id: string; status: string; message?: string }) {
+function Outcome({ id, status, message, watchedLive }: { id: string; status: string; message?: string; watchedLive: boolean }) {
   useEffect(() => {
-    if (status === "answered" || status === "partial") {
+    if (watchedLive && (status === "answered" || status === "partial")) {
       const t = setTimeout(() => go(`/a/${id}`), 2500);
       return () => clearTimeout(t);
     }
-  }, [id, status]);
+  }, [id, status, watchedLive]);
   if (status === "answered" || status === "partial")
     return (
       <p className="outcome ok">

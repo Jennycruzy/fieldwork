@@ -82,7 +82,11 @@ button:disabled { opacity: .55; cursor: default; }
 button.link { background: none; border: 0; padding: 0; color: var(--accent); font-weight: 500; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
 
 .ask textarea { width: 100%; font: inherit; padding: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); resize: vertical; }
-.samples, .history, .sources, .checks { padding-left: 18px; }
+.history, .sources { padding-left: 18px; }
+.samples { list-style: none; padding: 0; margin: 0; }
+.samples li { margin: 8px 0; }
+.samples button.link { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; color: var(--ink); background: var(--bg); }
+.samples button.link:hover { border-color: var(--accent); }
 .samples li, .history li, .sources li { margin: 8px 0; }
 details { margin-top: 14px; }
 summary { cursor: pointer; font-weight: 600; }
@@ -134,6 +138,7 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0 0 12px; }
 dt { color: var(--muted); }
 dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 480px) { dl { grid-template-columns: 1fr; gap: 0; } dd { margin-bottom: 8px; } }
 code { font-size: .88em; background: var(--code); padding: 1px 5px; border-radius: 4px; }
 
 .foot { max-width: 860px; margin: 0 auto; padding: 0 16px 32px; color: var(--muted); font-size: .85rem; }

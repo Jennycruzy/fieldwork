@@ -6,6 +6,9 @@ import { when } from "../format";
 // Column names from Zetaris ("crude_prevalence", "violations_2026") read better with spaces.
 const human = (h: string) => h.replace(/_/g, " ");
 
+// Zetaris returns counts cast to DOUBLE ("1125.0"); show whole numbers as 1,125 and keep decimals as they are.
+const cell = (v: string | null) => (v === null ? "—" : /^-?\d+\.0+$/.test(v) && !/^0\d/.test(v) ? Number(v).toLocaleString("en-US") : v);
+
 export function AnswerPage({ id }: { id: string }) {
   const [run, setRun] = useState<RunRecord>();
   const [missing, setMissing] = useState(false);
@@ -96,7 +99,7 @@ export function AnswerPage({ id }: { id: string }) {
                   <tr key={i}>
                     {r.map((v, j) => (
                       <td key={j} className={v !== null && /^-?\d+(\.\d+)?$/.test(v) ? "num" : ""}>
-                        {v ?? "—"}
+                        {cell(v)}
                       </td>
                     ))}
                   </tr>
