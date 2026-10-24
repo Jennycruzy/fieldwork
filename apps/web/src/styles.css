@@ -142,3 +142,4 @@ dd { margin: 0; overflow-wrap: anywhere; }
 code { font-size: .88em; background: var(--code); padding: 1px 5px; border-radius: 4px; }
 
 .foot { max-width: 860px; margin: 0 auto; padding: 0 16px 32px; color: var(--muted); font-size: .85rem; }
+.saved { margin: 12px 0 0; padding: 10px 12px; border: 1px dashed var(--accent); border-radius: 8px; overflow-wrap: anywhere; }

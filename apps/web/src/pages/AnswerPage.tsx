@@ -112,6 +112,11 @@ export function AnswerPage({ id }: { id: string }) {
               {all ? "Show fewer rows" : `Show all ${rows.length} rows`}
             </button>
           )}
+          {run.answer?.view && (
+            <p className="saved">
+              Saved in Zetaris as a SchemaStore view. Query it any time: <code>SELECT * FROM {run.answer.view}</code>
+            </p>
+          )}
           {run.answer?.sql && (
             <details>
               <summary>The Zetaris query</summary>

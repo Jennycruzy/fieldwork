@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { checkDraft, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, type Budget, type Route } from "@fieldwork/llm";
-import { ZetarisClient } from "@fieldwork/zetaris";
+import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
 import { learnFromRun } from "./memory.js";
 import type { Config } from "./config.js";
@@ -40,6 +40,7 @@ export interface RunOutcome {
   joined?: Joined;
   checks: CheckResult[];
   answer?: Answer;
+  view?: string; // the answer saved in Zetaris, e.g. fieldwork_answers.answer_b552f2
   message?: string;
 }
 
@@ -160,6 +161,7 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
     await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
     if (!dc.ok) out.status = "partial";
     out.answer = draft;
+    out.view = await saveAnswerView(ctx, joined.sql);
     return out;
   } catch (e) {
     if (e instanceof BudgetExceeded) {
@@ -186,9 +188,27 @@ export async function ask(cfg: Config, db: Db, question: string, opts: { onTrace
         answer: out.answer,
         sources: out.wired.map((w) => ({ title: w.title, url: w.sourceUrl, records: w.zetarisCount, sourceCount: w.sourceCount, filter: w.where })),
         plan: out.plan,
-        sql: out.joined?.sql, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
+        sql: out.joined?.sql,
+        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
     ]);
     await trace.log({ agent: "run", action: "finish", status: out.status === "answered" ? "ok" : "info", note: `status ${out.status} after ${out.rounds} round(s)` });
+  }
+}
+
+// The answer's query becomes a named SchemaStore view in Zetaris. A failure here is logged, never fatal.
+async function saveAnswerView(ctx: Ctx, sql: string): Promise<string | undefined> {
+  try {
+    const create = createAnswerView(ctx.runShort, sql);
+    await ctx.zetaris.query(createAnswerContainer()).catch((e) => {
+      if (!(e instanceof ZetarisError && /already exists/i.test(e.message))) throw e;
+    });
+    const r = await ctx.zetaris.query(create);
+    const name = `${ANSWER_CONTAINER}.${create.match(/VIEW (\S+)/)![1]}`;
+    await ctx.trace.log({ agent: "run", action: "save_view", status: "ok", note: `Saved in Zetaris as ${name}; query it with SELECT * FROM ${name}`, sql: create, zetarisMs: r.ms });
+    return name;
+  } catch (e) {
+    await ctx.trace.log({ agent: "run", action: "save_view", status: "error", note: `Couldn't save the answer as a Zetaris view: ${(e as Error).message}` });
+    return undefined;
   }
 }
 

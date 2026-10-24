@@ -113,7 +113,17 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
   };
   for (const t of texts) {
+    if (UNIVERSAL.test(t)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     const said = names.reduce((best, n, i) => (n && mentions(t, n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
+    // A rank claim next to one of the row's own values is checked against that value's column
+    // ("the highest blood pressure rate at 59.2%" -> rank of 59.2 in its column), not the row order.
+    if (said >= 0) {
+      const byColumn = columnRankProblems(t, said, names, headers, rows);
+      if (byColumn) {
+        order.push(...byColumn);
+        continue;
+      }
+    }
     const claimed = claimedRank(t);
     if (said < 0) {
       // A rank claim about no row in particular ("eleven tracts share the third-highest rate") can't be checked.
@@ -177,6 +187,65 @@ function mentions(t: string, name: string): boolean {
   if (t.includes(name)) return true;
   const short = name.replace(/^Census\s+/i, "");
   return short !== name && new RegExp(`\\b${short.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(t);
+}
+
+// "in every row", "consistently", "without exception": claims a correlation can't support.
+const UNIVERSAL = /\b(?:in|across|for) (?:every|each|all(?: the)?) (?:rows?|tracts?|cases?)\b|\bconsistently\b|\bwithout exception\b|\bholds? (?:across|for) (?:the )?(?:full|whole|entire) list\b/i;
+
+// Splits a sentence into clauses that each carry at most one rank claim:
+// "X ranked second in violations at 608.4 and second in blood pressure at 60.1%".
+function clauses(t: string): string[] {
+  return t.split(/;|,\s+(?=and\b|with\b|but\b)|\s+and\s+(?=(?:the\s+)?(?:highest|lowest|most|fewest|first|second|third|fourth|fifth|\d{1,2}(?:st|nd|rd|th))\b|(?:ranked|ranks|is)\b)/i);
+}
+
+// For each clause with a rank word and a number that is one of the named row's values, the claimed rank must
+// match the row's rank in that value's column (descending for highest/most, ascending for lowest/fewest;
+// equal values share a rank). Returns undefined when no clause ties a rank to a column, so the caller falls
+// back to the row order.
+function columnRankProblems(t: string, said: number, names: string[], headers: string[], rows: (string | null)[][]): string[] | undefined {
+  const problems: string[] = [];
+  let resolved = false;
+  for (const c of clauses(t)) {
+    const claim = claimedRankDir(c);
+    // "follows" / "is next" describe the row order, which the row-order check covers.
+    if (!claim || /\b(follows|comes next|is next|runner-up)\b/i.test(c)) continue;
+    const nums = numbersIn(withoutNames(spellNumbers(c), names));
+    const row = rows[said]!;
+    const cols = new Set<number>();
+    for (const n of nums) {
+      row.forEach((v, j) => {
+        if (j === 0 || v === null || !/^-?\d+(\.\d+)?$/.test(v)) return;
+        if (roundsTo(Number(v), n)) cols.add(j);
+      });
+    }
+    if (cols.size === 0) continue;
+    resolved = true;
+    const ranks = [...cols].map((j) => {
+      const mine = Number(row[j]);
+      const vals = rows.map((r) => (r[j] === null ? NaN : Number(r[j]))).filter((x) => !Number.isNaN(x));
+      return { j, rank: 1 + vals.filter((x) => (claim.dir === "desc" ? x > mine : x < mine)).length };
+    });
+    if (!ranks.some((r) => r.rank === claim.rank)) {
+      const r = ranks[0]!;
+      problems.push(`"${c.trim()}" puts ${names[said]} at rank ${claim.rank}${claim.dir === "asc" ? " from the bottom" : ""}, but in the rows it is rank ${r.rank} by ${headers[r.j] ?? "that column"}`);
+    }
+  }
+  return resolved ? problems : undefined;
+}
+
+// True when the text's number is the cell rounded to the text's precision: 645.4 for 645.36, 59.2% for 0.592.
+function roundsTo(x: number, text: string): boolean {
+  const n = Number(text);
+  const d = (text.split(".")[1] ?? "").length;
+  const near = (value: number, target: number, places: number) => Math.abs(value - target) <= 0.5 * 10 ** -places + 1e-9;
+  return near(x, n, d) || near(x * 100, n, d) || near(x / 100, n, d);
+}
+
+export function claimedRankDir(t: string): { rank: number; dir: "asc" | "desc" } | undefined {
+  const s = t.toLowerCase();
+  const dir = /\b(lowest|fewest|least|smallest)\b/.test(s) ? "asc" : "desc";
+  const r = claimedRank(t) ?? (/\b(the highest|the most|the largest|the lowest|the fewest|the smallest)\b/.test(s) ? 1 : undefined);
+  return r === undefined ? undefined : { rank: r, dir };
 }
 
 const ORDINALS: Record<string, number> = { first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9, tenth: 10 };

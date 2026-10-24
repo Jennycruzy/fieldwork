@@ -43,6 +43,7 @@ export interface RunRecord {
     answer?: Answer;
     sources?: Source[];
     sql?: string;
+    view?: string;
     headers?: string[];
     rows?: (string | null)[][];
     checks?: { ok: boolean; detail: string }[];

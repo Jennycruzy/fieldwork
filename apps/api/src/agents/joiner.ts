@@ -50,7 +50,7 @@ async function joinOnce(ctx: Ctx, question: string, p: Plan, wired: Wired[], bri
         role: "system",
         content: `${SYSTEM_BASE}
 You are the Joiner. Write ONE Zetaris Lightning SQL SELECT (Spark SQL dialect) that answers the question from the tables listed.
-Rules: CAST string numbers (CAST(x AS DOUBLE)); never reference the same table twice in one query (use window functions or conditional aggregation); include the tract name; include population when a rate per resident is asked for or useful; LIMIT 50 at most; no semicolons.
+Rules: CAST string numbers (CAST(x AS DOUBLE)); never reference the same table twice in one query (use window functions or conditional aggregation); include the tract name; include population when a rate per resident is asked for or useful (CDC PLACES has totalpopulation for all ages and totalpop18plus for adults: divide by totalpop18plus only for a rate "per adult", and name every rate column after the population it was divided by); LIMIT 50 at most; no semicolons.
 Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
       },
       {

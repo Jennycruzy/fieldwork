@@ -57,3 +57,22 @@ export function opt(value: string): string {
   if (value.includes('"')) throw new Error("option values must not contain double quotes");
   return `"${value}"`;
 }
+
+// Finished answers are saved in Zetaris as SchemaStore views, so anyone can query an answer by name after the run.
+export const ANSWER_CONTAINER = "fieldwork_answers";
+
+export function createAnswerContainer(): string {
+  return `CREATE SCHEMASTORE CONTAINER ${ANSWER_CONTAINER}`;
+}
+
+export function answerViewName(runShort: string): string {
+  return `answer_${runShort.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+}
+
+// Only a query that already passed the reader check may become a view.
+export function createAnswerView(runShort: string, selectSql: string): string {
+  const chk = checkSql(selectSql, "reader");
+  if (!chk.ok) throw new Error(`answer query can't be saved: ${chk.reason}`);
+  const body = stripComments(selectSql).trim().replace(/;\s*$/, "");
+  return `CREATE SCHEMASTORE VIEW ${answerViewName(runShort)} WITH CONTAINER ${ANSWER_CONTAINER} AS ${body}`;
+}

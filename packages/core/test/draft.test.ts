@@ -93,3 +93,31 @@ describe("live run r_20261024_72540e", () => {
     expect(r.missingNumbers).toEqual([]);
   });
 });
+
+// Rows from live run r_20261024_217d18 (sorted by violations per 1,000; Tract 11 has the higher blood pressure rate).
+describe("checkDraft on a correlation answer", () => {
+  const h = ["name", "population", "code_violations", "violations_per_1000_adults", "high_bp_prev", "pearson_corr"];
+  const r = [
+    ["Census Tract 12", "1455.0", "939.0", "645.360824742268", "59.2", "0.640893647462182"],
+    ["Census Tract 11", "2684.0", "1633.0", "608.4202682563339", "60.1", "0.640893647462182"],
+    ["Census Tract 22.02", "884.0", "474.0", "536.1990950226244", "57.8", "0.640893647462182"],
+    ["Census Tract 3", "1261.0", "591.0", "468.67565424266456", "55.7", "0.640893647462182"],
+    ["Census Tract 7", "997.0", "366.0", "367.1", "41.2", "0.640893647462182"],
+  ];
+
+  it("catches the live slip: Tract 12 is not highest in blood pressure (Tract 11 is)", () => {
+    const d = checkDraft(["Census Tract 12 had the highest violations per 1,000 adults at 645.4 and the highest high blood pressure rate at 59.2%"], h, r);
+    expect(d.ok).toBe(false);
+    expect(d.orderProblems[0]).toContain("rank 2 by high_bp_prev");
+  });
+
+  it("accepts correct ranks in two different columns", () => {
+    expect(checkDraft(["Census Tract 11 ranked second in violations per 1,000 adults at 608.4 and has the highest high blood pressure rate at 60.1%"], h, r).ok).toBe(true);
+  });
+
+  it("rejects claims that the pattern holds in every row", () => {
+    expect(checkDraft(["The pattern holds across the full list: higher violations correspond with higher blood pressure in every row"], h, r).ok).toBe(false);
+    expect(checkDraft(["Tracts with more code violations consistently have higher blood pressure rates, with a correlation of 0.641"], h, r).ok).toBe(false);
+    expect(checkDraft(["Tracts with more code violations tend to have higher blood pressure rates (correlation 0.641)"], h, r).ok).toBe(true);
+  });
+});
