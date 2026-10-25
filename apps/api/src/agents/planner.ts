@@ -61,6 +61,9 @@ Shape: ${SHAPE}`,
       value.analysis.reason="Compare population-adjusted rates across neighborhoods with different population sizes.";
     }
   }
+  if(value.in_scope&&value.analysis?.denominator==="residents"&&value.analysis.basis==="rates"&&!value.measures.some(m=>m.kind==="health_estimate")) {
+    value.measures.push({id:"population",describe:"Total resident population by census tract for the requested rates",kind:"health_estimate",search_terms:["PLACES census tract"]});
+  }
   if (ctx.world) {
     for (const m of value.measures) await ctx.world.upsertEntity({type:"measure",externalKey:{system:ctx.runId,id:m.id},attrs:{...m,analysis:value.analysis},source:provenance(ctx,"planner")});
     for (const c of ctx.world.entities().filter((e)=>e.type==="challenge"&&e.attrs.status==="open")) await ctx.world.upsertEntity({type:"challenge",externalKey:{system:ctx.runId,id:String(c.attrs.round)},attrs:{status:"resolved",resolution:value.analysis?.reason ?? revision},source:provenance(ctx,"planner")});

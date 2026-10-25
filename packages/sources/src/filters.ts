@@ -34,3 +34,12 @@ export function typedWhere(where:string,fields:{name:string;type:string}[]):stri
  }
  return result;
 }
+
+// Latest-inspection selection must see earlier and later scores, including establishments
+// whose source status vocabulary does not match a model's invented "Active" label.
+export function inspectionSourceWhere(where:string,request:string):string {
+ return where.replace(/\b(Score(?:_1)?|Status)\s*(?:<>|!=|<=|>=|=|<|>)\s*(?:'(?:[^']|'')*'|-?\d+(?:\.\d+)?)/gi,(predicate,field:string)=>{
+  if(/^Status$/i.test(field)&&/\b(active|inactive|closed|open|status)\b/i.test(request))return predicate;
+  return "1=1";
+ });
+}

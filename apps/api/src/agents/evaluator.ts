@@ -40,6 +40,9 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     excludedTestRecords: wired.reduce((n, w) => n + w.excludedTestRecords, 0),
   });
   if(zeroProof)checks.push(zeroProof);
+  for(const w of wired.filter(w=>w.valueKind==="score")) {
+    checks.push({id:"latest_source_selection",ok:!/\bScore(?:_1)?\s*[<>=]/i.test(w.where),detail:"Retrieve full inspection histories before latest-per-establishment selection; apply score thresholds in the analysis only."});
+  }
   for(const w of wired) {
     if(w.accessedAt)checks.push({id:`source_accessed_${w.label}`,ok:true,detail:`${w.title}: retrieved ${w.accessedAt.slice(0,10)}. Catalog updated ${w.catalogUpdatedAt?.slice(0,10)??"date not published"}; retrieval is not an event or inspection date.`});
     if(w.catalogDescription)checks.push({id:`source_definition_${w.label}`,ok:true,detail:`Published description for ${w.title}: ${w.catalogDescription}`});
@@ -52,6 +55,10 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     checks.push({id:`source_dates_${w.label}`,ok:true,detail:`${w.title}: event dates ${c.earliest??"not published"} to ${c.latest??"not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected&&c.periods<expected?` Only ${c.periods} calendar months contain records; ${expected-c.periods} have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.`:""}`});
   }
   checks.push(...analysisChecks(p, joined.sql, joined.result));
+  for(const w of wired.filter(w=>w.normalized&&w.valueKind==="score")) {
+    const observed=await ctx.zetaris.query(`SELECT geoid,entity_key,event_date,value,record_id FROM fw_pg.tract_observations WHERE run_id='${ctx.runId}' AND source='${w.label}'`,10000);
+    checks.push(latestInspectionCheck(question,observed.rows,joined.result));
+  }
   for (const c of checks) await ctx.trace.log({ agent: "evaluator", action: `check:${c.id}`, status: c.ok ? "ok" : "error", note: c.detail });
 
   for (const [id, code] of [["bridge_match", "JOIN_WEAK"], ["sample_size", "SMALL_SAMPLE"]] as const) {
@@ -99,10 +106,10 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     8000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
-  const empty = checks.find((c) => ["measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership"].includes(c.id) && !c.ok);
+  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","latest_source_selection","latest_inspection_values"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
   if (empty && value.verdict === "APPROVE") {
     value.verdict = "REVISE";
-    value.target = empty.id === "analysis_basis" ? "plan" : "join";
+    value.target = empty.id === "analysis_basis" ? "plan" : empty.id==="latest_source_selection"||(empty.id==="has_rows"&&wired.some(w=>w.sourceCount===0)) ? "wire" : "join";
     value.instruction = `${empty.detail}. Check the join keys and filter values against the table descriptions (for tract_counts, grp = 'all' is the total per tract).`;
     value.reasons = [empty.detail, ...value.reasons].slice(0, 6);
   }
@@ -132,4 +139,26 @@ function minimumSample(joined:Joined):number|undefined {
  const j=joined.result.headers.findIndex(h=>/establishment.*count|count.*establishment|sample_size|inspected_count/i.test(h));
  const values=j<0?[]:joined.result.rows.map(r=>r[j]==null?NaN:Number(r[j])).filter(Number.isFinite);
  return values.length?Math.min(...values):undefined;
+}
+
+// Independently select latest establishments in code, then compare the grouped SQL output.
+export function latestInspectionCheck(question:string,observations:(string|null)[][],result:{headers:string[];rows:(string|null)[][]}):CheckResult {
+ const latest=new Map<string,(string|null)[]>();
+ for(const row of observations) {
+  const old=latest.get(row[1]!);
+  if(!old||String(row[2]??"")>String(old[2]??"")||(row[2]===old[2]&&String(row[4])>String(old[4])))latest.set(row[1]!,row);
+ }
+ const groups=new Map<string,number[]>();
+ for(const row of latest.values())if(row[0]&&row[3]!=null){const a=groups.get(row[0])??[];a.push(Number(row[3]));groups.set(row[0],a);}
+ const {headers,rows}=result,geo=headers.findIndex(h=>/^(geoid|tractfips)$/i.test(h));
+ const threshold=question.match(/\b(?:below|less than|under)\s+(\d+(?:\.\d+)?)/i)?.[1];
+ const measure=headers.findIndex(h=>threshold?/below|threshold/i.test(h):/avg|average|mean/i.test(h));
+ const count=headers.findIndex(h=>threshold?/total.*(?:inspect|establish)/i.test(h):/establishment.*count|facility_count|sample|^n$/i.test(h));
+ const actual=new Set(rows.map(r=>r[geo]));
+ const ok=observations.length<10000&&geo>=0&&measure>=0&&count>=0&&rows.length>0&&[...groups.keys()].every(k=>actual.has(k))&&rows.every(r=>{
+  const scores=groups.get(r[geo]??"")??[];
+  const expected=threshold?scores.filter(v=>v<Number(threshold)).length:scores.reduce((a,b)=>a+b,0)/scores.length;
+  return Number(r[count])===scores.length&&Math.abs(Number(r[measure])-expected)<1e-5;
+ });
+ return {id:"latest_inspection_values",ok,detail:ok?"Latest-per-establishment scores, sample sizes and thresholds independently recompute from normalized inspection histories.":"Latest inspection output did not match independently selected establishment scores; select latest before excluding missing scores or applying thresholds."};
 }

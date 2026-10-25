@@ -1,6 +1,6 @@
 import { WiringSchema, looksLikeTestValue, notice, FieldworkError, type Plan } from "@fieldwork/core";
 import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
-import { featurePageUrl, observationRoles, typedWhere, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
+import { featurePageUrl, observationRoles, inspectionSourceWhere, typedWhere, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
 import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
@@ -83,7 +83,11 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const fields = w.fields.filter((f) => known.has(f) && !privateField.test(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
     if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", `${c.candidate.title} publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.`);
-    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, w.where, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
+    const roles=observationRoles(c.fields,!!c.geometryType);
+    const request=String(ctx.world?.entities().find(e=>e.type==="run")?.attrs.question??p.measures.map(m=>m.describe).join(" "));
+    const sourceWhere=roles.valueKind==="score"?inspectionSourceWhere(w.where,request):w.where;
+    if(sourceWhere!==w.where)await ctx.trace.log({agent:"wirer",action:"filter_alignment",status:"info",note:"Retrieve inspection histories before selecting latest scores; unrequested status and score filters were removed."});
+    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, sourceWhere, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
   }
   for(const w of out) {
     const c=chosen.find((c)=>c.measureId===w.measureId);

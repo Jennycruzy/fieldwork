@@ -25,5 +25,26 @@ export function analysisChecks(plan: Plan, sql: string, result: {
         const sorted = numeric.every((v, i) => i === 0 || direction * (v - numeric[i - 1]!) >= -1e-9);
         out.push({ id: "ranking_order", ok: /\bORDER\s+BY\b/i.test(sql) && numeric.length > 0 && sorted, detail: `Sort by the requested measure: ${a.rank_measure}; retain its value before supporting columns.` });
     }
+    out.push(...rateArithmeticChecks(result));
     return out;
+}
+
+export function rateArithmeticChecks(result:{headers:string[];rows:(string|null)[][]}):CheckResult[] {
+ const {headers,rows}=result,out:CheckResult[]=[];
+ const tokens=(s:string)=>s.toLowerCase().split("_").map(w=>w.replace(/s$/,"")).filter(w=>!["per","1000","10000","rate","resident","adult","count","total","population","n"].includes(w));
+ for(const [i,h] of headers.entries()) {
+  if(/corr/i.test(h)||!/(?:^|_)per_?(?:1_?000|10_?000)|(?:^|_)rate(?:_|$)/i.test(h))continue;
+  const scale=/10_?000/.test(h)?10000:1000;
+  const adult=/adult|18plus/i.test(h);
+  const denominator=headers.findIndex(v=>!/per_|rate|corr/i.test(v)&&(adult?/adult_population|totalpop18plus|^adults$|denominator/i:/total_?population|resident_population|^population$|^residents$|denominator/i).test(v));
+  const candidates=headers.map((v,j)=>({j,v,score:tokens(v).filter(w=>tokens(h).includes(w)).length})).filter(x=>x.j!==i&&!/per_|rate|corr|population|geoid|fips/i.test(x.v)&&(/count|^n_|^n$/i.test(x.v))).sort((a,b)=>b.score-a.score);
+  const numerator=candidates[0]?.j??-1;
+  const ok=numerator>=0&&denominator>=0&&rows.length>0&&rows.every(r=>{
+   const n=r[numerator],d=r[denominator],actual=r[i];
+   if(d==null||Number(d)<=0)return actual==null;
+   return n!=null&&actual!=null&&Math.abs(Number(actual)-Number(n)/Number(d)*scale)<=1e-5;
+  });
+  out.push({id:`rate_arithmetic_${i}`,ok,detail:ok?`${h}: recomputed every displayed rate from raw counts, its population denominator and scaling by ${scale}.`:`${h}: retain the raw count and matching population denominator and compute count * ${scale}.0 / population; missing or zero populations produce NULL.`});
+ }
+ return out;
 }
