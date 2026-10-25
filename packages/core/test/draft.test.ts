@@ -142,3 +142,21 @@ it("allows an explicit denial of causation while rejecting a positive causal cla
 it("a negation cannot excuse a later causal claim",()=>{
  expect(checkDraft(["This does not establish a relationship. Code violations cause hypertension."],["name","count"],[["Census Tract 1","100"]]).ok).toBe(false);
 });
+
+// Original wording and complete rows from the recorded 311 and shelter answers.
+import { readFileSync } from "node:fs";
+function recorded(id: string) {
+ return JSON.parse(readFileSync(new URL(`../../../evidence/runs/r_20261024_${id}.run.json`,import.meta.url),"utf8")).answer;
+}
+it("resolves each 311 rank clause to the tract named in that clause",()=>{
+ const a=recorded("ab8c31");
+ expect(checkDraft([a.answer.headline,...a.answer.points],a.headers,a.rows,a.sources.map((s:{title:string})=>s.title)).ok).toBe(true);
+ expect(checkDraft(["Census Tract 25 had the most requests with 1,071, followed by Tract 1 (1,419)."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Tract 1 had the most requests with 1,419, and Tract 25 ranked first with 1,071."],a.headers,a.rows).ok).toBe(false);
+});
+it("recognizes shelter tract lists including the Oxford comma",()=>{
+ const a=recorded("362ff8");
+ for(const text of ["Census Tracts 22.01, 33.03 and 54.03 contain shelters.","Census Tracts 18, 22.01, 33.03, 54.03, 54.12, and 56.05 each contain one shelter."])
+  expect(checkDraft([text],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Tract 56.05 has 54.03 shelters."],a.headers,a.rows).ok).toBe(false);
+});

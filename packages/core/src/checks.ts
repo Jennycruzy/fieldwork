@@ -144,27 +144,49 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         else {const rank=claimedRank(t);if(rank!==undefined && rank!==rankOf(i)) order.push(`The stated tie for ${names[i]} is not supported by its actual rank.`);}
       }
     }
-    const said = names.reduce((best, n, i) => (n && mentions(t, n) && (best < 0 || n.length > names[best]!.length) ? i : best), -1);
-    // A rank claim next to one of the row's own values is checked against that value's column
-    // ("the highest blood pressure rate at 59.2%" -> rank of 59.2 in its column), not the row order.
-    if (said >= 0) {
-      const byColumn = columnRankProblems(t, said, names, headers, rows);
-      if (byColumn) {
-        order.push(...byColumn);
+    if (/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) continue;
+    let previous = -1;
+    for (const clause of rowClauses(t, names)) {
+      const named = names.findIndex(n => n && mentions(clause, n));
+      const said = named < 0 ? previous : named;
+      if (named >= 0) previous = named;
+      // A rank claim next to one of the row's own values is checked against that value's column
+      // ("the highest blood pressure rate at 59.2%" -> rank of 59.2 in its column), not the row order.
+      if (said >= 0) {
+        const byColumn = columnRankProblems(clause, said, names, headers, rows);
+        if (byColumn) {
+          order.push(...byColumn);
+          continue;
+        }
+      }
+      const claimed = claimedRankDir(clause)?.rank;
+      if (said < 0) {
+        // A rank claim about no row in particular ("eleven tracts share the third-highest rate") can't be checked.
+        if (claimed !== undefined && !/top \w+ tracts? (by|are)|^the top/i.test(clause)) order.push(`"${clause}" makes a ranking claim that names no row`);
         continue;
       }
-    }
-    const claimed = claimedRank(t);
-    if (said < 0) {
-      // A rank claim about no row in particular ("eleven tracts share the third-highest rate") can't be checked.
-      if (claimed !== undefined && !/top \w+ tracts? (by|are)|^the top/i.test(t)) order.push(`"${t}" makes a ranking claim that names no row`);
-      continue;
-    }
-    if (claimed !== undefined && claimed !== rankOf(said)) {
-      order.push(`"${t}" puts ${names[said]} at rank ${claimed}, but in the rows it is rank ${rankOf(said)}`);
+      if (claimed !== undefined && claimed !== rankOf(said)) {
+        order.push(`"${clause}" puts ${names[said]} at rank ${claimed}, but in the rows it is rank ${rankOf(said)}`);
+      }
     }
   }
   return { ok: missing.length === 0 && order.length === 0, missingNumbers: [...new Set(missing)], orderProblems: order };
+}
+
+// Keep each named row with its own claims. Unnamed following clauses inherit that row.
+function rowClauses(text: string, names: string[]): string[] {
+  return clauses(text).flatMap(clause => {
+    const starts = new Set<number>();
+    for (const name of names) {
+      if (!name) continue;
+      const short = name.replace(/^Census\s+/i, "");
+      const escaped = (v: string) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`(?<![\\w.])(?:${escaped(name)}|${escaped(short)})(?![\\w.])`, "gi");
+      for (const m of clause.matchAll(re)) starts.add(m.index!);
+    }
+    const cuts = [...starts].sort((a,b) => a-b).slice(1);
+    return [0,...cuts].map((start,i,all) => clause.slice(start,all[i+1]));
+  });
 }
 
 function numbersIn(s: string | null | undefined): string[] {
@@ -213,7 +235,7 @@ function withoutNames(t: string, names: string[]): string {
       s=s.replace(new RegExp(`(?<![\\w.])${escaped}(?![\\w.])`,"gi")," ");
     }
   }
-  return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,|and)\s*\d+(?:\.\d+)?)*/gi, " ");
+  return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)*/gi, " ");
 }
 
 function mentions(t: string, name: string): boolean {
@@ -305,7 +327,7 @@ function knownIdentifiers(text: string, facts: string[]): string {
 }
 
 function expandTractLists(text:string):string {
- return text.replace(/\b(?:Census\s+)?Tracts\s+(\d+(?:\.\d+)?(?:\s*(?:,|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
+ return text.replace(/\b(?:Census\s+)?Tracts\s+(\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
 }
 
 function unsupportedCertainty(text:string):boolean {
