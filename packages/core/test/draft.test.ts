@@ -230,3 +230,27 @@ it("one singular tract prefix covers a complete list of recorded shelter identif
  ])expect(checkDraft([text],a.headers,a.rows).ok).toBe(true);
  expect(checkDraft(["Census Tract 18, 22.01, 33.03 and 56.05 each contain 4 shelters."],a.headers,a.rows).ok).toBe(false);
 });
+
+it("chronological superlatives use measure extrema and their own following month name",()=>{
+ const a=recorded25("617a2f");
+ expect(checkDraft(["The highest monthly count was 2,521 in June; the lowest was 668 in February."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["The highest monthly count was 2,521; the lowest was 668."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["June had the highest monthly count; February had the lowest."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["The lowest was 2,521 in June."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["The highest was 668 in February."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Code violations totaled 18,407 so far in 2026."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Code violations totaled 16,409 so far in 2026."],a.headers,a.rows).ok).toBe(true);
+});
+it("count cells cannot become percentages to excuse an invented shelter count",()=>{
+ const a=recorded25("fe9fd0");
+ expect(checkDraft(["Tract 22.01 has 100 listed shelters."],a.headers,a.rows).ok).toBe(false);
+});
+
+it("a new superlative sentence does not borrow the prior month",()=>{
+ const a=recorded25("617a2f");
+ expect(checkDraft(["The highest monthly count was 2,521 in June; the lowest was 668."],a.headers,a.rows).ok).toBe(true);
+});
+it("a request-channel identifier does not become a numeric tract claim",()=>{
+ const a=recorded25("a5f032");
+ expect(checkDraft(["Tract 22.01 is among the top tracts for 311 requests."],a.headers,a.rows).ok).toBe(true);
+});

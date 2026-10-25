@@ -115,8 +115,8 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       const value=row[j];
       if(value==null||!/^[-+]?\d+(?:\.\d+)?$/.test(value))continue;
       const x=Number(value);result.add(normaliseNumber(value));
-      if(Math.abs(x)<=1)result.add(normaliseNumber(String(x*100)));
-      if(Math.abs(x)<=100)result.add(normaliseNumber(String(x/100)));
+      if(/share|percent|pct|prevalence|prev|_rate$/i.test(headers[j]!)&&Math.abs(x)<=1)result.add(normaliseNumber(String(x*100)));
+      if(/share|percent|pct|prevalence|prev|_rate$/i.test(headers[j]!)&&Math.abs(x)<=100)result.add(normaliseNumber(String(x/100)));
     }
     return result;
   };
@@ -138,6 +138,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
         .replace(/\b(the|all)\s+(\d+)(?=\s+(?:tracts|rows|areas)\b)/gi,(match,article:string,n:string)=>[rows.length,...columns.flatMap(j=>[rows.filter(r=>r[j]!=null&&Number(r[j])>0).length,rows.filter(r=>r[j]!=null&&Number(r[j])===0).length])].includes(Number(n))?article:match)
         .replace(/\btop\s+(\d+)(?=\s+(?:tracts?|rows?|areas?))/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
+        .replace(/\bfor\s+311\s+requests\b/gi,match=>headers.some(h=>/request|311/i.test(h))?"for service requests":match)
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
@@ -167,14 +168,15 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       }
     }
     if (/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) continue;
+    for(const sentence of t.split(/;|[!?]|\.(?=\s+[A-Z])/)) {
     let previous = -1;
-    for (const clause of rowClauses(t, names)) {
+    for (const clause of rowClauses(sentence, names)) {
       const named = names.findIndex(n => n && mentions(clause, n));
       const said = named < 0 ? previous : named;
       if (named >= 0) previous = named;
       // A rank claim next to one of the row's own values is checked against that value's column
       // ("the highest blood pressure rate at 59.2%" -> rank of 59.2 in its column), not the row order.
-      if (said >= 0) {
+      if (said >= 0 || /\b(highest|lowest|most|fewest|largest|smallest)\b/i.test(clause)) {
         const byColumn = columnRankProblems(clause, said, names, headers, rows);
         if (byColumn) {
           order.push(...byColumn);
@@ -191,6 +193,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         order.push(`"${clause}" puts ${names[said]} at rank ${claimed}, but in the rows it is rank ${rankOf(said)}`);
       }
     }
+    }
   }
   return { ok: missing.length === 0 && order.length === 0, missingNumbers: [...new Set(missing)], orderProblems: order };
 }
@@ -203,7 +206,7 @@ function rowClauses(text: string, names: string[]): string[] {
       if (!name) continue;
       const short = name.replace(/^Census\s+/i, "");
       const escaped = (v: string) => v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const re = new RegExp(`(?<![\\w.])(?:${escaped(name)}|${escaped(short)})(?![\\w.])`, "gi");
+      const re = new RegExp(`(?<![\\w.])(?:${escaped(name)}|${escaped(short)})(?!\\w|\\.\\d)`, "gi");
       for (const m of clause.matchAll(re)) starts.add(m.index!);
     }
     const cuts = [...starts].sort((a,b) => a-b).slice(1);
@@ -277,7 +280,7 @@ function withoutNames(t: string, names: string[]): string {
     const short = n.replace(/^Census\s+/i, "");
     for(const name of [n,short]) {
       const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
-      s=s.replace(new RegExp(`(?<![\\w.])${escaped}(?![\\w.])`,"gi")," ");
+      s=s.replace(new RegExp(`(?<![\\w.])${escaped}(?!\\w|\\.\\d)`,"gi")," ");
     }
   }
   return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)*/gi, " ");
@@ -286,7 +289,7 @@ function withoutNames(t: string, names: string[]): string {
 function mentions(t: string, name: string): boolean {
   const escaped=(v:string)=>v.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
   const short=name.replace(/^Census\s+/i,"");
-  return [name,short].some(n=>new RegExp(`(?<![\\w.])${escaped(n)}(?![\\w.])`,"i").test(t));
+  return [name,short].some(n=>new RegExp(`(?<![\\w.])${escaped(n)}(?!\\w|\\.\\d)`,"i").test(t));
 }
 
 // "in every row", "consistently", "without exception": claims a correlation can't support.
@@ -310,24 +313,23 @@ function columnRankProblems(t: string, said: number, names: string[], headers: s
     // "follows" / "is next" describe the row order, which the row-order check covers.
     if (!claim || !/\b(highest|lowest|most|fewest|largest|smallest)\b/i.test(c) || /\b(follows|comes next|is next|runner-up)\b/i.test(c)) continue;
     const nums = numbersIn(withoutNames(spellNumbers(c), names));
-    const row = rows[said]!;
+    const row = said>=0 ? rows[said]! : undefined;
     const cols = new Set<number>();
-    for (const n of nums) {
-      row.forEach((v, j) => {
-        if (j === 0 || v === null || !/^-?\d+(\.\d+)?$/.test(v)) return;
-        if (roundsTo(Number(v), n)) cols.add(j);
-      });
+    const candidateRows=row?[row]:rows;
+    for(const candidate of candidateRows)for(const n of nums)for(const j of valueColumns(headers)) {
+      const v=candidate[j];if(v!=null&&/^-?\d+(\.\d+)?$/.test(v)&&roundsTo(Number(v),n))cols.add(j);
     }
+    if(cols.size===0&&row&&valueColumns(headers).length===1)cols.add(valueColumns(headers)[0]!);
     if (cols.size === 0) continue;
     resolved = true;
     const ranks = [...cols].map((j) => {
-      const mine = Number(row[j]);
+      const mine = row ? Number(row[j]) : Number(nums.find(n=>rows.some(r=>r[j]!=null&&roundsTo(Number(r[j]),n))));
       const vals = rows.map((r) => (r[j] === null ? NaN : Number(r[j]))).filter((x) => !Number.isNaN(x));
       return { j, rank: 1 + vals.filter((x) => (claim.dir === "desc" ? x > mine : x < mine)).length };
     });
     if (!ranks.some((r) => r.rank === claim.rank)) {
       const r = ranks[0]!;
-      problems.push(`"${c.trim()}" puts ${names[said]} at rank ${claim.rank}${claim.dir === "asc" ? " from the bottom" : ""}, but in the rows it is rank ${r.rank} by ${headers[r.j] ?? "that column"}`);
+      problems.push(`"${c.trim()}" puts ${said>=0?names[said]:"the stated value"} at rank ${claim.rank}${claim.dir === "asc" ? " from the bottom" : ""}, but in the rows it is rank ${r.rank} by ${headers[r.j] ?? "that column"}`);
     }
   }
   return resolved ? problems : undefined;
