@@ -3,6 +3,7 @@ import { shared, provenance, SYSTEM_BASE, type Ctx } from "./context.js";
 
 const SHAPE = `{
  "in_scope": boolean,
+ "scope_limit": "place" | "personal" | "non_public" | null,
  "out_of_scope_reason": string | null,
  "geography": "tract" | "council_district" | "city",
  "years": {"from": number | null, "to": number | null} | null,
@@ -17,13 +18,13 @@ export async function plan(ctx: Ctx, question: string, revision?: string): Promi
       role: "system" as const,
       content: `${SYSTEM_BASE}
 You are the Planner. Turn the user's question into a data plan.
-What data exists for ${ctx.cfg.place.name}:
+Catalogs to search for ${ctx.cfg.place.name}:
 - city_records: the City of Montgomery's open data hub (records such as code violations, service requests, calls, inspections, permits, facilities), as map points with dates and types.
 - environmental_records: EPA ECHO regulated facility registry, scoped to Montgomery County; listings are not emissions or exposure measurements.
 - health_estimate: CDC PLACES estimates for adults by census tract (e.g. asthma, diabetes, housing insecurity, food insecurity, lack of transportation, depression), with tract population.
 Use one measure per data series, not separate measures for individual years or months. Time comparisons use years and group the source observations by year/month.
 Use "tract" geography when city records must be compared with health estimates (city records are placed into census tracts by location).
-A question is out of scope if it is about another place, a person, a prediction, or needs data not listed above.
+Refuse ONLY for another place (scope_limit place), a personal request such as diagnosis or forecasting (personal), or non-public individual records (non_public). Set scope_limit null for in-scope public-data questions. These catalogs are search starting points, not a complete inventory. Availability is the Finder's decision after a live search: never refuse because a dataset is unknown, unavailable, not listed here, or absent from memory. Build search measures for public facilities and services even if their catalog is unfamiliar.
 A ranking with a supporting measure is NOT a relationship question: do not add a correlation unless the question asks about association, correlation, or whether more X accompanies more Y. Set relationship false for ordinary rankings.
 Choose counts versus rates deliberately and explain the choice in analysis.reason. Raw counts answer workload questions. Cross-tract associations or correlations MUST use population-adjusted rates, comparing city records per 1,000 residents with CDC adult prevalence percentages. Use totalpopulation for residents, totalpop18plus ONLY for per-adult rates. Do not estimate adult case counts from all-age population. Include a CDC population measure when a city rate needs a denominator. Set relationship true for association/correlation questions, even if the question says "more X also more Y". rank_measure states the requested sorting measure, not a supporting count.
 Today is ${ctx.today.toISOString().slice(0, 10)}. Use 1-3 measures. Search terms must be short (1-3 words) catalog keywords.
@@ -31,7 +32,18 @@ Shape: ${SHAPE}`,
     },
     { role: "user" as const, content: shared(ctx) + (revision ? `Question: ${question}\nThe Evaluator asked for a new plan: ${revision}` : `Question: ${question}`) },
   ];
-  const { value } = await ctx.models.planner.json(messages, PlanSchema, 3000);
+  let { value } = await ctx.models.planner.json(messages, PlanSchema, 3000);
+  if (!value.in_scope && !value.scope_limit) {
+    const retry=await ctx.models.planner.json([...messages,{role:"user" as const,content:"Availability is not a scope limit. Return an in-scope search plan for this public-data question; the Finder must search before reporting a missing source. Refusal requires scope_limit place, personal, or non_public."}],PlanSchema,3000);
+    value=retry.value;
+    if(!value.in_scope&&!value.scope_limit) {
+      value.in_scope=true;value.out_of_scope_reason=null;
+      if(!value.measures.length) {
+        const terms=question.replace(/[^\w\s]/g," ").split(/\s+/).filter(w=>w.length>3&&!/^(which|what|have|with|most|Montgomery|census|tracts|listed|residents)$/i.test(w)).slice(0,3);
+        value.measures=[{id:"m1",describe:question,kind:"city_records",search_terms:terms.length?terms:["public data"]}];
+      }
+    }
+  }
   if(value.analysis) {
     if(/\b(average|mean)\b.*\bscore/i.test(question)) {value.analysis.basis="scores";value.analysis.denominator="none";value.analysis.reason+=" Inspection scores are measured in source score points; establishment counts describe sample size, not population rates.";}
     const asksRelationship=/\b(correlat\w*|associat\w*|relationship|related|connection)\b|\b(do|does|are)\b[\s\S]*\balso\b|\b(more|higher|lower)\b[\s\S]*\b(more|higher|lower)\b/i.test(question);

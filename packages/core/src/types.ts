@@ -3,6 +3,7 @@ import { z } from "zod";
 // What the Planner returns.
 export const PlanSchema = z.object({
   in_scope: z.boolean(),
+  scope_limit: z.enum(["place", "personal", "non_public"]).optional().nullable(),
   out_of_scope_reason: z.string().optional().nullable(),
   geography: z.enum(["tract", "council_district", "city"]),
   years: z.object({ from: z.number().int().optional().nullable(), to: z.number().int().optional().nullable() }).optional().nullable(),
