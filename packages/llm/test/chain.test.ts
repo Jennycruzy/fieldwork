@@ -74,3 +74,18 @@ describe("OpenRouterProvider", () => {
     await expect(p.chat({ model: "nvidia/nemotron-3.5-lightning", messages: [] })).rejects.toMatchObject({ status: 402, retryable: false });
   });
 });
+
+import {readFileSync} from "node:fs";
+import {PlanSchema} from "@fieldwork/core";
+const failedPlan=JSON.parse(readFileSync("evidence/runs/r_20261025_b87122.run.json","utf8")).answer.plan;
+it("extracts the first balanced schema-valid object from the failed run's plan plus extra text",()=>{
+ const raw=JSON.stringify(failedPlan);
+ expect(parseJson(`Explanation {"other":"a } brace"}\n${raw}\nextra {"notes":"after"}`,PlanSchema)).toEqual({ok:true,value:failedPlan});
+ expect(parseJson(`${raw}\n${raw}`,PlanSchema)).toEqual({ok:true,value:failedPlan});
+});
+it("tries the next model once after the initial JSON and repair both fail",async()=>{
+ const a=new ScriptedProvider("a",["not JSON","still not JSON"]);
+ const b=new ScriptedProvider("b",[JSON.stringify(failedPlan)]);
+ const result=await new ModelChain([{provider:a,model:"one"},{provider:b,model:"two"}],{sleep:noSleep}).json([],PlanSchema);
+ expect(result.value).toEqual(failedPlan);expect(a.calls).toHaveLength(2);expect(b.calls).toHaveLength(1);
+});

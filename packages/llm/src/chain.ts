@@ -53,10 +53,10 @@ export class ModelChain {
     this.sleep = opts.sleep ?? defaultSleep;
   }
 
-  async chat(messages: ChatMessage[], maxTokens = 2000): Promise<ChatResult> {
+  async chat(messages: ChatMessage[], maxTokens = 2000, startAt=0, once=false): Promise<ChatResult> {
     let lastError: unknown;
     let attempt = 0;
-    for (const route of this.routes) {
+    for (const route of this.routes.slice(startAt,once?startAt+1:undefined)) {
       for (let i = 0; i <= this.backoff.length; i++) {
         attempt++;
         if (!(await (this.opts.budget ?? unlimited).take())) throw new BudgetExceeded();
@@ -113,21 +113,42 @@ export class ModelChain {
     calls.push(repair);
     const again = parseJson(repair.text, schema);
     if (again.ok) return { value: again.value, calls };
+    const used=this.routes.findIndex(r=>r.provider.id===repair.provider&&r.model===repair.modelRequested);
+    if(used>=0&&used+1<this.routes.length) {
+      const fallback=await this.chat(messages,maxTokens,used+1,true);calls.push(fallback);
+      const parsedFallback=parseJson(fallback.text,schema);
+      if(parsedFallback.ok)return {value:parsedFallback.value,calls};
+      throw new Error(`model did not return valid JSON: ${parsedFallback.error}`);
+    }
     throw new Error(`model did not return valid JSON: ${again.error}`);
   }
 }
 
 export function parseJson<T>(text: string, schema: z.ZodType<T>): { ok: true; value: T } | { ok: false; error: string } {
   const cleaned = text.replace(/<think>[\s\S]*?<\/think>/g, "").replace(/```(?:json)?/g, "");
-  const start = cleaned.indexOf("{");
-  const end = cleaned.lastIndexOf("}");
-  if (start < 0 || end <= start) return { ok: false, error: "no JSON object found" };
-  let raw: unknown;
-  try {
-    raw = JSON.parse(cleaned.slice(start, end + 1));
-  } catch (e) {
-    return { ok: false, error: `JSON parse error: ${(e as Error).message}` };
+  let error="no schema-matching JSON object found";
+  for(let start=0;start<cleaned.length;start++) {
+    if(cleaned[start]!=="{")continue;
+    let depth=0,quoted=false,escaped=false;
+    for(let end=start;end<cleaned.length;end++) {
+      const c=cleaned[end];
+      if(quoted) {
+        if(escaped)escaped=false;
+        else if(c==="\\")escaped=true;
+        else if(c==='"')quoted=false;
+        continue;
+      }
+      if(c==='"'){quoted=true;continue;}
+      if(c==="{")depth++;
+      if(c!=="}"||--depth!==0)continue;
+      try {
+        const value=JSON.parse(cleaned.slice(start,end+1));
+        const result=schema.safeParse(value);
+        if(result.success)return {ok:true,value:result.data};
+        error=result.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ");
+      } catch(e){error=`JSON parse error: ${(e as Error).message}`;}
+      break;
+    }
   }
-  const r = schema.safeParse(raw);
-  return r.success ? { ok: true, value: r.data } : { ok: false, error: r.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ") };
+  return {ok:false,error};
 }
