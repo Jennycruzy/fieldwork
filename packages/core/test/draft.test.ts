@@ -220,3 +220,13 @@ it("a tract claim cannot borrow another tract's numeric measure",()=>{
  expect(checkDraft(["Tract 25 had 1,419 requests."],a.headers,a.rows).ok).toBe(false);
  expect(checkDraft(["Tract 25 had 1,071 requests."],a.headers,a.rows).ok).toBe(true);
 });
+
+it("one singular tract prefix covers a complete list of recorded shelter identifiers",()=>{
+ const a=recorded25("fe9fd0");
+ for(const text of [
+  "Census Tract 18, 22.01, 33.03, 54.03, 54.12 and 56.05",
+  "The six tracts with a shelter are Census Tract 18, 22.01, 33.03, 54.03, 54.12 and 56.05.",
+  "Census Tract 18, 22.01, 33.03, 54.03, 54.12, and 56.05 each contain 1 shelter."
+ ])expect(checkDraft([text],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Census Tract 18, 22.01, 33.03 and 56.05 each contain 4 shelters."],a.headers,a.rows).ok).toBe(false);
+});

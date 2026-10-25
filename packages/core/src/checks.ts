@@ -136,6 +136,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       const content=withoutNames(spellNumbers(knownIdentifiers(clause,facts,names)),names)
         .replace(/\b\d+(?:st|nd|rd|th)\b/gi," ")
         .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
+        .replace(/\b(the|all)\s+(\d+)(?=\s+(?:tracts|rows|areas)\b)/gi,(match,article:string,n:string)=>[rows.length,...columns.flatMap(j=>[rows.filter(r=>r[j]!=null&&Number(r[j])>0).length,rows.filter(r=>r[j]!=null&&Number(r[j])===0).length])].includes(Number(n))?article:match)
         .replace(/\btop\s+(\d+)(?=\s+(?:tracts?|rows?|areas?))/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
@@ -372,7 +373,7 @@ function knownIdentifiers(text: string, facts: string[], names:string[]=[]): str
 }
 
 function expandTractLists(text:string):string {
- return text.replace(/\b(?:Census\s+)?Tracts\s+(\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
+ return text.replace(/\b(?:Census\s+)?Tracts?\s*:?\s+(\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
 }
 
 function unsupportedCertainty(text:string):boolean {
