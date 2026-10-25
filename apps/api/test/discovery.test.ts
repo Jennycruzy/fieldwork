@@ -4,7 +4,7 @@ import { HMEM } from "@fieldwork/hmem";
 import { find } from "../src/agents/finder.js";
 import { searchMontgomeryHub, searchSocrata, socrataColumns, layerInfo, getJson } from "@fieldwork/sources";
 import type { Ctx } from "../src/agents/context.js";
-vi.mock("@fieldwork/sources", async (importOriginal) => ({ ...await importOriginal<typeof import("@fieldwork/sources")>(), searchMontgomeryHub: vi.fn(), getJson: vi.fn(async()=>({license:{name:"Public Domain"}})), searchSocrata: vi.fn(), socrataColumns: vi.fn(), layerInfo: vi.fn() }));
+vi.mock("@fieldwork/sources", async (importOriginal) => ({ ...await importOriginal<typeof import("@fieldwork/sources")>(), searchMontgomeryHub: vi.fn(), resolveLayerUrl: vi.fn(async (u: string) => u), getJson: vi.fn(async()=>({license:{name:"Public Domain"}})), searchSocrata: vi.fn(), socrataColumns: vi.fn(), layerInfo: vi.fn() }));
 test("empty source cache and empty memory still discover the live-captured 311 dataset", async () => {
     const fixture = JSON.parse(readFileSync("evidence/sources/live-probes.json", "utf8"))[0];
     vi.mocked(searchMontgomeryHub).mockResolvedValue([fixture.candidate]);
@@ -73,4 +73,17 @@ test("a restrictive inspection phrase is broadened using its own catalog keyword
  const result=await find(ctx,missing.answer.plan);
  expect(searchMontgomeryHub).toHaveBeenCalledWith("food",6);
  expect(result[0]?.candidate.url).toBe(source.url);
+});
+test("broadening tries every request word: 'building' alone matched Weather Sirens, 'permits' finds the permit data",async()=>{
+ const sirens={catalog:"montgomery_hub" as const,id:"sirens",kind:"arcgis_layer" as const,title:"Weather Sirens",url:"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Weather_Sirens/FeatureServer",description:"Weather siren locations"};
+ const permits={catalog:"montgomery_hub" as const,id:"permits",kind:"arcgis_layer" as const,title:"Construction Permit Data",url:"https://example.invalid/Construction_Permits/FeatureServer/0",description:"Construction permits"};
+ vi.mocked(searchMontgomeryHub).mockImplementation(async term=>term==="building"?[sirens]:term==="permits"?[permits]:[]);
+ vi.mocked(layerInfo).mockResolvedValue({url:permits.url,name:permits.title,fields:[{name:"IssuedDate",type:"esriFieldTypeDate"}],maxRecordCount:1000,geometryType:"esriGeometryPoint"});
+ let offered:string[]=[];
+ const ctx={cfg:{place:{name:"Montgomery, AL"}},memory:new HMEM(),recalled:[],trace:{log:vi.fn()},models:{finder:{json:async(messages:{content:string}[])=>{offered=[sirens.title,permits.title].filter(t=>messages.some(m=>m.content.includes(t)));return {value:{choices:[{measure_id:"m1",candidate_index:1,reason:"Permit records"}]}};}}}} as unknown as Ctx;
+ const result=await find(ctx,{in_scope:true,geography:"tract",measures:[{id:"m1",describe:"Number of building permits issued in 2025 per census tract",kind:"city_records",search_terms:["building permits","Montgomery AL"]}],output:"ranking"});
+ expect(searchMontgomeryHub).toHaveBeenCalledWith("building",6);
+ expect(searchMontgomeryHub).toHaveBeenCalledWith("permits",6);
+ expect(offered).toEqual(["Weather Sirens","Construction Permit Data"]);
+ expect(result[0]?.candidate.title).toBe("Construction Permit Data");
 });

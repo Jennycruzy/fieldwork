@@ -43,6 +43,11 @@ export interface ChainOptions {
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
+// Free Nemotron calls on 25 Oct: successful Joiner median 42.9 s, max 135.3 s. A 35 s limit failed 15 of 25
+// questions, so one request may take up to 150 s, and a second route is only asked after 30 s.
+export const REQUEST_LIMIT_MS = 150000;
+export const HEDGE_AFTER_MS = 30000;
+
 
 type Parsed<T>={ok:true;value:T}|{ok:false;error:string};
 export class ModelChain {
@@ -56,7 +61,7 @@ export class ModelChain {
   const counter={value:0};
   return this.race((index,signal)=>this.strategy(index,messages,maxTokens,r=>({ok:true,value:r}),false,signal,[],counter),startAt,once);
  }
- async json<T>(messages:ChatMessage[],schema:z.ZodType<T>,maxTokens=2000):Promise<{value:T;calls:ChatResult[]}> {
+ async json<T>(messages:ChatMessage[],schema:z.ZodType<T, z.ZodTypeDef, unknown>,maxTokens=2000):Promise<{value:T;calls:ChatResult[]}> {
   const calls:ChatResult[]=[],counter={value:0};
   const value=await this.race((index,signal,repair)=>this.strategy(index,messages,maxTokens,r=>parseJson(r.text,schema),repair,signal,calls,counter));
   return {value,calls};
@@ -79,7 +84,7 @@ export class ModelChain {
    parent.throwIfAborted();
    const attempt=++counter.value,started=Date.now(),controller=new AbortController();
    let timedOut=false;
-   const timeout=setTimeout(()=>{timedOut=true;controller.abort(new Error("model request time limit reached"));},this.opts.requestTimeoutMs??35000);
+   const timeout=setTimeout(()=>{timedOut=true;controller.abort(new Error("model request time limit reached"));},this.opts.requestTimeoutMs??REQUEST_LIMIT_MS);
    const signal=AbortSignal.any([parent,controller.signal]);
    const progress=setInterval(()=>this.opts.onSlow?.(Math.round((Date.now()-started)/1000)),30000);
    let abort!:()=>void;
@@ -137,7 +142,7 @@ export class ModelChain {
      };
      const startSecond=()=>{if(launched||settled)return;launched=true;if(timer)clearTimeout(timer);launch(1,secondary);};
      launch(0,index);
-     timer=setTimeout(startSecond,this.opts.hedgeAfterMs??10000);
+     timer=setTimeout(startSecond,this.opts.hedgeAfterMs??HEDGE_AFTER_MS);
     });
    } catch(e) {if(this.fatal(e))throw e;last=e;}
    finally {
@@ -151,9 +156,9 @@ export class ModelChain {
  }
 }
 
-export function parseJson<T>(text: string, schema: z.ZodType<T>): { ok: true; value: T } | { ok: false; error: string } {
+export function parseJson<T>(text: string, schema: z.ZodType<T, z.ZodTypeDef, unknown>): { ok: true; value: T } | { ok: false; error: string } {
   const cleaned = text.replace(/<think>[\s\S]*?<\/think>/g, "").replace(/```(?:json)?/g, "");
-  let error="no schema-matching JSON object found";
+  let error:string|undefined;
   for(let start=0;start<cleaned.length;start++) {
     if(cleaned[start]!=="{")continue;
     let depth=0,quoted=false,escaped=false;
@@ -172,10 +177,11 @@ export function parseJson<T>(text: string, schema: z.ZodType<T>): { ok: true; va
         const value=JSON.parse(cleaned.slice(start,end+1));
         const result=schema.safeParse(value);
         if(result.success)return {ok:true,value:result.data};
-        error=result.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ");
-      } catch(e){error=`JSON parse error: ${(e as Error).message}`;}
+        error??=result.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ");
+      } catch(e){error??=`JSON parse error: ${(e as Error).message}`;}
+      start=end; // skip the objects nested inside this one
       break;
     }
   }
-  return {ok:false,error};
+  return {ok:false,error:error??"no schema-matching JSON object found"};
 }

@@ -59,3 +59,15 @@ describe("URL builders", () => {
     expect(new URL(tractPolygonsUrl("01", "101")).searchParams.get("where")).toBe("STATE='01' AND COUNTY='101'");
   });
 });
+
+import { resolveLayerUrl, layerInfo } from "@fieldwork/sources";
+it("a service URL resolves to its real first layer (Weather_Sirens has only layer 3) and errors keep their details", async () => {
+  const service = "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Weather_Sirens/FeatureServer";
+  const real = globalThis.fetch;
+  globalThis.fetch = (async () => new Response(JSON.stringify({ layers: [{ id: 3 }], tables: [] }))) as typeof fetch;
+  try { expect(await resolveLayerUrl(service)).toBe(`${service}/3`); expect(await resolveLayerUrl(`${service}/3`)).toBe(`${service}/3`); }
+  finally { globalThis.fetch = real; }
+  globalThis.fetch = (async () => new Response(JSON.stringify({ error: { code: 400, message: "", details: ["The requested layer (layerId: 0) was not found."] } }))) as typeof fetch;
+  try { await expect(layerInfo(`${service}/0`)).rejects.toThrow("ArcGIS: The requested layer (layerId: 0) was not found."); }
+  finally { globalThis.fetch = real; }
+});

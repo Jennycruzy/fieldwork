@@ -18,9 +18,9 @@ export async function layerInfo(url: string): Promise<LayerInfo> {
     fields?: { name: string; type: string; alias?: string }[];
     maxRecordCount?: number;
     geometryType?: string;
-    error?: { message?: string };
+    error?: { message?: string; details?: string[] };
   };
-  if (b.error) throw new Error(`ArcGIS: ${b.error.message ?? "layer error"}`);
+  if (b.error) throw new Error(`ArcGIS: ${[b.error.message, ...(b.error.details ?? [])].filter(Boolean).join("; ") || "layer error"}`);
   return { url: base, name: b.name ?? base, fields: b.fields ?? [], maxRecordCount: b.maxRecordCount ?? 1000, geometryType: b.geometryType };
 }
 
@@ -28,6 +28,16 @@ export async function layerCount(url: string, where = "1=1"): Promise<number> {
   const b = (await getJson(`${normaliseLayerUrl(url)}/query?where=${encodeURIComponent(where)}&returnCountOnly=true&f=json`)) as { count?: number; error?:{code?:number;message?:string;details?:string[]} };
   if (typeof b.count !== "number") throw new Error(`ArcGIS did not return a count${b.error?`: ${b.error.code??""} ${b.error.message??""} ${b.error.details?.join("; ")??""}`:""}`);
   return b.count;
+}
+
+// A catalog URL may name the service rather than a layer, and its first layer is not always 0
+// (Montgomery's Weather_Sirens service has only layer 3).
+export async function resolveLayerUrl(url: string): Promise<string> {
+  const u = url.replace(/\/+$/, "").replace(/\/query$/, "");
+  if (!/\/(FeatureServer|MapServer)$/.test(u)) return u;
+  const s = (await getJson(`${u}?f=json`)) as { layers?: { id: number }[]; tables?: { id: number }[] };
+  const id = s.layers?.[0]?.id ?? s.tables?.[0]?.id;
+  return id === undefined ? normaliseLayerUrl(u) : `${u}/${id}`;
 }
 
 // A layer URL from a catalog may point at the service; queries need a layer (".../0").

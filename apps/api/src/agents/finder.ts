@@ -1,5 +1,5 @@
 import { ChoiceSchema, FieldworkError, type Plan } from "@fieldwork/core";
-import { getJson, layerInfo, searchEpa, searchMontgomeryHub, searchSocrata, socrataColumns, type Candidate } from "@fieldwork/sources";
+import { getJson, layerInfo, resolveLayerUrl, searchEpa, searchMontgomeryHub, searchSocrata, socrataColumns, type Candidate } from "@fieldwork/sources";
 import { recall, type Recalled } from "@fieldwork/hmem";
 import { SYSTEM_BASE, provenance, dataBlock, type Ctx } from "./context.js";
 
@@ -39,7 +39,6 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
         const found=m.kind==="health_estimate"?await searchSocrata(p.geography==="tract"?`${token} census tract`:token,["data.cdc.gov"],6):await searchMontgomeryHub(token,6);
         for(const c of found)if(!seen.has(c.id)){seen.add(c.id);cands.push(c);}
         await ctx.trace.log({agent:"finder",action:"broaden_search",status:found.length?"ok":"info",note:`Broadened catalog search to "${token}": ${found.length} candidates.`});
-        if(cands.length)break;
       }
     }
     await ctx.trace.log({ agent: "finder", action: "search", status: cands.length ? "ok" : "error", note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${searched.map((t) => `"${t}"`).join(", ")}` });
@@ -113,6 +112,7 @@ Prefer current, official, record-level or tract-level data. When several release
     const m = perMeasure.find((x) => x.id === c.measure_id);
     const cand = m?.candidates[c.candidate_index];
     if (!m || !cand) continue;
+    if (cand.kind === "arcgis_layer") cand.url = await resolveLayerUrl(cand.url);
     const info = cand.kind === "arcgis_layer" ? await layerInfo(cand.url) : undefined;
     const fields =
       cand.kind === "arcgis_layer"

@@ -89,3 +89,26 @@ it("tries the next model once after the initial JSON and repair both fail",async
  const result=await new ModelChain([{provider:a,model:"one"},{provider:b,model:"two"}],{sleep:noSleep}).json([],PlanSchema);
  expect(result.value).toEqual(failedPlan);expect(a.calls).toHaveLength(2);expect(b.calls).toHaveLength(1);
 });
+
+import { REQUEST_LIMIT_MS, HEDGE_AFTER_MS } from "@fieldwork/llm";
+const q21 = JSON.parse(readFileSync("apps/api/test/fixtures/q21-planner-replies.json", "utf8")) as { replies: string[] };
+describe("Planner replies recorded for Q21 (Birmingham)", () => {
+  it("accepts both correct place refusals, with geography or rank measure left empty", () => {
+    for (const reply of q21.replies) {
+      const r = parseJson(reply, PlanSchema);
+      expect(r.ok).toBe(true);
+      if (r.ok) { expect(r.value.in_scope).toBe(false); expect(r.value.scope_limit).toBe("place"); }
+    }
+  });
+  it("still rejects an in-scope plan without a geography, and names that field, not fields of a nested object", () => {
+    const r = parseJson(q21.replies[0]!.replace('"in_scope": false', '"in_scope": true'), PlanSchema);
+    expect(r.ok).toBe(false);
+    if (!r.ok) { expect(r.error).toMatch(/geography/); expect(r.error).not.toMatch(/in_scope: Required/); }
+  });
+});
+describe("model time limits", () => {
+  it("allow the slowest successful free-model call seen on 25 Oct (135.3 s) and hedge only after 30 s", () => {
+    expect(REQUEST_LIMIT_MS).toBeGreaterThan(135300);
+    expect(HEDGE_AFTER_MS).toBe(30000);
+  });
+});
