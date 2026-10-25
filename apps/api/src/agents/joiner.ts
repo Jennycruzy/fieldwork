@@ -71,7 +71,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     SqlSchema,
     8000,
   );
-  const sql = monthlySummarySql(ctx.runId, question, p, wired) ?? value.sql.trim().replace(/;\s*$/, "");
+  const sql = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
   const chk = checkSql(sql, "reader");
   if (!chk.ok) throw new Error(`refused the Joiner's SQL: ${chk.reason}`);
   const result = await ctx.zetaris.query(sql, 200);
@@ -90,4 +90,10 @@ export function monthlySummarySql(runId:string,question:string,p:Plan,wired:Wire
  const from=p.years?.from,to=p.years?.to;
  const years=[from?`year >= ${from}`:undefined,to?`year <= ${to}`:undefined].filter(Boolean);
  return `SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}' AND month IS NOT NULL${years.length?" AND "+years.join(" AND "):""} GROUP BY year, month ORDER BY year, month`;
+}
+
+export function categorySummarySql(runId:string,p:Plan,wired:Wired[]):string|undefined {
+ if(p.geography!=="city"||p.output==="trend"||wired.length!==1||!wired[0]?.normalized||!wired[0].groupField||wired[0].valueKind!=="count")return;
+ const w=wired[0];
+ return `SELECT category, SUM(value) AS record_count, SUM(SUM(value)) OVER () AS total_records, 100.0*SUM(value)/SUM(SUM(value)) OVER () AS share_pct FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}' GROUP BY category ORDER BY record_count DESC, category`;
 }

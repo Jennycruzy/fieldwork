@@ -24,3 +24,13 @@ export function withoutPostalFilters(input:string):string {
  };
  return prune(input)||"1=1";
 }
+
+// ArcGIS integer fields reject quoted numeric literals even when a string Year field accepts them.
+export function typedWhere(where:string,fields:{name:string;type:string}[]):string {
+ let result=where;
+ for(const f of fields)if(/^(?:esriFieldType)?(?:oid|integer|smallinteger|biginteger|double|single|long)$/i.test(f.type)) {
+  const name=f.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  result=result.replace(new RegExp(`\\b(${name}\\s*(?:<>|!=|<=|>=|=|<|>)\\s*)'(-?\\d+(?:\\.\\d+)?)'`,"gi"),"$1$2");
+ }
+ return result;
+}

@@ -46,7 +46,7 @@ export const WiringSchema = z.object({
     z.object({
       measure_id: z.string(),
       where: z.string().describe("filter in the source's own query language; '1=1' for none"),
-      fields: z.array(z.string()).min(1).max(12),
+      fields: z.array(z.string()).min(1).max(80),
       group_field: z.string().optional().nullable(),
     }),
   ),

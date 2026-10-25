@@ -6,3 +6,5 @@ export * from "./bridge.js";
 export * from "./observations.js";
 
 export * from "./filters.js";
+
+export {typedWhere} from "./filters.js";

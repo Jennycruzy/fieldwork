@@ -25,8 +25,8 @@ export async function layerInfo(url: string): Promise<LayerInfo> {
 }
 
 export async function layerCount(url: string, where = "1=1"): Promise<number> {
-  const b = (await getJson(`${normaliseLayerUrl(url)}/query?where=${encodeURIComponent(where)}&returnCountOnly=true&f=json`)) as { count?: number };
-  if (typeof b.count !== "number") throw new Error("ArcGIS did not return a count");
+  const b = (await getJson(`${normaliseLayerUrl(url)}/query?where=${encodeURIComponent(where)}&returnCountOnly=true&f=json`)) as { count?: number; error?:{code?:number;message?:string;details?:string[]} };
+  if (typeof b.count !== "number") throw new Error(`ArcGIS did not return a count${b.error?`: ${b.error.code??""} ${b.error.message??""} ${b.error.details?.join("; ")??""}`:""}`);
   return b.count;
 }
 

@@ -1,6 +1,6 @@
 import { WiringSchema, looksLikeTestValue, notice, FieldworkError, type Plan } from "@fieldwork/core";
 import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
-import { featurePageUrl, observationRoles, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
+import { featurePageUrl, observationRoles, typedWhere, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
 import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
@@ -130,7 +130,7 @@ export async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields
   const layer = normaliseLayerUrl(c.candidate.url);
   const objectIdField=c.fields.find((f)=>f.type === "oid")?.name ?? "OBJECTID";
   const pageSize=Math.min(PAGE,c.maxRecordCount ?? PAGE);
-  let where = modelWhere?.trim() || "1=1";
+  let where = typedWhere(modelWhere?.trim() || "1=1",c.fields);
   const aligned=withoutPostalFilters(where);
   if(aligned!==where) {where=aligned||"1=1";await ctx.trace.log({agent:"wirer",action:"filter_alignment",status:"info",note:"Postal city/state labels do not define tract geography; membership is checked against the county tract boundaries."});}
 
