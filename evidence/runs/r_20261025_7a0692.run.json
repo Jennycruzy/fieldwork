@@ -1,0 +1,91 @@
+{
+  "id": "r_20261025_7a0692",
+  "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
+  "created_at": "2026-10-25T15:26:50.386Z",
+  "finished_at": "2026-10-25T15:27:01.503Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for a ranking of tracts by the number of food establishments with a failing latest inspection score, which is a raw workload count per tract, not an association with health estimates.",
+        "denominator": "none",
+        "rank_measure": "count of food establishments with latest inspection score below 85, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of food establishments whose latest inspection score is below 85, grouped by Montgomery census tract",
+          "search_terms": [
+            "food establishment inspection",
+            "restaurant health inspection",
+            "food service inspection score"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_7a0692",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?"
+          },
+          "source": {
+            "at": "2026-10-25T15:26:50.437Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_7a0692:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for a ranking of tracts by the number of food establishments with a failing latest inspection score, which is a raw workload count per tract, not an association with health estimates.",
+              "denominator": "none",
+              "rank_measure": "count of food establishments with latest inspection score below 85, descending",
+              "relationship": false
+            },
+            "describe": "Count of food establishments whose latest inspection score is below 85, grouped by Montgomery census tract",
+            "search_terms": [
+              "food establishment inspection",
+              "restaurant health inspection",
+              "food service inspection score"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T15:26:50.438Z",
+            "run": "r_20261025_7a0692",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "No suitable public dataset was found for Count of food establishments whose latest inspection score is below 85, grouped by Montgomery census tract",
+    "sources": [],
+    "memories": [],
+    "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
+    "memoryWrites": [
+      {
+        "id": "mem-332",
+        "content": "World state for Which Montgomery tracts have the most food establishments with a latest inspection score below 85?: [{\"id\":\"run:fieldwork:r_20261025_7a0692\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery tracts have the most food establishments with a latest inspection score below 85?\"}},{\"id\":\"measure:r_20261025_7a0692:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of food establishments whose latest inspection score is below 85, grouped by Montgomery census tract\",\"kind\":\"city_records\",\"search_terms\":[\"food establishment inspection\",\"restaurant health inspection\",\"food service inspection score\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by the number of food establishments with a failing latest inspection score, which is a raw workload count per tract, not an association with health estimates.\",\"rank_measure\":\"count of food establishments with latest inspection score below 85, descending\"}}}]"
+      }
+    ]
+  }
+}

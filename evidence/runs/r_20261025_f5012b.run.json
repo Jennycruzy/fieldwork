@@ -1,0 +1,57 @@
+{
+  "id": "r_20261025_f5012b",
+  "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+  "created_at": "2026-10-25T15:38:52.597Z",
+  "finished_at": "2026-10-25T15:39:12.990Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Out of scope for place: Birmingham is outside the Montgomery, Alabama data scope, so no public-data plan can be built.",
+        "denominator": "none",
+        "rank_measure": "code violations per tract, descending",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "place",
+      "out_of_scope_reason": "The question asks about Birmingham, Alabama census tracts, but the available public data catalogs are scoped to Montgomery, Alabama only."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_f5012b",
+          "type": "run",
+          "attrs": {
+            "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?"
+          },
+          "source": {
+            "at": "2026-10-25T15:38:52.666Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The question asks about Birmingham, Alabama census tracts, but the available public data catalogs are scoped to Montgomery, Alabama only.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-358",
+        "content": "World state for Which Birmingham, Alabama census tracts had the most code violations in 2025?: [{\"id\":\"run:fieldwork:r_20261025_f5012b\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Birmingham, Alabama census tracts had the most code violations in 2025?\"}}]"
+      }
+    ]
+  }
+}

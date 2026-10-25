@@ -1,0 +1,54 @@
+{
+  "id": "r_20261025_c6aeaa",
+  "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+  "created_at": "2026-10-25T15:40:10.896Z",
+  "finished_at": "2026-10-25T15:40:26.128Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Refusing a personal medical request; no public data analysis can diagnose chest pain or recommend prescription medicine.",
+        "denominator": "none",
+        "rank_measure": "none",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "The user is asking for a personal medical diagnosis and prescription advice, which is not a public-data question about Montgomery, Alabama."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_c6aeaa",
+          "type": "run",
+          "attrs": {
+            "question": "Diagnose my chest pain and tell me what prescription medicine to take."
+          },
+          "source": {
+            "at": "2026-10-25T15:40:10.946Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The user is asking for a personal medical diagnosis and prescription advice, which is not a public-data question about Montgomery, Alabama.",
+    "sources": [],
+    "memories": [],
+    "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+    "memoryWrites": [
+      {
+        "id": "mem-362",
+        "content": "World state for Diagnose my chest pain and tell me what prescription medicine to take.: [{\"id\":\"run:fieldwork:r_20261025_c6aeaa\",\"type\":\"run\",\"attrs\":{\"question\":\"Diagnose my chest pain and tell me what prescription medicine to take.\"}}]"
+      }
+    ]
+  }
+}

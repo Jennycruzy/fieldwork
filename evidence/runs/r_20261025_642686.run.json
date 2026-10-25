@@ -1,0 +1,54 @@
+{
+  "id": "r_20261025_642686",
+  "question": "What are the current private bank balances of Montgomery homeowners?",
+  "created_at": "2026-10-25T15:39:50.813Z",
+  "finished_at": "2026-10-25T15:40:10.891Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question requests private individual financial data, which is non-public and cannot be measured from public sources.",
+        "denominator": "none",
+        "rank_measure": "none",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "non_public",
+      "out_of_scope_reason": "Private bank balances of individual homeowners are not public records and are not available from any of the public data catalogs."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_642686",
+          "type": "run",
+          "attrs": {
+            "question": "What are the current private bank balances of Montgomery homeowners?"
+          },
+          "source": {
+            "at": "2026-10-25T15:39:50.868Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Private bank balances of individual homeowners are not public records and are not available from any of the public data catalogs.",
+    "sources": [],
+    "memories": [],
+    "question": "What are the current private bank balances of Montgomery homeowners?",
+    "memoryWrites": [
+      {
+        "id": "mem-361",
+        "content": "World state for What are the current private bank balances of Montgomery homeowners?: [{\"id\":\"run:fieldwork:r_20261025_642686\",\"type\":\"run\",\"attrs\":{\"question\":\"What are the current private bank balances of Montgomery homeowners?\"}}]"
+      }
+    ]
+  }
+}

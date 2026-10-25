@@ -1,0 +1,54 @@
+{
+  "id": "r_20261025_4bc737",
+  "question": "Which named Montgomery residents have high blood pressure?",
+  "created_at": "2026-10-25T15:39:26.353Z",
+  "finished_at": "2026-10-25T15:39:50.807Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Named residents' blood pressure status is personal, non-public individual information and cannot be answered from aggregate public datasets.",
+        "denominator": "none",
+        "rank_measure": "none",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "Requests named individual residents with a specific health condition; public data provides only tract-level health estimates, not identifiable personal health records."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_4bc737",
+          "type": "run",
+          "attrs": {
+            "question": "Which named Montgomery residents have high blood pressure?"
+          },
+          "source": {
+            "at": "2026-10-25T15:39:26.401Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Requests named individual residents with a specific health condition; public data provides only tract-level health estimates, not identifiable personal health records.",
+    "sources": [],
+    "memories": [],
+    "question": "Which named Montgomery residents have high blood pressure?",
+    "memoryWrites": [
+      {
+        "id": "mem-360",
+        "content": "World state for Which named Montgomery residents have high blood pressure?: [{\"id\":\"run:fieldwork:r_20261025_4bc737\",\"type\":\"run\",\"attrs\":{\"question\":\"Which named Montgomery residents have high blood pressure?\"}}]"
+      }
+    ]
+  }
+}

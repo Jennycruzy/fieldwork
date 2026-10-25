@@ -1,0 +1,119 @@
+{
+  "id": "r_20261025_a5190e",
+  "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
+  "created_at": "2026-10-25T15:23:37.925Z",
+  "finished_at": "2026-10-25T15:23:55.238Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks which tracts had the most calls, a workload ranking; raw call counts per tract directly answer this without a population denominator or correlation.",
+        "denominator": "none",
+        "rank_measure": "count of 911 calls per tract, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of 911 / emergency service calls by Montgomery census tract in 2025",
+          "search_terms": [
+            "911 calls",
+            "service requests",
+            "emergency calls",
+            "calls for service"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_a5190e",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts had the most 911 calls in 2025?"
+          },
+          "source": {
+            "at": "2026-10-25T15:23:37.971Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_a5190e:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks which tracts had the most calls, a workload ranking; raw call counts per tract directly answer this without a population denominator or correlation.",
+              "denominator": "none",
+              "rank_measure": "count of 911 calls per tract, descending",
+              "relationship": false
+            },
+            "describe": "Count of 911 / emergency service calls by Montgomery census tract in 2025",
+            "search_terms": [
+              "911 calls",
+              "service requests",
+              "emergency calls",
+              "calls for service"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T15:23:37.973Z",
+            "run": "r_20261025_a5190e",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "911 Calls publishes no tract locations, so tract counts cannot be inferred.",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-247",
+        "kind": "choice",
+        "content": "For \"Count of food establishments whose latest inspection score is below 85, grouped by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Food Scores\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer): Directly provides food inspection scores for Montgomery establishments grouped by census tract, matching the measure and marked newest in series.",
+        "confidence": 0.8
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 1
+      }
+    ],
+    "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-324",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request."
+      },
+      {
+        "id": "mem-325",
+        "content": "World state for Which Montgomery census tracts had the most 911 calls in 2025?: [{\"id\":\"run:fieldwork:r_20261025_a5190e\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts had the most 911 calls in 2025?\"}},{\"id\":\"measure:r_20261025_a5190e:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of 911 / emergency service calls by Montgomery census tract in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"911 calls\",\"service requests\",\"emergency calls\",\"calls for service\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks which tracts had the most calls, a workload ranking; raw call counts per tract directly answer this without a population denominator or correlation.\",\"rank_measure\":\"count of 911 calls per tract, descending\"}}}]"
+      }
+    ]
+  }
+}

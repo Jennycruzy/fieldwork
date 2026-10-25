@@ -1,0 +1,1175 @@
+{
+  "id": "r_20261025_4c28fc",
+  "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+  "created_at": "2026-10-25T15:35:29.913Z",
+  "finished_at": "2026-10-25T15:37:14.292Z",
+  "status": "answered",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "WITH cdc AS (\n  SELECT\n    tractfips AS geoid,\n    CAST(diabetes_crudeprev AS DOUBLE) AS adult_diabetes_prevalence,\n    CAST(totalpop18plus AS DOUBLE) AS totalpop18plus,\n    CAST(totalpopulation AS DOUBLE) AS totalpopulation\n  FROM session.fw_4c28fc_m1_cdc\n)\nSELECT\n  t.name,\n  c.adult_diabetes_prevalence,\n  c.totalpop18plus,\n  c.totalpopulation,\n  t.geoid\nFROM fw_pg.tracts t\nLEFT JOIN cdc c ON t.geoid = c.geoid\nORDER BY c.adult_diabetes_prevalence DESC NULLS LAST, t.name ASC\nLIMIT 200",
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "rates",
+        "reason": "The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested.",
+        "denominator": "adults",
+        "rank_measure": "adult diabetes prevalence, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "health_estimate",
+          "describe": "Adult diabetes prevalence percentage by Montgomery census tract (CDC PLACES estimate)",
+          "search_terms": [
+            "diabetes",
+            "adult diabetes",
+            "diabetes prevalence"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Census Tract 24",
+        "31.5",
+        "1398.0",
+        "1758.0",
+        "01101002400"
+      ],
+      [
+        "Census Tract 6",
+        "28.5",
+        "1203.0",
+        "1763.0",
+        "01101000600"
+      ],
+      [
+        "Census Tract 7",
+        "28.2",
+        "790.0",
+        "997.0",
+        "01101000700"
+      ],
+      [
+        "Census Tract 12",
+        "28.0",
+        "1046.0",
+        "1455.0",
+        "01101001200"
+      ],
+      [
+        "Census Tract 11",
+        "27.6",
+        "2038.0",
+        "2684.0",
+        "01101001100"
+      ],
+      [
+        "Census Tract 23",
+        "27.2",
+        "2061.0",
+        "2501.0",
+        "01101002300"
+      ],
+      [
+        "Census Tract 61",
+        "26.4",
+        "1651.0",
+        "2062.0",
+        "01101006100"
+      ],
+      [
+        "Census Tract 22.01",
+        "26.3",
+        "2870.0",
+        "3754.0",
+        "01101002201"
+      ],
+      [
+        "Census Tract 59.02",
+        "26.3",
+        "2442.0",
+        "3212.0",
+        "01101005902"
+      ],
+      [
+        "Census Tract 10",
+        "25.3",
+        "841.0",
+        "1200.0",
+        "01101001000"
+      ],
+      [
+        "Census Tract 30",
+        "25.2",
+        "1499.0",
+        "1904.0",
+        "01101003000"
+      ],
+      [
+        "Census Tract 3",
+        "24.6",
+        "964.0",
+        "1261.0",
+        "01101000300"
+      ],
+      [
+        "Census Tract 22.02",
+        "24.5",
+        "695.0",
+        "884.0",
+        "01101002202"
+      ],
+      [
+        "Census Tract 57",
+        "23.4",
+        "1216.0",
+        "1417.0",
+        "01101005700"
+      ],
+      [
+        "Census Tract 4",
+        "22.7",
+        "3120.0",
+        "4267.0",
+        "01101000400"
+      ],
+      [
+        "Census Tract 25",
+        "22.5",
+        "1689.0",
+        "2315.0",
+        "01101002500"
+      ],
+      [
+        "Census Tract 29.02",
+        "22.3",
+        "2929.0",
+        "3875.0",
+        "01101002902"
+      ],
+      [
+        "Census Tract 51.02",
+        "22.2",
+        "3234.0",
+        "4239.0",
+        "01101005102"
+      ],
+      [
+        "Census Tract 2",
+        "22.1",
+        "1345.0",
+        "1440.0",
+        "01101000200"
+      ],
+      [
+        "Census Tract 32",
+        "21.9",
+        "4465.0",
+        "5741.0",
+        "01101003200"
+      ],
+      [
+        "Census Tract 31",
+        "21.8",
+        "2668.0",
+        "3436.0",
+        "01101003100"
+      ],
+      [
+        "Census Tract 29.01",
+        "21.6",
+        "2452.0",
+        "3313.0",
+        "01101002901"
+      ],
+      [
+        "Census Tract 16",
+        "21.5",
+        "2803.0",
+        "3830.0",
+        "01101001600"
+      ],
+      [
+        "Census Tract 56.13",
+        "20.2",
+        "3285.0",
+        "4832.0",
+        "01101005613"
+      ],
+      [
+        "Census Tract 60",
+        "19.4",
+        "2589.0",
+        "3209.0",
+        "01101006000"
+      ],
+      [
+        "Census Tract 56.14",
+        "18.8",
+        "1841.0",
+        "2808.0",
+        "01101005614"
+      ],
+      [
+        "Census Tract 59.04",
+        "18.1",
+        "1932.0",
+        "2369.0",
+        "01101005904"
+      ],
+      [
+        "Census Tract 18",
+        "17.9",
+        "2627.0",
+        "3375.0",
+        "01101001800"
+      ],
+      [
+        "Census Tract 13",
+        "17.7",
+        "1691.0",
+        "2094.0",
+        "01101001300"
+      ],
+      [
+        "Census Tract 21",
+        "17.6",
+        "2861.0",
+        "3886.0",
+        "01101002100"
+      ],
+      [
+        "Census Tract 58",
+        "17.6",
+        "1609.0",
+        "1918.0",
+        "01101005800"
+      ],
+      [
+        "Census Tract 28",
+        "17.4",
+        "3793.0",
+        "4948.0",
+        "01101002800"
+      ],
+      [
+        "Census Tract 54.02",
+        "17.4",
+        "3949.0",
+        "5486.0",
+        "01101005402"
+      ],
+      [
+        "Census Tract 5",
+        "17.3",
+        "2177.0",
+        "2902.0",
+        "01101000500"
+      ],
+      [
+        "Census Tract 56.06",
+        "17.0",
+        "3527.0",
+        "4770.0",
+        "01101005606"
+      ],
+      [
+        "Census Tract 56.10",
+        "17.0",
+        "1017.0",
+        "1400.0",
+        "01101005610"
+      ],
+      [
+        "Census Tract 59.03",
+        "16.6",
+        "1609.0",
+        "1943.0",
+        "01101005903"
+      ],
+      [
+        "Census Tract 33.03",
+        "16.2",
+        "2079.0",
+        "2652.0",
+        "01101003303"
+      ],
+      [
+        "Census Tract 53.02",
+        "16.1",
+        "1554.0",
+        "2198.0",
+        "01101005302"
+      ],
+      [
+        "Census Tract 51.01",
+        "15.3",
+        "2842.0",
+        "3604.0",
+        "01101005101"
+      ],
+      [
+        "Census Tract 26",
+        "14.8",
+        "4480.0",
+        "5458.0",
+        "01101002600"
+      ],
+      [
+        "Census Tract 27",
+        "14.6",
+        "3558.0",
+        "4349.0",
+        "01101002700"
+      ],
+      [
+        "Census Tract 56.05",
+        "14.4",
+        "2920.0",
+        "3712.0",
+        "01101005605"
+      ],
+      [
+        "Census Tract 19",
+        "13.9",
+        "2452.0",
+        "3110.0",
+        "01101001900"
+      ],
+      [
+        "Census Tract 54.13",
+        "13.7",
+        "3374.0",
+        "3973.0",
+        "01101005413"
+      ],
+      [
+        "Census Tract 17",
+        "13.5",
+        "4113.0",
+        "5469.0",
+        "01101001700"
+      ],
+      [
+        "Census Tract 33.01",
+        "13.5",
+        "2776.0",
+        "3470.0",
+        "01101003301"
+      ],
+      [
+        "Census Tract 20",
+        "13.4",
+        "3558.0",
+        "4750.0",
+        "01101002000"
+      ],
+      [
+        "Census Tract 56.04",
+        "13.0",
+        "2899.0",
+        "3541.0",
+        "01101005604"
+      ],
+      [
+        "Census Tract 33.04",
+        "12.9",
+        "2957.0",
+        "3723.0",
+        "01101003304"
+      ],
+      [
+        "Census Tract 54.09",
+        "12.5",
+        "1873.0",
+        "2325.0",
+        "01101005409"
+      ],
+      [
+        "Census Tract 54.12",
+        "12.5",
+        "5280.0",
+        "6381.0",
+        "01101005412"
+      ],
+      [
+        "Census Tract 55.01",
+        "12.5",
+        "2928.0",
+        "3426.0",
+        "01101005501"
+      ],
+      [
+        "Census Tract 54.10",
+        "12.2",
+        "4031.0",
+        "5070.0",
+        "01101005410"
+      ],
+      [
+        "Census Tract 54.03",
+        "11.6",
+        "3000.0",
+        "3905.0",
+        "01101005403"
+      ],
+      [
+        "Census Tract 54.11",
+        "11.5",
+        "2540.0",
+        "3092.0",
+        "01101005411"
+      ],
+      [
+        "Census Tract 55.02",
+        "11.2",
+        "2224.0",
+        "3195.0",
+        "01101005502"
+      ],
+      [
+        "Census Tract 56.08",
+        "11.1",
+        "1216.0",
+        "1633.0",
+        "01101005608"
+      ],
+      [
+        "Census Tract 56.11",
+        "10.8",
+        "2922.0",
+        "3644.0",
+        "01101005611"
+      ],
+      [
+        "Census Tract 54.07",
+        "10.7",
+        "3645.0",
+        "4335.0",
+        "01101005407"
+      ],
+      [
+        "Census Tract 54.14",
+        "10.7",
+        "3020.0",
+        "3945.0",
+        "01101005414"
+      ],
+      [
+        "Census Tract 56.07",
+        "10.6",
+        "3977.0",
+        "5640.0",
+        "01101005607"
+      ],
+      [
+        "Census Tract 1",
+        "10.5",
+        "842.0",
+        "982.0",
+        "01101000100"
+      ],
+      [
+        "Census Tract 55.03",
+        "10.2",
+        "4467.0",
+        "6176.0",
+        "01101005503"
+      ],
+      [
+        "Census Tract 56.12",
+        "10.0",
+        "1522.0",
+        "2131.0",
+        "01101005612"
+      ],
+      [
+        "Census Tract 15",
+        "9.9",
+        "3566.0",
+        "4112.0",
+        "01101001500"
+      ],
+      [
+        "Census Tract 56.09",
+        "9.6",
+        "3903.0",
+        "5034.0",
+        "01101005609"
+      ],
+      [
+        "Census Tract 14",
+        "9.1",
+        "3127.0",
+        "3555.0",
+        "01101001400"
+      ],
+      [
+        "Census Tract 55.04",
+        "8.9",
+        "1285.0",
+        "1829.0",
+        "01101005504"
+      ],
+      [
+        "Census Tract 9",
+        "8.7",
+        "1741.0",
+        "2133.0",
+        "01101000900"
+      ],
+      [
+        "Census Tract 53.01",
+        "3.9",
+        "830.0",
+        "1154.0",
+        "01101005301"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_4c28fc",
+    "world": {
+      "edges": [
+        {
+          "id": "0c9e3c2d2e108c9a1cccdd4daf8f7fa5fe7876e97376b9fbc9dd3aaa9179e1c1",
+          "to": "source:r_20261025_4c28fc:m1_cdc",
+          "from": "measure:r_20261025_4c28fc:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-25T15:35:29.961Z"
+        },
+        {
+          "id": "b14d685d378cfaa143dee0b637630e3219fcda769d046254a8797d16ec96d640",
+          "to": "source:r_20261025_4c28fc:m1_cdc",
+          "from": "finding:r_20261025_4c28fc:query",
+          "type": "joins to",
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "joiner"
+          },
+          "context": "source:r_20261025_4c28fc:m1_cdc",
+          "validFrom": "2026-10-25T15:35:29.961Z"
+        },
+        {
+          "id": "8de05377b4605a03885d854886b44a17f902b1bdc8b1f40dc1052302f9b30391",
+          "to": "finding:r_20261025_4c28fc:query",
+          "from": "finding:r_20261025_4c28fc:approval-1",
+          "type": "supports",
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "evaluator"
+          },
+          "validFrom": "2026-10-25T15:35:29.961Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_4c28fc",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?"
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.960Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_4c28fc:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested.",
+              "denominator": "adults",
+              "rank_measure": "adult diabetes prevalence, descending",
+              "relationship": false
+            },
+            "describe": "Adult diabetes prevalence percentage by Montgomery census tract (CDC PLACES estimate)",
+            "search_terms": [
+              "diabetes",
+              "adult diabetes",
+              "diabetes prevalence"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "source:r_20261025_4c28fc:m1_cdc",
+          "type": "source",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              "tractfips",
+              "countyfips",
+              "countyname",
+              "stateabbr",
+              "totalpopulation",
+              "totalpop18plus",
+              "diabetes_crudeprev",
+              "diabetes_crude95ci"
+            ],
+            "filter": "countyfips = '01101' AND (countyfips = '01101' AND diabetes_crudeprev IS NOT NULL)",
+            "tables": [
+              "fw_4c28fc_m1_cdc"
+            ],
+            "records": 71
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "finding:r_20261025_4c28fc:query",
+          "type": "finding",
+          "attrs": {
+            "sql": "WITH cdc AS (\n  SELECT\n    tractfips AS geoid,\n    CAST(diabetes_crudeprev AS DOUBLE) AS adult_diabetes_prevalence,\n    CAST(totalpop18plus AS DOUBLE) AS totalpop18plus,\n    CAST(totalpopulation AS DOUBLE) AS totalpopulation\n  FROM session.fw_4c28fc_m1_cdc\n)\nSELECT\n  t.name,\n  c.adult_diabetes_prevalence,\n  c.totalpop18plus,\n  c.totalpopulation,\n  t.geoid\nFROM fw_pg.tracts t\nLEFT JOIN cdc c ON t.geoid = c.geoid\nORDER BY c.adult_diabetes_prevalence DESC NULLS LAST, t.name ASC\nLIMIT 200",
+            "rows": 71,
+            "headers": [
+              "name",
+              "adult_diabetes_prevalence",
+              "totalpop18plus",
+              "totalpopulation",
+              "geoid"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "joiner"
+          }
+        },
+        {
+          "id": "round:r_20261025_4c28fc:1",
+          "type": "round",
+          "attrs": {
+            "checks": [
+              {
+                "id": "rows_m1_cdc",
+                "ok": true,
+                "detail": "m1_cdc: Zetaris rows 71 vs source's own count 71"
+              },
+              {
+                "id": "has_rows",
+                "ok": true,
+                "detail": "71 result rows"
+              },
+              {
+                "id": "measure_values",
+                "ok": true,
+                "detail": "every measure column has real values"
+              },
+              {
+                "id": "sample_size",
+                "ok": true,
+                "detail": "every group has at least 30 records (smallest 695)"
+              },
+              {
+                "id": "duplicates",
+                "ok": true,
+                "detail": "0 duplicate case IDs removed before tract counting."
+              },
+              {
+                "id": "source_accessed_m1_cdc",
+                "ok": true,
+                "detail": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release: retrieved 2026-10-25. Catalog updated 2026-09-22; retrieval is not an event or inspection date."
+              },
+              {
+                "id": "source_definition_m1_cdc",
+                "ok": true,
+                "detail": "Published description for PLACES: Census Tract Data (GIS Friendly Format), 2025 release: This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven"
+              },
+              {
+                "id": "analysis_basis",
+                "ok": true,
+                "detail": "rates; denominator: adults. The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested."
+              },
+              {
+                "id": "ranking_order",
+                "ok": true,
+                "detail": "Sort by the requested measure: adult diabetes prevalence, descending; retain its value before supporting columns."
+              }
+            ],
+            "verdict": "APPROVE"
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "evaluator"
+          }
+        },
+        {
+          "id": "finding:r_20261025_4c28fc:approval-1",
+          "type": "finding",
+          "attrs": {
+            "round": 1,
+            "status": "approved",
+            "reasons": [
+              "Rates (adult diabetes prevalence percentage) answer the ranking question, not raw adult counts; denominator is adults (totalpop18plus) as planned. ORDER BY adult_diabetes_prevalence DESC NULLS LAST matches the requested ranking measure. Source filter (countyfips='01101', non-null prevalence) is already applied; 71 paired tract rows returned, all code checks pass, and missing/zero cases do not affect the ranking."
+            ],
+            "instruction": null
+          },
+          "source": {
+            "at": "2026-10-25T15:35:29.961Z",
+            "run": "r_20261025_4c28fc",
+            "kind": "evaluator"
+          }
+        }
+      ]
+    },
+    "answer": {
+      "points": [
+        "Census Tract 24 leads with 31.5% adult diabetes prevalence (rank 1).",
+        "Census Tract 6 is second at 28.5% (rank 2).",
+        "Census Tract 7 is third at 28.2% (rank 3).",
+        "Census Tract 12 ranks fourth at 28.0% and Census Tract 11 fifth at 27.6%.",
+        "Tracts 22.01 and 59.02 are tied at 26.3% (rank 8).",
+        "The ranking uses CDC PLACES 2025 model-based rates per adult population."
+      ],
+      "caveats": [
+        "CDC PLACES values are model-based estimates from survey data, not census counts.",
+        "Rates are per-adult percentages; raw case counts are not provided.",
+        "Tied values share a rank; the list continues beyond the top 13 shown here."
+      ],
+      "headline": "Census Tract 24 has the highest adult diabetes prevalence at 31.5%, followed by Census Tract 6 at 28.5% and Census Tract 7 at 28.2%.",
+      "how_sure": "The ranking is based on 71 result rows from the CDC PLACES 2025 release (retrieved 2026-10-25). All measure columns have real values, every group has at least 30 records, and no duplicate case IDs were removed before tract counting. Rates are population-adjusted percentages with adults as the denominator."
+    },
+    "checks": [
+      {
+        "id": "rows_m1_cdc",
+        "ok": true,
+        "detail": "m1_cdc: Zetaris rows 71 vs source's own count 71"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "71 result rows"
+      },
+      {
+        "id": "measure_values",
+        "ok": true,
+        "detail": "every measure column has real values"
+      },
+      {
+        "id": "sample_size",
+        "ok": true,
+        "detail": "every group has at least 30 records (smallest 695)"
+      },
+      {
+        "id": "duplicates",
+        "ok": true,
+        "detail": "0 duplicate case IDs removed before tract counting."
+      },
+      {
+        "id": "source_accessed_m1_cdc",
+        "ok": true,
+        "detail": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release: retrieved 2026-10-25. Catalog updated 2026-09-22; retrieval is not an event or inspection date."
+      },
+      {
+        "id": "source_definition_m1_cdc",
+        "ok": true,
+        "detail": "Published description for PLACES: Census Tract Data (GIS Friendly Format), 2025 release: This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven"
+      },
+      {
+        "id": "analysis_basis",
+        "ok": true,
+        "detail": "rates; denominator: adults. The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested."
+      },
+      {
+        "id": "ranking_order",
+        "ok": true,
+        "detail": "Sort by the requested measure: adult diabetes prevalence, descending; retain its value before supporting columns."
+      }
+    ],
+    "headers": [
+      "name",
+      "adult_diabetes_prevalence",
+      "totalpop18plus",
+      "totalpopulation",
+      "geoid"
+    ],
+    "sources": [
+      {
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "label": "m1_cdc",
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "filter": "countyfips = '01101' AND (countyfips = '01101' AND diabetes_crudeprev IS NOT NULL)",
+        "licence": "Public Domain",
+        "records": 71,
+        "accessedAt": "2026-10-25T15:35:37.806Z",
+        "licenceUrl": "https://data.cdc.gov/api/views/yjkw-uj5s.json",
+        "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+        "sourceCount": 71,
+        "catalogUpdatedAt": "2026-09-22T23:23:00.000Z"
+      }
+    ],
+    "memories": [
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 0.99
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 0.94
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      }
+    ],
+    "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+    "intervals": [
+      {
+        "rows": [
+          [
+            "01101000100",
+            "( 9.0, 12.2)"
+          ],
+          [
+            "01101000200",
+            "(19.6, 24.8)"
+          ],
+          [
+            "01101000300",
+            "(21.9, 27.4)"
+          ],
+          [
+            "01101000400",
+            "(20.2, 25.4)"
+          ],
+          [
+            "01101000500",
+            "(15.2, 19.6)"
+          ],
+          [
+            "01101000600",
+            "(25.5, 31.6)"
+          ],
+          [
+            "01101000700",
+            "(25.0, 31.6)"
+          ],
+          [
+            "01101000900",
+            "( 7.4, 10.2)"
+          ],
+          [
+            "01101001000",
+            "(22.8, 28.0)"
+          ],
+          [
+            "01101001100",
+            "(24.2, 30.9)"
+          ],
+          [
+            "01101001200",
+            "(25.2, 31.0)"
+          ],
+          [
+            "01101001300",
+            "(15.5, 20.1)"
+          ],
+          [
+            "01101001400",
+            "( 7.8, 10.6)"
+          ],
+          [
+            "01101001500",
+            "( 8.8, 11.2)"
+          ],
+          [
+            "01101001600",
+            "(19.2, 24.0)"
+          ],
+          [
+            "01101001700",
+            "(11.7, 15.4)"
+          ],
+          [
+            "01101001800",
+            "(15.7, 20.2)"
+          ],
+          [
+            "01101001900",
+            "(11.9, 16.1)"
+          ],
+          [
+            "01101002000",
+            "(11.6, 15.3)"
+          ],
+          [
+            "01101002100",
+            "(15.2, 20.1)"
+          ],
+          [
+            "01101002201",
+            "(23.2, 29.6)"
+          ],
+          [
+            "01101002202",
+            "(21.5, 27.5)"
+          ],
+          [
+            "01101002300",
+            "(24.1, 30.5)"
+          ],
+          [
+            "01101002400",
+            "(28.5, 34.9)"
+          ],
+          [
+            "01101002500",
+            "(19.9, 25.4)"
+          ],
+          [
+            "01101002600",
+            "(12.6, 17.0)"
+          ],
+          [
+            "01101002700",
+            "(12.6, 16.7)"
+          ],
+          [
+            "01101002800",
+            "(15.2, 19.7)"
+          ],
+          [
+            "01101002901",
+            "(19.0, 24.4)"
+          ],
+          [
+            "01101002902",
+            "(19.5, 25.1)"
+          ],
+          [
+            "01101003000",
+            "(22.3, 28.2)"
+          ],
+          [
+            "01101003100",
+            "(19.2, 24.7)"
+          ],
+          [
+            "01101003200",
+            "(19.4, 24.8)"
+          ],
+          [
+            "01101003301",
+            "(11.6, 15.6)"
+          ],
+          [
+            "01101003303",
+            "(14.0, 18.8)"
+          ],
+          [
+            "01101003304",
+            "(11.2, 14.9)"
+          ],
+          [
+            "01101005101",
+            "(13.4, 17.5)"
+          ],
+          [
+            "01101005102",
+            "(19.6, 25.0)"
+          ],
+          [
+            "01101005301",
+            "( 3.3,  4.5)"
+          ],
+          [
+            "01101005302",
+            "(14.1, 18.2)"
+          ],
+          [
+            "01101005402",
+            "(15.2, 19.8)"
+          ],
+          [
+            "01101005403",
+            "(10.0, 13.3)"
+          ],
+          [
+            "01101005407",
+            "( 9.2, 12.3)"
+          ],
+          [
+            "01101005409",
+            "(10.7, 14.5)"
+          ],
+          [
+            "01101005410",
+            "(10.6, 13.9)"
+          ],
+          [
+            "01101005411",
+            "( 9.7, 13.4)"
+          ],
+          [
+            "01101005412",
+            "(10.8, 14.3)"
+          ],
+          [
+            "01101005413",
+            "(11.9, 15.9)"
+          ],
+          [
+            "01101005414",
+            "( 9.2, 12.4)"
+          ],
+          [
+            "01101005501",
+            "(11.0, 14.2)"
+          ],
+          [
+            "01101005502",
+            "( 9.7, 12.8)"
+          ],
+          [
+            "01101005503",
+            "( 8.8, 11.7)"
+          ],
+          [
+            "01101005504",
+            "( 7.6, 10.3)"
+          ],
+          [
+            "01101005604",
+            "(11.3, 14.8)"
+          ],
+          [
+            "01101005605",
+            "(12.5, 16.5)"
+          ],
+          [
+            "01101005606",
+            "(14.7, 19.4)"
+          ],
+          [
+            "01101005607",
+            "( 9.1, 12.2)"
+          ],
+          [
+            "01101005608",
+            "( 9.6, 12.8)"
+          ],
+          [
+            "01101005609",
+            "( 8.2, 11.2)"
+          ],
+          [
+            "01101005610",
+            "(14.9, 19.2)"
+          ],
+          [
+            "01101005611",
+            "( 9.2, 12.5)"
+          ],
+          [
+            "01101005612",
+            "( 8.6, 11.5)"
+          ],
+          [
+            "01101005613",
+            "(17.9, 22.6)"
+          ],
+          [
+            "01101005614",
+            "(16.7, 21.1)"
+          ],
+          [
+            "01101005700",
+            "(20.7, 26.3)"
+          ],
+          [
+            "01101005800",
+            "(15.5, 20.0)"
+          ],
+          [
+            "01101005902",
+            "(23.1, 29.4)"
+          ],
+          [
+            "01101005903",
+            "(14.7, 18.8)"
+          ],
+          [
+            "01101005904",
+            "(15.9, 20.5)"
+          ],
+          [
+            "01101006000",
+            "(17.1, 21.9)"
+          ],
+          [
+            "01101006100",
+            "(23.3, 29.5)"
+          ]
+        ],
+        "source": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "headers": [
+          "tractfips",
+          "diabetes_crude95ci"
+        ]
+      }
+    ],
+    "memoryWrites": [
+      {
+        "id": "mem-348",
+        "content": "For \"Adult diabetes prevalence percentage by Montgomery census tract (CDC PLACES estimate)\" in Montgomery, AL, dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json) was read through Zetaris: 71 records; fields tractfips, countyfips, countyname, stateabbr, totalpopulation, totalpop18plus, diabetes_crudeprev, diabetes_crude95ci. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-349",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (countyfips = '01101' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, countyname, stateabbr, totalpopulation, totalpop18plus, diabetes_crudeprev, diabetes_crude95ci; 71 of 71 source records read."
+      },
+      {
+        "id": "mem-350",
+        "content": "A working Zetaris join for \"Which Montgomery census tracts have the highest adult diabetes prevalence?\": WITH cdc AS (\n  SELECT\n    tractfips AS geoid,\n    CAST(diabetes_crudeprev AS DOUBLE) AS adult_diabetes_prevalence,\n    CAST(totalpop18plus AS DOUBLE) AS totalpop18plus,\n    CAST(totalpopulation AS DOUBLE) AS totalpopulation\n  FROM session.fw_<run>_m1_cdc\n)\nSELECT\n  t.name,\n  c.adult_diabetes_prevalence,\n  c.totalpop18plus,\n  c.totalpopulation,\n  t.geoid\nFROM fw_pg.tracts t\nLEFT JOIN cdc c ON t.geoid = c.geoid\nORDER BY c.adult_diabetes_prevalence DESC NULLS LAST, t.name ASC\nLIMIT 200"
+      },
+      {
+        "id": "mem-351",
+        "content": "World state for Which Montgomery census tracts have the highest adult diabetes prevalence?: [{\"id\":\"run:fieldwork:r_20261025_4c28fc\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have the highest adult diabetes prevalence?\"}},{\"id\":\"measure:r_20261025_4c28fc:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Adult diabetes prevalence percentage by Montgomery census tract (CDC PLACES estimate)\",\"kind\":\"health_estimate\",\"search_terms\":[\"diabetes\",\"adult diabetes\",\"diabetes prevalence\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"adults\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested.\",\"rank_measure\":\"adult diabetes prevalence, descending\"}}},{\"id\":\"source:r_20261025_4c28fc:m1_cdc\",\"type\":\"source\",\"attrs\":{\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"tables\":[\"fw_4c28fc_m1_cdc\"],\"filter\":\"countyfips = '01101' AND (countyfips = '01101' AND diabetes_crudeprev IS NOT NULL)\",\"fields\":[\"tractfips\",\"countyfips\",\"countyname\",\"stateabbr\",\"totalpopulation\",\"totalpop18plus\",\"diabetes_crudeprev\",\"diabetes_crude95ci\"],\"records\":71}},{\"id\":\"finding:r_20261025_4c28fc:query\",\"type\":\"finding\",\"attrs\":{\"sql\":\"WITH cdc AS (\\n  SELECT\\n    tractfips AS geoid,\\n    CAST(diabetes_crudeprev AS DOUBLE) AS adult_diabetes_prevalence,\\n    CAST(totalpop18plus AS DOUBLE) AS totalpop18plus,\\n    CAST(totalpopulation AS DOUBLE) AS totalpopulation\\n  FROM session.fw_4c28fc_m1_cdc\\n)\\nSELECT\\n  t.name,\\n  c.adult_diabetes_prevalence,\\n  c.totalpop18plus,\\n  c.totalpopulation,\\n  t.geoid\\nFROM fw_pg.tracts t\\nLEFT JOIN cdc c ON t.geoid = c.geoid\\nORDER BY c.adult_diabetes_prevalence DESC NULLS LAST, t.name ASC\\nLIMIT 200\",\"headers\":[\"name\",\"adult_diabetes_prevalence\",\"totalpop18plus\",\"totalpopulation\",\"geoid\"],\"rows\":71}},{\"id\":\"round:r_20261025_4c28fc:1\",\"type\":\"round\",\"attrs\":{\"verdict\":\"APPROVE\",\"checks\":[{\"id\":\"rows_m1_cdc\",\"ok\":true,\"detail\":\"m1_cdc: Zetaris rows 71 vs source's own count 71\"},{\"id\":\"has_rows\",\"ok\":true,\"detail\":\"71 result rows\"},{\"id\":\"measure_values\",\"ok\":true,\"detail\":\"every measure column has real values\"},{\"id\":\"sample_size\",\"ok\":true,\"detail\":\"every group has at least 30 records (smallest 695)\"},{\"id\":\"duplicates\",\"ok\":true,\"detail\":\"0 duplicate case IDs removed before tract counting.\"},{\"id\":\"source_accessed_m1_cdc\",\"ok\":true,\"detail\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release: retrieved 2026-10-25. Catalog updated 2026-09-22; retrieval is not an event or inspection date.\"},{\"id\":\"source_definition_m1_cdc\",\"ok\":true,\"detail\":\"Published description for PLACES: Census Tract Data (GIS Friendly Format), 2025 release: This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\"},{\"id\":\"analysis_basis\",\"ok\":true,\"detail\":\"rates; denominator: adults. The question asks for a ranking of tracts by adult diabetes prevalence, which is a population-adjusted percentage already provided by CDC PLACES; no cross-tract correlation is requested.\"},{\"id\":\"ranking_order\",\"ok\":true,\"detail\":\"Sort by the requested measure: adult diabetes prevalence, descending; retain its value before supporting columns.\"}]}},{\"id\":\"finding:r_20261025_4c28fc:approval-1\",\"type\":\"finding\",\"attrs\":{\"round\":1,\"status\":\"approved\",\"instruction\":null,\"reasons\":[\"Rates (adult diabetes prevalence percentage) answer the ranking question, not raw adult counts; denominator is adults (totalpop18plus) as planned. ORDER BY adult_diabetes_prevalence DESC NULLS LAST matches the requested ranking measure. Source filter (countyfips='01101', non-null prevalence) is already applied; 71 paired tract rows returned, all code checks pass, and missing/zero cases do not affect the ranking.\"]}}]"
+      }
+    ]
+  }
+}
