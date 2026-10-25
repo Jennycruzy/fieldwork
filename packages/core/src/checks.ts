@@ -108,13 +108,19 @@ export interface DraftCheck {
 export function checkDraft(texts: string[], headers: string[], rows: (string | null)[][], facts: string[] = []): DraftCheck {
   // Values come from every column except the first (the row's name, e.g. "Census Tract 11").
   // A share and its percent are the same figure (0.601 and 60.1%).
-  const values = new Set<string>();
-  for (const r of rows) for (const v of r.slice(1)) for (const n of numbersIn(v)) {
-    values.add(n);
-    const x = Number(n);
-    if (Math.abs(x) <= 1) values.add(normaliseNumber(String(Number((x * 100).toFixed(4)))));
-    if (Math.abs(x) <= 100) values.add(normaliseNumber(String(Number((x / 100).toFixed(6)))));
-  }
+  const columns=valueColumns(headers);
+  const cellValues=(records:(string|null)[][])=>{
+    const result=new Set<string>();
+    for(const row of records)for(const j of columns) {
+      const value=row[j];
+      if(value==null||!/^[-+]?\d+(?:\.\d+)?$/.test(value))continue;
+      const x=Number(value);result.add(normaliseNumber(value));
+      if(Math.abs(x)<=1)result.add(normaliseNumber(String(x*100)));
+      if(Math.abs(x)<=100)result.add(normaliseNumber(String(x/100)));
+    }
+    return result;
+  };
+  const values=cellValues(rows);
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
   for (const f of facts) for (const n of numbersIn(f.replace(/\b(?:countyfips|tractfips|geoid)\s*[:=]\s*['"]?\d+['"]?/gi," ")) ) values.add(n);
   const monthColumn=headers.findIndex(h=>/^month$/i.test(h));
@@ -124,9 +130,18 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const missing: string[] = [];
   for (const original of texts) {
     const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
-    for (const raw of numberTokens(withoutNames(spellNumbers(knownIdentifiers(t, facts, names)), names))) {
-      const n=normaliseNumber(raw);
-      if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(raw, values) && !derivedNumber(raw, headers, rows)) missing.push(n);
+    for(const clause of rowClauses(t,names)) {
+      const named=names.map((name,i)=>mentions(clause,name)?i:-1).filter(i=>i>=0);
+      const allowed=named.length?cellValues(named.map(i=>rows[i]!)):values;
+      const content=withoutNames(spellNumbers(knownIdentifiers(clause,facts,names)),names)
+        .replace(/\b\d+(?:st|nd|rd|th)\b/gi," ")
+        .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
+        .replace(/\btop\s+(\d+)(?=\s+(?:tracts?|rows?|areas?))/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
+        .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
+      for (const raw of numberTokens(content)) {
+        const n=normaliseNumber(raw);
+        if(!allowed.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*)\b/i.test(clause))))missing.push(n);
+      }
     }
   }
 
@@ -199,8 +214,7 @@ function rowClauses(text: string, names: string[]): string[] {
 function derivedNumber(text: string, headers: string[], rows: (string|null)[][]): boolean {
  const target=Number(text),places=(text.split(".")[1]??"").length;
  const equal=(x:number)=>Number.isFinite(x)&&Number(x.toFixed(places))===target;
- for(let j=1;j<headers.length;j++) {
-  if(/geoid|fips|identifier|(?:^|_)id$/i.test(headers[j]!))continue;
+ for(const j of valueColumns(headers)) {
   const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
   if(!cells.length)continue;
   if(equal(cells.reduce((a,b)=>a+b,0)))return true;
@@ -209,6 +223,10 @@ function derivedNumber(text: string, headers: string[], rows: (string|null)[][])
   }
  }
  return false;
+}
+
+function valueColumns(headers:string[]):number[] {
+ return headers.map((h,j)=>({h,j})).filter(({h,j})=>j>0&&!/geoid|fips|identifier|(?:^|_)(?:id|year|month|name)(?:_|$)/i.test(h)).map(({j})=>j);
 }
 
 function numbersIn(s: string | null | undefined): string[] {

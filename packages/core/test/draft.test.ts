@@ -207,3 +207,16 @@ it("metadata does not excuse an unsupported universal relationship",()=>{
  const a=recorded25("a5f032");
  expect(checkDraft(["Geoid codes are provided for each tract; higher requests consistently mean higher health burden."],a.headers,a.rows).ok).toBe(false);
 });
+
+it("a named shelter row cannot borrow a small count or identifier digits",()=>{
+ const a=recorded25("fe9fd0");
+ expect(checkDraft(["Tract 22.01 has 4 listed shelters."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Tract 22.01 has 1 listed shelter."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Tract 22.01 has 6 shelters in total across the returned tracts."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Tract 22.01 has 1101002201 listed shelters."],a.headers,a.rows).ok).toBe(false);
+});
+it("a tract claim cannot borrow another tract's numeric measure",()=>{
+ const a=recorded25("a5f032");
+ expect(checkDraft(["Tract 25 had 1,419 requests."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Tract 25 had 1,071 requests."],a.headers,a.rows).ok).toBe(true);
+});
