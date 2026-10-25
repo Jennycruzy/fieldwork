@@ -31,15 +31,15 @@ export class Trace {
         await this.log({agent,action:switched ? "MODEL_DOWN":"provider_retry",status:"info",note:switched ? notice("MODEL_DOWN",r.modelServed).message : "The retried model request answered."});
         failed=undefined;
       }
-      if (!r.ok) failed = {provider:r.provider,model:r.modelRequested};
+      if (!r.ok&&!r.cancelled) failed = {provider:r.provider,model:r.modelRequested};
       await this.log({
         agent,
         action: "model_call",
-        status: r.ok ? "ok" : "error",
+        status: r.ok ? "ok" : r.cancelled ? "info" : "error",
         note: r.ok ? `answered by ${r.modelServed}` : `attempt ${r.attempt} failed: ${r.error ?? "error"}`,
         modelProvider: r.provider,
         modelRequested: r.modelRequested,
-        modelServed: r.ok ? r.modelServed : undefined,
+        modelServed: r.modelServed || undefined,
         tokensIn: r.tokensIn,
         tokensOut: r.tokensOut,
         latencyMs: r.ms,

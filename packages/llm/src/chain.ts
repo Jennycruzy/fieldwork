@@ -13,6 +13,7 @@ export interface CallRecord extends ChatResult {
   attempt: number;
   ok: boolean;
   error?: string;
+  cancelled?: boolean;
 }
 
 export interface Budget {
@@ -36,92 +37,118 @@ export interface ChainOptions {
   onSlow?: (seconds: number) => void;
   onCall?: (rec: CallRecord) => void | Promise<void>;
   sleep?: (ms: number) => Promise<void>;
+  requestTimeoutMs?: number;
+  hedgeAfterMs?: number;
 }
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
+
+type Parsed<T>={ok:true;value:T}|{ok:false;error:string};
 export class ModelChain {
-  private readonly backoff: number[];
-  private readonly sleep: (ms: number) => Promise<void>;
-
-  constructor(
-    private readonly routes: Route[],
-    private readonly opts: ChainOptions = {},
-  ) {
-    if (routes.length === 0) throw new Error("no model routes configured");
-    this.backoff = opts.backoffMs ?? [2000, 6000, 18000];
-    this.sleep = opts.sleep ?? defaultSleep;
+ private readonly backoff:number[];
+ private readonly sleep:(ms:number)=>Promise<void>;
+ constructor(private readonly routes:Route[],private readonly opts:ChainOptions={}) {
+  if(!routes.length)throw new Error("no model routes configured");
+  this.backoff=opts.backoffMs??[2000,6000,18000];this.sleep=opts.sleep??defaultSleep;
+ }
+ async chat(messages:ChatMessage[],maxTokens=2000,startAt=0,once=false):Promise<ChatResult> {
+  const counter={value:0};
+  return this.race((index,signal)=>this.strategy(index,messages,maxTokens,r=>({ok:true,value:r}),false,signal,[],counter),startAt,once);
+ }
+ async json<T>(messages:ChatMessage[],schema:z.ZodType<T>,maxTokens=2000):Promise<{value:T;calls:ChatResult[]}> {
+  const calls:ChatResult[]=[],counter={value:0};
+  const value=await this.race((index,signal,repair)=>this.strategy(index,messages,maxTokens,r=>parseJson(r.text,schema),repair,signal,calls,counter));
+  return {value,calls};
+ }
+ private async strategy<T>(index:number,messages:ChatMessage[],maxTokens:number,parse:(r:ChatResult)=>Parsed<T>,repair:boolean,signal:AbortSignal,calls:ChatResult[],counter:{value:number}):Promise<T> {
+  let input=messages;
+  for(let generation=0;generation<(repair?2:1);generation++) {
+   const {result,parsed}=await this.request(this.routes[index]!,input,maxTokens,parse,signal,counter);
+   calls.push(result);
+   if(parsed.ok)return parsed.value;
+   if(generation+1>=(repair?2:1))throw new ProviderError(`model did not return valid JSON: ${parsed.error}`,result.provider,422,false);
+   input=[...messages,{role:"assistant",content:result.text},{role:"user",content:`That was not valid JSON for the required shape (${parsed.error}). Reply with the JSON only.`}];
   }
-
-  async chat(messages: ChatMessage[], maxTokens = 2000, startAt=0, once=false): Promise<ChatResult> {
-    let lastError: unknown;
-    let attempt = 0;
-    for (const route of this.routes.slice(startAt,once?startAt+1:undefined)) {
-      for (let i = 0; i <= this.backoff.length; i++) {
-        attempt++;
-        if (!(await (this.opts.budget ?? unlimited).take())) throw new BudgetExceeded();
-        const started = Date.now();
-        try {
-          const timer = setInterval(() => this.opts.onSlow?.(Math.round((Date.now() - started) / 1000)), 30000);
-          let res: ChatResult;
-          try { res = await route.provider.chat({ model: route.model, messages, maxTokens, reasoning: this.opts.reasoning }); }
-          finally { clearInterval(timer); }
-          await this.opts.onCall?.({ ...res, attempt, ok: true });
-          return res;
-        } catch (e) {
-          lastError = e;
-          const err = e instanceof ProviderError ? e : undefined;
-          await this.opts.onCall?.({
-            text: "",
-            provider: route.provider.id,
-            modelRequested: route.model,
-            modelServed: route.model,
-            tokensIn: 0,
-            tokensOut: 0,
-            ms: Date.now()-started,
-            attempt,
-            ok: false,
-            error: (e as Error).message.slice(0, 300),
-          });
-          if (err && !err.fallback) throw err; // a typed refusal goes back to the caller with its real reason
-          if (!err?.retryable) break; // not worth retrying this route; try the next one
-          if ((err.status === 204 || err.status === 502) && i >= 1) break; // empty twice: switch model rather than wait
-          const wait = this.backoff[i];
-          if (wait === undefined) break;
-          await this.sleep(wait);
-        }
-      }
-    }
-    throw lastError instanceof Error ? lastError : new Error("all model routes failed");
+  throw new Error("no valid model reply");
+ }
+ private async request<T>(route:Route,messages:ChatMessage[],maxTokens:number,parse:(r:ChatResult)=>Parsed<T>,parent:AbortSignal,counter:{value:number}):Promise<{result:ChatResult;parsed:Parsed<T>}> {
+  for(let retry=0;;retry++) {
+   parent.throwIfAborted();
+   if(!(await(this.opts.budget??unlimited).take()))throw new BudgetExceeded();
+   parent.throwIfAborted();
+   const attempt=++counter.value,started=Date.now(),controller=new AbortController();
+   let timedOut=false;
+   const timeout=setTimeout(()=>{timedOut=true;controller.abort(new Error("model request time limit reached"));},this.opts.requestTimeoutMs??35000);
+   const signal=AbortSignal.any([parent,controller.signal]);
+   const progress=setInterval(()=>this.opts.onSlow?.(Math.round((Date.now()-started)/1000)),30000);
+   let abort!:()=>void;
+   try {
+    const stopped=new Promise<never>((_,reject)=>{abort=()=>reject(signal.reason??new Error("model request stopped"));signal.addEventListener("abort",abort,{once:true});if(signal.aborted)abort();});
+    const result=await Promise.race([route.provider.chat({model:route.model,messages,maxTokens,reasoning:this.opts.reasoning,signal}),stopped]);
+    const parsed=parse(result);
+    await this.opts.onCall?.({...result,attempt,ok:parsed.ok,error:parsed.ok?undefined:`Invalid JSON: ${parsed.error}`});
+    return {result,parsed};
+   } catch(e) {
+    const cancelled=parent.aborted;
+    const error=timedOut?new ProviderError("model request time limit reached",route.provider.id,408,false):e;
+    await this.opts.onCall?.({text:"",provider:route.provider.id,modelRequested:route.model,modelServed:"",tokensIn:0,tokensOut:0,ms:Date.now()-started,attempt,ok:false,cancelled,error:cancelled?"Stopped after another route returned a valid reply":(error as Error).message.slice(0,300)});
+    if(cancelled)throw error;
+    const providerError=error instanceof ProviderError?error:undefined;
+    if(providerError&&!providerError.fallback)throw error;
+    if(!providerError?.retryable||((providerError.status===204||providerError.status===502)&&retry>=1)||this.backoff[retry]===undefined)throw error;
+   } finally {
+    clearTimeout(timeout);clearInterval(progress);signal.removeEventListener("abort",abort);
+   }
+   // An aborted losing request never retries or waits through a backoff.
+   let stop!:()=>void;
+   const aborted=new Promise<never>((_,reject)=>{stop=()=>reject(parent.reason);parent.addEventListener("abort",stop,{once:true});if(parent.aborted)stop();});
+   try {await Promise.race([this.sleep(this.backoff[retry]!),aborted]);}
+   finally {parent.removeEventListener("abort",stop);}
   }
-
-  // Ask for JSON matching a schema. One repair attempt if the first answer doesn't parse.
-  async json<T>(messages: ChatMessage[], schema: z.ZodType<T>, maxTokens = 2000): Promise<{ value: T; calls: ChatResult[] }> {
-    const calls: ChatResult[] = [];
-    const first = await this.chat(messages, maxTokens);
-    calls.push(first);
-    const parsed = parseJson(first.text, schema);
-    if (parsed.ok) return { value: parsed.value, calls };
-    const repair = await this.chat(
-      [
-        ...messages,
-        { role: "assistant", content: first.text },
-        { role: "user", content: `That was not valid JSON for the required shape (${parsed.error}). Reply with the JSON only.` },
-      ],
-      maxTokens,
-    );
-    calls.push(repair);
-    const again = parseJson(repair.text, schema);
-    if (again.ok) return { value: again.value, calls };
-    const used=this.routes.findIndex(r=>r.provider.id===repair.provider&&r.model===repair.modelRequested);
-    if(used>=0&&used+1<this.routes.length) {
-      const fallback=await this.chat(messages,maxTokens,used+1,true);calls.push(fallback);
-      const parsedFallback=parseJson(fallback.text,schema);
-      if(parsedFallback.ok)return {value:parsedFallback.value,calls};
-      throw new Error(`model did not return valid JSON: ${parsedFallback.error}`);
-    }
-    throw new Error(`model did not return valid JSON: ${again.error}`);
+ }
+ private fatal(error:unknown):boolean {
+  return error instanceof BudgetExceeded||(error instanceof ProviderError&&!error.fallback);
+ }
+ private async race<T>(run:(index:number,signal:AbortSignal,repair:boolean)=>Promise<T>,startAt=0,once=false):Promise<T> {
+  let last:unknown;
+  for(let index=startAt;index<this.routes.length;) {
+   const secondary=once||this.routes[index]!.provider.id==="meterless"?-1:this.routes.findIndex((r,i)=>i>index&&r.model.endsWith(":free"));
+   if(secondary<0) {
+    try{return await run(index,new AbortController().signal,index===startAt);}
+    catch(e){if(this.fatal(e))throw e;last=e;}
+    if(once)break;index++;continue;
+   }
+   const controllers=[new AbortController(),new AbortController()],tasks:Promise<void>[]=[];
+   let timer:ReturnType<typeof setTimeout>|undefined;
+   try {
+    return await new Promise<T>((resolve,reject)=>{
+     let launched=false,finished=0,settled=false;
+     const launch=(slot:number,route:number)=>{
+      const task=Promise.resolve().then(()=>run(route,controllers[slot]!.signal,slot===0&&index===startAt)).then(value=>{
+       if(!settled){settled=true;resolve(value);}
+      },error=>{
+       last=error;finished++;
+       if(this.fatal(error)){if(!settled){settled=true;reject(error);}return;}
+       if(slot===0&&!launched)startSecond();
+       if(finished===2&&!settled){settled=true;reject(error);}
+      });
+      tasks.push(task);
+     };
+     const startSecond=()=>{if(launched||settled)return;launched=true;if(timer)clearTimeout(timer);launch(1,secondary);};
+     launch(0,index);
+     timer=setTimeout(startSecond,this.opts.hedgeAfterMs??10000);
+    });
+   } catch(e) {if(this.fatal(e))throw e;last=e;}
+   finally {
+    if(timer)clearTimeout(timer);
+    for(const c of controllers)c.abort(new Error("another route completed"));
+    await Promise.allSettled(tasks);
+   }
+   index=secondary+1;
   }
+  throw last instanceof Error?last:new Error("all model routes failed");
+ }
 }
 
 export function parseJson<T>(text: string, schema: z.ZodType<T>): { ok: true; value: T } | { ok: false; error: string } {

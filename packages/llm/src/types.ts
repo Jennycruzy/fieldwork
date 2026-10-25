@@ -4,6 +4,7 @@ export interface ChatMessage {
 }
 
 export interface ChatRequest {
+  signal?: AbortSignal;
   model: string;
   messages: ChatMessage[];
   maxTokens?: number;

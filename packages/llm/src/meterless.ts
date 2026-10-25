@@ -130,7 +130,7 @@ export class MeterlessProvider implements Provider {
           method: "POST",
           headers: this.headers(true),
           body: JSON.stringify({ model: req.model, messages: req.messages, max_tokens: req.maxTokens ?? 2000, temperature: req.temperature ?? 0, stream: false }),
-          signal: AbortSignal.timeout(this.opts.timeoutMs ?? TIMEOUT_MS),
+          signal: AbortSignal.any([AbortSignal.timeout(this.opts.timeoutMs ?? TIMEOUT_MS),...(req.signal?[req.signal]:[])]),
         });
       } catch {
         throw new MeterlessError(`Meterless Runtime isn't reachable at ${this.baseUrl}. Start the runtime and run Auto Detect.`, 0, true);

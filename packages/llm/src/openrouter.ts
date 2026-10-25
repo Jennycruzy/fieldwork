@@ -32,7 +32,7 @@ export class OpenRouterProvider implements Provider {
           // Thinking gets at most 60% of the budget, so the answer itself always has room.
           reasoning: req.reasoning === "off" ? { enabled: false } : { max_tokens: Math.floor((req.maxTokens ?? 2000) * 0.6) },
         }),
-        signal: AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),
+        signal: AbortSignal.any([AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),...(req.signal?[req.signal]:[])]),
       });
     } catch (e) {
       throw new ProviderError(`OpenRouter did not answer: ${(e as Error).message}`, this.id, 0, true);
