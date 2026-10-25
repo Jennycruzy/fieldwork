@@ -1,0 +1,1362 @@
+{
+  "tracts": [
+    [
+      "01101001800",
+      "Census Tract 18"
+    ],
+    [
+      "01101001900",
+      "Census Tract 19"
+    ],
+    [
+      "01101002000",
+      "Census Tract 20"
+    ],
+    [
+      "01101002100",
+      "Census Tract 21"
+    ],
+    [
+      "01101001000",
+      "Census Tract 10"
+    ],
+    [
+      "01101001100",
+      "Census Tract 11"
+    ],
+    [
+      "01101001200",
+      "Census Tract 12"
+    ],
+    [
+      "01101001300",
+      "Census Tract 13"
+    ],
+    [
+      "01101001500",
+      "Census Tract 15"
+    ],
+    [
+      "01101001600",
+      "Census Tract 16"
+    ],
+    [
+      "01101005407",
+      "Census Tract 54.07"
+    ],
+    [
+      "01101005611",
+      "Census Tract 56.11"
+    ],
+    [
+      "01101005608",
+      "Census Tract 56.08"
+    ],
+    [
+      "01101005503",
+      "Census Tract 55.03"
+    ],
+    [
+      "01101005501",
+      "Census Tract 55.01"
+    ],
+    [
+      "01101005504",
+      "Census Tract 55.04"
+    ],
+    [
+      "01101005502",
+      "Census Tract 55.02"
+    ],
+    [
+      "01101005612",
+      "Census Tract 56.12"
+    ],
+    [
+      "01101005610",
+      "Census Tract 56.10"
+    ],
+    [
+      "01101005605",
+      "Census Tract 56.05"
+    ],
+    [
+      "01101001700",
+      "Census Tract 17"
+    ],
+    [
+      "01101005403",
+      "Census Tract 54.03"
+    ],
+    [
+      "01101003301",
+      "Census Tract 33.01"
+    ],
+    [
+      "01101005301",
+      "Census Tract 53.01"
+    ],
+    [
+      "01101005302",
+      "Census Tract 53.02"
+    ],
+    [
+      "01101005604",
+      "Census Tract 56.04"
+    ],
+    [
+      "01101000100",
+      "Census Tract 1"
+    ],
+    [
+      "01101000200",
+      "Census Tract 2"
+    ],
+    [
+      "01101000400",
+      "Census Tract 4"
+    ],
+    [
+      "01101000500",
+      "Census Tract 5"
+    ],
+    [
+      "01101000600",
+      "Census Tract 6"
+    ],
+    [
+      "01101000700",
+      "Census Tract 7"
+    ],
+    [
+      "01101000900",
+      "Census Tract 9"
+    ],
+    [
+      "01101005902",
+      "Census Tract 59.02"
+    ],
+    [
+      "01101005607",
+      "Census Tract 56.07"
+    ],
+    [
+      "01101006000",
+      "Census Tract 60"
+    ],
+    [
+      "01101000300",
+      "Census Tract 3"
+    ],
+    [
+      "01101002800",
+      "Census Tract 28"
+    ],
+    [
+      "01101006100",
+      "Census Tract 61"
+    ],
+    [
+      "01101005402",
+      "Census Tract 54.02"
+    ],
+    [
+      "01101005102",
+      "Census Tract 51.02"
+    ],
+    [
+      "01101005700",
+      "Census Tract 57"
+    ],
+    [
+      "01101005101",
+      "Census Tract 51.01"
+    ],
+    [
+      "01101005800",
+      "Census Tract 58"
+    ],
+    [
+      "01101001400",
+      "Census Tract 14"
+    ],
+    [
+      "01101005409",
+      "Census Tract 54.09"
+    ],
+    [
+      "01101005614",
+      "Census Tract 56.14"
+    ],
+    [
+      "01101002902",
+      "Census Tract 29.02"
+    ],
+    [
+      "01101005412",
+      "Census Tract 54.12"
+    ],
+    [
+      "01101005904",
+      "Census Tract 59.04"
+    ],
+    [
+      "01101005411",
+      "Census Tract 54.11"
+    ],
+    [
+      "01101002600",
+      "Census Tract 26"
+    ],
+    [
+      "01101003000",
+      "Census Tract 30"
+    ],
+    [
+      "01101003100",
+      "Census Tract 31"
+    ],
+    [
+      "01101003200",
+      "Census Tract 32"
+    ],
+    [
+      "01101005606",
+      "Census Tract 56.06"
+    ],
+    [
+      "01101002201",
+      "Census Tract 22.01"
+    ],
+    [
+      "01101002202",
+      "Census Tract 22.02"
+    ],
+    [
+      "01101002300",
+      "Census Tract 23"
+    ],
+    [
+      "01101002400",
+      "Census Tract 24"
+    ],
+    [
+      "01101002500",
+      "Census Tract 25"
+    ],
+    [
+      "01101002700",
+      "Census Tract 27"
+    ],
+    [
+      "01101003304",
+      "Census Tract 33.04"
+    ],
+    [
+      "01101003303",
+      "Census Tract 33.03"
+    ],
+    [
+      "01101005414",
+      "Census Tract 54.14"
+    ],
+    [
+      "01101005413",
+      "Census Tract 54.13"
+    ],
+    [
+      "01101005613",
+      "Census Tract 56.13"
+    ],
+    [
+      "01101002901",
+      "Census Tract 29.01"
+    ],
+    [
+      "01101005410",
+      "Census Tract 54.10"
+    ],
+    [
+      "01101005609",
+      "Census Tract 56.09"
+    ],
+    [
+      "01101005903",
+      "Census Tract 59.03"
+    ]
+  ],
+  "counts": [],
+  "health": [],
+  "observations": [
+    {
+      "title": "Received 311 Service Requests",
+      "years": [
+        [
+          null,
+          "2025",
+          "27817"
+        ]
+      ],
+      "months": [
+        [
+          "2025",
+          "1",
+          "2276",
+          "2276.0"
+        ],
+        [
+          "2025",
+          "2",
+          "2068",
+          "2068.0"
+        ],
+        [
+          "2025",
+          "3",
+          "2713",
+          "2713.0"
+        ],
+        [
+          "2025",
+          "4",
+          "3337",
+          "3337.0"
+        ],
+        [
+          "2025",
+          "5",
+          "3649",
+          "3649.0"
+        ],
+        [
+          "2025",
+          "6",
+          "3622",
+          "3622.0"
+        ],
+        [
+          "2025",
+          "7",
+          "4004",
+          "4004.0"
+        ],
+        [
+          "2025",
+          "8",
+          "3130",
+          "3130.0"
+        ],
+        [
+          "2025",
+          "9",
+          "3018",
+          "3018.0"
+        ]
+      ],
+      "categories": [
+        [
+          "ADA CONCRETE REPAIRS",
+          "1"
+        ],
+        [
+          "Add A Handicap Space",
+          "1"
+        ],
+        [
+          "Add A New Marking",
+          "5"
+        ],
+        [
+          "Add a left turn indication at a signalized intersection",
+          "4"
+        ],
+        [
+          "Alley Ways on City Property",
+          "5"
+        ],
+        [
+          "Animal Control Issues",
+          "63"
+        ],
+        [
+          "Ask 3-1-1",
+          "3321"
+        ],
+        [
+          "Ask the MAYOR",
+          "1"
+        ],
+        [
+          "Asphalt repairs in the street",
+          "69"
+        ],
+        [
+          "Backyard Trash Pickup (Disability Service)",
+          "12"
+        ],
+        [
+          "Basketball Goal on City Right-of-Way",
+          "34"
+        ],
+        [
+          "Bridge Maintenance",
+          "8"
+        ],
+        [
+          "Broken utility poles",
+          "24"
+        ],
+        [
+          "Building Inspection Issues",
+          "4"
+        ],
+        [
+          "Bulky Items and Debris In The Street",
+          "207"
+        ],
+        [
+          "Bush Issues",
+          "26"
+        ],
+        [
+          "Bush or Objects Blocking Sight View",
+          "9"
+        ],
+        [
+          "Business in Residential District",
+          "135"
+        ],
+        [
+          "COM Ballfield Lighting",
+          "51"
+        ],
+        [
+          "COM Barricade Request / Barricade Pickup",
+          "16"
+        ],
+        [
+          "COM Barricade Request /Pickup Barricade",
+          "110"
+        ],
+        [
+          "COM Basketball Goal Repair",
+          "2"
+        ],
+        [
+          "COM Broken playground or exercise equipment",
+          "11"
+        ],
+        [
+          "COM Cabinet Shop",
+          "48"
+        ],
+        [
+          "COM Carpentry",
+          "347"
+        ],
+        [
+          "COM Community Center Issues",
+          "14"
+        ],
+        [
+          "COM Concrete Issues",
+          "14"
+        ],
+        [
+          "COM Electrical",
+          "439"
+        ],
+        [
+          "COM Elevator Maintenance",
+          "7"
+        ],
+        [
+          "COM Extermination",
+          "23"
+        ],
+        [
+          "COM Fallen Tree or Limb Down Inside a Park",
+          "14"
+        ],
+        [
+          "COM Fence Repairs At City Parks and Community Centers",
+          "33"
+        ],
+        [
+          "COM Field Striping",
+          "1"
+        ],
+        [
+          "COM Fill In Holes At City Parks",
+          "2"
+        ],
+        [
+          "COM Flags",
+          "4"
+        ],
+        [
+          "COM Gates/Fence Issues Repairing and Replacement",
+          "8"
+        ],
+        [
+          "COM Grass Issues",
+          "109"
+        ],
+        [
+          "COM HVAC/Refrigeration",
+          "505"
+        ],
+        [
+          "COM Herbicide/Pesticide",
+          "3"
+        ],
+        [
+          "COM Irrigation Issues",
+          "25"
+        ],
+        [
+          "COM Landscape Issues",
+          "63"
+        ],
+        [
+          "COM Overgrown Weeds",
+          "10"
+        ],
+        [
+          "COM Paint",
+          "41"
+        ],
+        [
+          "COM Parks and Community Centers Request for Additional Trash Cans/Empty trash containers",
+          "25"
+        ],
+        [
+          "COM Plumbing",
+          "445"
+        ],
+        [
+          "COM Pothole/Sinkhole",
+          "46"
+        ],
+        [
+          "COM Proactive requests",
+          "2"
+        ],
+        [
+          "COM Repair Walking Track in City Parks",
+          "1"
+        ],
+        [
+          "COM Request For Sand",
+          "2"
+        ],
+        [
+          "COM Request for supplies",
+          "1"
+        ],
+        [
+          "COM Roofing",
+          "78"
+        ],
+        [
+          "COM Shelter Repairs",
+          "12"
+        ],
+        [
+          "COM Sign Issues",
+          "11"
+        ],
+        [
+          "COM Upholstery",
+          "11"
+        ],
+        [
+          "Cancel Vacation Home Check",
+          "1"
+        ],
+        [
+          "Change Speed Limit",
+          "8"
+        ],
+        [
+          "Check a dark signalized intersection",
+          "31"
+        ],
+        [
+          "Check the timing for an approach of an existing signalized intersection",
+          "121"
+        ],
+        [
+          "Check the timing on a Parking Meter",
+          "1"
+        ],
+        [
+          "Chickens & other Agriculture",
+          "64"
+        ],
+        [
+          "City Jail Carpentry",
+          "11"
+        ],
+        [
+          "City Jail Electrical",
+          "22"
+        ],
+        [
+          "City Jail Hvac/Refrigeration",
+          "29"
+        ],
+        [
+          "City Jail Paint",
+          "2"
+        ],
+        [
+          "City Jail Plumbing",
+          "42"
+        ],
+        [
+          "City Right-Of-Way",
+          "172"
+        ],
+        [
+          "Clean Inlets",
+          "536"
+        ],
+        [
+          "Commercial",
+          "1"
+        ],
+        [
+          "Commercial garbage Pick Up",
+          "5"
+        ],
+        [
+          "Commercial trash container issues",
+          "18"
+        ],
+        [
+          "Community Center Cabinet Shop",
+          "41"
+        ],
+        [
+          "Community Center Carpentry",
+          "274"
+        ],
+        [
+          "Community Center Electrical",
+          "50"
+        ],
+        [
+          "Community Center Hvac/Refrigeration",
+          "3"
+        ],
+        [
+          "Community Center Paint",
+          "22"
+        ],
+        [
+          "Community Center Plumbing",
+          "78"
+        ],
+        [
+          "Community Center Roofing",
+          "12"
+        ],
+        [
+          "Community Center Upholstery",
+          "4"
+        ],
+        [
+          "Concrete Repairs",
+          "15"
+        ],
+        [
+          "Container Ordinance",
+          "21"
+        ],
+        [
+          "Curb and Gutter Lines- Concrete Repair",
+          "92"
+        ],
+        [
+          "Curb/Gutter Clean up (dirt/debris)",
+          "157"
+        ],
+        [
+          "Curbside trash for less than seven days",
+          "1"
+        ],
+        [
+          "Damaged Parking Meter",
+          "5"
+        ],
+        [
+          "Dark Area Near Existing Street Light",
+          "1"
+        ],
+        [
+          "Dead Animal pickup",
+          "246"
+        ],
+        [
+          "Debris In The Street",
+          "38"
+        ],
+        [
+          "Demolition(House)",
+          "106"
+        ],
+        [
+          "District Clean-Up",
+          "7"
+        ],
+        [
+          "Ditch Cutting That Is Not on Schedule List",
+          "182"
+        ],
+        [
+          "Ditch Eroding",
+          "30"
+        ],
+        [
+          "Ditch Flooding",
+          "21"
+        ],
+        [
+          "Drains",
+          "14"
+        ],
+        [
+          "Dumpster Permit (Residential)",
+          "4"
+        ],
+        [
+          "Duplicated Service Request",
+          "493"
+        ],
+        [
+          "Duplicated Service Request(Property Maintenance Department)",
+          "23"
+        ],
+        [
+          "Exchange Damage Container",
+          "414"
+        ],
+        [
+          "FAQ- Montgomery Police Department",
+          "525"
+        ],
+        [
+          "FAQ- Neighborhood Services",
+          "10"
+        ],
+        [
+          "FAQ-City Council Members",
+          "55"
+        ],
+        [
+          "FAQ-City Hall",
+          "96"
+        ],
+        [
+          "FAQ-Municipal Court",
+          "612"
+        ],
+        [
+          "FAQ-Parks & Rec",
+          "38"
+        ],
+        [
+          "FAQ-Personnel",
+          "22"
+        ],
+        [
+          "FAQ-Sanitation",
+          "122"
+        ],
+        [
+          "Fallen Trees and Limbs",
+          "244"
+        ],
+        [
+          "Fire Cabinet Shop",
+          "8"
+        ],
+        [
+          "Fire Carpentry",
+          "70"
+        ],
+        [
+          "Fire Department Tree Issues",
+          "13"
+        ],
+        [
+          "Fire Duplicated Service Request",
+          "1"
+        ],
+        [
+          "Fire Electrical",
+          "69"
+        ],
+        [
+          "Fire Hvac/Refrigeration",
+          "73"
+        ],
+        [
+          "Fire Inquiries",
+          "1"
+        ],
+        [
+          "Fire Paint",
+          "11"
+        ],
+        [
+          "Fire Plumbing",
+          "104"
+        ],
+        [
+          "Fire Roofing",
+          "26"
+        ],
+        [
+          "Fire Upholstery",
+          "17"
+        ],
+        [
+          "Frequently Ask Questions",
+          "12"
+        ],
+        [
+          "Garbage/Debris Dumping ( For debris that have been dumped mainly in downtown Montgomery along the r.o.w)",
+          "14"
+        ],
+        [
+          "Gate Open",
+          "12"
+        ],
+        [
+          "General Repairs",
+          "442"
+        ],
+        [
+          "General Sanitation Inquiry",
+          "74"
+        ],
+        [
+          "Grading a Dirt Road",
+          "2"
+        ],
+        [
+          "Graffiti - City Property",
+          "37"
+        ],
+        [
+          "Grass Issues On City Owned Property ***FOR PHILLIP TAUNTON CREW ONLY***",
+          "22"
+        ],
+        [
+          "Gravel/Fuel or Concrete Spills",
+          "6"
+        ],
+        [
+          "Gutter Line is holding water",
+          "13"
+        ],
+        [
+          "Hazardous Waste Disposal",
+          "1"
+        ],
+        [
+          "Illicit Discharge",
+          "8"
+        ],
+        [
+          "Inquiries",
+          "1229"
+        ],
+        [
+          "Inquiries (Building Permits)",
+          "4"
+        ],
+        [
+          "Inquiries(Land Use)",
+          "5"
+        ],
+        [
+          "Inquiries(Parks Recreation Department)",
+          "2"
+        ],
+        [
+          "Inquiries(Property Maintenance)",
+          "14"
+        ],
+        [
+          "Inquiries(Sanitation Department)",
+          "6"
+        ],
+        [
+          "Inquiries(Street Maintenance Department)",
+          "1"
+        ],
+        [
+          "Inquiries(Traffic Engineering)",
+          "1"
+        ],
+        [
+          "Install Inlet",
+          "4"
+        ],
+        [
+          "Install Multi-way Stop Signs",
+          "2"
+        ],
+        [
+          "Install New Signs",
+          "70"
+        ],
+        [
+          "Install Pipes",
+          "7"
+        ],
+        [
+          "Install S-Type Inlets",
+          "1"
+        ],
+        [
+          "Install a New Street Light",
+          "21"
+        ],
+        [
+          "Install a new signalized intersection",
+          "5"
+        ],
+        [
+          "Internal/Sanitation",
+          "27"
+        ],
+        [
+          "Investigate a signalized intersection that is on flash",
+          "66"
+        ],
+        [
+          "Larvicide",
+          "1"
+        ],
+        [
+          "Leaning Light Pole",
+          "13"
+        ],
+        [
+          "Leaves and Debris Pick up",
+          "538"
+        ],
+        [
+          "Library Cabinet Shop",
+          "3"
+        ],
+        [
+          "Library Carpentry",
+          "31"
+        ],
+        [
+          "Library Electrical",
+          "19"
+        ],
+        [
+          "Library Hvac/Refrigeration",
+          "47"
+        ],
+        [
+          "Library Internal Landscaping Issues",
+          "10"
+        ],
+        [
+          "Library Paint",
+          "1"
+        ],
+        [
+          "Library Plumbing",
+          "44"
+        ],
+        [
+          "Library Roofing",
+          "4"
+        ],
+        [
+          "Litter Problems for paper and Other Small Items (DO NOT USE FOR BULKY ITEMS)",
+          "69"
+        ],
+        [
+          "Locking and unlocking gates at City Parks",
+          "6"
+        ],
+        [
+          "MPD Complaints**DO NOT USE- SERVICE NO LONGER PROVIDED**",
+          "1"
+        ],
+        [
+          "Mailbox Issues",
+          "5"
+        ],
+        [
+          "Mask Ordinance Violations",
+          "1"
+        ],
+        [
+          "Mayor Office Complaints",
+          "68"
+        ],
+        [
+          "Miscellaneous Issues At City Parks /Community Centers",
+          "16"
+        ],
+        [
+          "Missed Pick Up",
+          "323"
+        ],
+        [
+          "Missing Trash Container",
+          "224"
+        ],
+        [
+          "Mosquito Spraying (starts on May 2nd and ends in October)",
+          "99"
+        ],
+        [
+          "Mud in Street(Contractor Only)",
+          "4"
+        ],
+        [
+          "NRT Information",
+          "1"
+        ],
+        [
+          "No Utilities(House)",
+          "45"
+        ],
+        [
+          "Non-Emergency",
+          "1"
+        ],
+        [
+          "Nuisance",
+          "7170"
+        ],
+        [
+          "Open & Vacant (Abandoned House)",
+          "6"
+        ],
+        [
+          "Open & Vacant(Abandon House)",
+          "205"
+        ],
+        [
+          "Other",
+          "24"
+        ],
+        [
+          "Parking Meter Malfunction",
+          "12"
+        ],
+        [
+          "Parking On Front Lawn",
+          "1038"
+        ],
+        [
+          "Permits",
+          "62"
+        ],
+        [
+          "Pick Up Container",
+          "58"
+        ],
+        [
+          "Planting Trees or Brushes",
+          "1"
+        ],
+        [
+          "Political/Advertising signs on utility poles on the city right of way",
+          "1"
+        ],
+        [
+          "Pothole Repairing",
+          "340"
+        ],
+        [
+          "Privacy Fence",
+          "26"
+        ],
+        [
+          "Property w/o Address Displayed",
+          "8"
+        ],
+        [
+          "RV & Boats",
+          "26"
+        ],
+        [
+          "Recycling",
+          "11"
+        ],
+        [
+          "Refill dog waste bags at City Parks",
+          "1"
+        ],
+        [
+          "Refresh An Existing Marking",
+          "35"
+        ],
+        [
+          "Remove A Marking That Is No Longer Needed",
+          "2"
+        ],
+        [
+          "Repair Asphalt at Driveway (DO NOT USE-Service No Longer Provided)",
+          "18"
+        ],
+        [
+          "Repair Existing Signs",
+          "80"
+        ],
+        [
+          "Repair Inlets",
+          "53"
+        ],
+        [
+          "Repair or Replace Damaged/ Missing Signs",
+          "21"
+        ],
+        [
+          "Repair or Replace Pavers",
+          "5"
+        ],
+        [
+          "Repair or Replace Sign",
+          "10"
+        ],
+        [
+          "Repair/Replace Fence or Gate",
+          "25"
+        ],
+        [
+          "Repair/Replace Guard Rails",
+          "6"
+        ],
+        [
+          "Replace An Existing Handicap Sign",
+          "1"
+        ],
+        [
+          "Replace Inlet(Storm Drain) Tops",
+          "67"
+        ],
+        [
+          "Replace Missing Signs",
+          "23"
+        ],
+        [
+          "Replace a signal indication that is not working",
+          "26"
+        ],
+        [
+          "Request A New Container",
+          "93"
+        ],
+        [
+          "Request Cleaning",
+          "247"
+        ],
+        [
+          "Request For Bucket Truck",
+          "21"
+        ],
+        [
+          "Request For Custodial Services",
+          "3"
+        ],
+        [
+          "Request Pipe Cleaning",
+          "30"
+        ],
+        [
+          "Request Vacation Home Check",
+          "166"
+        ],
+        [
+          "Request additional trash container",
+          "8"
+        ],
+        [
+          "Request for Custodial Services (property that is maintained by Parks and Recreation Dept.)",
+          "10"
+        ],
+        [
+          "Rumble Strips**DO NOT USE***",
+          "1"
+        ],
+        [
+          "Sand Request",
+          "11"
+        ],
+        [
+          "Schedule A Bulk Pick Up***DO NOT USE***",
+          "36"
+        ],
+        [
+          "School Zone Signs",
+          "1"
+        ],
+        [
+          "Sewer Issues",
+          "17"
+        ],
+        [
+          "Sidewalk",
+          "166"
+        ],
+        [
+          "Sidewalk is holding water",
+          "5"
+        ],
+        [
+          "Sight Obstructions",
+          "98"
+        ],
+        [
+          "Sight View Obstructions",
+          "1"
+        ],
+        [
+          "Sign Relocation",
+          "5"
+        ],
+        [
+          "Sinkholes/Cave Ins",
+          "78"
+        ],
+        [
+          "Speed Humps **DO NOT USE**",
+          "1"
+        ],
+        [
+          "Standing water in a ditch",
+          "21"
+        ],
+        [
+          "Stop Sign Missing/Damaged",
+          "34"
+        ],
+        [
+          "Stop Sign or Yield Sign Missing/Damaged",
+          "7"
+        ],
+        [
+          "Storm Debris Removal",
+          "1"
+        ],
+        [
+          "Storm January 9, 2011(Street Issues)",
+          "1"
+        ],
+        [
+          "Storm Water Issues",
+          "11"
+        ],
+        [
+          "Street Flooding",
+          "44"
+        ],
+        [
+          "Street Light Out",
+          "191"
+        ],
+        [
+          "Street Maintenance Please Call Citizen Back",
+          "23"
+        ],
+        [
+          "Street Maintenance-HAZARD",
+          "2"
+        ],
+        [
+          "Street Paving Request",
+          "15"
+        ],
+        [
+          "Street Sweepers",
+          "13"
+        ],
+        [
+          "Street is holding water",
+          "34"
+        ],
+        [
+          "Stump Removal",
+          "66"
+        ],
+        [
+          "Surveying",
+          "4"
+        ],
+        [
+          "Traffic Calming Request",
+          "102"
+        ],
+        [
+          "Traffic Issues for Montgomery Police Dept",
+          "681"
+        ],
+        [
+          "Traffic Signal Needing Physical Repair",
+          "23"
+        ],
+        [
+          "Tree Debris Pick-Up ***For Urban Forestry Use Only***",
+          "3"
+        ],
+        [
+          "Tree Issues On City R.O.W.",
+          "43"
+        ],
+        [
+          "Tree Issues On Private Property",
+          "17"
+        ],
+        [
+          "Tree Maintenance",
+          "3"
+        ],
+        [
+          "Tree Risk Assessment",
+          "34"
+        ],
+        [
+          "Tree Trimming",
+          "276"
+        ],
+        [
+          "Tunnel Issues",
+          "2"
+        ],
+        [
+          "Utility Issues",
+          "93"
+        ],
+        [
+          "Utility Street cuts",
+          "25"
+        ],
+        [
+          "Weeds on City Property",
+          "7"
+        ],
+        [
+          "Yard Sales",
+          "2"
+        ]
+      ],
+      "latest": [],
+      "below": []
+    }
+  ]
+}

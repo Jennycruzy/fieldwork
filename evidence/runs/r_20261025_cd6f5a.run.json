@@ -1,0 +1,2147 @@
+{
+  "id": "r_20261025_cd6f5a",
+  "question": "What were the most common types of Montgomery 311 requests in 2025?",
+  "created_at": "2026-10-25T22:13:17.428Z",
+  "finished_at": "2026-10-25T22:14:33.334Z",
+  "status": "partial",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT category, SUM(value) AS record_count, SUM(SUM(value)) OVER () AS total_records, 100.0*SUM(value)/SUM(SUM(value)) OVER () AS share_pct FROM fw_pg.tract_observations WHERE run_id='r_20261025_cd6f5a' AND source='m1_city' GROUP BY category ORDER BY record_count DESC, category",
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.",
+        "denominator": "none",
+        "rank_measure": "count of 311 requests by type, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of Montgomery 311 service requests in 2025, grouped by request type",
+          "search_terms": [
+            "311",
+            "service request",
+            "311 request"
+          ]
+        }
+      ],
+      "geography": "city",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "Nuisance",
+        "7170.0",
+        "27817.0",
+        "25.775604845957506"
+      ],
+      [
+        "Ask 3-1-1",
+        "3321.0",
+        "27817.0",
+        "11.938742495596218"
+      ],
+      [
+        "Inquiries",
+        "1229.0",
+        "27817.0",
+        "4.418161555883093"
+      ],
+      [
+        "Parking On Front Lawn",
+        "1038.0",
+        "27817.0",
+        "3.731531078117698"
+      ],
+      [
+        "Traffic Issues for Montgomery Police Dept",
+        "681.0",
+        "27817.0",
+        "2.4481432217708594"
+      ],
+      [
+        "FAQ-Municipal Court",
+        "612.0",
+        "27817.0",
+        "2.200093468023151"
+      ],
+      [
+        "Leaves and Debris Pick up",
+        "538.0",
+        "27817.0",
+        "1.9340690944386527"
+      ],
+      [
+        "Clean Inlets",
+        "536.0",
+        "27817.0",
+        "1.9268792465039364"
+      ],
+      [
+        "FAQ- Montgomery Police Department",
+        "525.0",
+        "27817.0",
+        "1.8873350828629973"
+      ],
+      [
+        "COM HVAC/Refrigeration",
+        "505.0",
+        "27817.0",
+        "1.8154366035158356"
+      ],
+      [
+        "Duplicated Service Request",
+        "493.0",
+        "27817.0",
+        "1.7722975159075385"
+      ],
+      [
+        "COM Plumbing",
+        "445.0",
+        "27817.0",
+        "1.5997411654743503"
+      ],
+      [
+        "General Repairs",
+        "442.0",
+        "27817.0",
+        "1.588956393572276"
+      ],
+      [
+        "COM Electrical",
+        "439.0",
+        "27817.0",
+        "1.5781716216702018"
+      ],
+      [
+        "Exchange Damage Container",
+        "414.0",
+        "27817.0",
+        "1.4882985224862495"
+      ],
+      [
+        "COM Carpentry",
+        "347.0",
+        "27817.0",
+        "1.2474386166732574"
+      ],
+      [
+        "Pothole Repairing",
+        "340.0",
+        "27817.0",
+        "1.2222741489017508"
+      ],
+      [
+        "Missed Pick Up",
+        "323.0",
+        "27817.0",
+        "1.1611604414566632"
+      ],
+      [
+        "Tree Trimming",
+        "276.0",
+        "27817.0",
+        "0.992199014990833"
+      ],
+      [
+        "Community Center Carpentry",
+        "274.0",
+        "27817.0",
+        "0.9850091670561167"
+      ],
+      [
+        "Request Cleaning",
+        "247.0",
+        "27817.0",
+        "0.8879462199374484"
+      ],
+      [
+        "Dead Animal pickup",
+        "246.0",
+        "27817.0",
+        "0.8843512959700902"
+      ],
+      [
+        "Fallen Trees and Limbs",
+        "244.0",
+        "27817.0",
+        "0.8771614480353741"
+      ],
+      [
+        "Missing Trash Container",
+        "224.0",
+        "27817.0",
+        "0.8052629686882122"
+      ],
+      [
+        "Bulky Items and Debris In The Street",
+        "207.0",
+        "27817.0",
+        "0.7441492612431247"
+      ],
+      [
+        "Open & Vacant(Abandon House)",
+        "205.0",
+        "27817.0",
+        "0.7369594133084085"
+      ],
+      [
+        "Street Light Out",
+        "191.0",
+        "27817.0",
+        "0.6866304777653952"
+      ],
+      [
+        "Ditch Cutting That Is Not on Schedule List",
+        "182.0",
+        "27817.0",
+        "0.6542761620591725"
+      ],
+      [
+        "City Right-Of-Way",
+        "172.0",
+        "27817.0",
+        "0.6183269223855915"
+      ],
+      [
+        "Request Vacation Home Check",
+        "166.0",
+        "27817.0",
+        "0.596757378581443"
+      ],
+      [
+        "Sidewalk",
+        "166.0",
+        "27817.0",
+        "0.596757378581443"
+      ],
+      [
+        "Curb/Gutter Clean up (dirt/debris)",
+        "157.0",
+        "27817.0",
+        "0.5644030628752202"
+      ],
+      [
+        "Business in Residential District",
+        "135.0",
+        "27817.0",
+        "0.4853147355933422"
+      ],
+      [
+        "FAQ-Sanitation",
+        "122.0",
+        "27817.0",
+        "0.43858072401768705"
+      ],
+      [
+        "Check the timing for an approach of an existing signalized intersection",
+        "121.0",
+        "27817.0",
+        "0.43498580005032894"
+      ],
+      [
+        "COM Barricade Request /Pickup Barricade",
+        "110.0",
+        "27817.0",
+        "0.39544163640938995"
+      ],
+      [
+        "COM Grass Issues",
+        "109.0",
+        "27817.0",
+        "0.39184671244203184"
+      ],
+      [
+        "Demolition(House)",
+        "106.0",
+        "27817.0",
+        "0.38106194053995757"
+      ],
+      [
+        "Fire Plumbing",
+        "104.0",
+        "27817.0",
+        "0.3738720926052414"
+      ],
+      [
+        "Traffic Calming Request",
+        "102.0",
+        "27817.0",
+        "0.36668224467052524"
+      ],
+      [
+        "Mosquito Spraying (starts on May 2nd and ends in October)",
+        "99.0",
+        "27817.0",
+        "0.35589747276845096"
+      ],
+      [
+        "Sight Obstructions",
+        "98.0",
+        "27817.0",
+        "0.35230254880109285"
+      ],
+      [
+        "FAQ-City Hall",
+        "96.0",
+        "27817.0",
+        "0.3451127008663767"
+      ],
+      [
+        "Request A New Container",
+        "93.0",
+        "27817.0",
+        "0.3343279289643024"
+      ],
+      [
+        "Utility Issues",
+        "93.0",
+        "27817.0",
+        "0.3343279289643024"
+      ],
+      [
+        "Curb and Gutter Lines- Concrete Repair",
+        "92.0",
+        "27817.0",
+        "0.3307330049969443"
+      ],
+      [
+        "Repair Existing Signs",
+        "80.0",
+        "27817.0",
+        "0.28759391738864726"
+      ],
+      [
+        "COM Roofing",
+        "78.0",
+        "27817.0",
+        "0.28040406945393104"
+      ],
+      [
+        "Community Center Plumbing",
+        "78.0",
+        "27817.0",
+        "0.28040406945393104"
+      ],
+      [
+        "Sinkholes/Cave Ins",
+        "78.0",
+        "27817.0",
+        "0.28040406945393104"
+      ],
+      [
+        "General Sanitation Inquiry",
+        "74.0",
+        "27817.0",
+        "0.2660243735844987"
+      ],
+      [
+        "Fire Hvac/Refrigeration",
+        "73.0",
+        "27817.0",
+        "0.2624294496171406"
+      ],
+      [
+        "Fire Carpentry",
+        "70.0",
+        "27817.0",
+        "0.2516446777150663"
+      ],
+      [
+        "Install New Signs",
+        "70.0",
+        "27817.0",
+        "0.2516446777150663"
+      ],
+      [
+        "Asphalt repairs in the street",
+        "69.0",
+        "27817.0",
+        "0.24804975374770824"
+      ],
+      [
+        "Fire Electrical",
+        "69.0",
+        "27817.0",
+        "0.24804975374770824"
+      ],
+      [
+        "Litter Problems for paper and Other Small Items (DO NOT USE FOR BULKY ITEMS)",
+        "69.0",
+        "27817.0",
+        "0.24804975374770824"
+      ],
+      [
+        "Mayor Office Complaints",
+        "68.0",
+        "27817.0",
+        "0.24445482978035016"
+      ],
+      [
+        "Replace Inlet(Storm Drain) Tops",
+        "67.0",
+        "27817.0",
+        "0.24085990581299205"
+      ],
+      [
+        "Investigate a signalized intersection that is on flash",
+        "66.0",
+        "27817.0",
+        "0.23726498184563397"
+      ],
+      [
+        "Stump Removal",
+        "66.0",
+        "27817.0",
+        "0.23726498184563397"
+      ],
+      [
+        "Chickens & other Agriculture",
+        "64.0",
+        "27817.0",
+        "0.23007513391091777"
+      ],
+      [
+        "Animal Control Issues",
+        "63.0",
+        "27817.0",
+        "0.2264802099435597"
+      ],
+      [
+        "COM Landscape Issues",
+        "63.0",
+        "27817.0",
+        "0.2264802099435597"
+      ],
+      [
+        "Permits",
+        "62.0",
+        "27817.0",
+        "0.2228852859762016"
+      ],
+      [
+        "Pick Up Container",
+        "58.0",
+        "27817.0",
+        "0.20850559010676925"
+      ],
+      [
+        "FAQ-City Council Members",
+        "55.0",
+        "27817.0",
+        "0.19772081820469498"
+      ],
+      [
+        "Repair Inlets",
+        "53.0",
+        "27817.0",
+        "0.19053097026997878"
+      ],
+      [
+        "COM Ballfield Lighting",
+        "51.0",
+        "27817.0",
+        "0.18334112233526262"
+      ],
+      [
+        "Community Center Electrical",
+        "50.0",
+        "27817.0",
+        "0.1797461983679045"
+      ],
+      [
+        "COM Cabinet Shop",
+        "48.0",
+        "27817.0",
+        "0.17255635043318834"
+      ],
+      [
+        "Library Hvac/Refrigeration",
+        "47.0",
+        "27817.0",
+        "0.16896142646583026"
+      ],
+      [
+        "COM Pothole/Sinkhole",
+        "46.0",
+        "27817.0",
+        "0.16536650249847215"
+      ],
+      [
+        "No Utilities(House)",
+        "45.0",
+        "27817.0",
+        "0.16177157853111407"
+      ],
+      [
+        "Library Plumbing",
+        "44.0",
+        "27817.0",
+        "0.158176654563756"
+      ],
+      [
+        "Street Flooding",
+        "44.0",
+        "27817.0",
+        "0.158176654563756"
+      ],
+      [
+        "Tree Issues On City R.O.W.",
+        "43.0",
+        "27817.0",
+        "0.15458173059639788"
+      ],
+      [
+        "City Jail Plumbing",
+        "42.0",
+        "27817.0",
+        "0.1509868066290398"
+      ],
+      [
+        "COM Paint",
+        "41.0",
+        "27817.0",
+        "0.1473918826616817"
+      ],
+      [
+        "Community Center Cabinet Shop",
+        "41.0",
+        "27817.0",
+        "0.1473918826616817"
+      ],
+      [
+        "Debris In The Street",
+        "38.0",
+        "27817.0",
+        "0.13660711075960744"
+      ],
+      [
+        "FAQ-Parks & Rec",
+        "38.0",
+        "27817.0",
+        "0.13660711075960744"
+      ],
+      [
+        "Graffiti - City Property",
+        "37.0",
+        "27817.0",
+        "0.13301218679224935"
+      ],
+      [
+        "Schedule A Bulk Pick Up***DO NOT USE***",
+        "36.0",
+        "27817.0",
+        "0.12941726282489124"
+      ],
+      [
+        "Refresh An Existing Marking",
+        "35.0",
+        "27817.0",
+        "0.12582233885753316"
+      ],
+      [
+        "Basketball Goal on City Right-of-Way",
+        "34.0",
+        "27817.0",
+        "0.12222741489017508"
+      ],
+      [
+        "Stop Sign Missing/Damaged",
+        "34.0",
+        "27817.0",
+        "0.12222741489017508"
+      ],
+      [
+        "Street is holding water",
+        "34.0",
+        "27817.0",
+        "0.12222741489017508"
+      ],
+      [
+        "Tree Risk Assessment",
+        "34.0",
+        "27817.0",
+        "0.12222741489017508"
+      ],
+      [
+        "COM Fence Repairs At City Parks and Community Centers",
+        "33.0",
+        "27817.0",
+        "0.11863249092281698"
+      ],
+      [
+        "Check a dark signalized intersection",
+        "31.0",
+        "27817.0",
+        "0.1114426429881008"
+      ],
+      [
+        "Library Carpentry",
+        "31.0",
+        "27817.0",
+        "0.1114426429881008"
+      ],
+      [
+        "Ditch Eroding",
+        "30.0",
+        "27817.0",
+        "0.10784771902074271"
+      ],
+      [
+        "Request Pipe Cleaning",
+        "30.0",
+        "27817.0",
+        "0.10784771902074271"
+      ],
+      [
+        "City Jail Hvac/Refrigeration",
+        "29.0",
+        "27817.0",
+        "0.10425279505338463"
+      ],
+      [
+        "Internal/Sanitation",
+        "27.0",
+        "27817.0",
+        "0.09706294711866845"
+      ],
+      [
+        "Bush Issues",
+        "26.0",
+        "27817.0",
+        "0.09346802315131035"
+      ],
+      [
+        "Fire Roofing",
+        "26.0",
+        "27817.0",
+        "0.09346802315131035"
+      ],
+      [
+        "Privacy Fence",
+        "26.0",
+        "27817.0",
+        "0.09346802315131035"
+      ],
+      [
+        "RV & Boats",
+        "26.0",
+        "27817.0",
+        "0.09346802315131035"
+      ],
+      [
+        "Replace a signal indication that is not working",
+        "26.0",
+        "27817.0",
+        "0.09346802315131035"
+      ],
+      [
+        "COM Irrigation Issues",
+        "25.0",
+        "27817.0",
+        "0.08987309918395225"
+      ],
+      [
+        "COM Parks and Community Centers Request for Additional Trash Cans/Empty trash containers",
+        "25.0",
+        "27817.0",
+        "0.08987309918395225"
+      ],
+      [
+        "Repair/Replace Fence or Gate",
+        "25.0",
+        "27817.0",
+        "0.08987309918395225"
+      ],
+      [
+        "Utility Street cuts",
+        "25.0",
+        "27817.0",
+        "0.08987309918395225"
+      ],
+      [
+        "Broken utility poles",
+        "24.0",
+        "27817.0",
+        "0.08627817521659417"
+      ],
+      [
+        "Other",
+        "24.0",
+        "27817.0",
+        "0.08627817521659417"
+      ],
+      [
+        "COM Extermination",
+        "23.0",
+        "27817.0",
+        "0.08268325124923608"
+      ],
+      [
+        "Duplicated Service Request(Property Maintenance Department)",
+        "23.0",
+        "27817.0",
+        "0.08268325124923608"
+      ],
+      [
+        "Replace Missing Signs",
+        "23.0",
+        "27817.0",
+        "0.08268325124923608"
+      ],
+      [
+        "Street Maintenance Please Call Citizen Back",
+        "23.0",
+        "27817.0",
+        "0.08268325124923608"
+      ],
+      [
+        "Traffic Signal Needing Physical Repair",
+        "23.0",
+        "27817.0",
+        "0.08268325124923608"
+      ],
+      [
+        "City Jail Electrical",
+        "22.0",
+        "27817.0",
+        "0.079088327281878"
+      ],
+      [
+        "Community Center Paint",
+        "22.0",
+        "27817.0",
+        "0.079088327281878"
+      ],
+      [
+        "FAQ-Personnel",
+        "22.0",
+        "27817.0",
+        "0.079088327281878"
+      ],
+      [
+        "Grass Issues On City Owned Property ***FOR PHILLIP TAUNTON CREW ONLY***",
+        "22.0",
+        "27817.0",
+        "0.079088327281878"
+      ],
+      [
+        "Container Ordinance",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Ditch Flooding",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Install a New Street Light",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Repair or Replace Damaged/ Missing Signs",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Request For Bucket Truck",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Standing water in a ditch",
+        "21.0",
+        "27817.0",
+        "0.0754934033145199"
+      ],
+      [
+        "Library Electrical",
+        "19.0",
+        "27817.0",
+        "0.06830355537980372"
+      ],
+      [
+        "Commercial trash container issues",
+        "18.0",
+        "27817.0",
+        "0.06470863141244562"
+      ],
+      [
+        "Repair Asphalt at Driveway (DO NOT USE-Service No Longer Provided)",
+        "18.0",
+        "27817.0",
+        "0.06470863141244562"
+      ],
+      [
+        "Fire Upholstery",
+        "17.0",
+        "27817.0",
+        "0.06111370744508754"
+      ],
+      [
+        "Sewer Issues",
+        "17.0",
+        "27817.0",
+        "0.06111370744508754"
+      ],
+      [
+        "Tree Issues On Private Property",
+        "17.0",
+        "27817.0",
+        "0.06111370744508754"
+      ],
+      [
+        "COM Barricade Request / Barricade Pickup",
+        "16.0",
+        "27817.0",
+        "0.05751878347772944"
+      ],
+      [
+        "Miscellaneous Issues At City Parks /Community Centers",
+        "16.0",
+        "27817.0",
+        "0.05751878347772944"
+      ],
+      [
+        "Concrete Repairs",
+        "15.0",
+        "27817.0",
+        "0.053923859510371354"
+      ],
+      [
+        "Street Paving Request",
+        "15.0",
+        "27817.0",
+        "0.053923859510371354"
+      ],
+      [
+        "COM Community Center Issues",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "COM Concrete Issues",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "COM Fallen Tree or Limb Down Inside a Park",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "Drains",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "Garbage/Debris Dumping ( For debris that have been dumped mainly in downtown Montgomery along the r.o.w)",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "Inquiries(Property Maintenance)",
+        "14.0",
+        "27817.0",
+        "0.050328935543013265"
+      ],
+      [
+        "Fire Department Tree Issues",
+        "13.0",
+        "27817.0",
+        "0.046734011575655175"
+      ],
+      [
+        "Gutter Line is holding water",
+        "13.0",
+        "27817.0",
+        "0.046734011575655175"
+      ],
+      [
+        "Leaning Light Pole",
+        "13.0",
+        "27817.0",
+        "0.046734011575655175"
+      ],
+      [
+        "Street Sweepers",
+        "13.0",
+        "27817.0",
+        "0.046734011575655175"
+      ],
+      [
+        "Backyard Trash Pickup (Disability Service)",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "COM Shelter Repairs",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "Community Center Roofing",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "Frequently Ask Questions",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "Gate Open",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "Parking Meter Malfunction",
+        "12.0",
+        "27817.0",
+        "0.043139087608297086"
+      ],
+      [
+        "COM Broken playground or exercise equipment",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "COM Sign Issues",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "COM Upholstery",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "City Jail Carpentry",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "Fire Paint",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "Recycling",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "Sand Request",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "Storm Water Issues",
+        "11.0",
+        "27817.0",
+        "0.039544163640939"
+      ],
+      [
+        "COM Overgrown Weeds",
+        "10.0",
+        "27817.0",
+        "0.03594923967358091"
+      ],
+      [
+        "FAQ- Neighborhood Services",
+        "10.0",
+        "27817.0",
+        "0.03594923967358091"
+      ],
+      [
+        "Library Internal Landscaping Issues",
+        "10.0",
+        "27817.0",
+        "0.03594923967358091"
+      ],
+      [
+        "Repair or Replace Sign",
+        "10.0",
+        "27817.0",
+        "0.03594923967358091"
+      ],
+      [
+        "Request for Custodial Services (property that is maintained by Parks and Recreation Dept.)",
+        "10.0",
+        "27817.0",
+        "0.03594923967358091"
+      ],
+      [
+        "Bush or Objects Blocking Sight View",
+        "9.0",
+        "27817.0",
+        "0.03235431570622281"
+      ],
+      [
+        "Bridge Maintenance",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "COM Gates/Fence Issues Repairing and Replacement",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "Change Speed Limit",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "Fire Cabinet Shop",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "Illicit Discharge",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "Property w/o Address Displayed",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "Request additional trash container",
+        "8.0",
+        "27817.0",
+        "0.02875939173886472"
+      ],
+      [
+        "COM Elevator Maintenance",
+        "7.0",
+        "27817.0",
+        "0.025164467771506632"
+      ],
+      [
+        "District Clean-Up",
+        "7.0",
+        "27817.0",
+        "0.025164467771506632"
+      ],
+      [
+        "Install Pipes",
+        "7.0",
+        "27817.0",
+        "0.025164467771506632"
+      ],
+      [
+        "Stop Sign or Yield Sign Missing/Damaged",
+        "7.0",
+        "27817.0",
+        "0.025164467771506632"
+      ],
+      [
+        "Weeds on City Property",
+        "7.0",
+        "27817.0",
+        "0.025164467771506632"
+      ],
+      [
+        "Gravel/Fuel or Concrete Spills",
+        "6.0",
+        "27817.0",
+        "0.021569543804148543"
+      ],
+      [
+        "Inquiries(Sanitation Department)",
+        "6.0",
+        "27817.0",
+        "0.021569543804148543"
+      ],
+      [
+        "Locking and unlocking gates at City Parks",
+        "6.0",
+        "27817.0",
+        "0.021569543804148543"
+      ],
+      [
+        "Open & Vacant (Abandoned House)",
+        "6.0",
+        "27817.0",
+        "0.021569543804148543"
+      ],
+      [
+        "Repair/Replace Guard Rails",
+        "6.0",
+        "27817.0",
+        "0.021569543804148543"
+      ],
+      [
+        "Add A New Marking",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Alley Ways on City Property",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Commercial garbage Pick Up",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Damaged Parking Meter",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Inquiries(Land Use)",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Install a new signalized intersection",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Mailbox Issues",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Repair or Replace Pavers",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Sidewalk is holding water",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Sign Relocation",
+        "5.0",
+        "27817.0",
+        "0.017974619836790454"
+      ],
+      [
+        "Add a left turn indication at a signalized intersection",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Building Inspection Issues",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "COM Flags",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Community Center Upholstery",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Dumpster Permit (Residential)",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Inquiries (Building Permits)",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Install Inlet",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Library Roofing",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Mud in Street(Contractor Only)",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "Surveying",
+        "4.0",
+        "27817.0",
+        "0.01437969586943236"
+      ],
+      [
+        "COM Herbicide/Pesticide",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "Community Center Hvac/Refrigeration",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "Library Cabinet Shop",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "Request For Custodial Services",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "Tree Debris Pick-Up ***For Urban Forestry Use Only***",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "Tree Maintenance",
+        "3.0",
+        "27817.0",
+        "0.010784771902074271"
+      ],
+      [
+        "COM Basketball Goal Repair",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "COM Fill In Holes At City Parks",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "COM Proactive requests",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "COM Request For Sand",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "City Jail Paint",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Grading a Dirt Road",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Inquiries(Parks Recreation Department)",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Install Multi-way Stop Signs",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Remove A Marking That Is No Longer Needed",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Street Maintenance-HAZARD",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Tunnel Issues",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "Yard Sales",
+        "2.0",
+        "27817.0",
+        "0.00718984793471618"
+      ],
+      [
+        "ADA CONCRETE REPAIRS",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Add A Handicap Space",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Ask the MAYOR",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "COM Field Striping",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "COM Repair Walking Track in City Parks",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "COM Request for supplies",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Cancel Vacation Home Check",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Check the timing on a Parking Meter",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Commercial",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Curbside trash for less than seven days",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Dark Area Near Existing Street Light",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Fire Duplicated Service Request",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Fire Inquiries",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Hazardous Waste Disposal",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Inquiries(Street Maintenance Department)",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Inquiries(Traffic Engineering)",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Install S-Type Inlets",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Larvicide",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Library Paint",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "MPD Complaints**DO NOT USE- SERVICE NO LONGER PROVIDED**",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Mask Ordinance Violations",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "NRT Information",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Non-Emergency",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Planting Trees or Brushes",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Political/Advertising signs on utility poles on the city right of way",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Refill dog waste bags at City Parks",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Replace An Existing Handicap Sign",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Rumble Strips**DO NOT USE***",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "School Zone Signs",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Sight View Obstructions",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Speed Humps **DO NOT USE**",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Storm Debris Removal",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ],
+      [
+        "Storm January 9, 2011(Street Issues)",
+        "1.0",
+        "27817.0",
+        "0.00359492396735809"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_cd6f5a",
+    "world": {
+      "edges": [
+        {
+          "id": "6615cb1dd8536a20c90f9c32befd73fc98954a62873bf9303a00e6f1c5faab07",
+          "to": "candidate:r_20261025_cd6f5a:m1:46a3ffb5bd244363a6f90bc17a37ea7e",
+          "from": "measure:r_20261025_cd6f5a:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-25T22:13:17.723Z"
+        },
+        {
+          "id": "c1435501e3cbabee16b124586a316cf514f7d6f1478f98b7c1a777944f0c36c6",
+          "to": "source:r_20261025_cd6f5a:m1_city",
+          "from": "measure:r_20261025_cd6f5a:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-25T22:13:17.723Z"
+        },
+        {
+          "id": "f8f8a96e2e963a2bc3e2e4b29947a38012f37a71638accd34526ba901fa1574c",
+          "to": "source:r_20261025_cd6f5a:m1_city",
+          "from": "finding:r_20261025_cd6f5a:query",
+          "type": "joins to",
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "joiner"
+          },
+          "context": "source:r_20261025_cd6f5a:m1_city",
+          "validFrom": "2026-10-25T22:13:17.723Z"
+        },
+        {
+          "id": "fda5f2f156a659b2ff15f27a26a25d6ea2a60fa09e156066f0865cefe5ab687b",
+          "to": "finding:r_20261025_cd6f5a:query",
+          "from": "finding:r_20261025_cd6f5a:approval-1",
+          "type": "supports",
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "evaluator"
+          },
+          "validFrom": "2026-10-25T22:13:17.723Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_cd6f5a",
+          "type": "run",
+          "attrs": {
+            "question": "What were the most common types of Montgomery 311 requests in 2025?"
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.722Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_cd6f5a:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.",
+              "denominator": "none",
+              "rank_measure": "count of 311 requests by type, descending",
+              "relationship": false
+            },
+            "describe": "Count of Montgomery 311 service requests in 2025, grouped by request type",
+            "search_terms": [
+              "311",
+              "service request",
+              "311 request"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261025_cd6f5a:m1:46a3ffb5bd244363a6f90bc17a37ea7e",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+            "title": "Received 311 Service Requests",
+            "fields": [
+              {
+                "name": "OBJECTID",
+                "type": "oid",
+                "alias": "OBJECTID"
+              },
+              {
+                "name": "Request_ID",
+                "type": "integer",
+                "alias": "Request ID"
+              },
+              {
+                "name": "Create_Date",
+                "type": "date",
+                "alias": "Create Date"
+              },
+              {
+                "name": "Department",
+                "type": "string",
+                "alias": "Department"
+              },
+              {
+                "name": "Request_Type",
+                "type": "string",
+                "alias": "Request Type"
+              },
+              {
+                "name": "Address",
+                "type": "string",
+                "alias": "Address"
+              },
+              {
+                "name": "District",
+                "type": "integer",
+                "alias": "District"
+              },
+              {
+                "name": "Status",
+                "type": "string",
+                "alias": "Status"
+              },
+              {
+                "name": "Close_Date",
+                "type": "date",
+                "alias": "Close Date"
+              },
+              {
+                "name": "Origin",
+                "type": "string",
+                "alias": "Origin"
+              },
+              {
+                "name": "Latitude",
+                "type": "double",
+                "alias": "Latitude"
+              },
+              {
+                "name": "Longitude",
+                "type": "double",
+                "alias": "Longitude"
+              },
+              {
+                "name": "Year",
+                "type": "integer",
+                "alias": "Year"
+              },
+              {
+                "name": "Shape",
+                "type": "geometry",
+                "alias": "Shape"
+              },
+              {
+                "name": "GlobalID",
+                "type": "globalid",
+                "alias": "GlobalID"
+              },
+              {
+                "name": "created_user",
+                "type": "string",
+                "alias": "created_user"
+              },
+              {
+                "name": "created_date",
+                "type": "date",
+                "alias": "created_date"
+              },
+              {
+                "name": "last_edited_user",
+                "type": "string",
+                "alias": "last_edited_user"
+              },
+              {
+                "name": "last_edited_date",
+                "type": "date",
+                "alias": "last_edited_date"
+              }
+            ],
+            "measure": "Count of Montgomery 311 service requests in 2025, grouped by request type",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "source:r_20261025_cd6f5a:m1_city",
+          "type": "source",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+            "title": "Received 311 Service Requests",
+            "fields": [
+              "OBJECTID",
+              "Create_Date",
+              "Year",
+              "Request_Type",
+              "Request_ID"
+            ],
+            "filter": "Year = 2025",
+            "tables": [
+              "fw_cd6f5a_m1_city_p0",
+              "fw_cd6f5a_m1_city_p1",
+              "fw_cd6f5a_m1_city_p2",
+              "fw_cd6f5a_m1_city_p3",
+              "fw_cd6f5a_m1_city_p4",
+              "fw_cd6f5a_m1_city_p5",
+              "fw_cd6f5a_m1_city_p6",
+              "fw_cd6f5a_m1_city_p7",
+              "fw_cd6f5a_m1_city_p8",
+              "fw_cd6f5a_m1_city_p9",
+              "fw_cd6f5a_m1_city_p10",
+              "fw_cd6f5a_m1_city_p11",
+              "fw_cd6f5a_m1_city_p12",
+              "fw_cd6f5a_m1_city_p13"
+            ],
+            "records": 27817
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "wiring:r_20261025_cd6f5a:verified",
+          "type": "wiring",
+          "attrs": {
+            "runId": "r_20261025_cd6f5a",
+            "wired": [
+              {
+                "label": "m1_city",
+                "shape": "arcgis_features",
+                "title": "Received 311 Service Requests",
+                "where": "Year = 2025",
+                "capped": false,
+                "fields": [
+                  "OBJECTID",
+                  "Create_Date",
+                  "Year",
+                  "Request_Type",
+                  "Request_ID"
+                ],
+                "tables": [
+                  "fw_cd6f5a_m1_city_p0",
+                  "fw_cd6f5a_m1_city_p1",
+                  "fw_cd6f5a_m1_city_p2",
+                  "fw_cd6f5a_m1_city_p3",
+                  "fw_cd6f5a_m1_city_p4",
+                  "fw_cd6f5a_m1_city_p5",
+                  "fw_cd6f5a_m1_city_p6",
+                  "fw_cd6f5a_m1_city_p7",
+                  "fw_cd6f5a_m1_city_p8",
+                  "fw_cd6f5a_m1_city_p9",
+                  "fw_cd6f5a_m1_city_p10",
+                  "fw_cd6f5a_m1_city_p11",
+                  "fw_cd6f5a_m1_city_p12",
+                  "fw_cd6f5a_m1_city_p13"
+                ],
+                "licence": "No explicit license supplied in the catalog",
+                "measure": "Count of Montgomery 311 service requests in 2025, grouped by request type",
+                "dateField": "Create_Date",
+                "measureId": "m1",
+                "sourceUrl": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+                "valueKind": "count",
+                "yearField": "Year",
+                "accessedAt": "2026-10-25T22:13:37.570Z",
+                "groupField": "Request_Type",
+                "licenceUrl": "https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e",
+                "caseIdField": "Request_ID",
+                "sourceCount": 27817,
+                "zetarisCount": 27817,
+                "categoryField": "Request_Type",
+                "objectIdField": "OBJECTID",
+                "catalogUpdatedAt": "2025-08-05T18:20:41.000Z",
+                "catalogDescription": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+                "excludedTestRecords": 0
+              }
+            ],
+            "signature": "{\"plan\":{\"in_scope\":true,\"scope_limit\":null,\"out_of_scope_reason\":null,\"geography\":\"city\",\"years\":{\"from\":2025,\"to\":2025},\"measures\":[{\"id\":\"m1\",\"describe\":\"Count of Montgomery 311 service requests in 2025, grouped by request type\",\"kind\":\"city_records\",\"search_terms\":[\"311\",\"service request\",\"311 request\"]}],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.\",\"rank_measure\":\"count of 311 requests by type, descending\"},\"output\":\"ranking\"},\"chosen\":[[\"m1\",\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",[{\"name\":\"OBJECTID\",\"alias\":\"OBJECTID\",\"type\":\"oid\"},{\"name\":\"Request_ID\",\"alias\":\"Request ID\",\"type\":\"integer\"},{\"name\":\"Create_Date\",\"alias\":\"Create Date\",\"type\":\"date\"},{\"name\":\"Department\",\"alias\":\"Department\",\"type\":\"string\"},{\"name\":\"Request_Type\",\"alias\":\"Request Type\",\"type\":\"string\"},{\"name\":\"Address\",\"alias\":\"Address\",\"type\":\"string\"},{\"name\":\"District\",\"alias\":\"District\",\"type\":\"integer\"},{\"name\":\"Status\",\"alias\":\"Status\",\"type\":\"string\"},{\"name\":\"Close_Date\",\"alias\":\"Close Date\",\"type\":\"date\"},{\"name\":\"Origin\",\"alias\":\"Origin\",\"type\":\"string\"},{\"name\":\"Latitude\",\"alias\":\"Latitude\",\"type\":\"double\"},{\"name\":\"Longitude\",\"alias\":\"Longitude\",\"type\":\"double\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Shape\",\"alias\":\"Shape\",\"type\":\"geometry\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"esriGeometryPoint\"]],\"version\":1}"
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "finding:r_20261025_cd6f5a:query",
+          "type": "finding",
+          "attrs": {
+            "sql": "SELECT category, SUM(value) AS record_count, SUM(SUM(value)) OVER () AS total_records, 100.0*SUM(value)/SUM(SUM(value)) OVER () AS share_pct FROM fw_pg.tract_observations WHERE run_id='r_20261025_cd6f5a' AND source='m1_city' GROUP BY category ORDER BY record_count DESC, category",
+            "rows": 250,
+            "headers": [
+              "category",
+              "record_count",
+              "total_records",
+              "share_pct"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "joiner"
+          }
+        },
+        {
+          "id": "round:r_20261025_cd6f5a:1",
+          "type": "round",
+          "attrs": {
+            "checks": [
+              {
+                "id": "rows_m1_city",
+                "ok": true,
+                "detail": "m1_city: Zetaris rows 27,817 vs source's own count 27,817"
+              },
+              {
+                "id": "has_rows",
+                "ok": true,
+                "detail": "250 result rows"
+              },
+              {
+                "id": "measure_values",
+                "ok": true,
+                "detail": "every measure column has real values"
+              },
+              {
+                "id": "duplicates",
+                "ok": true,
+                "detail": "0 duplicate case IDs removed before tract counting."
+              },
+              {
+                "id": "source_accessed_m1_city",
+                "ok": true,
+                "detail": "Received 311 Service Requests: retrieved 2026-10-25. Catalog updated 2025-08-05; retrieval is not an event or inspection date."
+              },
+              {
+                "id": "source_definition_m1_city",
+                "ok": true,
+                "detail": "Published description for Received 311 Service Requests: This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery."
+              },
+              {
+                "id": "source_dates_m1_city",
+                "ok": true,
+                "detail": "Received 311 Service Requests: event dates 2025-01-01T23:07:00.000Z to 2025-09-30T23:26:00.000Z; monthly coverage 2025-01 through 2025-09 (9 distinct months). Only 9 calendar months contain records; 3 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+              },
+              {
+                "id": "analysis_basis",
+                "ok": true,
+                "detail": "counts; denominator: none. The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed."
+              },
+              {
+                "id": "ranking_order",
+                "ok": true,
+                "detail": "Sort by the requested measure: count of 311 requests by type, descending; retain its value before supporting columns."
+              },
+              {
+                "id": "category_totals",
+                "ok": true,
+                "detail": "All 250 category totals match the independently aggregated source observations."
+              }
+            ],
+            "verdict": "APPROVE"
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "evaluator"
+          }
+        },
+        {
+          "id": "finding:r_20261025_cd6f5a:approval-1",
+          "type": "finding",
+          "attrs": {
+            "round": 1,
+            "status": "approved",
+            "reasons": [
+              "Counts are the correct basis: the question asks for a workload ranking of request types, so raw counts by type directly answer it; no population denominator or cross-tract relationship is needed.",
+              "Year = 2025 is already applied at the source (27,817 records), so it must not be re-added; the SQL correctly reads the pre-filtered m1_city observations.",
+              "SQL groups by category, sums value as record_count, computes total and share, and orders by record_count DESC matching the requested ranking measure.",
+              "Result total (27,817) matches the source count; all code checks pass; 250 category rows returned with real values and no duplicates.",
+              "Limitation noted but not a revision: source event coverage runs only through 2025-09-30, so late-2025 months may be absent; the answer reflects available 2025 data."
+            ],
+            "instruction": null
+          },
+          "source": {
+            "at": "2026-10-25T22:13:17.723Z",
+            "run": "r_20261025_cd6f5a",
+            "kind": "evaluator"
+          }
+        }
+      ]
+    },
+    "answer": {
+      "points": [
+        "Nuisance was the most common request type with 7,170 records, representing 25.8% of all 311 requests in 2025.",
+        "Ask 3-1-1 ranked second with 3,321 requests (11.9% of total).",
+        "Inquiries ranked third with 1,229 requests (4.4% of total)."
+      ],
+      "caveats": [
+        "Only 9 of 12 months in 2025 have source rows; 3 months have no data, so the total may underrepresent the full year.",
+        "Counts are raw request volumes; no population denominator is applied, so shares reflect proportion of the 27,817 recorded requests only.",
+        "Tie groups are based on exact record counts from the source; adjacent rows with equal rounded display values do not constitute a tie.",
+        "I could not fully support an answer after the checks. Here is what the data shows and what remains uncertain. Review the flagged checks below."
+      ],
+      "headline": "The top 311 request types in Montgomery in 2025 were Nuisance, Ask 3-1-1, and Inquiries, with 7,170, 3,321, and 1,229 requests respectively.",
+      "how_sure": "The data covers 27,817 311 service requests received between January 1 and September 30, 2025, as published by the City of Montgomery. Only 9 of 12 calendar months have records; complete annual coverage is not established. Counts are raw request volumes with no population denominator."
+    },
+    "checks": [
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 27,817 vs source's own count 27,817"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "250 result rows"
+      },
+      {
+        "id": "measure_values",
+        "ok": true,
+        "detail": "every measure column has real values"
+      },
+      {
+        "id": "duplicates",
+        "ok": true,
+        "detail": "0 duplicate case IDs removed before tract counting."
+      },
+      {
+        "id": "source_accessed_m1_city",
+        "ok": true,
+        "detail": "Received 311 Service Requests: retrieved 2026-10-25. Catalog updated 2025-08-05; retrieval is not an event or inspection date."
+      },
+      {
+        "id": "source_definition_m1_city",
+        "ok": true,
+        "detail": "Published description for Received 311 Service Requests: This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery."
+      },
+      {
+        "id": "source_dates_m1_city",
+        "ok": true,
+        "detail": "Received 311 Service Requests: event dates 2025-01-01T23:07:00.000Z to 2025-09-30T23:26:00.000Z; monthly coverage 2025-01 through 2025-09 (9 distinct months). Only 9 calendar months contain records; 3 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+      },
+      {
+        "id": "analysis_basis",
+        "ok": true,
+        "detail": "counts; denominator: none. The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed."
+      },
+      {
+        "id": "ranking_order",
+        "ok": true,
+        "detail": "Sort by the requested measure: count of 311 requests by type, descending; retain its value before supporting columns."
+      },
+      {
+        "id": "category_totals",
+        "ok": true,
+        "detail": "All 250 category totals match the independently aggregated source observations."
+      },
+      {
+        "id": "quotable_numbers",
+        "ok": true,
+        "detail": "Quotable numbers: 311 (from the question)"
+      },
+      {
+        "id": "answer_draft",
+        "ok": false,
+        "detail": "Unsupported statements were omitted after the Writer rewrite; the answer remains partial."
+      }
+    ],
+    "drafts": [
+      {
+        "points": [
+          "Nuisance was the most common request type with 7,170 records, representing 25.8% of all 311 requests in 2025.",
+          "Ask 3-1-1 ranked second with 3,321 requests (11.9% of total).",
+          "Inquiries ranked third with 1,229 requests (4.4% of total).",
+          "The top 10 request types also included Parking On Front Lawn (1,038), Traffic Issues for Montgomery Police Dept (681), FAQ-Municipal Court (612), Leaves and Debris Pick up (538), Clean Inlets (536), and FAQ-Montgomery Police Department (525).",
+          "Ties appeared at several ranks: Request Vacation Home Check and Sidewalk tied at rank 30 with 166 each; Request A New Container and Utility Issues tied at rank 44 with 93 each; COM Roofing, Community Center Plumbing, and Sinkholes/Cave Ins tied at rank 48 with 78 each.",
+          "Data source: Received 311 Service Requests (27,817 records used; filter Year = 2025). Event dates range from 2025-01-01 to 2025-09-30; only 9 of 12 months have source records, so full annual coverage is not established."
+        ],
+        "caveats": [
+          "The dataset covers only 9 of 12 months in 2025; October–December records are not included, so the total is not a full-year count.",
+          "Ties in rank are exact (same record count), but adjacent rows with different counts do not constitute ties.",
+          "Some request categories have long descriptive names that may be truncated in display; the full name is preserved in the source data.",
+          "The 'most common' ranking reflects workload frequency, not community need or priority."
+        ],
+        "headline": "The top 311 request types in Montgomery for 2025 were Nuisance (7,170), Ask 3-1-1 (3,321), and Inquiries (1,229).",
+        "how_sure": "Counts are from the City of Montgomery's 311 service request dataset (27,817 records). The dataset covers 9 months of 2025 (January through September); October through December records are absent, so the total does not represent a full calendar year. Rankings are based on raw request counts; no population denominator was applied.",
+        "problems": [
+          "the number 10 is not in the result rows",
+          "the number 525 is not in the result rows",
+          "the number 30 is not in the result rows",
+          "the number 44 is not in the result rows",
+          "the number 48 is not in the result rows"
+        ]
+      },
+      {
+        "points": [
+          "Nuisance was the most common request type with 7,170 records, representing 25.8% of all 311 requests in 2025.",
+          "Ask 3-1-1 ranked second with 3,321 requests (11.9% of total).",
+          "Inquiries ranked third with 1,229 requests (4.4% of total).",
+          "The top 10 request types also included Parking On Front Lawn (1,038), Traffic Issues for Montgomery Police Dept (681), FAQ-Municipal Court (612), Leaves and Debris Pick up (538), Clean Inlets (536), and FAQ-Montgomery Police Department (525).",
+          "Ties appeared at several ranks: Request Vacation Home Check and Sidewalk tied at rank 30 with 166 requests each; Request A New Container and Utility Issues tied at rank 44 with 93 requests each; COM Roofing, Community Center Plumbing, and Sinkholes/Cave Ins tied at rank 48 with 78 requests each."
+        ],
+        "caveats": [
+          "Only 9 of 12 months in 2025 have source rows; 3 months have no data, so the total may underrepresent the full year.",
+          "Counts are raw request volumes; no population denominator is applied, so shares reflect proportion of the 27,817 recorded requests only.",
+          "Tie groups are based on exact record counts from the source; adjacent rows with equal rounded display values do not constitute a tie."
+        ],
+        "headline": "The top 311 request types in Montgomery in 2025 were Nuisance, Ask 3-1-1, and Inquiries, with 7,170, 3,321, and 1,229 requests respectively.",
+        "how_sure": "The data covers 27,817 311 service requests received between January 1 and September 30, 2025, as published by the City of Montgomery. Only 9 of 12 calendar months have records; complete annual coverage is not established. Counts are raw request volumes with no population denominator.",
+        "problems": [
+          "the number 10 is not in the result rows",
+          "the number 525 is not in the result rows",
+          "the number 30 is not in the result rows",
+          "the number 44 is not in the result rows",
+          "the number 48 is not in the result rows"
+        ]
+      }
+    ],
+    "headers": [
+      "category",
+      "record_count",
+      "total_records",
+      "share_pct"
+    ],
+    "sources": [
+      {
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+        "label": "m1_city",
+        "title": "Received 311 Service Requests",
+        "filter": "Year = 2025",
+        "licence": "No explicit license supplied in the catalog",
+        "records": 27817,
+        "accessedAt": "2026-10-25T22:13:37.570Z",
+        "licenceUrl": "https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e",
+        "description": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+        "sourceCount": 27817,
+        "catalogUpdatedAt": "2025-08-05T18:20:41.000Z"
+      }
+    ],
+    "memories": [],
+    "question": "What were the most common types of Montgomery 311 requests in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-808",
+        "content": "For \"Count of Montgomery 311 service requests in 2025, grouped by request type\" in Montgomery, AL, dataset \"Received 311 Service Requests\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0) was read through Zetaris: 27817 records; fields OBJECTID, Create_Date, Year, Request_Type, Request_ID. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-536",
+        "content": "Dataset \"Received 311 Service Requests\" wires into Zetaris as arcgis_features in 14 pages of 2000; filter Year = 2025; fields OBJECTID, Create_Date, Year, Request_Type, Request_ID; 27817 of 27817 source records read."
+      },
+      {
+        "id": "mem-537",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_cd6f5a\",\"type\":\"run\",\"attrs\":{\"question\":\"What were the most common types of Montgomery 311 requests in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T22:13:17.722Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-538",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261025_cd6f5a:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of Montgomery 311 service requests in 2025, grouped by request type\",\"kind\":\"city_records\",\"search_terms\":[\"311\",\"service request\",\"311 request\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.\",\"rank_measure\":\"count of 311 requests by type, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd6f5a:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_cd6f5a:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"6615cb1dd8536a20c90f9c32befd73fc98954a62873bf9303a00e6f1c5faab07\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"},{\"from\":\"measure:r_20261025_cd6f5a:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_cd6f5a:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"c1435501e3cbabee16b124586a316cf514f7d6f1478f98b7c1a777944f0c36c6\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"}]}"
+      },
+      {
+        "id": "mem-539",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261025_cd6f5a:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Count of Montgomery 311 service requests in 2025, grouped by request type\",\"title\":\"Received 311 Service Requests\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"fields\":[{\"name\":\"OBJECTID\",\"alias\":\"OBJECTID\",\"type\":\"oid\"},{\"name\":\"Request_ID\",\"alias\":\"Request ID\",\"type\":\"integer\"},{\"name\":\"Create_Date\",\"alias\":\"Create Date\",\"type\":\"date\"},{\"name\":\"Department\",\"alias\":\"Department\",\"type\":\"string\"},{\"name\":\"Request_Type\",\"alias\":\"Request Type\",\"type\":\"string\"},{\"name\":\"Address\",\"alias\":\"Address\",\"type\":\"string\"},{\"name\":\"District\",\"alias\":\"District\",\"type\":\"integer\"},{\"name\":\"Status\",\"alias\":\"Status\",\"type\":\"string\"},{\"name\":\"Close_Date\",\"alias\":\"Close Date\",\"type\":\"date\"},{\"name\":\"Origin\",\"alias\":\"Origin\",\"type\":\"string\"},{\"name\":\"Latitude\",\"alias\":\"Latitude\",\"type\":\"double\"},{\"name\":\"Longitude\",\"alias\":\"Longitude\",\"type\":\"double\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Shape\",\"alias\":\"Shape\",\"type\":\"geometry\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd6f5a:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_cd6f5a:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"6615cb1dd8536a20c90f9c32befd73fc98954a62873bf9303a00e6f1c5faab07\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"}]}"
+      },
+      {
+        "id": "mem-540",
+        "content": "{\"world_entity\":{\"id\":\"source:r_20261025_cd6f5a:m1_city\",\"type\":\"source\",\"attrs\":{\"title\":\"Received 311 Service Requests\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"tables\":[\"fw_cd6f5a_m1_city_p0\",\"fw_cd6f5a_m1_city_p1\",\"fw_cd6f5a_m1_city_p2\",\"fw_cd6f5a_m1_city_p3\",\"fw_cd6f5a_m1_city_p4\",\"fw_cd6f5a_m1_city_p5\",\"fw_cd6f5a_m1_city_p6\",\"fw_cd6f5a_m1_city_p7\",\"fw_cd6f5a_m1_city_p8\",\"fw_cd6f5a_m1_city_p9\",\"fw_cd6f5a_m1_city_p10\",\"fw_cd6f5a_m1_city_p11\",\"fw_cd6f5a_m1_city_p12\",\"fw_cd6f5a_m1_city_p13\"],\"filter\":\"Year = 2025\",\"fields\":[\"OBJECTID\",\"Create_Date\",\"Year\",\"Request_Type\",\"Request_ID\"],\"records\":27817},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd6f5a:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_cd6f5a:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"c1435501e3cbabee16b124586a316cf514f7d6f1478f98b7c1a777944f0c36c6\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"},{\"from\":\"finding:r_20261025_cd6f5a:query\",\"type\":\"joins to\",\"to\":\"source:r_20261025_cd6f5a:m1_city\",\"context\":\"source:r_20261025_cd6f5a:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"f8f8a96e2e963a2bc3e2e4b29947a38012f37a71638accd34526ba901fa1574c\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"}]}"
+      },
+      {
+        "id": "mem-541",
+        "content": "{\"world_entity\":{\"id\":\"wiring:r_20261025_cd6f5a:verified\",\"type\":\"wiring\",\"attrs\":{\"runId\":\"r_20261025_cd6f5a\",\"signature\":\"{\\\"plan\\\":{\\\"in_scope\\\":true,\\\"scope_limit\\\":null,\\\"out_of_scope_reason\\\":null,\\\"geography\\\":\\\"city\\\",\\\"years\\\":{\\\"from\\\":2025,\\\"to\\\":2025},\\\"measures\\\":[{\\\"id\\\":\\\"m1\\\",\\\"describe\\\":\\\"Count of Montgomery 311 service requests in 2025, grouped by request type\\\",\\\"kind\\\":\\\"city_records\\\",\\\"search_terms\\\":[\\\"311\\\",\\\"service request\\\",\\\"311 request\\\"]}],\\\"analysis\\\":{\\\"basis\\\":\\\"counts\\\",\\\"denominator\\\":\\\"none\\\",\\\"relationship\\\":false,\\\"reason\\\":\\\"The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.\\\",\\\"rank_measure\\\":\\\"count of 311 requests by type, descending\\\"},\\\"output\\\":\\\"ranking\\\"},\\\"chosen\\\":[[\\\"m1\\\",\\\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\\\",[{\\\"name\\\":\\\"OBJECTID\\\",\\\"alias\\\":\\\"OBJECTID\\\",\\\"type\\\":\\\"oid\\\"},{\\\"name\\\":\\\"Request_ID\\\",\\\"alias\\\":\\\"Request ID\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Create_Date\\\",\\\"alias\\\":\\\"Create Date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"Department\\\",\\\"alias\\\":\\\"Department\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Request_Type\\\",\\\"alias\\\":\\\"Request Type\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Address\\\",\\\"alias\\\":\\\"Address\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"District\\\",\\\"alias\\\":\\\"District\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Status\\\",\\\"alias\\\":\\\"Status\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Close_Date\\\",\\\"alias\\\":\\\"Close Date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"Origin\\\",\\\"alias\\\":\\\"Origin\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Latitude\\\",\\\"alias\\\":\\\"Latitude\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"Longitude\\\",\\\"alias\\\":\\\"Longitude\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"Year\\\",\\\"alias\\\":\\\"Year\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Shape\\\",\\\"alias\\\":\\\"Shape\\\",\\\"type\\\":\\\"geometry\\\"},{\\\"name\\\":\\\"GlobalID\\\",\\\"alias\\\":\\\"GlobalID\\\",\\\"type\\\":\\\"globalid\\\"},{\\\"name\\\":\\\"created_user\\\",\\\"alias\\\":\\\"created_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"created_date\\\",\\\"alias\\\":\\\"created_date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"last_edited_user\\\",\\\"alias\\\":\\\"last_edited_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"last_edited_date\\\",\\\"alias\\\":\\\"last_edited_date\\\",\\\"type\\\":\\\"date\\\"}],\\\"esriGeometryPoint\\\"]],\\\"version\\\":1}\",\"wired\":[{\"measureId\":\"m1\",\"measure\":\"Count of Montgomery 311 service requests in 2025, grouped by request type\",\"label\":\"m1_city\",\"title\":\"Received 311 Service Requests\",\"shape\":\"arcgis_features\",\"dateField\":\"Create_Date\",\"yearField\":\"Year\",\"categoryField\":\"Request_Type\",\"valueKind\":\"count\",\"objectIdField\":\"OBJECTID\",\"tables\":[\"fw_cd6f5a_m1_city_p0\",\"fw_cd6f5a_m1_city_p1\",\"fw_cd6f5a_m1_city_p2\",\"fw_cd6f5a_m1_city_p3\",\"fw_cd6f5a_m1_city_p4\",\"fw_cd6f5a_m1_city_p5\",\"fw_cd6f5a_m1_city_p6\",\"fw_cd6f5a_m1_city_p7\",\"fw_cd6f5a_m1_city_p8\",\"fw_cd6f5a_m1_city_p9\",\"fw_cd6f5a_m1_city_p10\",\"fw_cd6f5a_m1_city_p11\",\"fw_cd6f5a_m1_city_p12\",\"fw_cd6f5a_m1_city_p13\"],\"fields\":[\"OBJECTID\",\"Create_Date\",\"Year\",\"Request_Type\",\"Request_ID\"],\"caseIdField\":\"Request_ID\",\"groupField\":\"Request_Type\",\"where\":\"Year = 2025\",\"sourceCount\":27817,\"zetarisCount\":27817,\"capped\":false,\"excludedTestRecords\":0,\"sourceUrl\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"accessedAt\":\"2026-10-25T22:13:37.570Z\",\"catalogUpdatedAt\":\"2025-08-05T18:20:41.000Z\",\"catalogDescription\":\"This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.\",\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e\"}]},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-703",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261025_cd6f5a:query\",\"type\":\"finding\",\"attrs\":{\"sql\":\"SELECT category, SUM(value) AS record_count, SUM(SUM(value)) OVER () AS total_records, 100.0*SUM(value)/SUM(SUM(value)) OVER () AS share_pct FROM fw_pg.tract_observations WHERE run_id='r_20261025_cd6f5a' AND source='m1_city' GROUP BY category ORDER BY record_count DESC, category\",\"headers\":[\"category\",\"record_count\",\"total_records\",\"share_pct\"],\"rows\":250},\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[{\"from\":\"finding:r_20261025_cd6f5a:query\",\"type\":\"joins to\",\"to\":\"source:r_20261025_cd6f5a:m1_city\",\"context\":\"source:r_20261025_cd6f5a:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"f8f8a96e2e963a2bc3e2e4b29947a38012f37a71638accd34526ba901fa1574c\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"},{\"from\":\"finding:r_20261025_cd6f5a:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261025_cd6f5a:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"fda5f2f156a659b2ff15f27a26a25d6ea2a60fa09e156066f0865cefe5ab687b\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"}]}"
+      },
+      {
+        "id": "mem-704",
+        "content": "{\"world_entity\":{\"id\":\"round:r_20261025_cd6f5a:1\",\"type\":\"round\",\"attrs\":{\"verdict\":\"APPROVE\",\"checks\":[{\"id\":\"rows_m1_city\",\"ok\":true,\"detail\":\"m1_city: Zetaris rows 27,817 vs source's own count 27,817\"},{\"id\":\"has_rows\",\"ok\":true,\"detail\":\"250 result rows\"},{\"id\":\"measure_values\",\"ok\":true,\"detail\":\"every measure column has real values\"},{\"id\":\"duplicates\",\"ok\":true,\"detail\":\"0 duplicate case IDs removed before tract counting.\"},{\"id\":\"source_accessed_m1_city\",\"ok\":true,\"detail\":\"Received 311 Service Requests: retrieved 2026-10-25. Catalog updated 2025-08-05; retrieval is not an event or inspection date.\"},{\"id\":\"source_definition_m1_city\",\"ok\":true,\"detail\":\"Published description for Received 311 Service Requests: This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.\"},{\"id\":\"source_dates_m1_city\",\"ok\":true,\"detail\":\"Received 311 Service Requests: event dates 2025-01-01T23:07:00.000Z to 2025-09-30T23:26:00.000Z; monthly coverage 2025-01 through 2025-09 (9 distinct months). Only 9 calendar months contain records; 3 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.\"},{\"id\":\"analysis_basis\",\"ok\":true,\"detail\":\"counts; denominator: none. The question asks for the most common request types, which is a workload ranking. Raw counts of 311 requests by type directly answer this; no population denominator or cross-tract association is needed.\"},{\"id\":\"ranking_order\",\"ok\":true,\"detail\":\"Sort by the requested measure: count of 311 requests by type, descending; retain its value before supporting columns.\"},{\"id\":\"category_totals\",\"ok\":true,\"detail\":\"All 250 category totals match the independently aggregated source observations.\"}]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-705",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261025_cd6f5a:approval-1\",\"type\":\"finding\",\"attrs\":{\"round\":1,\"status\":\"approved\",\"instruction\":null,\"reasons\":[\"Counts are the correct basis: the question asks for a workload ranking of request types, so raw counts by type directly answer it; no population denominator or cross-tract relationship is needed.\",\"Year = 2025 is already applied at the source (27,817 records), so it must not be re-added; the SQL correctly reads the pre-filtered m1_city observations.\",\"SQL groups by category, sums value as record_count, computes total and share, and orders by record_count DESC matching the requested ranking measure.\",\"Result total (27,817) matches the source count; all code checks pass; 250 category rows returned with real values and no duplicates.\",\"Limitation noted but not a revision: source event coverage runs only through 2025-09-30, so late-2025 months may be absent; the answer reflects available 2025 data.\"]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"}},\"relationships\":[{\"from\":\"finding:r_20261025_cd6f5a:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261025_cd6f5a:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-25T22:13:17.723Z\",\"run\":\"r_20261025_cd6f5a\"},\"id\":\"fda5f2f156a659b2ff15f27a26a25d6ea2a60fa09e156066f0865cefe5ab687b\",\"validFrom\":\"2026-10-25T22:13:17.723Z\"}]}"
+      }
+    ]
+  }
+}
