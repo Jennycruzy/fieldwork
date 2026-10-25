@@ -1,0 +1,924 @@
+{
+  "id": "r_20261025_2bc72f",
+  "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+  "created_at": "2026-10-25T19:56:10.990Z",
+  "finished_at": "2026-10-25T19:57:04.673Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "rates",
+        "reason": "CDC PLACES provides adult diabetes prevalence percentages by census tract; ranking tracts by this percentage directly answers which tracts have the highest prevalence without city records or correlation.",
+        "denominator": "adults",
+        "rank_measure": "adult diabetes prevalence percentage, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "health_estimate",
+          "describe": "adult diabetes prevalence percentage by census tract",
+          "search_terms": [
+            "diabetes",
+            "adult diabetes",
+            "CDC PLACES"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "d8e671a235c77d0cae5b25f814d8abb24af220e52099d9cf9b637f9c943be5f2",
+          "to": "candidate:r_20261025_2bc72f:m1:yjkw-uj5s",
+          "from": "measure:r_20261025_2bc72f:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-25T19:56:11.110Z"
+        },
+        {
+          "id": "90d16c4f2707e9ff58b0e7e49f84be0adc437932ed5e832db7bab1bd39741d0e",
+          "to": "source:r_20261025_2bc72f:m1_cdc",
+          "from": "measure:r_20261025_2bc72f:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-25T19:56:11.110Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_2bc72f",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?"
+          },
+          "source": {
+            "at": "2026-10-25T19:56:11.108Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_2bc72f:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "CDC PLACES provides adult diabetes prevalence percentages by census tract; ranking tracts by this percentage directly answers which tracts have the highest prevalence without city records or correlation.",
+              "denominator": "adults",
+              "rank_measure": "adult diabetes prevalence percentage, descending",
+              "relationship": false
+            },
+            "describe": "adult diabetes prevalence percentage by census tract",
+            "search_terms": [
+              "diabetes",
+              "adult diabetes",
+              "CDC PLACES"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261025_2bc72f:m1:yjkw-uj5s",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              {
+                "name": "stateabbr",
+                "type": "text"
+              },
+              {
+                "name": "statedesc",
+                "type": "text"
+              },
+              {
+                "name": "countyname",
+                "type": "text"
+              },
+              {
+                "name": "countyfips",
+                "type": "text"
+              },
+              {
+                "name": "tractfips",
+                "type": "text"
+              },
+              {
+                "name": "totalpopulation",
+                "type": "text"
+              },
+              {
+                "name": "totalpop18plus",
+                "type": "text"
+              },
+              {
+                "name": "access2_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "access2_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "binge_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "binge_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "chd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "chd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "copd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "copd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "dental_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "dental_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "depression_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "depression_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "vision_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "vision_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crudeprev_",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "disability_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "disability_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "geolocation",
+                "type": "text"
+              }
+            ],
+            "measure": "adult diabetes prevalence percentage by census tract",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "source:r_20261025_2bc72f:m1_cdc",
+          "type": "source",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              "tractfips",
+              "countyfips",
+              "countyname",
+              "stateabbr",
+              "totalpopulation",
+              "totalpop18plus",
+              "diabetes_crudeprev",
+              "diabetes_crude95ci"
+            ],
+            "filter": "countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL)",
+            "tables": [
+              "fw_2bc72f_m1_cdc"
+            ],
+            "records": 71
+          },
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "wiring:r_20261025_2bc72f:verified",
+          "type": "wiring",
+          "attrs": {
+            "runId": "r_20261025_2bc72f",
+            "wired": [
+              {
+                "label": "m1_cdc",
+                "shape": "socrata_list",
+                "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+                "where": "countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL)",
+                "capped": false,
+                "fields": [
+                  "tractfips",
+                  "countyfips",
+                  "countyname",
+                  "stateabbr",
+                  "totalpopulation",
+                  "totalpop18plus",
+                  "diabetes_crudeprev",
+                  "diabetes_crude95ci"
+                ],
+                "tables": [
+                  "fw_2bc72f_m1_cdc"
+                ],
+                "licence": "Public Domain",
+                "measure": "adult diabetes prevalence percentage by census tract",
+                "measureId": "m1",
+                "sourceUrl": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+                "accessedAt": "2026-10-25T19:56:19.302Z",
+                "licenceUrl": "https://data.cdc.gov/api/views/yjkw-uj5s.json",
+                "sourceCount": 71,
+                "zetarisCount": 71,
+                "catalogUpdatedAt": "2026-09-22T23:23:00.000Z",
+                "catalogDescription": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+                "excludedTestRecords": 0
+              }
+            ],
+            "signature": "{\"plan\":{\"in_scope\":true,\"scope_limit\":null,\"out_of_scope_reason\":null,\"geography\":\"tract\",\"years\":null,\"measures\":[{\"id\":\"m1\",\"describe\":\"adult diabetes prevalence percentage by census tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"diabetes\",\"adult diabetes\",\"CDC PLACES\"]}],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"adults\",\"relationship\":false,\"reason\":\"CDC PLACES provides adult diabetes prevalence percentages by census tract; ranking tracts by this percentage directly answers which tracts have the highest prevalence without city records or correlation.\",\"rank_measure\":\"adult diabetes prevalence percentage, descending\"},\"output\":\"ranking\"},\"chosen\":[[\"m1\",\"https://data.cdc.gov/resource/yjkw-uj5s.json\",[{\"name\":\"stateabbr\",\"type\":\"text\"},{\"name\":\"statedesc\",\"type\":\"text\"},{\"name\":\"countyname\",\"type\":\"text\"},{\"name\":\"countyfips\",\"type\":\"text\"},{\"name\":\"tractfips\",\"type\":\"text\"},{\"name\":\"totalpopulation\",\"type\":\"text\"},{\"name\":\"totalpop18plus\",\"type\":\"text\"},{\"name\":\"access2_crudeprev\",\"type\":\"text\"},{\"name\":\"access2_crude95ci\",\"type\":\"text\"},{\"name\":\"arthritis_crudeprev\",\"type\":\"text\"},{\"name\":\"arthritis_crude95ci\",\"type\":\"text\"},{\"name\":\"binge_crudeprev\",\"type\":\"text\"},{\"name\":\"binge_crude95ci\",\"type\":\"text\"},{\"name\":\"bphigh_crudeprev\",\"type\":\"text\"},{\"name\":\"bphigh_crude95ci\",\"type\":\"text\"},{\"name\":\"bpmed_crudeprev\",\"type\":\"text\"},{\"name\":\"bpmed_crude95ci\",\"type\":\"text\"},{\"name\":\"cancer_crudeprev\",\"type\":\"text\"},{\"name\":\"cancer_crude95ci\",\"type\":\"text\"},{\"name\":\"casthma_crudeprev\",\"type\":\"text\"},{\"name\":\"casthma_crude95ci\",\"type\":\"text\"},{\"name\":\"chd_crudeprev\",\"type\":\"text\"},{\"name\":\"chd_crude95ci\",\"type\":\"text\"},{\"name\":\"checkup_crudeprev\",\"type\":\"text\"},{\"name\":\"checkup_crude95ci\",\"type\":\"text\"},{\"name\":\"cholscreen_crudeprev\",\"type\":\"text\"},{\"name\":\"cholscreen_crude95ci\",\"type\":\"text\"},{\"name\":\"colon_screen_crudeprev\",\"type\":\"text\"},{\"name\":\"colon_screen_crude95ci\",\"type\":\"text\"},{\"name\":\"copd_crudeprev\",\"type\":\"text\"},{\"name\":\"copd_crude95ci\",\"type\":\"text\"},{\"name\":\"csmoking_crudeprev\",\"type\":\"text\"},{\"name\":\"csmoking_crude95ci\",\"type\":\"text\"},{\"name\":\"dental_crudeprev\",\"type\":\"text\"},{\"name\":\"dental_crude95ci\",\"type\":\"text\"},{\"name\":\"depression_crudeprev\",\"type\":\"text\"},{\"name\":\"depression_crude95ci\",\"type\":\"text\"},{\"name\":\"diabetes_crudeprev\",\"type\":\"text\"},{\"name\":\"diabetes_crude95ci\",\"type\":\"text\"},{\"name\":\"ghlth_crudeprev\",\"type\":\"text\"},{\"name\":\"ghlth_crude95ci\",\"type\":\"text\"},{\"name\":\"highchol_crudeprev\",\"type\":\"text\"},{\"name\":\"highchol_crude95ci\",\"type\":\"text\"},{\"name\":\"lpa_crudeprev\",\"type\":\"text\"},{\"name\":\"lpa_crude95ci\",\"type\":\"text\"},{\"name\":\"mammouse_crudeprev\",\"type\":\"text\"},{\"name\":\"mammouse_crude95ci\",\"type\":\"text\"},{\"name\":\"mhlth_crudeprev\",\"type\":\"text\"},{\"name\":\"mhlth_crude95ci\",\"type\":\"text\"},{\"name\":\"obesity_crudeprev\",\"type\":\"text\"},{\"name\":\"obesity_crude95ci\",\"type\":\"text\"},{\"name\":\"phlth_crudeprev\",\"type\":\"text\"},{\"name\":\"phlth_crude95ci\",\"type\":\"text\"},{\"name\":\"sleep_crudeprev\",\"type\":\"text\"},{\"name\":\"sleep_crude95ci\",\"type\":\"text\"},{\"name\":\"stroke_crudeprev\",\"type\":\"text\"},{\"name\":\"stroke_crude95ci\",\"type\":\"text\"},{\"name\":\"teethlost_crudeprev\",\"type\":\"text\"},{\"name\":\"teethlost_crude95ci\",\"type\":\"text\"},{\"name\":\"hearing_crudeprev\",\"type\":\"text\"},{\"name\":\"hearing_crude95ci\",\"type\":\"text\"},{\"name\":\"vision_crudeprev\",\"type\":\"text\"},{\"name\":\"vision_crude95ci\",\"type\":\"text\"},{\"name\":\"cognition_crudeprev\",\"type\":\"text\"},{\"name\":\"cognition_crude95ci\",\"type\":\"text\"},{\"name\":\"mobility_crudeprev_\",\"type\":\"text\"},{\"name\":\"mobility_crude95ci\",\"type\":\"text\"},{\"name\":\"selfcare_crudeprev\",\"type\":\"text\"},{\"name\":\"selfcare_crude95ci\",\"type\":\"text\"},{\"name\":\"indeplive_crudeprev\",\"type\":\"text\"},{\"name\":\"indeplive_crude95ci\",\"type\":\"text\"},{\"name\":\"disability_crudeprev\",\"type\":\"text\"},{\"name\":\"disability_crude95ci\",\"type\":\"text\"},{\"name\":\"loneliness_crudeprev\",\"type\":\"text\"},{\"name\":\"loneliness_crude95ci\",\"type\":\"text\"},{\"name\":\"foodstamp_crudeprev\",\"type\":\"text\"},{\"name\":\"foodstamp_crude95ci\",\"type\":\"text\"},{\"name\":\"foodinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"foodinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"housinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"housinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"shututility_crudeprev\",\"type\":\"text\"},{\"name\":\"shututility_crude95ci\",\"type\":\"text\"},{\"name\":\"lacktrpt_crudeprev\",\"type\":\"text\"},{\"name\":\"lacktrpt_crude95ci\",\"type\":\"text\"},{\"name\":\"emotionspt_crudeprev\",\"type\":\"text\"},{\"name\":\"emotionspt_crude95ci\",\"type\":\"text\"},{\"name\":\"geolocation\",\"type\":\"text\"}],null]],\"version\":1}"
+          },
+          "source": {
+            "at": "2026-10-25T19:56:11.110Z",
+            "run": "r_20261025_2bc72f",
+            "kind": "wirer"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "model request time limit reached",
+    "sources": [
+      {
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "label": "m1_cdc",
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "filter": "countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL)",
+        "licence": "Public Domain",
+        "records": 71,
+        "accessedAt": "2026-10-25T19:56:19.302Z",
+        "licenceUrl": "https://data.cdc.gov/api/views/yjkw-uj5s.json",
+        "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+        "sourceCount": 71,
+        "catalogUpdatedAt": "2026-09-22T23:23:00.000Z"
+      }
+    ],
+    "memories": [
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      }
+    ],
+    "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+    "intervals": [
+      {
+        "rows": [
+          [
+            "01101000100",
+            "( 9.0, 12.2)"
+          ],
+          [
+            "01101000200",
+            "(19.6, 24.8)"
+          ],
+          [
+            "01101000300",
+            "(21.9, 27.4)"
+          ],
+          [
+            "01101000400",
+            "(20.2, 25.4)"
+          ],
+          [
+            "01101000500",
+            "(15.2, 19.6)"
+          ],
+          [
+            "01101000600",
+            "(25.5, 31.6)"
+          ],
+          [
+            "01101000700",
+            "(25.0, 31.6)"
+          ],
+          [
+            "01101000900",
+            "( 7.4, 10.2)"
+          ],
+          [
+            "01101001000",
+            "(22.8, 28.0)"
+          ],
+          [
+            "01101001100",
+            "(24.2, 30.9)"
+          ],
+          [
+            "01101001200",
+            "(25.2, 31.0)"
+          ],
+          [
+            "01101001300",
+            "(15.5, 20.1)"
+          ],
+          [
+            "01101001400",
+            "( 7.8, 10.6)"
+          ],
+          [
+            "01101001500",
+            "( 8.8, 11.2)"
+          ],
+          [
+            "01101001600",
+            "(19.2, 24.0)"
+          ],
+          [
+            "01101001700",
+            "(11.7, 15.4)"
+          ],
+          [
+            "01101001800",
+            "(15.7, 20.2)"
+          ],
+          [
+            "01101001900",
+            "(11.9, 16.1)"
+          ],
+          [
+            "01101002000",
+            "(11.6, 15.3)"
+          ],
+          [
+            "01101002100",
+            "(15.2, 20.1)"
+          ],
+          [
+            "01101002201",
+            "(23.2, 29.6)"
+          ],
+          [
+            "01101002202",
+            "(21.5, 27.5)"
+          ],
+          [
+            "01101002300",
+            "(24.1, 30.5)"
+          ],
+          [
+            "01101002400",
+            "(28.5, 34.9)"
+          ],
+          [
+            "01101002500",
+            "(19.9, 25.4)"
+          ],
+          [
+            "01101002600",
+            "(12.6, 17.0)"
+          ],
+          [
+            "01101002700",
+            "(12.6, 16.7)"
+          ],
+          [
+            "01101002800",
+            "(15.2, 19.7)"
+          ],
+          [
+            "01101002901",
+            "(19.0, 24.4)"
+          ],
+          [
+            "01101002902",
+            "(19.5, 25.1)"
+          ],
+          [
+            "01101003000",
+            "(22.3, 28.2)"
+          ],
+          [
+            "01101003100",
+            "(19.2, 24.7)"
+          ],
+          [
+            "01101003200",
+            "(19.4, 24.8)"
+          ],
+          [
+            "01101003301",
+            "(11.6, 15.6)"
+          ],
+          [
+            "01101003303",
+            "(14.0, 18.8)"
+          ],
+          [
+            "01101003304",
+            "(11.2, 14.9)"
+          ],
+          [
+            "01101005101",
+            "(13.4, 17.5)"
+          ],
+          [
+            "01101005102",
+            "(19.6, 25.0)"
+          ],
+          [
+            "01101005301",
+            "( 3.3,  4.5)"
+          ],
+          [
+            "01101005302",
+            "(14.1, 18.2)"
+          ],
+          [
+            "01101005402",
+            "(15.2, 19.8)"
+          ],
+          [
+            "01101005403",
+            "(10.0, 13.3)"
+          ],
+          [
+            "01101005407",
+            "( 9.2, 12.3)"
+          ],
+          [
+            "01101005409",
+            "(10.7, 14.5)"
+          ],
+          [
+            "01101005410",
+            "(10.6, 13.9)"
+          ],
+          [
+            "01101005411",
+            "( 9.7, 13.4)"
+          ],
+          [
+            "01101005412",
+            "(10.8, 14.3)"
+          ],
+          [
+            "01101005413",
+            "(11.9, 15.9)"
+          ],
+          [
+            "01101005414",
+            "( 9.2, 12.4)"
+          ],
+          [
+            "01101005501",
+            "(11.0, 14.2)"
+          ],
+          [
+            "01101005502",
+            "( 9.7, 12.8)"
+          ],
+          [
+            "01101005503",
+            "( 8.8, 11.7)"
+          ],
+          [
+            "01101005504",
+            "( 7.6, 10.3)"
+          ],
+          [
+            "01101005604",
+            "(11.3, 14.8)"
+          ],
+          [
+            "01101005605",
+            "(12.5, 16.5)"
+          ],
+          [
+            "01101005606",
+            "(14.7, 19.4)"
+          ],
+          [
+            "01101005607",
+            "( 9.1, 12.2)"
+          ],
+          [
+            "01101005608",
+            "( 9.6, 12.8)"
+          ],
+          [
+            "01101005609",
+            "( 8.2, 11.2)"
+          ],
+          [
+            "01101005610",
+            "(14.9, 19.2)"
+          ],
+          [
+            "01101005611",
+            "( 9.2, 12.5)"
+          ],
+          [
+            "01101005612",
+            "( 8.6, 11.5)"
+          ],
+          [
+            "01101005613",
+            "(17.9, 22.6)"
+          ],
+          [
+            "01101005614",
+            "(16.7, 21.1)"
+          ],
+          [
+            "01101005700",
+            "(20.7, 26.3)"
+          ],
+          [
+            "01101005800",
+            "(15.5, 20.0)"
+          ],
+          [
+            "01101005902",
+            "(23.1, 29.4)"
+          ],
+          [
+            "01101005903",
+            "(14.7, 18.8)"
+          ],
+          [
+            "01101005904",
+            "(15.9, 20.5)"
+          ],
+          [
+            "01101006000",
+            "(17.1, 21.9)"
+          ],
+          [
+            "01101006100",
+            "(23.3, 29.5)"
+          ]
+        ],
+        "source": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "headers": [
+          "tractfips",
+          "diabetes_crude95ci"
+        ]
+      }
+    ],
+    "memoryWrites": [
+      {
+        "id": "mem-623",
+        "content": "For \"adult diabetes prevalence percentage by census tract\" in Montgomery, AL, dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json) was read through Zetaris: 71 records; fields tractfips, countyfips, countyname, stateabbr, totalpopulation, totalpop18plus, diabetes_crudeprev, diabetes_crude95ci. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-624",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, countyname, stateabbr, totalpopulation, totalpop18plus, diabetes_crudeprev, diabetes_crude95ci; 71 of 71 source records read."
+      },
+      {
+        "id": "mem-625",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_2bc72f\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have the highest adult diabetes prevalence?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T19:56:11.108Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-626",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261025_2bc72f:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"adult diabetes prevalence percentage by census tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"diabetes\",\"adult diabetes\",\"CDC PLACES\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"adults\",\"relationship\":false,\"reason\":\"CDC PLACES provides adult diabetes prevalence percentages by census tract; ranking tracts by this percentage directly answers which tracts have the highest prevalence without city records or correlation.\",\"rank_measure\":\"adult diabetes prevalence percentage, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"}},\"relationships\":[{\"from\":\"measure:r_20261025_2bc72f:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_2bc72f:m1:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"},\"id\":\"d8e671a235c77d0cae5b25f814d8abb24af220e52099d9cf9b637f9c943be5f2\",\"validFrom\":\"2026-10-25T19:56:11.110Z\"},{\"from\":\"measure:r_20261025_2bc72f:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_2bc72f:m1_cdc\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"},\"id\":\"90d16c4f2707e9ff58b0e7e49f84be0adc437932ed5e832db7bab1bd39741d0e\",\"validFrom\":\"2026-10-25T19:56:11.110Z\"}]}"
+      },
+      {
+        "id": "mem-627",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261025_2bc72f:m1:yjkw-uj5s\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"adult diabetes prevalence percentage by census tract\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"fields\":[{\"name\":\"stateabbr\",\"type\":\"text\"},{\"name\":\"statedesc\",\"type\":\"text\"},{\"name\":\"countyname\",\"type\":\"text\"},{\"name\":\"countyfips\",\"type\":\"text\"},{\"name\":\"tractfips\",\"type\":\"text\"},{\"name\":\"totalpopulation\",\"type\":\"text\"},{\"name\":\"totalpop18plus\",\"type\":\"text\"},{\"name\":\"access2_crudeprev\",\"type\":\"text\"},{\"name\":\"access2_crude95ci\",\"type\":\"text\"},{\"name\":\"arthritis_crudeprev\",\"type\":\"text\"},{\"name\":\"arthritis_crude95ci\",\"type\":\"text\"},{\"name\":\"binge_crudeprev\",\"type\":\"text\"},{\"name\":\"binge_crude95ci\",\"type\":\"text\"},{\"name\":\"bphigh_crudeprev\",\"type\":\"text\"},{\"name\":\"bphigh_crude95ci\",\"type\":\"text\"},{\"name\":\"bpmed_crudeprev\",\"type\":\"text\"},{\"name\":\"bpmed_crude95ci\",\"type\":\"text\"},{\"name\":\"cancer_crudeprev\",\"type\":\"text\"},{\"name\":\"cancer_crude95ci\",\"type\":\"text\"},{\"name\":\"casthma_crudeprev\",\"type\":\"text\"},{\"name\":\"casthma_crude95ci\",\"type\":\"text\"},{\"name\":\"chd_crudeprev\",\"type\":\"text\"},{\"name\":\"chd_crude95ci\",\"type\":\"text\"},{\"name\":\"checkup_crudeprev\",\"type\":\"text\"},{\"name\":\"checkup_crude95ci\",\"type\":\"text\"},{\"name\":\"cholscreen_crudeprev\",\"type\":\"text\"},{\"name\":\"cholscreen_crude95ci\",\"type\":\"text\"},{\"name\":\"colon_screen_crudeprev\",\"type\":\"text\"},{\"name\":\"colon_screen_crude95ci\",\"type\":\"text\"},{\"name\":\"copd_crudeprev\",\"type\":\"text\"},{\"name\":\"copd_crude95ci\",\"type\":\"text\"},{\"name\":\"csmoking_crudeprev\",\"type\":\"text\"},{\"name\":\"csmoking_crude95ci\",\"type\":\"text\"},{\"name\":\"dental_crudeprev\",\"type\":\"text\"},{\"name\":\"dental_crude95ci\",\"type\":\"text\"},{\"name\":\"depression_crudeprev\",\"type\":\"text\"},{\"name\":\"depression_crude95ci\",\"type\":\"text\"},{\"name\":\"diabetes_crudeprev\",\"type\":\"text\"},{\"name\":\"diabetes_crude95ci\",\"type\":\"text\"},{\"name\":\"ghlth_crudeprev\",\"type\":\"text\"},{\"name\":\"ghlth_crude95ci\",\"type\":\"text\"},{\"name\":\"highchol_crudeprev\",\"type\":\"text\"},{\"name\":\"highchol_crude95ci\",\"type\":\"text\"},{\"name\":\"lpa_crudeprev\",\"type\":\"text\"},{\"name\":\"lpa_crude95ci\",\"type\":\"text\"},{\"name\":\"mammouse_crudeprev\",\"type\":\"text\"},{\"name\":\"mammouse_crude95ci\",\"type\":\"text\"},{\"name\":\"mhlth_crudeprev\",\"type\":\"text\"},{\"name\":\"mhlth_crude95ci\",\"type\":\"text\"},{\"name\":\"obesity_crudeprev\",\"type\":\"text\"},{\"name\":\"obesity_crude95ci\",\"type\":\"text\"},{\"name\":\"phlth_crudeprev\",\"type\":\"text\"},{\"name\":\"phlth_crude95ci\",\"type\":\"text\"},{\"name\":\"sleep_crudeprev\",\"type\":\"text\"},{\"name\":\"sleep_crude95ci\",\"type\":\"text\"},{\"name\":\"stroke_crudeprev\",\"type\":\"text\"},{\"name\":\"stroke_crude95ci\",\"type\":\"text\"},{\"name\":\"teethlost_crudeprev\",\"type\":\"text\"},{\"name\":\"teethlost_crude95ci\",\"type\":\"text\"},{\"name\":\"hearing_crudeprev\",\"type\":\"text\"},{\"name\":\"hearing_crude95ci\",\"type\":\"text\"},{\"name\":\"vision_crudeprev\",\"type\":\"text\"},{\"name\":\"vision_crude95ci\",\"type\":\"text\"},{\"name\":\"cognition_crudeprev\",\"type\":\"text\"},{\"name\":\"cognition_crude95ci\",\"type\":\"text\"},{\"name\":\"mobility_crudeprev_\",\"type\":\"text\"},{\"name\":\"mobility_crude95ci\",\"type\":\"text\"},{\"name\":\"selfcare_crudeprev\",\"type\":\"text\"},{\"name\":\"selfcare_crude95ci\",\"type\":\"text\"},{\"name\":\"indeplive_crudeprev\",\"type\":\"text\"},{\"name\":\"indeplive_crude95ci\",\"type\":\"text\"},{\"name\":\"disability_crudeprev\",\"type\":\"text\"},{\"name\":\"disability_crude95ci\",\"type\":\"text\"},{\"name\":\"loneliness_crudeprev\",\"type\":\"text\"},{\"name\":\"loneliness_crude95ci\",\"type\":\"text\"},{\"name\":\"foodstamp_crudeprev\",\"type\":\"text\"},{\"name\":\"foodstamp_crude95ci\",\"type\":\"text\"},{\"name\":\"foodinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"foodinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"housinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"housinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"shututility_crudeprev\",\"type\":\"text\"},{\"name\":\"shututility_crude95ci\",\"type\":\"text\"},{\"name\":\"lacktrpt_crudeprev\",\"type\":\"text\"},{\"name\":\"lacktrpt_crude95ci\",\"type\":\"text\"},{\"name\":\"emotionspt_crudeprev\",\"type\":\"text\"},{\"name\":\"emotionspt_crude95ci\",\"type\":\"text\"},{\"name\":\"geolocation\",\"type\":\"text\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"}},\"relationships\":[{\"from\":\"measure:r_20261025_2bc72f:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_2bc72f:m1:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"},\"id\":\"d8e671a235c77d0cae5b25f814d8abb24af220e52099d9cf9b637f9c943be5f2\",\"validFrom\":\"2026-10-25T19:56:11.110Z\"}]}"
+      },
+      {
+        "id": "mem-628",
+        "content": "{\"world_entity\":{\"id\":\"source:r_20261025_2bc72f:m1_cdc\",\"type\":\"source\",\"attrs\":{\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"tables\":[\"fw_2bc72f_m1_cdc\"],\"filter\":\"countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL)\",\"fields\":[\"tractfips\",\"countyfips\",\"countyname\",\"stateabbr\",\"totalpopulation\",\"totalpop18plus\",\"diabetes_crudeprev\",\"diabetes_crude95ci\"],\"records\":71},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"}},\"relationships\":[{\"from\":\"measure:r_20261025_2bc72f:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_2bc72f:m1_cdc\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"},\"id\":\"90d16c4f2707e9ff58b0e7e49f84be0adc437932ed5e832db7bab1bd39741d0e\",\"validFrom\":\"2026-10-25T19:56:11.110Z\"}]}"
+      },
+      {
+        "id": "mem-629",
+        "content": "{\"world_entity\":{\"id\":\"wiring:r_20261025_2bc72f:verified\",\"type\":\"wiring\",\"attrs\":{\"runId\":\"r_20261025_2bc72f\",\"signature\":\"{\\\"plan\\\":{\\\"in_scope\\\":true,\\\"scope_limit\\\":null,\\\"out_of_scope_reason\\\":null,\\\"geography\\\":\\\"tract\\\",\\\"years\\\":null,\\\"measures\\\":[{\\\"id\\\":\\\"m1\\\",\\\"describe\\\":\\\"adult diabetes prevalence percentage by census tract\\\",\\\"kind\\\":\\\"health_estimate\\\",\\\"search_terms\\\":[\\\"diabetes\\\",\\\"adult diabetes\\\",\\\"CDC PLACES\\\"]}],\\\"analysis\\\":{\\\"basis\\\":\\\"rates\\\",\\\"denominator\\\":\\\"adults\\\",\\\"relationship\\\":false,\\\"reason\\\":\\\"CDC PLACES provides adult diabetes prevalence percentages by census tract; ranking tracts by this percentage directly answers which tracts have the highest prevalence without city records or correlation.\\\",\\\"rank_measure\\\":\\\"adult diabetes prevalence percentage, descending\\\"},\\\"output\\\":\\\"ranking\\\"},\\\"chosen\\\":[[\\\"m1\\\",\\\"https://data.cdc.gov/resource/yjkw-uj5s.json\\\",[{\\\"name\\\":\\\"stateabbr\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"statedesc\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"countyname\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"countyfips\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"tractfips\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"totalpopulation\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"totalpop18plus\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"access2_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"access2_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"arthritis_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"arthritis_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"binge_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"binge_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"bphigh_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"bphigh_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"bpmed_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"bpmed_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cancer_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cancer_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"casthma_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"casthma_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"chd_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"chd_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"checkup_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"checkup_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cholscreen_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cholscreen_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"colon_screen_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"colon_screen_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"copd_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"copd_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"csmoking_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"csmoking_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"dental_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"dental_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"depression_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"depression_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"diabetes_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"diabetes_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"ghlth_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"ghlth_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"highchol_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"highchol_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"lpa_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"lpa_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mammouse_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mammouse_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mhlth_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mhlth_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"obesity_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"obesity_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"phlth_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"phlth_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"sleep_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"sleep_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"stroke_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"stroke_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"teethlost_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"teethlost_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"hearing_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"hearing_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"vision_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"vision_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cognition_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"cognition_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mobility_crudeprev_\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"mobility_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"selfcare_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"selfcare_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"indeplive_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"indeplive_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"disability_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"disability_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"loneliness_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"loneliness_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"foodstamp_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"foodstamp_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"foodinsecu_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"foodinsecu_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"housinsecu_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"housinsecu_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"shututility_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"shututility_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"lacktrpt_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"lacktrpt_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"emotionspt_crudeprev\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"emotionspt_crude95ci\\\",\\\"type\\\":\\\"text\\\"},{\\\"name\\\":\\\"geolocation\\\",\\\"type\\\":\\\"text\\\"}],null]],\\\"version\\\":1}\",\"wired\":[{\"measureId\":\"m1\",\"measure\":\"adult diabetes prevalence percentage by census tract\",\"label\":\"m1_cdc\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"shape\":\"socrata_list\",\"tables\":[\"fw_2bc72f_m1_cdc\"],\"fields\":[\"tractfips\",\"countyfips\",\"countyname\",\"stateabbr\",\"totalpopulation\",\"totalpop18plus\",\"diabetes_crudeprev\",\"diabetes_crude95ci\"],\"where\":\"countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL)\",\"sourceCount\":71,\"zetarisCount\":71,\"capped\":false,\"excludedTestRecords\":0,\"sourceUrl\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"accessedAt\":\"2026-10-25T19:56:19.302Z\",\"catalogUpdatedAt\":\"2026-09-22T23:23:00.000Z\",\"catalogDescription\":\"This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\",\"licence\":\"Public Domain\",\"licenceUrl\":\"https://data.cdc.gov/api/views/yjkw-uj5s.json\"}]},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:56:11.110Z\",\"run\":\"r_20261025_2bc72f\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "r_20261025_ef7efb",
+  "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+  "created_at": "2026-10-25T20:00:36.648Z",
+  "finished_at": "2026-10-25T20:00:59.540Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Out of scope: personal medical diagnosis request",
+        "denominator": "none",
+        "rank_measure": "",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "personal medical diagnosis request"
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_ef7efb",
+          "type": "run",
+          "attrs": {
+            "question": "Diagnose my chest pain and tell me what prescription medicine to take."
+          },
+          "source": {
+            "at": "2026-10-25T20:00:36.789Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs personal medical diagnosis request",
+    "sources": [],
+    "memories": [],
+    "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+    "memoryWrites": [
+      {
+        "id": "mem-649",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_ef7efb\",\"type\":\"run\",\"attrs\":{\"question\":\"Diagnose my chest pain and tell me what prescription medicine to take.\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T20:00:36.789Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

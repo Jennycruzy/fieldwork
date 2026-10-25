@@ -1,0 +1,371 @@
+{
+  "id": "r_20261025_cd0cb3",
+  "question": "What were the most common types of Montgomery 311 requests in 2025?",
+  "created_at": "2026-10-25T19:45:29.564Z",
+  "finished_at": "2026-10-25T19:46:37.993Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for the most common request types, which is a workload ranking; raw counts of requests by type directly answer this without needing population adjustment or correlation.",
+        "denominator": "none",
+        "rank_measure": "number of 311 requests by type, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of Montgomery 311 service requests by request type in 2025",
+          "search_terms": [
+            "311",
+            "service request",
+            "311 request"
+          ]
+        }
+      ],
+      "geography": "city",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "8fc5b11ea87e1f837884e2ed95051e3e518fdcb9545cfd394cabb4999b0c2425",
+          "to": "candidate:r_20261025_cd0cb3:m1:46a3ffb5bd244363a6f90bc17a37ea7e",
+          "from": "measure:r_20261025_cd0cb3:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-25T19:45:29.667Z"
+        },
+        {
+          "id": "6a5bb766d85fe6eb76988aeca767a56b044b57b4e11eb6bac8bef593b3f78e6f",
+          "to": "source:r_20261025_cd0cb3:m1_city",
+          "from": "measure:r_20261025_cd0cb3:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-25T19:45:29.667Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_cd0cb3",
+          "type": "run",
+          "attrs": {
+            "question": "What were the most common types of Montgomery 311 requests in 2025?"
+          },
+          "source": {
+            "at": "2026-10-25T19:45:29.664Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261025_cd0cb3:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for the most common request types, which is a workload ranking; raw counts of requests by type directly answer this without needing population adjustment or correlation.",
+              "denominator": "none",
+              "rank_measure": "number of 311 requests by type, descending",
+              "relationship": false
+            },
+            "describe": "Count of Montgomery 311 service requests by request type in 2025",
+            "search_terms": [
+              "311",
+              "service request",
+              "311 request"
+            ]
+          },
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261025_cd0cb3:m1:46a3ffb5bd244363a6f90bc17a37ea7e",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+            "title": "Received 311 Service Requests",
+            "fields": [
+              {
+                "name": "OBJECTID",
+                "type": "oid",
+                "alias": "OBJECTID"
+              },
+              {
+                "name": "Request_ID",
+                "type": "integer",
+                "alias": "Request ID"
+              },
+              {
+                "name": "Create_Date",
+                "type": "date",
+                "alias": "Create Date"
+              },
+              {
+                "name": "Department",
+                "type": "string",
+                "alias": "Department"
+              },
+              {
+                "name": "Request_Type",
+                "type": "string",
+                "alias": "Request Type"
+              },
+              {
+                "name": "Address",
+                "type": "string",
+                "alias": "Address"
+              },
+              {
+                "name": "District",
+                "type": "integer",
+                "alias": "District"
+              },
+              {
+                "name": "Status",
+                "type": "string",
+                "alias": "Status"
+              },
+              {
+                "name": "Close_Date",
+                "type": "date",
+                "alias": "Close Date"
+              },
+              {
+                "name": "Origin",
+                "type": "string",
+                "alias": "Origin"
+              },
+              {
+                "name": "Latitude",
+                "type": "double",
+                "alias": "Latitude"
+              },
+              {
+                "name": "Longitude",
+                "type": "double",
+                "alias": "Longitude"
+              },
+              {
+                "name": "Year",
+                "type": "integer",
+                "alias": "Year"
+              },
+              {
+                "name": "Shape",
+                "type": "geometry",
+                "alias": "Shape"
+              },
+              {
+                "name": "GlobalID",
+                "type": "globalid",
+                "alias": "GlobalID"
+              },
+              {
+                "name": "created_user",
+                "type": "string",
+                "alias": "created_user"
+              },
+              {
+                "name": "created_date",
+                "type": "date",
+                "alias": "created_date"
+              },
+              {
+                "name": "last_edited_user",
+                "type": "string",
+                "alias": "last_edited_user"
+              },
+              {
+                "name": "last_edited_date",
+                "type": "date",
+                "alias": "last_edited_date"
+              }
+            ],
+            "measure": "Count of Montgomery 311 service requests by request type in 2025",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "source:r_20261025_cd0cb3:m1_city",
+          "type": "source",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+            "title": "Received 311 Service Requests",
+            "fields": [
+              "OBJECTID",
+              "Create_Date",
+              "Year",
+              "Request_Type",
+              "Request_ID"
+            ],
+            "filter": "Year = 2025",
+            "tables": [
+              "fw_cd0cb3_m1_city_p0",
+              "fw_cd0cb3_m1_city_p1",
+              "fw_cd0cb3_m1_city_p2",
+              "fw_cd0cb3_m1_city_p3",
+              "fw_cd0cb3_m1_city_p4",
+              "fw_cd0cb3_m1_city_p5",
+              "fw_cd0cb3_m1_city_p6",
+              "fw_cd0cb3_m1_city_p7",
+              "fw_cd0cb3_m1_city_p8",
+              "fw_cd0cb3_m1_city_p9",
+              "fw_cd0cb3_m1_city_p10",
+              "fw_cd0cb3_m1_city_p11",
+              "fw_cd0cb3_m1_city_p12",
+              "fw_cd0cb3_m1_city_p13"
+            ],
+            "records": 27817
+          },
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "wiring:r_20261025_cd0cb3:verified",
+          "type": "wiring",
+          "attrs": {
+            "runId": "r_20261025_cd0cb3",
+            "wired": [
+              {
+                "label": "m1_city",
+                "shape": "arcgis_features",
+                "title": "Received 311 Service Requests",
+                "where": "Year = 2025",
+                "capped": false,
+                "fields": [
+                  "OBJECTID",
+                  "Create_Date",
+                  "Year",
+                  "Request_Type",
+                  "Request_ID"
+                ],
+                "tables": [
+                  "fw_cd0cb3_m1_city_p0",
+                  "fw_cd0cb3_m1_city_p1",
+                  "fw_cd0cb3_m1_city_p2",
+                  "fw_cd0cb3_m1_city_p3",
+                  "fw_cd0cb3_m1_city_p4",
+                  "fw_cd0cb3_m1_city_p5",
+                  "fw_cd0cb3_m1_city_p6",
+                  "fw_cd0cb3_m1_city_p7",
+                  "fw_cd0cb3_m1_city_p8",
+                  "fw_cd0cb3_m1_city_p9",
+                  "fw_cd0cb3_m1_city_p10",
+                  "fw_cd0cb3_m1_city_p11",
+                  "fw_cd0cb3_m1_city_p12",
+                  "fw_cd0cb3_m1_city_p13"
+                ],
+                "licence": "No explicit license supplied in the catalog",
+                "measure": "Count of Montgomery 311 service requests by request type in 2025",
+                "dateField": "Create_Date",
+                "measureId": "m1",
+                "sourceUrl": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+                "valueKind": "count",
+                "yearField": "Year",
+                "accessedAt": "2026-10-25T19:45:49.645Z",
+                "groupField": "Request_Type",
+                "licenceUrl": "https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e",
+                "caseIdField": "Request_ID",
+                "sourceCount": 27817,
+                "zetarisCount": 27817,
+                "categoryField": "Request_Type",
+                "objectIdField": "OBJECTID",
+                "catalogUpdatedAt": "2025-08-05T18:20:41.000Z",
+                "catalogDescription": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+                "excludedTestRecords": 0
+              }
+            ],
+            "signature": "{\"plan\":{\"in_scope\":true,\"scope_limit\":null,\"out_of_scope_reason\":null,\"geography\":\"city\",\"years\":{\"from\":2025,\"to\":2025},\"measures\":[{\"id\":\"m1\",\"describe\":\"Count of Montgomery 311 service requests by request type in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"311\",\"service request\",\"311 request\"]}],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for the most common request types, which is a workload ranking; raw counts of requests by type directly answer this without needing population adjustment or correlation.\",\"rank_measure\":\"number of 311 requests by type, descending\"},\"output\":\"ranking\"},\"chosen\":[[\"m1\",\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",[{\"name\":\"OBJECTID\",\"alias\":\"OBJECTID\",\"type\":\"oid\"},{\"name\":\"Request_ID\",\"alias\":\"Request ID\",\"type\":\"integer\"},{\"name\":\"Create_Date\",\"alias\":\"Create Date\",\"type\":\"date\"},{\"name\":\"Department\",\"alias\":\"Department\",\"type\":\"string\"},{\"name\":\"Request_Type\",\"alias\":\"Request Type\",\"type\":\"string\"},{\"name\":\"Address\",\"alias\":\"Address\",\"type\":\"string\"},{\"name\":\"District\",\"alias\":\"District\",\"type\":\"integer\"},{\"name\":\"Status\",\"alias\":\"Status\",\"type\":\"string\"},{\"name\":\"Close_Date\",\"alias\":\"Close Date\",\"type\":\"date\"},{\"name\":\"Origin\",\"alias\":\"Origin\",\"type\":\"string\"},{\"name\":\"Latitude\",\"alias\":\"Latitude\",\"type\":\"double\"},{\"name\":\"Longitude\",\"alias\":\"Longitude\",\"type\":\"double\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Shape\",\"alias\":\"Shape\",\"type\":\"geometry\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"esriGeometryPoint\"]],\"version\":1}"
+          },
+          "source": {
+            "at": "2026-10-25T19:45:29.667Z",
+            "run": "r_20261025_cd0cb3",
+            "kind": "wirer"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "model request time limit reached",
+    "sources": [
+      {
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+        "label": "m1_city",
+        "title": "Received 311 Service Requests",
+        "filter": "Year = 2025",
+        "licence": "No explicit license supplied in the catalog",
+        "records": 27817,
+        "accessedAt": "2026-10-25T19:45:49.645Z",
+        "licenceUrl": "https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e",
+        "description": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+        "sourceCount": 27817,
+        "catalogUpdatedAt": "2025-08-05T18:20:41.000Z"
+      }
+    ],
+    "memories": [],
+    "question": "What were the most common types of Montgomery 311 requests in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-535",
+        "content": "For \"Count of Montgomery 311 service requests by request type in 2025\" in Montgomery, AL, dataset \"Received 311 Service Requests\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0) was read through Zetaris: 27817 records; fields OBJECTID, Create_Date, Year, Request_Type, Request_ID. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-536",
+        "content": "Dataset \"Received 311 Service Requests\" wires into Zetaris as arcgis_features in 14 pages of 2000; filter Year = 2025; fields OBJECTID, Create_Date, Year, Request_Type, Request_ID; 27817 of 27817 source records read."
+      },
+      {
+        "id": "mem-537",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_cd0cb3\",\"type\":\"run\",\"attrs\":{\"question\":\"What were the most common types of Montgomery 311 requests in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T19:45:29.664Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-538",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261025_cd0cb3:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of Montgomery 311 service requests by request type in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"311\",\"service request\",\"311 request\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for the most common request types, which is a workload ranking; raw counts of requests by type directly answer this without needing population adjustment or correlation.\",\"rank_measure\":\"number of 311 requests by type, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd0cb3:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_cd0cb3:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"},\"id\":\"8fc5b11ea87e1f837884e2ed95051e3e518fdcb9545cfd394cabb4999b0c2425\",\"validFrom\":\"2026-10-25T19:45:29.667Z\"},{\"from\":\"measure:r_20261025_cd0cb3:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_cd0cb3:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"},\"id\":\"6a5bb766d85fe6eb76988aeca767a56b044b57b4e11eb6bac8bef593b3f78e6f\",\"validFrom\":\"2026-10-25T19:45:29.667Z\"}]}"
+      },
+      {
+        "id": "mem-539",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261025_cd0cb3:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Count of Montgomery 311 service requests by request type in 2025\",\"title\":\"Received 311 Service Requests\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"fields\":[{\"name\":\"OBJECTID\",\"alias\":\"OBJECTID\",\"type\":\"oid\"},{\"name\":\"Request_ID\",\"alias\":\"Request ID\",\"type\":\"integer\"},{\"name\":\"Create_Date\",\"alias\":\"Create Date\",\"type\":\"date\"},{\"name\":\"Department\",\"alias\":\"Department\",\"type\":\"string\"},{\"name\":\"Request_Type\",\"alias\":\"Request Type\",\"type\":\"string\"},{\"name\":\"Address\",\"alias\":\"Address\",\"type\":\"string\"},{\"name\":\"District\",\"alias\":\"District\",\"type\":\"integer\"},{\"name\":\"Status\",\"alias\":\"Status\",\"type\":\"string\"},{\"name\":\"Close_Date\",\"alias\":\"Close Date\",\"type\":\"date\"},{\"name\":\"Origin\",\"alias\":\"Origin\",\"type\":\"string\"},{\"name\":\"Latitude\",\"alias\":\"Latitude\",\"type\":\"double\"},{\"name\":\"Longitude\",\"alias\":\"Longitude\",\"type\":\"double\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Shape\",\"alias\":\"Shape\",\"type\":\"geometry\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd0cb3:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261025_cd0cb3:m1:46a3ffb5bd244363a6f90bc17a37ea7e\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"},\"id\":\"8fc5b11ea87e1f837884e2ed95051e3e518fdcb9545cfd394cabb4999b0c2425\",\"validFrom\":\"2026-10-25T19:45:29.667Z\"}]}"
+      },
+      {
+        "id": "mem-540",
+        "content": "{\"world_entity\":{\"id\":\"source:r_20261025_cd0cb3:m1_city\",\"type\":\"source\",\"attrs\":{\"title\":\"Received 311 Service Requests\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"tables\":[\"fw_cd0cb3_m1_city_p0\",\"fw_cd0cb3_m1_city_p1\",\"fw_cd0cb3_m1_city_p2\",\"fw_cd0cb3_m1_city_p3\",\"fw_cd0cb3_m1_city_p4\",\"fw_cd0cb3_m1_city_p5\",\"fw_cd0cb3_m1_city_p6\",\"fw_cd0cb3_m1_city_p7\",\"fw_cd0cb3_m1_city_p8\",\"fw_cd0cb3_m1_city_p9\",\"fw_cd0cb3_m1_city_p10\",\"fw_cd0cb3_m1_city_p11\",\"fw_cd0cb3_m1_city_p12\",\"fw_cd0cb3_m1_city_p13\"],\"filter\":\"Year = 2025\",\"fields\":[\"OBJECTID\",\"Create_Date\",\"Year\",\"Request_Type\",\"Request_ID\"],\"records\":27817},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"}},\"relationships\":[{\"from\":\"measure:r_20261025_cd0cb3:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261025_cd0cb3:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"},\"id\":\"6a5bb766d85fe6eb76988aeca767a56b044b57b4e11eb6bac8bef593b3f78e6f\",\"validFrom\":\"2026-10-25T19:45:29.667Z\"}]}"
+      },
+      {
+        "id": "mem-541",
+        "content": "{\"world_entity\":{\"id\":\"wiring:r_20261025_cd0cb3:verified\",\"type\":\"wiring\",\"attrs\":{\"runId\":\"r_20261025_cd0cb3\",\"signature\":\"{\\\"plan\\\":{\\\"in_scope\\\":true,\\\"scope_limit\\\":null,\\\"out_of_scope_reason\\\":null,\\\"geography\\\":\\\"city\\\",\\\"years\\\":{\\\"from\\\":2025,\\\"to\\\":2025},\\\"measures\\\":[{\\\"id\\\":\\\"m1\\\",\\\"describe\\\":\\\"Count of Montgomery 311 service requests by request type in 2025\\\",\\\"kind\\\":\\\"city_records\\\",\\\"search_terms\\\":[\\\"311\\\",\\\"service request\\\",\\\"311 request\\\"]}],\\\"analysis\\\":{\\\"basis\\\":\\\"counts\\\",\\\"denominator\\\":\\\"none\\\",\\\"relationship\\\":false,\\\"reason\\\":\\\"The question asks for the most common request types, which is a workload ranking; raw counts of requests by type directly answer this without needing population adjustment or correlation.\\\",\\\"rank_measure\\\":\\\"number of 311 requests by type, descending\\\"},\\\"output\\\":\\\"ranking\\\"},\\\"chosen\\\":[[\\\"m1\\\",\\\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\\\",[{\\\"name\\\":\\\"OBJECTID\\\",\\\"alias\\\":\\\"OBJECTID\\\",\\\"type\\\":\\\"oid\\\"},{\\\"name\\\":\\\"Request_ID\\\",\\\"alias\\\":\\\"Request ID\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Create_Date\\\",\\\"alias\\\":\\\"Create Date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"Department\\\",\\\"alias\\\":\\\"Department\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Request_Type\\\",\\\"alias\\\":\\\"Request Type\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Address\\\",\\\"alias\\\":\\\"Address\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"District\\\",\\\"alias\\\":\\\"District\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Status\\\",\\\"alias\\\":\\\"Status\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Close_Date\\\",\\\"alias\\\":\\\"Close Date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"Origin\\\",\\\"alias\\\":\\\"Origin\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Latitude\\\",\\\"alias\\\":\\\"Latitude\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"Longitude\\\",\\\"alias\\\":\\\"Longitude\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"Year\\\",\\\"alias\\\":\\\"Year\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Shape\\\",\\\"alias\\\":\\\"Shape\\\",\\\"type\\\":\\\"geometry\\\"},{\\\"name\\\":\\\"GlobalID\\\",\\\"alias\\\":\\\"GlobalID\\\",\\\"type\\\":\\\"globalid\\\"},{\\\"name\\\":\\\"created_user\\\",\\\"alias\\\":\\\"created_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"created_date\\\",\\\"alias\\\":\\\"created_date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"last_edited_user\\\",\\\"alias\\\":\\\"last_edited_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"last_edited_date\\\",\\\"alias\\\":\\\"last_edited_date\\\",\\\"type\\\":\\\"date\\\"}],\\\"esriGeometryPoint\\\"]],\\\"version\\\":1}\",\"wired\":[{\"measureId\":\"m1\",\"measure\":\"Count of Montgomery 311 service requests by request type in 2025\",\"label\":\"m1_city\",\"title\":\"Received 311 Service Requests\",\"shape\":\"arcgis_features\",\"dateField\":\"Create_Date\",\"yearField\":\"Year\",\"categoryField\":\"Request_Type\",\"valueKind\":\"count\",\"objectIdField\":\"OBJECTID\",\"tables\":[\"fw_cd0cb3_m1_city_p0\",\"fw_cd0cb3_m1_city_p1\",\"fw_cd0cb3_m1_city_p2\",\"fw_cd0cb3_m1_city_p3\",\"fw_cd0cb3_m1_city_p4\",\"fw_cd0cb3_m1_city_p5\",\"fw_cd0cb3_m1_city_p6\",\"fw_cd0cb3_m1_city_p7\",\"fw_cd0cb3_m1_city_p8\",\"fw_cd0cb3_m1_city_p9\",\"fw_cd0cb3_m1_city_p10\",\"fw_cd0cb3_m1_city_p11\",\"fw_cd0cb3_m1_city_p12\",\"fw_cd0cb3_m1_city_p13\"],\"fields\":[\"OBJECTID\",\"Create_Date\",\"Year\",\"Request_Type\",\"Request_ID\"],\"caseIdField\":\"Request_ID\",\"groupField\":\"Request_Type\",\"where\":\"Year = 2025\",\"sourceCount\":27817,\"zetarisCount\":27817,\"capped\":false,\"excludedTestRecords\":0,\"sourceUrl\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0\",\"accessedAt\":\"2026-10-25T19:45:49.645Z\",\"catalogUpdatedAt\":\"2025-08-05T18:20:41.000Z\",\"catalogDescription\":\"This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.\",\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=46a3ffb5bd244363a6f90bc17a37ea7e\"}]},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-25T19:45:29.667Z\",\"run\":\"r_20261025_cd0cb3\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

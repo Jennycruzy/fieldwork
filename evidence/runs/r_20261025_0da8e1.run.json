@@ -1,0 +1,38 @@
+{
+  "id": "r_20261025_0da8e1",
+  "question": "What are the current private bank balances of Montgomery homeowners?",
+  "created_at": "2026-10-25T20:00:14.294Z",
+  "finished_at": "2026-10-25T20:00:36.642Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_0da8e1",
+          "type": "run",
+          "attrs": {
+            "question": "What are the current private bank balances of Montgomery homeowners?"
+          },
+          "source": {
+            "at": "2026-10-25T20:00:14.385Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "model did not return valid JSON: in_scope: Required; geography: Required; measures: Required; output: Required",
+    "sources": [],
+    "memories": [],
+    "question": "What are the current private bank balances of Montgomery homeowners?",
+    "memoryWrites": [
+      {
+        "id": "mem-648",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_0da8e1\",\"type\":\"run\",\"attrs\":{\"question\":\"What are the current private bank balances of Montgomery homeowners?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T20:00:14.385Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "id": "r_20261025_34ff84",
+  "question": "Which named Montgomery residents have high blood pressure?",
+  "created_at": "2026-10-25T19:59:51.338Z",
+  "finished_at": "2026-10-25T20:00:14.288Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261025_34ff84",
+          "type": "run",
+          "attrs": {
+            "question": "Which named Montgomery residents have high blood pressure?"
+          },
+          "source": {
+            "at": "2026-10-25T19:59:51.450Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "model did not return valid JSON: in_scope: Required; geography: Required; measures: Required; output: Required",
+    "sources": [],
+    "memories": [],
+    "question": "Which named Montgomery residents have high blood pressure?",
+    "memoryWrites": [
+      {
+        "id": "mem-647",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261025_34ff84\",\"type\":\"run\",\"attrs\":{\"question\":\"Which named Montgomery residents have high blood pressure?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-25T19:59:51.450Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
