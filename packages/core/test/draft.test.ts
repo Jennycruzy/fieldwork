@@ -178,3 +178,32 @@ it("uses the stated precision and does not derive across unrelated columns",()=>
  expect(checkDraft(["The change is 33.30%."],["month","calls"],[["Jan","300"],["Feb","400"]]).ok).toBe(false);
  expect(checkDraft(["The change is 12345."],["name","calls","population"],[["A","12000","345"],["B","56000","789"]]).ok).toBe(false);
 });
+
+import {supportedDraft} from "../src/checks.js";
+it("recognizes calendar-month names in the recorded normalized monthly result",()=>{
+ const a=recorded25("617a2f");
+ expect(checkDraft(["The highest monthly count was 2,521 in June","The lowest monthly count (668 in February)"],a.headers,a.rows).ok).toBe(true);
+});
+it("unqualified ordinal ranks follow the recorded ascending score query",()=>{
+ const a=recorded25("617926");
+ expect(checkDraft(["Tract 54.13 ranks second with an average score of 92.0 across 2 establishments"],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Tract 54.13 ranks first with an average score of 92.0 across 2 establishments"],a.headers,a.rows).ok).toBe(false);
+});
+it("verifies tract identifiers as metadata while retaining the universal-pattern check",()=>{
+ const a=recorded25("a5f032");
+ expect(checkDraft(["Geoid codes are provided for each tract; the numeric suffix (e.g., 22.01) reflects the census tract numbering used by the source."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Geoid codes are provided for each tract; the numeric suffix (e.g., 99.99) reflects the census tract numbering."],a.headers,a.rows).ok).toBe(false);
+});
+it("omits an unsupported headline as well as unsupported points",()=>{
+ const a=recorded25("3a4e21"),facts=a.checks.map((c:{detail:string})=>c.detail);
+ expect(a.rows).toHaveLength(48);
+ const result=supportedDraft(a.answer,a.headers,a.rows,facts);
+ expect(result.headline).not.toBe(a.answer.headline);
+ expect(checkDraft([result.headline,...result.points,result.how_sure,...result.caveats],a.headers,a.rows,facts).ok).toBe(true);
+});
+function recorded25(id:string){return JSON.parse(readFileSync(new URL(`../../../evidence/runs/r_20261025_${id}.run.json`,import.meta.url),"utf8")).answer;}
+
+it("metadata does not excuse an unsupported universal relationship",()=>{
+ const a=recorded25("a5f032");
+ expect(checkDraft(["Geoid codes are provided for each tract; higher requests consistently mean higher health burden."],a.headers,a.rows).ok).toBe(false);
+});

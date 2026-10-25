@@ -117,11 +117,14 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   }
   for (const h of headers) for (const n of numbersIn(h)) values.add(n); // e.g. a "2025" column name
   for (const f of facts) for (const n of numbersIn(f.replace(/\b(?:countyfips|tractfips|geoid)\s*[:=]\s*['"]?\d+['"]?/gi," ")) ) values.add(n);
-  const names = rows.map((r) => String(r[0] ?? ""));
+  const monthColumn=headers.findIndex(h=>/^month$/i.test(h));
+  const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const calendarRows=/^(year|month)$/i.test(headers[0]??"")&&monthColumn>=0;
+  const names = rows.map((r) => calendarRows ? monthNames[Number(r[monthColumn])-1]??String(r[monthColumn]??"") : String(r[0] ?? ""));
   const missing: string[] = [];
   for (const original of texts) {
     const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
-    for (const raw of numberTokens(withoutNames(spellNumbers(knownIdentifiers(t, facts)), names))) {
+    for (const raw of numberTokens(withoutNames(spellNumbers(knownIdentifiers(t, facts, names)), names))) {
       const n=normaliseNumber(raw);
       if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(raw, values) && !derivedNumber(raw, headers, rows)) missing.push(n);
     }
@@ -139,7 +142,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   for (const original of texts) {
     const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
     if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
-    if (UNIVERSAL.test(t)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
+    if (UNIVERSAL.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
       for(let i=0;i<names.length;i++) if(mentions(t,names[i]!)) {
         const errors=columnRankProblems(t,i,names,headers,rows);
@@ -286,7 +289,7 @@ function columnRankProblems(t: string, said: number, names: string[], headers: s
   for (const c of clauses(t)) {
     const claim = claimedRankDir(c);
     // "follows" / "is next" describe the row order, which the row-order check covers.
-    if (!claim || /\b(follows|comes next|is next|runner-up)\b/i.test(c)) continue;
+    if (!claim || !/\b(highest|lowest|most|fewest|largest|smallest)\b/i.test(c) || /\b(follows|comes next|is next|runner-up)\b/i.test(c)) continue;
     const nums = numbersIn(withoutNames(spellNumbers(c), names));
     const row = rows[said]!;
     const cols = new Set<number>();
@@ -342,7 +345,8 @@ export function claimedRank(t: string): number | undefined {
   return undefined;
 }
 
-function knownIdentifiers(text: string, facts: string[]): string {
+function knownIdentifiers(text: string, facts: string[], names:string[]=[]): string {
+  text=text.replace(/\bnumeric suffix\s*\(e\.g\.,?\s*(\d+(?:\.\d+)?)\)/gi,(match,id:string)=>names.some(n=>n.toLowerCase()===`census tract ${id}`)? "known tract identifier":match);
   return text.replace(/\b(countyfips|tractfips|geoid)\s*[:=]\s*['"]?(\d+)['"]?/gi,(match,field:string,id:string)=>{
     const expression=new RegExp(`\\b${field}\\s*[:=]\\s*['"]?${id}['"]?`,"i");
     return facts.some((f)=>expression.test(f)) ? " " : match;
@@ -362,4 +366,19 @@ function unsupportedCertainty(text:string):boolean {
   }
  }
  return false;
+}
+
+function verifiedMetadata(text:string,headers:string[],rows:(string|null)[][],facts:string[]):boolean {
+ if(/correlat|pattern|relationship|higher|lower|consistently|without exception/i.test(text))return false;
+ const geo=headers.findIndex(h=>/^(geoid|tractfips)$/i.test(h));
+ if(/\b(geoid|identifier|tract code)\b/i.test(text)&&/\b(provided|included|shown|supplied)\b/i.test(text))return geo>=0&&rows.every(r=>r[geo]!=null&&r[geo]!=="");
+ return /\bscore/i.test(text)&&/averag/i.test(text)&&headers.some(h=>/avg|average|mean/i.test(h))&&facts.some(f=>/Latest-per-establishment.*independently recompute/i.test(f));
+}
+export function supportedDraft<T extends {headline:string;points:string[];how_sure:string;caveats:string[]}>(draft:T,headers:string[],rows:(string|null)[][],facts:string[]):T {
+ const supported=(text:string)=>checkDraft([text],headers,rows,facts).ok;
+ return {...draft,
+  headline:supported(draft.headline)?draft.headline:"Some draft statements could not be verified; review the result rows and checks.",
+  points:draft.points.filter(supported),caveats:draft.caveats.filter(supported),
+  how_sure:supported(draft.how_sure)?draft.how_sure:"Some draft statements could not be checked. Only supported statements are shown; review the flagged checks.",
+ };
 }

@@ -1,6 +1,6 @@
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
-import { checkDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
+import { checkDraft, supportedDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
@@ -186,10 +186,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
     if (!dc.ok) {
       out.status = "partial";
-      const supported = (text: string) => checkDraft([text],joined.result.headers,joined.result.rows,facts).ok;
-      draft.points=draft.points.filter(supported);
-      draft.caveats=draft.caveats.filter(supported);
-      if(!supported(draft.how_sure)) draft.how_sure="Some draft statements could not be checked. Only supported statements are shown; review the flagged checks.";
+      Object.assign(draft,supportedDraft(draft,joined.result.headers,joined.result.rows,facts));
       out.checks.push({id:"answer_draft",ok:false,detail:"Unsupported statements were omitted after the Writer rewrite; the answer remains partial."});
     }
     if (out.status === "partial") draft.caveats.push(notice("PARTIAL", "Review the flagged checks below.").message);
