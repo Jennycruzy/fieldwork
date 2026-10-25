@@ -87,9 +87,10 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
 export function monthlySummarySql(runId:string,question:string,p:Plan,wired:Wired[]):string|undefined {
  if(p.geography!=="city"||p.output!=="trend"||!/\bmonth/i.test(question)||wired.length!==1||!wired[0]?.normalized||wired[0].valueKind!=="count")return;
  const w=wired[0];
+ const countLabel=/^Call_Count_By_Origin$/i.test(w.valueField??"")?"call_activity_count":"record_count";
  const from=p.years?.from,to=p.years?.to;
  const years=[from?`year >= ${from}`:undefined,to?`year <= ${to}`:undefined].filter(Boolean);
- return `SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}' AND month IS NOT NULL${years.length?" AND "+years.join(" AND "):""} GROUP BY year, month ORDER BY year, month`;
+ return `SELECT year, month, SUM(value) AS ${countLabel} FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}' AND month IS NOT NULL${years.length?" AND "+years.join(" AND "):""} GROUP BY year, month ORDER BY year, month`;
 }
 
 export function categorySummarySql(runId:string,p:Plan,wired:Wired[]):string|undefined {

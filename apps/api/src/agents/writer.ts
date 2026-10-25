@@ -4,6 +4,8 @@ import type { Joined } from "./joiner.js";
 import type { Wired } from "./wirer.js";
 
 export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[], joined: Joined, checks: CheckResult[], rounds: number, fix?: string): Promise<Answer> {
+  const callSources=wired.filter(w=>/^Call_Count_By_Origin$/i.test(w.valueField??""));
+  const callActivity=callSources.length>0||checks.some(c=>c.ok&&c.id.startsWith("call_units_"));
   const { value } = await ctx.models.writer.json(
     [
       {
@@ -25,7 +27,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
           "\n" +
           dataBlock("checks", checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`)) +
           "\n" +
-          dataBlock("sources", wired.map((w) => `${w.title} (${w.zetarisCount} records used; filter ${w.where})`)) +
+          dataBlock("source_units",callSources.map(w=>({source:w.title,value_field:w.valueField,unit:"weighted call-center activity",aggregation:"SUM of the published count, not COUNT of source rows"})))+"\n"+dataBlock("sources", wired.map((w) => `${w.title} (${w.zetarisCount} records used; filter ${w.where})`)) +
           `\nEvaluator rounds: ${rounds}. Plan years: ${JSON.stringify(p.years)}` +
           (fix ? `\nYour previous draft had these problems; fix them: ${fix}` : ""),
       },
@@ -33,6 +35,10 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     AnswerSchema,
     1500,
   );
+  if(callActivity) {
+    const caveat="These are weighted call-center activity totals, not confirmed incidents or crime statistics.";
+    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  }
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });

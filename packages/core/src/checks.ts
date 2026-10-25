@@ -139,6 +139,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\b(the|all)\s+(\d+)(?=\s+(?:tracts|rows|areas)\b)/gi,(match,article:string,n:string)=>[rows.length,...columns.flatMap(j=>[rows.filter(r=>r[j]!=null&&Number(r[j])>0).length,rows.filter(r=>r[j]!=null&&Number(r[j])===0).length])].includes(Number(n))?article:match)
         .replace(/\btop\s+(\d+)(?=\s+(?:tracts?|rows?|areas?))/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
         .replace(/\bfor\s+311\s+requests\b/gi,match=>headers.some(h=>/request|311/i.test(h))?"for service requests":match)
+        .replace(/\b911(?=\s+calls\b)/gi,()=>facts.some(f=>/\b911\b|Call_Count_By_Origin/.test(f))?"":"911")
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
