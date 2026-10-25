@@ -1,6 +1,6 @@
 // What a run teaches Fieldwork, written to H-MEM at the end of the run.
 
-import { feedback, remember, saveMemory, slug } from "@fieldwork/hmem";
+import { feedback, remember, saveMemory, slug, embed } from "@fieldwork/hmem";
 import type { Ctx } from "./agents/context.js";
 import type { Chosen } from "./agents/finder.js";
 import type { Wired } from "./agents/wirer.js";
@@ -21,16 +21,23 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
   const conf = ok ? 0.8 : 0.5;
 
   for (const c of l.chosen) {
-    added.push(
-      remember(ctx.memory, {
-        kind: "choice",
-        runId: ctx.runId,
-        content: `For "${c.measure}" in ${ctx.cfg.place.name}, Fieldwork chose the dataset "${c.candidate.title}" (${c.candidate.url}): ${c.reason}`,
-        confidence: conf,
-        refs: [c.candidate.url],
-        datasetTitle: c.candidate.title,
-      }).id,
-    );
+    const verified=l.wired.find(w=>w.measureId===c.measureId&&w.zetarisCount>0);
+    if(!verified) {
+      // Catalog metadata is observed; a selection rationale is still a hypothesis.
+      if(c.candidate.kind==="arcgis_layer"&&!c.geometryType) {
+        const content=`Dataset "${c.candidate.title}" publishes a nonspatial table with no tract locations; it was not successfully wired for this request.`;
+        for(const previous of ctx.memory.store.all().filter(m=>m.tags.includes(datasetTag(c.candidate.title))&&m.tags.includes("fw:choice")&&/tract.level counts|directly provides.*tract/i.test(m.content))) {
+          ctx.memory.store.update(previous.id,{content,embedding:embed(content),tags:previous.tags.filter(t=>t!=="fw:choice").concat("fw:quality"),confidence:.9});
+        }
+        added.push(remember(ctx.memory,{kind:"quality",runId:ctx.runId,content,confidence:.9,refs:[c.candidate.url],datasetTitle:c.candidate.title}).id);
+      }
+      continue;
+    }
+    added.push(remember(ctx.memory,{
+      kind:"choice",runId:ctx.runId,
+      content:`For "${c.measure}" in ${ctx.cfg.place.name}, dataset "${c.candidate.title}" (${c.candidate.url}) was read through Zetaris: ${verified.zetarisCount} records; fields ${verified.fields.join(", ")}. Catalog selection reasons are hypotheses, not verified capabilities.`,
+      confidence:conf,refs:[c.candidate.url],datasetTitle:c.candidate.title,
+    }).id);
   }
   for (const w of l.wired) {
     added.push(

@@ -82,7 +82,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const known = new Set(c.fields.map((f) => f.name));
     const fields = w.fields.filter((f) => known.has(f) && !privateField.test(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
-    if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", `${c.candidate.title} publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.`);
+    if (p.geography === "tract" && c.candidate.kind === "arcgis_layer" && !c.geometryType) throw new FieldworkError("NO_SOURCE", {source:c.candidate.title,reason:"publishes no tract locations, so tract counts cannot be inferred."});
     const roles=observationRoles(c.fields,!!c.geometryType);
     const request=String(ctx.world?.entities().find(e=>e.type==="run")?.attrs.question??p.measures.map(m=>m.describe).join(" "));
     const sourceWhere=roles.valueKind==="score"?inspectionSourceWhere(w.where,request):w.where;
