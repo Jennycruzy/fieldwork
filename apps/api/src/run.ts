@@ -44,6 +44,7 @@ export interface RunOutcome {
   providerFailed?: boolean; // the run stopped because a model provider failed, not because of the data
   view?: string; // the answer saved in Zetaris, e.g. fieldwork_answers.answer_b552f2
   message?: string;
+  drafts?: { headline: string; points: string[]; how_sure: string; caveats: string[]; problems: string[] }[]; // drafts the answer check sent back
 }
 
 export function newRunId(): string {
@@ -174,17 +175,23 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     out.bridged = bridged;
     out.joined = joined;
     // The draft is checked against the rows; a slip goes back to the Writer once with the exact problems.
+    const tractCount = world.entities().filter((e) => e.type === "tract").length;
+    const asked = (question.match(/\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?/g) ?? []).map((n) => n.replace(/,/g, "")).filter((n) => !/^(?:19|20)\d\d$/.test(n));
+    const quotable = [...new Set([...asked, ...(tractCount ? [String(tractCount)] : [])])];
+    if (quotable.length) out.checks.push({ id: "quotable_numbers", ok: true, detail: `Quotable numbers: ${quotable.join(", ")} (${[asked.length ? "from the question" : "", tractCount ? `${tractCount} census tracts compared` : ""].filter(Boolean).join("; ")})` });
     let draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds);
     const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), `Evaluator rounds: ${out.rounds}`];
     let dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     if (!dc.ok) {
       const problems = [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems].join("; ");
       await trace.log({ agent: "evaluator", action: "check:draft", status: "error", note: `Sent the draft back to the Writer: ${problems}` });
+      out.drafts = [{ ...draft, problems: [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems] }];
       draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds, problems);
       dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     }
     await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
     if (!dc.ok) {
+      (out.drafts ??= []).push({ ...draft, problems: [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems] });
       out.status = "partial";
       Object.assign(draft,supportedDraft(draft,joined.result.headers,joined.result.rows,facts));
       out.checks.push({id:"answer_draft",ok:false,detail:"Unsupported statements were omitted after the Writer rewrite; the answer remains partial."});
@@ -222,7 +229,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         memoryWrites: ctx.writtenMemories, intervals: ctx.intervals, world: world.context(), tracts: ctx.tractShapes, memories: ctx.recalled.map(({ id, kind, content, confidence }) => ({ id, kind, content, confidence })),
         plan: out.plan,
         sql: out.joined?.sql,
-        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, message: out.message }),
+        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, drafts: out.drafts, message: out.message }),
     ]);
     await trace.log({ agent: "run", action: "finish", status: out.status === "answered" ? "ok" : "info", note: `status ${out.status} after ${out.rounds} round(s)` });
   }

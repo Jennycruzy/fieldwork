@@ -108,7 +108,10 @@ export interface DraftCheck {
 export function checkDraft(texts: string[], headers: string[], rows: (string | null)[][], facts: string[] = []): DraftCheck {
   // Values come from every column except the first (the row's name, e.g. "Census Tract 11").
   // A share and its percent are the same figure (0.601 and 60.1%).
+  const nameCol=nameColumn(headers);
   const columns=valueColumns(headers);
+  // Numbers the run itself established for quoting: the question's own numbers and the tract count.
+  const quotable=new Set(facts.flatMap(f=>/^Quotable numbers:/.test(f)?numbersIn(f.replace(/\(.*$/,"")):[]));
   const cellValues=(records:(string|null)[][])=>{
     const result=new Set<string>();
     for(const row of records)for(const j of columns) {
@@ -126,17 +129,18 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const monthColumn=headers.findIndex(h=>/^month$/i.test(h));
   const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
   const calendarRows=/^(year|month)$/i.test(headers[0]??"")&&monthColumn>=0;
-  const names = rows.map((r) => calendarRows ? monthNames[Number(r[monthColumn])-1]??String(r[monthColumn]??"") : String(r[0] ?? ""));
+  const names = rows.map((r) => calendarRows ? monthNames[Number(r[monthColumn])-1]??String(r[monthColumn]??"") : String(r[nameCol] ?? ""));
   const missing: string[] = [];
   for (const original of texts) {
-    const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
+    const t = normaliseText(original);
     for(const sentence of t.split(/;|[!?]|\.(?=\s+[A-Z])/)) {
+    const sentenceRows=names.map((name,i)=>name&&mentions(sentence,name)?i:-1).filter(i=>i>=0);
     let previousRows:number[]=[];
     for(const clause of rowClauses(sentence,names)) {
       const direct=names.map((name,i)=>mentions(clause,name)?i:-1).filter(i=>i>=0);
       const named=direct.length?direct:previousRows;
       if(direct.length)previousRows=direct;
-      const allowed=named.length?cellValues(named.map(i=>rows[i]!)):values;
+      const allowed=named.length?cellValues([...new Set([...named,...sentenceRows])].map(i=>rows[i]!)):values;
       const content=withoutNames(spellNumbers(knownIdentifiers(clause,facts,names,new Map(headers.map((h,j)=>[h.toLowerCase(),new Set((named.length?named.map(i=>rows[i]!):rows).map(r=>r[j]??""))])))),names)
         .replace(/\b\d+(?:st|nd|rd|th)\b/gi," ")
         .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
@@ -147,7 +151,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
-        if(!allowed.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*)\b/i.test(clause))))missing.push(n);
+        if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*)\b/i.test(clause))))missing.push(n);
       }
     }
     }
@@ -156,16 +160,16 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
   // numeric column) share a rank, e.g. two tracts at 13.1% tie for 4th.
   const order: string[] = [];
-  const keyCol = rows[0] ? rows[0].findIndex((v, i) => i > 0 && /^-?\d+(\.\d+)?$/.test(v ?? "")) : -1;
+  const keyCol = rows[0] ? rows[0].findIndex((v, i) => i !== nameCol && columns.includes(i) && /^-?\d+(\.\d+)?$/.test(v ?? "")) : -1;
   const rankOf = (idx: number): number => {
     if (keyCol < 0) return idx + 1;
     const v = rows[idx]![keyCol];
     return rows.findIndex((r) => r[keyCol] === v) + 1; // first row with the same value = shared rank
   };
   for (const original of texts) {
-    const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
+    const t = normaliseText(original);
     if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
-    if (UNIVERSAL.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
+    if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
       for(let i=0;i<names.length;i++) if(mentions(t,names[i]!)) {
         const errors=columnRankProblems(t,i,names,headers,rows);
@@ -237,8 +241,15 @@ function derivedNumber(text: string, headers: string[], rows: (string|null)[][])
  return false;
 }
 
+// The row's name column, found by its header; the first column otherwise.
+function nameColumn(headers:string[]):number {
+ const j=headers.findIndex(h=>/^(?:name|tract_name|tract|area_name|neighborhood)$/i.test(h));
+ return j>=0?j:0;
+}
+
 function valueColumns(headers:string[]):number[] {
- return headers.map((h,j)=>({h,j})).filter(({h,j})=>j>0&&!/geoid|fips|identifier|(?:^|_)(?:id|year|month|name)(?:_|$)/i.test(h)).map(({j})=>j);
+ const nameCol=nameColumn(headers);
+ return headers.map((h,j)=>({h,j})).filter(({h,j})=>j!==nameCol&&!/geoid|fips|identifier|(?:^|_)(?:id|year|month|name)(?:_|$)/i.test(h)).map(({j})=>j);
 }
 
 function numbersIn(s: string | null | undefined): string[] {
@@ -246,7 +257,7 @@ function numbersIn(s: string | null | undefined): string[] {
 }
 
 function numberTokens(s:string|null|undefined):string[] {
- return (s??"").replace(/,(?=\d{3}\b)/g,"").match(/-?\d+(?:\.\d+)?/g)??[];
+ return (s??"").replace(/,(?=\d{3}\b)/g,"").match(/(?:(?<![\w.)\]%-])-)?\d+(?:\.\d+)?/g)??[];
 }
 
 function normaliseNumber(n: string): string {
@@ -302,6 +313,15 @@ function mentions(t: string, name: string): boolean {
 
 // "in every row", "consistently", "without exception": claims a correlation can't support.
 const UNIVERSAL = /\b(?:in|across|for) (?:every|each|all(?: the)?) (?:rows?|tracts?|cases?)\b|\bconsistently\b|\bwithout exception\b|\bholds? (?:across|for) (?:the )?(?:full|whole|entire) list\b/i;
+
+const PATTERN = /correlat|associat|pattern|relationship|higher|lower|\bmore\b|fewer|increas|decreas|\brise|\brose|\bfall|\bfell|\btend/i;
+
+// Dashes become "-"; "most recent" is about time, not rank; "ranked 1st through 5th" describes the order.
+function normaliseText(original:string):string {
+ return expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-")
+  .replace(/\bmost recent\b/gi,"latest")
+  .replace(/\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third)\s+(?:through|to)\s+(?:\d{1,2}(?:st|nd|rd|th)|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\b/gi,"in order");
+}
 
 // Splits a sentence into clauses that each carry at most one rank claim:
 // "X ranked second in violations at 608.4 and second in blood pressure at 60.1%".

@@ -1,7 +1,15 @@
 import { z } from "zod";
 
 // What the Planner returns.
-export const PlanSchema = z.object({
+const OUTPUTS = ["ranking", "comparison", "trend", "list"];
+// A refusal has nothing to analyse, so its analysis, measures and output are not held to the plan shape
+// (recorded Q24 reply: analysis.basis "none", no rank_measure).
+const refusalShape = (v: unknown) => {
+  if (!v || typeof v !== "object" || (v as { in_scope?: unknown }).in_scope !== false) return v;
+  const o = v as Record<string, unknown>;
+  return { ...o, analysis: undefined, measures: [], years: null, output: OUTPUTS.includes(o.output as string) ? o.output : "list" };
+};
+export const PlanSchema = z.preprocess(refusalShape, z.object({
   in_scope: z.boolean(),
   scope_limit: z.enum(["place", "personal", "non_public"]).optional().nullable(),
   out_of_scope_reason: z.string().optional().nullable(),
@@ -28,7 +36,7 @@ export const PlanSchema = z.object({
 })
   // A refusal has nothing to map, so the model may leave geography empty; an in-scope plan may not.
   .superRefine((v, ctx) => { if (v.in_scope && !v.geography) ctx.addIssue({ code: "custom", path: ["geography"], message: "Required for an in-scope plan" }); })
-  .transform((v) => ({ ...v, geography: v.geography ?? "city" }));
+  .transform((v) => ({ ...v, geography: v.geography ?? "city" })));
 export type Plan = z.infer<typeof PlanSchema>;
 
 // What the Finder picks for each measure.

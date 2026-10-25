@@ -71,7 +71,9 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     SqlSchema,
     8000,
   );
-  const sql = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? inspectionSummarySql(ctx.runId,question,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
+  const drafted = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? inspectionSummarySql(ctx.runId,question,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
+  const sql = fullRunId(drafted, ctx.runId);
+  if (sql !== drafted) await ctx.trace.log({ agent: "joiner", action: "run_id", status: "info", note: `The query named this run by a shortened id; corrected to '${ctx.runId}'.` });
   const chk = checkSql(sql, "reader");
   if (!chk.ok) throw new Error(`refused the Joiner's SQL: ${chk.reason}`);
   const result = await ctx.zetaris.query(sql, p.geography==="city"?1000:200);
@@ -105,4 +107,11 @@ export function inspectionSummarySql(runId:string,question:string,p:Plan,wired:W
  const cte=`WITH ranked AS (SELECT geoid, entity_key, value AS inspection_score, ROW_NUMBER() OVER (PARTITION BY entity_key ORDER BY event_date DESC NULLS LAST, record_id DESC) AS rn FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}'), latest AS (SELECT geoid, entity_key, inspection_score FROM ranked WHERE rn=1 AND inspection_score IS NOT NULL) `;
  if(threshold)return cte+`SELECT t.name, SUM(CASE WHEN l.inspection_score < ${Number(threshold)} THEN 1 ELSE 0 END) AS below_threshold_count, COUNT(l.entity_key) AS total_inspected_establishments, t.geoid FROM fw_pg.tracts t LEFT JOIN latest l ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY below_threshold_count DESC,t.name`;
  if(/\b(average|mean)\b/i.test(question))return cte+"SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, t.geoid FROM latest l JOIN fw_pg.tracts t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name";
+}
+
+// The model sometimes writes this run's id in its short form (r_28edaa for r_20261025_28edaa, 25 Oct Q10),
+// which matches nothing. Only the short form of this run's own id is corrected.
+export function fullRunId(sql: string, runId: string): string {
+  const short = `r_${runId.split("_").pop()}`;
+  return short === runId ? sql : sql.replace(new RegExp(`'${short}'`, "g"), `'${runId}'`);
 }

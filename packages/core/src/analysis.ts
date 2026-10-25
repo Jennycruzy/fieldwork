@@ -38,13 +38,16 @@ export function rateArithmeticChecks(result:{headers:string[];rows:(string|null)
   const scale=/10_?000/.test(h)?10000:1000;
   const adult=/adult|18plus/i.test(h);
   const denominator=headers.findIndex(v=>!/per_|rate|corr/i.test(v)&&(adult?/adult_population|totalpop18plus|^adults$|denominator/i:/total_?population|resident_population|^population$|^residents$|denominator/i).test(v));
-  const candidates=headers.map((v,j)=>({j,v,score:tokens(v).filter(w=>tokens(h).includes(w)).length})).filter(x=>x.j!==i&&!/per_|rate|corr|population|geoid|fips/i.test(x.v)&&(/count|^n_|^n$/i.test(x.v))).sort((a,b)=>b.score-a.score);
-  const numerator=candidates[0]?.j??-1;
-  const ok=numerator>=0&&denominator>=0&&rows.length>0&&rows.every(r=>{
+  // Any displayed count column may be the numerator ("code_violations", "violation_count", "n_311"), as long as
+  // it reproduces every displayed rate. A tract with no events may show an empty count beside a 0 rate.
+  const candidates=headers.map((v,j)=>({j,v,score:tokens(v).filter(w=>tokens(h).includes(w)).length})).filter(x=>x.j!==i&&!/per_|rate|corr|population|totalpop|prevalence|pct|percent|geoid|fips|paired|name/i.test(x.v)&&(/count|^n_|^n$/i.test(x.v)||x.score>0)).sort((a,b)=>b.score-a.score);
+  const reproduces=(numerator:number)=>denominator>=0&&rows.length>0&&rows.every(r=>{
    const n=r[numerator],d=r[denominator],actual=r[i];
    if(d==null||Number(d)<=0)return actual==null;
-   return n!=null&&actual!=null&&Math.abs(Number(actual)-Number(n)/Number(d)*scale)<=1e-5;
+   if(n==null)return actual!=null&&Number(actual)===0;
+   return actual!=null&&Math.abs(Number(actual)-Number(n)/Number(d)*scale)<=1e-5;
   });
+  const ok=candidates.some(c=>reproduces(c.j));
   out.push({id:`rate_arithmetic_${i}`,ok,detail:ok?`${h}: recomputed every displayed rate from raw counts, its population denominator and scaling by ${scale}.`:`${h}: retain the raw count and matching population denominator and compute count * ${scale}.0 / population; missing or zero populations produce NULL.`});
  }
  return out;

@@ -52,8 +52,7 @@ export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: strin
   }
   const remembered = chosen.flatMap((c) => recall(ctx.memory, `Dataset "${c.candidate.title}" wiring filter fields`, { kinds: ["wiring", "quality"], topN: 2 }));
   ctx.recalled.push(...remembered);
-  const { value } = await ctx.models.wirer.json(
-    [
+  const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
       {
         role: "system",
         content: `${SYSTEM_BASE}
@@ -76,15 +75,12 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
           (remembered.length ? "\n" + dataBlock("memory_from_earlier_runs", remembered.map((r) => r.content)) : "") +
           (revision ? `\nThe Evaluator asked: ${revision}` : ""),
       },
-    ],
-    WiringSchema,
-    1500,
-  );
+    ];
+  const { value } = await ctx.models.wirer.json(messages, WiringSchema, 1500);
 
-  const out: Wired[] = [];
-  for (const w of value.sources) {
+  const build = async (w: (typeof value.sources)[number]): Promise<Wired | undefined> => {
     const c = chosen.find((x) => x.measureId === w.measure_id);
-    if (!c) continue;
+    if (!c) return undefined;
     const known = new Set(c.fields.map((f) => f.name));
     const fields = w.fields.filter((f) => known.has(f) && !privateField.test(f));
     const label = `${c.measureId}_${c.candidate.kind === "arcgis_layer" ? "city" : "cdc"}${version > 1 ? `_v${version}` : ""}`;
@@ -93,7 +89,22 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const request=String(ctx.world?.entities().find(e=>e.type==="run")?.attrs.question??p.measures.map(m=>m.describe).join(" "));
     const sourceWhere=roles.valueKind==="score"?inspectionSourceWhere(w.where,request):w.where;
     if(sourceWhere!==w.where)await ctx.trace.log({agent:"wirer",action:"filter_alignment",status:"info",note:"Retrieve inspection histories before selecting latest scores; unrequested status and score filters were removed."});
-    out.push(c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, sourceWhere, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label));
+    return c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, sourceWhere, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label);
+  };
+  const out: Wired[] = [];
+  for (const w of value.sources) { const built = await build(w); if (built) out.push(built); }
+  // A filter that matched nothing on a source that has records gets one more try, with the source's real values
+  // (Q17 on 25 Oct guessed TYPE values the shelter layer does not have, three times).
+  const hints = await emptyFilterHints(chosen, out);
+  if (hints.size) {
+    await ctx.trace.log({ agent: "wirer", action: "filter_values", status: "info", note: [...hints.values()].join(" ") });
+    const again = await ctx.models.wirer.json([...messages, { role: "assistant", content: JSON.stringify(value) }, { role: "user", content: `${[...hints.values()].join("\n")}\nReturn the full shape again. Filter only on values that exist in the source, or use no category filter when none of them fits the request.` }], WiringSchema, 1500);
+    for (const w of again.value.sources) {
+      const i = out.findIndex((o) => o.measureId === w.measure_id);
+      if (i < 0 || !hints.has(w.measure_id)) continue;
+      const built = await build(w);
+      if (built) out[i] = built;
+    }
   }
   for(const w of out) {
     const c=chosen.find((c)=>c.measureId===w.measureId);
@@ -135,6 +146,25 @@ async function wireSocrata(ctx: Ctx, c: Chosen, modelWhere: string, fields: stri
   }
   await ctx.trace.log({ agent: "wirer", action: "count", status: zetarisCount === sourceCount ? "ok" : "error", note: `${label}: ${zetarisCount} rows in Zetaris, ${sourceCount} at the source`, sql: `SELECT COUNT(*) FROM session.${table}`, zetarisMs: z.ms, rows: zetarisCount });
   return { measureId: c.measureId, measure: c.measure, label, title: c.candidate.title, shape: "socrata_list", tables: [table], fields: select, where, sourceCount, zetarisCount, capped: false, excludedTestRecords: 0, sourceUrl: c.candidate.url };
+}
+
+export async function emptyFilterHints(chosen: Chosen[], out: Wired[]): Promise<Map<string, string>> {
+  const hints = new Map<string, string>();
+  for (const o of out) {
+    const c = chosen.find((x) => x.measureId === o.measureId);
+    if (!c || c.candidate.kind !== "arcgis_layer" || o.sourceCount !== 0 || !o.where || o.where.trim() === "1=1") continue;
+    const layer = normaliseLayerUrl(c.candidate.url);
+    const total = await layerCount(layer, "1=1");
+    if (!total) continue;
+    const parts: string[] = [];
+    for (const f of c.fields.filter((f) => f.type === "string" && new RegExp(`\\b${f.name}\\b`, "i").test(o.where)).slice(0, 3)) {
+      const s = (await getJson(statsUrl(layer, "1=1", f.name))) as { features?: { attributes: Record<string, unknown> }[] };
+      const values = (s.features ?? []).map((x) => ({ v: String(x.attributes[f.name] ?? ""), n: Number(x.attributes.n ?? 0) })).filter((x) => x.v).sort((a, b) => b.n - a.n).slice(0, 25);
+      if (values.length) parts.push(`${f.name} values in the source: ${values.map((x) => `'${x.v}' (${x.n})`).join(", ")}.`);
+    }
+    hints.set(o.measureId, `The filter ${o.where} on "${o.title}" matched 0 of its ${total.toLocaleString("en-US")} records.${parts.length ? " " + parts.join(" ") : ""}`);
+  }
+  return hints;
 }
 
 export async function wireArcgis(ctx: Ctx, c: Chosen, modelWhere: string, fields: string[], groupField: string | undefined, label: string): Promise<Wired> {
