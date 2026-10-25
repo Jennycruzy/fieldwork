@@ -121,7 +121,10 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const missing: string[] = [];
   for (const original of texts) {
     const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
-    for (const n of numbersIn(withoutNames(spellNumbers(knownIdentifiers(t, facts)), names))) if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(n, values)) missing.push(n);
+    for (const raw of numberTokens(withoutNames(spellNumbers(knownIdentifiers(t, facts)), names))) {
+      const n=normaliseNumber(raw);
+      if (!values.has(n) && !isYear(n) && !isSmallCount(n) && !nearAny(raw, values) && !derivedNumber(raw, headers, rows)) missing.push(n);
+    }
   }
 
   // Ranking words must match the row order. Rows come sorted by the query; tied values (same first
@@ -189,8 +192,28 @@ function rowClauses(text: string, names: string[]): string[] {
   });
 }
 
+// Derived claims need a reproducible operation within one numeric measure column.
+function derivedNumber(text: string, headers: string[], rows: (string|null)[][]): boolean {
+ const target=Number(text),places=(text.split(".")[1]??"").length;
+ const equal=(x:number)=>Number.isFinite(x)&&Number(x.toFixed(places))===target;
+ for(let j=1;j<headers.length;j++) {
+  if(/geoid|fips|identifier|(?:^|_)id$/i.test(headers[j]!))continue;
+  const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
+  if(!cells.length)continue;
+  if(equal(cells.reduce((a,b)=>a+b,0)))return true;
+  for(const a of cells)for(const b of cells) {
+   if(equal(b-a)||(a!==0&&equal((b-a)/a*100)))return true;
+  }
+ }
+ return false;
+}
+
 function numbersIn(s: string | null | undefined): string[] {
-  return ((s ?? "").replace(/,(?=\d{3}\b)/g, "").match(/-?\d+(?:\.\d+)?/g) ?? []).map(normaliseNumber);
+  return numberTokens(s).map(normaliseNumber);
+}
+
+function numberTokens(s:string|null|undefined):string[] {
+ return (s??"").replace(/,(?=\d{3}\b)/g,"").match(/-?\d+(?:\.\d+)?/g)??[];
 }
 
 function normaliseNumber(n: string): string {

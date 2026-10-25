@@ -160,3 +160,21 @@ it("recognizes shelter tract lists including the Oxford comma",()=>{
   expect(checkDraft([text],a.headers,a.rows).ok).toBe(true);
  expect(checkDraft(["Tract 56.05 has 54.03 shelters."],a.headers,a.rows).ok).toBe(false);
 });
+
+it("verifies sums, differences and percent changes from recorded monthly cells",()=>{
+ const a=recorded("e64b68");
+ const cells=a.rows.map((r:string[])=>Number(r[1]));
+ const sum=cells.reduce((x:number,y:number)=>x+y,0);
+ const difference=cells[6]-cells[1],change=difference/cells[1]*100;
+ for(const text of [`The published months total ${sum} calls.`,`Calls increased by ${difference} from February to July.`,`Calls increased by ${change.toFixed(2)}%.`])
+  expect(checkDraft([text],a.headers,a.rows).missingNumbers).toEqual([]);
+ expect(checkDraft(["Calls increased by 32.617493%."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["The monthly total was 99999999 calls."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["A derived change is 11.11%."],["month","count"],[["1","0"],["2",null]]).ok).toBe(false);
+});
+
+it("uses the stated precision and does not derive across unrelated columns",()=>{
+ expect(checkDraft(["The change is 33.33%."],["month","calls"],[["Jan","300"],["Feb","400"]]).ok).toBe(true);
+ expect(checkDraft(["The change is 33.30%."],["month","calls"],[["Jan","300"],["Feb","400"]]).ok).toBe(false);
+ expect(checkDraft(["The change is 12345."],["name","calls","population"],[["A","12000","345"],["B","56000","789"]]).ok).toBe(false);
+});

@@ -71,7 +71,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     SqlSchema,
     8000,
   );
-  const sql = value.sql.trim().replace(/;\s*$/, "");
+  const sql = monthlySummarySql(ctx.runId, question, p, wired) ?? value.sql.trim().replace(/;\s*$/, "");
   const chk = checkSql(sql, "reader");
   if (!chk.ok) throw new Error(`refused the Joiner's SQL: ${chk.reason}`);
   const result = await ctx.zetaris.query(sql, 200);
@@ -82,4 +82,12 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     for(const s of ctx.world.entities().filter((e)=>e.type==="source")) await ctx.world.relate({from:finding.id,type:"joins to",to:s.id,context:s.id,source});
   }
   return { sql, explain: value.explain, result };
+}
+
+export function monthlySummarySql(runId:string,question:string,p:Plan,wired:Wired[]):string|undefined {
+ if(p.geography!=="city"||p.output!=="trend"||!/\bmonth/i.test(question)||wired.length!==1||!wired[0]?.normalized||wired[0].valueKind!=="count")return;
+ const w=wired[0];
+ const from=p.years?.from,to=p.years?.to;
+ const years=[from?`year >= ${from}`:undefined,to?`year <= ${to}`:undefined].filter(Boolean);
+ return `SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}' AND month IS NOT NULL${years.length?" AND "+years.join(" AND "):""} GROUP BY year, month ORDER BY year, month`;
 }
