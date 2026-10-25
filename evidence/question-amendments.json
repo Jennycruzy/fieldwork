@@ -1,0 +1,18 @@
+{
+  "amendments": [
+    {
+      "id": "Q11",
+      "approved_by": "owner",
+      "approved_at": "2026-10-25",
+      "reason": "Montgomery's 911 Calls source is a nonspatial monthly summary with no tract or point locations (evidence/sources/observations-live.json), so per-tract counts cannot be produced from public data. The original expected outcome asked for an impossible answer; an honest stop that names the source and the missing locations is the correct product behaviour. Question text is unchanged.",
+      "from": {
+        "expected": "answered",
+        "answer_shape": "Aggregate call counts by tract, call-date definition and coverage; distinguish calls from confirmed incidents and omit personal details."
+      },
+      "to": {
+        "expected": "stopped-honestly",
+        "answer_shape": "Stop honestly: the 911 source publishes no tract locations, so tract counts cannot be made; name the source and the reason, invent no tract rows, omit personal details."
+      }
+    }
+  ]
+}

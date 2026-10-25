@@ -18,6 +18,14 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
   const expected:Record<string,RegExp>={Q21:/Montgomery|Birmingham|scope|place/i,Q22:/predict|forecast|price|future|financial/i,Q23:/person|individual|private|medical|named|aggregate/i,Q24:/private|bank|financial|account/i,Q25:/medical|health|diagnos|prescri|care|personal/i};
   check("Refusal explains this scope limit",(expected[q.id]??/scope/i).test(a.message??""));return {passed:reasons.length===0,reasons,checks};
  }
+ if(q.expected==="stopped-honestly") {
+  const m=a.message??"";
+  check("Stopped instead of answering",run.status!=="answered");if(run.status==="answered")reasons.push("Actual status: answered");
+  check("No invented answer or result rows",!draft&&!rows.length);
+  check("Names the requested source",/911/.test(m));
+  check("Explains the missing tract locations",/without tract locations|no tract locations|tract counts cannot/i.test(m));
+  return {passed:reasons.length===0,reasons,checks};
+ }
  check("Answered successfully",run.status==="answered");if(run.status!=="answered")reasons.push(`Actual status: ${run.status}. ${a.message??""}`);check("Nonempty reproducible result",rows.length>0&&!!sql&&!!a.view);check("Sources cited",sources.length>0);
  if(!rows.length||!draft){reasons.push(a.message??"No supported answer was produced");return {passed:false,reasons,checks};}
  const facts=[...(a.checks??[]).map(c=>c.detail),...sources.map(s=>s.filter),`Evaluator rounds: ${run.rounds}`];
@@ -128,4 +136,15 @@ export function monthNumber(value:string|null|undefined):number {
  const names=["january","february","march","april","may","june","july","august","september","october","november","december"];
  const index=names.findIndex(name=>new RegExp(`\\b(?:${name}|${name.slice(0,3)})\\b`,"i").test(text));
  return index<0?NaN:index+1;
+}
+export function checkFrozen(original:QuestionCase[],current:QuestionCase[],amendments:{id:string;from:{expected:string;answer_shape:string};to:{expected:string;answer_shape:string}}[]):string|undefined {
+ if(original.length!==current.length)return "Question count changed";
+ for(const [i,o] of original.entries()) {
+  const q=current[i]!;if(q.id!==o.id||q.question!==o.question)return `Question ${o.id} text or order changed`;
+  const amend=amendments.find(x=>x.id===o.id);
+  const want=amend?(amend.from.expected===o.expected&&amend.from.answer_shape===o.answer_shape?amend.to:undefined):o;
+  if(!want)return `Amendment for ${o.id} does not match the original`;
+  if(q.expected!==want.expected||q.answer_shape!==want.answer_shape)return `Question ${o.id} expectation changed without a recorded amendment`;
+ }
+ if(amendments.some(x=>!original.some(o=>o.id===x.id)))return "Amendment names an unknown question";
 }
