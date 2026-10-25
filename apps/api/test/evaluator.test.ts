@@ -24,3 +24,23 @@ test("a later passing score replaces an older failing score before threshold cou
  expect(latestInspectionCheck("latest score below 85",observations,{headers,rows:[["A","0","1",geo]]}).ok).toBe(true);
  expect(latestInspectionCheck("latest score below 85",observations,{headers,rows:[["A","1","1",geo]]}).ok).toBe(false);
 });
+
+import {pairedMembershipCheck,categoryTotalsCheck} from "../src/agents/evaluator.js";
+test("the actual missing paired tracts cannot be approved as a complete cohort",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261025_274176.run.json","utf8")).answer;
+ const ref=JSON.parse(readFileSync("evidence/runs/r_20261025_274176.reference.json","utf8"));
+ const h=ref.health.find((h:{headers:string[]})=>h.headers.includes("bphigh_crudeprev"));
+ expect(a.rows).toHaveLength(66);
+ expect(pairedMembershipCheck(h.headers,h.rows,a,"residents").ok).toBe(false);
+ const geo=h.headers.indexOf("tractfips"),pop=h.headers.indexOf("totalpopulation"),bp=h.headers.indexOf("bphigh_crudeprev");
+ const rows=h.rows.filter((r:(string|null)[])=>r[pop]!=null&&Number(r[pop])>0&&r[bp]!=null).map((r:string[])=>[r[geo],"0",r[bp]]);
+ expect(pairedMembershipCheck(h.headers,h.rows,{headers:["geoid","count","blood_pressure_prevalence"],rows},"residents").ok).toBe(true);
+});
+test("200 rows cannot represent the recorded source's 250 request types",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261025_fa400e.run.json","utf8")).answer;
+ const ref=JSON.parse(readFileSync("evidence/runs/r_20261025_fa400e.reference.json","utf8"));
+ const categories=ref.observations[0].categories;
+ expect(categories).toHaveLength(250);expect(a.rows).toHaveLength(200);
+ expect(categoryTotalsCheck(categories,a).ok).toBe(false);
+ expect(categoryTotalsCheck(categories,{headers:["category","record_count"],rows:categories}).ok).toBe(true);
+});

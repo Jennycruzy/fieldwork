@@ -74,7 +74,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
   const sql = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? inspectionSummarySql(ctx.runId,question,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
   const chk = checkSql(sql, "reader");
   if (!chk.ok) throw new Error(`refused the Joiner's SQL: ${chk.reason}`);
-  const result = await ctx.zetaris.query(sql, 200);
+  const result = await ctx.zetaris.query(sql, p.geography==="city"?1000:200);
   await ctx.trace.log({ agent: "joiner", action: "query", status: "ok", note: value.explain ?? "ran the analysis query", sql, zetarisMs: result.ms, rows: result.rows.length });
   if(ctx.world) {
     const source=provenance(ctx,"joiner");

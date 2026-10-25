@@ -59,6 +59,19 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     const observed=await ctx.zetaris.query(`SELECT geoid,entity_key,event_date,value,record_id FROM fw_pg.tract_observations WHERE run_id='${ctx.runId}' AND source='${w.label}'`,10000);
     checks.push(latestInspectionCheck(question,observed.rows,joined.result));
   }
+  if(p.analysis?.relationship) {
+    const health=wired.find(w=>w.shape==="socrata_list"&&w.fields.includes("tractfips")&&w.fields.some(f=>f.endsWith("_crudeprev")))??wired.find(w=>w.shape==="socrata_list"&&w.fields.includes("tractfips"));
+    if(health) {
+      const fields=health.fields.filter(f=>/^(tractfips|totalpopulation|totalpop18plus)$|^[a-z0-9_]+_crudeprev$/.test(f));
+      const source=await ctx.zetaris.query(`SELECT ${fields.join(",")} FROM session.${health.tables[0]}`,1000);
+      checks.push(pairedMembershipCheck(source.headers,source.rows,joined.result,p.analysis.denominator));
+    }
+  }
+  if(p.geography==="city"&&wired.length===1&&wired[0]?.normalized&&/category|type|kind|grp/i.test(joined.result.headers[0]??"")) {
+    const w=wired[0];
+    const source=await ctx.zetaris.query(`SELECT category,SUM(value) FROM fw_pg.tract_observations WHERE run_id='${ctx.runId}' AND source='${w.label}' GROUP BY category`,10000);
+    checks.push(categoryTotalsCheck(source.rows,joined.result));
+  }
   for (const c of checks) await ctx.trace.log({ agent: "evaluator", action: `check:${c.id}`, status: c.ok ? "ok" : "error", note: c.detail });
 
   for (const [id, code] of [["bridge_match", "JOIN_WEAK"], ["sample_size", "SMALL_SAMPLE"]] as const) {
@@ -106,7 +119,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     8000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
-  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","latest_source_selection","latest_inspection_values"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
+  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
   if (empty && value.verdict === "APPROVE") {
     value.verdict = "REVISE";
     value.target = empty.id === "analysis_basis" ? "plan" : empty.id==="latest_source_selection"||(empty.id==="has_rows"&&wired.some(w=>w.sourceCount===0)) ? "wire" : "join";
@@ -161,4 +174,23 @@ export function latestInspectionCheck(question:string,observations:(string|null)
   return Number(r[count])===scores.length&&Math.abs(Number(r[measure])-expected)<1e-5;
  });
  return {id:"latest_inspection_values",ok,detail:ok?"Latest-per-establishment scores, sample sizes and thresholds independently recompute from normalized inspection histories.":"Latest inspection output did not match independently selected establishment scores; select latest before excluding missing scores or applying thresholds."};
+}
+
+export function pairedMembershipCheck(headers:string[],source:(string|null)[][],result:{headers:string[];rows:(string|null)[][]},denominator:string):CheckResult {
+ const pop=headers.indexOf(denominator==="adults"?"totalpop18plus":"totalpopulation"),geo=headers.indexOf("tractfips");
+ const metrics=headers.map((h,j)=>({h,j})).filter(({h})=>h.endsWith("_crudeprev")).filter(({h})=>{
+  const name=h.replace(/_crudeprev$/,"");
+  const re=name==="bphigh"?/blood|hypertens|(?:^|_)bp(?:_|$)/i:name==="casthma"?/asthma/i:new RegExp(name,"i");
+  return result.headers.some(v=>!/corr/i.test(v)&&re.test(v));
+ });
+ const expected=new Set(source.filter(r=>pop>=0&&r[pop]!=null&&Number(r[pop])>0&&metrics.every(({j})=>r[j]!=null&&r[j]!==""&&Number.isFinite(Number(r[j])))).map(r=>r[geo]));
+ const actualGeo=result.headers.findIndex(h=>/^(geoid|tractfips)$/i.test(h)),actual=result.rows.map(r=>r[actualGeo]);
+ const ok=geo>=0&&pop>=0&&actualGeo>=0&&expected.size>0&&actual.length===expected.size&&new Set(actual).size===actual.length&&actual.every(id=>expected.has(id));
+ return {id:"paired_membership",ok,detail:ok?`All ${expected.size} population-eligible tracts appear exactly once in the paired result.`:`Expected ${expected.size} eligible tracts but returned ${actual.length}. Start with the complete non-missing population/health cohort, LEFT JOIN complete event totals and retain verified zero event counts.`};
+}
+export function categoryTotalsCheck(source:(string|null)[][],result:{headers:string[];rows:(string|null)[][]}):CheckResult {
+ const count=result.headers.findIndex(h=>/count|requests|^n$/i.test(h)&&!/total/i.test(h));
+ const expected=new Map(source.map(r=>[r[0],Number(r[1])]));
+ const ok=source.length<10000&&count>=0&&result.rows.length===expected.size&&new Set(result.rows.map(r=>r[0])).size===expected.size&&result.rows.every(r=>Number(r[count])===expected.get(r[0]));
+ return {id:"category_totals",ok,detail:ok?`All ${expected.size} category totals match the independently aggregated source observations.`:`The source has ${expected.size} categories; return every category and its correct weighted total before describing shares or ranks.`};
 }
