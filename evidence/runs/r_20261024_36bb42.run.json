@@ -1,0 +1,53 @@
+{
+  "id": "r_20261024_36bb42",
+  "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+  "created_at": "2026-10-24T23:08:54.123Z",
+  "finished_at": "2026-10-24T23:08:56.820Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for individual medical treatment, which cannot be answered with city records, environmental listings, or CDC health estimates.",
+        "denominator": "none",
+        "rank_measure": "none",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "out_of_scope_reason": "Request is for personal medical diagnosis and prescription advice, not a question about Montgomery, Alabama public data."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_36bb42",
+          "type": "run",
+          "attrs": {
+            "question": "Diagnose my chest pain and tell me what prescription medicine to take."
+          },
+          "source": {
+            "at": "2026-10-24T23:08:54.169Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Request is for personal medical diagnosis and prescription advice, not a question about Montgomery, Alabama public data.",
+    "sources": [],
+    "memories": [],
+    "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+    "memoryWrites": [
+      {
+        "id": "mem-274",
+        "content": "World state for Diagnose my chest pain and tell me what prescription medicine to take.: [{\"id\":\"run:fieldwork:r_20261024_36bb42\",\"type\":\"run\",\"attrs\":{\"question\":\"Diagnose my chest pain and tell me what prescription medicine to take.\"}}]"
+      }
+    ]
+  }
+}

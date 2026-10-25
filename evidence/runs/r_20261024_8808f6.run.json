@@ -1,0 +1,53 @@
+{
+  "id": "r_20261024_8808f6",
+  "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+  "created_at": "2026-10-24T23:01:30.967Z",
+  "finished_at": "2026-10-24T23:01:53.665Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "No source provides listed pharmacy locations or counts, so fewest pharmacies per 10,000 residents cannot be measured or ranked.",
+        "denominator": "none",
+        "rank_measure": "fewest pharmacies per 10,000 residents",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "tract",
+      "out_of_scope_reason": "Listed pharmacies are not available in any of the three data sources: city_records covers city violations, service requests, inspections, permits, and city facilities (not a pharmacy registry); environmental_records is EPA ECHO regulated facilities; health_estimate is CDC PLACES adult health-condition prevalence, not pharmacy access. A per-10,000-residents pharmacy measure cannot be constructed for Montgomery tracts."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_8808f6",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?"
+          },
+          "source": {
+            "at": "2026-10-24T23:01:31.015Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Listed pharmacies are not available in any of the three data sources: city_records covers city violations, service requests, inspections, permits, and city facilities (not a pharmacy registry); environmental_records is EPA ECHO regulated facilities; health_estimate is CDC PLACES adult health-condition prevalence, not pharmacy access. A per-10,000-residents pharmacy measure cannot be constructed for Montgomery tracts.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+    "memoryWrites": [
+      {
+        "id": "mem-252",
+        "content": "World state for Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?: [{\"id\":\"run:fieldwork:r_20261024_8808f6\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?\"}}]"
+      }
+    ]
+  }
+}

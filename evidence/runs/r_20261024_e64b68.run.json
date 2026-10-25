@@ -1,0 +1,390 @@
+{
+  "id": "r_20261024_e64b68",
+  "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+  "created_at": "2026-10-24T22:51:39.832Z",
+  "finished_at": "2026-10-24T22:53:24.132Z",
+  "status": "partial",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT month, SUM(value) AS call_count FROM fw_pg.tract_observations WHERE run_id = 'r_20261024_e64b68' AND source = 'm1_city' GROUP BY month ORDER BY month",
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "trend",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed.",
+        "denominator": "none",
+        "rank_measure": "monthly 911 call count, ordered chronologically",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "monthly count of Montgomery 911 calls",
+          "search_terms": [
+            "911 calls",
+            "emergency calls",
+            "service requests"
+          ]
+        }
+      ],
+      "geography": "city",
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "1",
+        "47828.0"
+      ],
+      [
+        "2",
+        "44752.0"
+      ],
+      [
+        "3",
+        "49847.0"
+      ],
+      [
+        "4",
+        "50027.0"
+      ],
+      [
+        "5",
+        "53299.0"
+      ],
+      [
+        "6",
+        "50357.0"
+      ],
+      [
+        "7",
+        "59349.0"
+      ],
+      [
+        "8",
+        "54913.0"
+      ],
+      [
+        "9",
+        "53450.0"
+      ],
+      [
+        "10",
+        "49794.0"
+      ],
+      [
+        "11",
+        "46670.0"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_e64b68",
+    "world": {
+      "edges": [
+        {
+          "id": "acb6e107beeb009db4038c1c6337f6615e06cf581c2e98aaceea6dc1fd049233",
+          "to": "source:r_20261024_e64b68:m1_city",
+          "from": "measure:r_20261024_e64b68:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-24T22:51:39.881Z"
+        },
+        {
+          "id": "d6eb631d2130bf8b6ddf88f1ef1ad3a83b0f7e3d7a922cb4ca64fd9c321f0146",
+          "to": "source:r_20261024_e64b68:m1_city",
+          "from": "finding:r_20261024_e64b68:query",
+          "type": "joins to",
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "joiner"
+          },
+          "context": "source:r_20261024_e64b68:m1_city",
+          "validFrom": "2026-10-24T22:51:39.881Z"
+        },
+        {
+          "id": "c03bb02b03095c56e50a27840be1377aae28733038b23dd577f7b9cb8e478546",
+          "to": "finding:r_20261024_e64b68:query",
+          "from": "finding:r_20261024_e64b68:approval-1",
+          "type": "supports",
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "evaluator"
+          },
+          "validFrom": "2026-10-24T22:51:39.881Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_e64b68",
+          "type": "run",
+          "attrs": {
+            "question": "How did the monthly number of Montgomery 911 calls change during 2025?"
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.879Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261024_e64b68:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed.",
+              "denominator": "none",
+              "rank_measure": "monthly 911 call count, ordered chronologically",
+              "relationship": false
+            },
+            "describe": "monthly count of Montgomery 911 calls",
+            "search_terms": [
+              "911 calls",
+              "emergency calls",
+              "service requests"
+            ]
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "source:r_20261024_e64b68:m1_city",
+          "type": "source",
+          "attrs": {
+            "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+            "title": "911 Calls",
+            "fields": [
+              "FID",
+              "Year",
+              "Month",
+              "Call_Count_By_Origin"
+            ],
+            "filter": "Year = 2025",
+            "tables": [
+              "fw_e64b68_m1_city_p0"
+            ],
+            "records": 132
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "finding:r_20261024_e64b68:query",
+          "type": "finding",
+          "attrs": {
+            "sql": "SELECT month, SUM(value) AS call_count FROM fw_pg.tract_observations WHERE run_id = 'r_20261024_e64b68' AND source = 'm1_city' GROUP BY month ORDER BY month",
+            "rows": 11,
+            "headers": [
+              "month",
+              "call_count"
+            ]
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "joiner"
+          }
+        },
+        {
+          "id": "round:r_20261024_e64b68:1",
+          "type": "round",
+          "attrs": {
+            "checks": [
+              {
+                "id": "rows_m1_city",
+                "ok": true,
+                "detail": "m1_city: Zetaris rows 132 vs source's own count 132"
+              },
+              {
+                "id": "has_rows",
+                "ok": true,
+                "detail": "11 result rows"
+              },
+              {
+                "id": "measure_values",
+                "ok": true,
+                "detail": "every measure column has real values"
+              },
+              {
+                "id": "duplicates",
+                "ok": true,
+                "detail": "0 duplicate case IDs removed before tract counting."
+              },
+              {
+                "id": "source_accessed_m1_city",
+                "ok": true,
+                "detail": "911 Calls: retrieved 2026-10-24. Catalog updated 2025-08-07; retrieval is not an event or inspection date."
+              },
+              {
+                "id": "source_definition_m1_city",
+                "ok": true,
+                "detail": "Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider."
+              },
+              {
+                "id": "call_units_m1_city",
+                "ok": true,
+                "detail": "This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates."
+              },
+              {
+                "id": "source_dates_m1_city",
+                "ok": true,
+                "detail": "911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+              },
+              {
+                "id": "analysis_basis",
+                "ok": true,
+                "detail": "counts; denominator: none. Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed."
+              }
+            ],
+            "verdict": "APPROVE"
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "evaluator"
+          }
+        },
+        {
+          "id": "finding:r_20261024_e64b68:approval-1",
+          "type": "finding",
+          "attrs": {
+            "round": 1,
+            "status": "approved",
+            "reasons": [
+              "Counts are the correct basis for 'monthly number of 911 calls' in a single city; no population denominator or rate is needed.",
+              "SQL groups by month and orders chronologically, matching the requested trend/rank measure.",
+              "All 11 months present in the source are returned; no display-limit truncation.",
+              "Limit: December 2025 has no source rows, so it is not a confirmed zero; the trend covers Jan–Nov 2025 only."
+            ],
+            "instruction": null
+          },
+          "source": {
+            "at": "2026-10-24T22:51:39.881Z",
+            "run": "r_20261024_e64b68",
+            "kind": "evaluator"
+          }
+        }
+      ]
+    },
+    "answer": {
+      "points": [
+        "Call counts were recorded for 11 months of 2025 (January through November); December data was not published",
+        "Monthly counts ranged from a low of 44,752 in February to a high of 59,349 in July",
+        "Calls increased from 47,828 in January to 53,299 in May, then dipped to 46,670 in November"
+      ],
+      "caveats": [
+        "December 2025 data is not published; absence does not mean zero calls",
+        "These are raw call counts, not verified incident counts or crime statistics",
+        "Model-based health estimates from CDC are not present in this dataset",
+        "I could not fully support an answer after the checks. Here is what the data shows and what remains uncertain. Review the flagged checks below."
+      ],
+      "headline": "Montgomery 911 calls rose from 44,752 in February to a peak of 59,349 in July 2025, then fell to 46,670 in November",
+      "how_sure": "Some draft statements could not be checked. Only supported statements are shown; review the flagged checks."
+    },
+    "checks": [
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 132 vs source's own count 132"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "11 result rows"
+      },
+      {
+        "id": "measure_values",
+        "ok": true,
+        "detail": "every measure column has real values"
+      },
+      {
+        "id": "duplicates",
+        "ok": true,
+        "detail": "0 duplicate case IDs removed before tract counting."
+      },
+      {
+        "id": "source_accessed_m1_city",
+        "ok": true,
+        "detail": "911 Calls: retrieved 2026-10-24. Catalog updated 2025-08-07; retrieval is not an event or inspection date."
+      },
+      {
+        "id": "source_definition_m1_city",
+        "ok": true,
+        "detail": "Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider."
+      },
+      {
+        "id": "call_units_m1_city",
+        "ok": true,
+        "detail": "This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates."
+      },
+      {
+        "id": "source_dates_m1_city",
+        "ok": true,
+        "detail": "911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+      },
+      {
+        "id": "analysis_basis",
+        "ok": true,
+        "detail": "counts; denominator: none. Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed."
+      },
+      {
+        "id": "answer_draft",
+        "ok": false,
+        "detail": "Unsupported statements were omitted after the Writer rewrite; the answer remains partial."
+      }
+    ],
+    "headers": [
+      "month",
+      "call_count"
+    ],
+    "sources": [
+      {
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+        "label": "m1_city",
+        "title": "911 Calls",
+        "filter": "Year = 2025",
+        "licence": "No explicit license supplied in the catalog",
+        "records": 132,
+        "accessedAt": "2026-10-24T22:52:05.500Z",
+        "licenceUrl": "https://www.arcgis.com/home/item.html?id=1fc59cd352224e80bab3bf8a99da907c",
+        "description": "This dataset shows the number of 911 calls per month by category, origin, and phone service provider.",
+        "sourceCount": 132,
+        "catalogUpdatedAt": "2025-08-07T16:08:08.000Z"
+      }
+    ],
+    "memories": [],
+    "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-241",
+        "content": "For \"monthly count of Montgomery 911 calls\" in Montgomery, AL, Fieldwork chose the dataset \"911 Calls\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer): Provides monthly 911 call counts for Montgomery, AL, and is the newest release in the series."
+      },
+      {
+        "id": "mem-242",
+        "content": "Dataset \"911 Calls\" wires into Zetaris as arcgis_table; filter Year = 2025; fields FID, Year, Month, Call_Count_By_Origin; 132 of 132 source records read."
+      },
+      {
+        "id": "mem-243",
+        "content": "World state for How did the monthly number of Montgomery 911 calls change during 2025?: [{\"id\":\"run:fieldwork:r_20261024_e64b68\",\"type\":\"run\",\"attrs\":{\"question\":\"How did the monthly number of Montgomery 911 calls change during 2025?\"}},{\"id\":\"measure:r_20261024_e64b68:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"monthly count of Montgomery 911 calls\",\"kind\":\"city_records\",\"search_terms\":[\"911 calls\",\"emergency calls\",\"service requests\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed.\",\"rank_measure\":\"monthly 911 call count, ordered chronologically\"}}},{\"id\":\"source:r_20261024_e64b68:m1_city\",\"type\":\"source\",\"attrs\":{\"title\":\"911 Calls\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"tables\":[\"fw_e64b68_m1_city_p0\"],\"filter\":\"Year = 2025\",\"fields\":[\"FID\",\"Year\",\"Month\",\"Call_Count_By_Origin\"],\"records\":132}},{\"id\":\"finding:r_20261024_e64b68:query\",\"type\":\"finding\",\"attrs\":{\"sql\":\"SELECT month, SUM(value) AS call_count FROM fw_pg.tract_observations WHERE run_id = 'r_20261024_e64b68' AND source = 'm1_city' GROUP BY month ORDER BY month\",\"headers\":[\"month\",\"call_count\"],\"rows\":11}},{\"id\":\"round:r_20261024_e64b68:1\",\"type\":\"round\",\"attrs\":{\"verdict\":\"APPROVE\",\"checks\":[{\"id\":\"rows_m1_city\",\"ok\":true,\"detail\":\"m1_city: Zetaris rows 132 vs source's own count 132\"},{\"id\":\"has_rows\",\"ok\":true,\"detail\":\"11 result rows\"},{\"id\":\"measure_values\",\"ok\":true,\"detail\":\"every measure column has real values\"},{\"id\":\"duplicates\",\"ok\":true,\"detail\":\"0 duplicate case IDs removed before tract counting.\"},{\"id\":\"source_accessed_m1_city\",\"ok\":true,\"detail\":\"911 Calls: retrieved 2026-10-24. Catalog updated 2025-08-07; retrieval is not an event or inspection date.\"},{\"id\":\"source_definition_m1_city\",\"ok\":true,\"detail\":\"Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider.\"},{\"id\":\"call_units_m1_city\",\"ok\":true,\"detail\":\"This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates.\"},{\"id\":\"source_dates_m1_city\",\"ok\":true,\"detail\":\"911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.\"},{\"id\":\"analysis_basis\",\"ok\":true,\"detail\":\"counts; denominator: none. Raw monthly counts of 911 calls directly show how call volume changed during 2025; no population denominator or cross-tract comparison is needed.\"}]}},{\"id\":\"finding:r_20261024_e64b68:approval-1\",\"type\":\"finding\",\"attrs\":{\"round\":1,\"status\":\"approved\",\"instruction\":null,\"reasons\":[\"Counts are the correct basis for 'monthly number of 911 calls' in a single city; no population denominator or rate is needed.\",\"SQL groups by month and orders chronologically, matching the requested trend/rank measure.\",\"All 11 months present in the source are returned; no display-limit truncation.\",\"Limit: December 2025 has no source rows, so it is not a confirmed zero; the trend covers Jan–Nov 2025 only.\"]}}]"
+      }
+    ]
+  }
+}

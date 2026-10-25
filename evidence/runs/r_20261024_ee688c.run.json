@@ -1,0 +1,53 @@
+{
+  "id": "r_20261024_ee688c",
+  "question": "Which Montgomery census tracts have no listed pharmacies?",
+  "created_at": "2026-10-24T22:59:03.310Z",
+  "finished_at": "2026-10-24T23:01:30.961Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question requires pharmacy location data that is not present in city_records, environmental_records, or health_estimate, so tract-level absence of pharmacies cannot be determined from the available sources.",
+        "denominator": "none",
+        "rank_measure": "pharmacy count per tract, ascending",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "tract",
+      "out_of_scope_reason": "Pharmacy locations are not available in any of the listed data sources; city_records covers city permits/violations/service requests/facilities, environmental_records covers EPA-regulated facilities, and health_estimate covers CDC health measures—none list pharmacies by census tract."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_ee688c",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have no listed pharmacies?"
+          },
+          "source": {
+            "at": "2026-10-24T22:59:03.351Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Pharmacy locations are not available in any of the listed data sources; city_records covers city permits/violations/service requests/facilities, environmental_records covers EPA-regulated facilities, and health_estimate covers CDC health measures—none list pharmacies by census tract.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Montgomery census tracts have no listed pharmacies?",
+    "memoryWrites": [
+      {
+        "id": "mem-251",
+        "content": "World state for Which Montgomery census tracts have no listed pharmacies?: [{\"id\":\"run:fieldwork:r_20261024_ee688c\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have no listed pharmacies?\"}}]"
+      }
+    ]
+  }
+}

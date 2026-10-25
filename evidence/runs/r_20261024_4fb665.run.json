@@ -1,0 +1,97 @@
+{
+  "id": "r_20261024_4fb665",
+  "question": "What were the most common types of Montgomery 311 requests in 2025?",
+  "created_at": "2026-10-24T22:39:57.531Z",
+  "finished_at": "2026-10-24T22:40:14.920Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for the most common request types, which is a workload ranking answered by raw counts of 311 requests grouped by type for 2025. No cross-tract association or correlation is requested.",
+        "denominator": "none",
+        "rank_measure": "request count, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of Montgomery 311 service requests by request type in 2025",
+          "search_terms": [
+            "311",
+            "service request",
+            "311 request"
+          ]
+        }
+      ],
+      "geography": "city",
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_4fb665",
+          "type": "run",
+          "attrs": {
+            "question": "What were the most common types of Montgomery 311 requests in 2025?"
+          },
+          "source": {
+            "at": "2026-10-24T22:39:57.568Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261024_4fb665:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for the most common request types, which is a workload ranking answered by raw counts of 311 requests grouped by type for 2025. No cross-tract association or correlation is requested.",
+              "denominator": "none",
+              "rank_measure": "request count, descending",
+              "relationship": false
+            },
+            "describe": "Count of Montgomery 311 service requests by request type in 2025",
+            "search_terms": [
+              "311",
+              "service request",
+              "311 request"
+            ]
+          },
+          "source": {
+            "at": "2026-10-24T22:39:57.569Z",
+            "run": "r_20261024_4fb665",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "ArcGIS did not return a count",
+    "sources": [],
+    "memories": [],
+    "question": "What were the most common types of Montgomery 311 requests in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-229",
+        "content": "For \"Count of Montgomery 311 service requests by request type in 2025\" in Montgomery, AL, Fieldwork chose the dataset \"Received 311 Service Requests\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0): It is the most recent official Montgomery 311 service request dataset, updated August 2025, and directly provides counts by request type."
+      },
+      {
+        "id": "mem-230",
+        "content": "World state for What were the most common types of Montgomery 311 requests in 2025?: [{\"id\":\"run:fieldwork:r_20261024_4fb665\",\"type\":\"run\",\"attrs\":{\"question\":\"What were the most common types of Montgomery 311 requests in 2025?\"}},{\"id\":\"measure:r_20261024_4fb665:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of Montgomery 311 service requests by request type in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"311\",\"service request\",\"311 request\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for the most common request types, which is a workload ranking answered by raw counts of 311 requests grouped by type for 2025. No cross-tract association or correlation is requested.\",\"rank_measure\":\"request count, descending\"}}}]"
+      }
+    ]
+  }
+}

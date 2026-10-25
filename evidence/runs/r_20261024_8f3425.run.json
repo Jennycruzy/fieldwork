@@ -1,0 +1,53 @@
+{
+  "id": "r_20261024_8f3425",
+  "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+  "created_at": "2026-10-24T23:08:20.892Z",
+  "finished_at": "2026-10-24T23:08:24.716Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Out of scope: Birmingham is a different city from Montgomery, so no listed Montgomery data source can answer this question.",
+        "denominator": "none",
+        "rank_measure": "",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "out_of_scope_reason": "The question asks about Birmingham, Alabama, but the available public data is limited to Montgomery, Alabama."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_8f3425",
+          "type": "run",
+          "attrs": {
+            "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?"
+          },
+          "source": {
+            "at": "2026-10-24T23:08:20.951Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The question asks about Birmingham, Alabama, but the available public data is limited to Montgomery, Alabama.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-270",
+        "content": "World state for Which Birmingham, Alabama census tracts had the most code violations in 2025?: [{\"id\":\"run:fieldwork:r_20261024_8f3425\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Birmingham, Alabama census tracts had the most code violations in 2025?\"}}]"
+      }
+    ]
+  }
+}

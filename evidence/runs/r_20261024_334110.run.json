@@ -1,0 +1,53 @@
+{
+  "id": "r_20261024_334110",
+  "question": "What are the current private bank balances of Montgomery homeowners?",
+  "created_at": "2026-10-24T23:08:50.222Z",
+  "finished_at": "2026-10-24T23:08:54.118Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for private financial data that none of the available datasets contain, so no measure or denominator can answer it.",
+        "denominator": "none",
+        "rank_measure": "none",
+        "relationship": false
+      },
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "out_of_scope_reason": "Private bank balances of homeowners are not available in any of the listed public data sources (city records, environmental records, or CDC health estimates), and individual financial information is not public data."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_334110",
+          "type": "run",
+          "attrs": {
+            "question": "What are the current private bank balances of Montgomery homeowners?"
+          },
+          "source": {
+            "at": "2026-10-24T23:08:50.256Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Private bank balances of homeowners are not available in any of the listed public data sources (city records, environmental records, or CDC health estimates), and individual financial information is not public data.",
+    "sources": [],
+    "memories": [],
+    "question": "What are the current private bank balances of Montgomery homeowners?",
+    "memoryWrites": [
+      {
+        "id": "mem-273",
+        "content": "World state for What are the current private bank balances of Montgomery homeowners?: [{\"id\":\"run:fieldwork:r_20261024_334110\",\"type\":\"run\",\"attrs\":{\"question\":\"What are the current private bank balances of Montgomery homeowners?\"}}]"
+      }
+    ]
+  }
+}

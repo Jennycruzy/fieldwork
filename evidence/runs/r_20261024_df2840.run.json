@@ -1,0 +1,184 @@
+{
+  "id": "r_20261024_df2840",
+  "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+  "created_at": "2026-10-24T22:31:14.786Z",
+  "finished_at": "2026-10-24T22:31:27.026Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "rates",
+        "reason": "The question asks for a ranking of tracts by code violations per 1,000 residents, which is a rate requiring a population denominator. This is an ordinary ranking, not an association or correlation question.",
+        "denominator": "residents",
+        "rank_measure": "code violations per 1,000 residents, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "code violations recorded in Montgomery in 2025, placed into census tracts by location",
+          "search_terms": [
+            "code violations",
+            "code enforcement",
+            "violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "total population by census tract to use as the per-1,000-residents denominator",
+          "search_terms": [
+            "total population",
+            "population"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261024_df2840",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?"
+          },
+          "source": {
+            "at": "2026-10-24T22:31:14.824Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261024_df2840:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks for a ranking of tracts by code violations per 1,000 residents, which is a rate requiring a population denominator. This is an ordinary ranking, not an association or correlation question.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending",
+              "relationship": false
+            },
+            "describe": "code violations recorded in Montgomery in 2025, placed into census tracts by location",
+            "search_terms": [
+              "code violations",
+              "code enforcement",
+              "violations"
+            ]
+          },
+          "source": {
+            "at": "2026-10-24T22:31:14.826Z",
+            "run": "r_20261024_df2840",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261024_df2840:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks for a ranking of tracts by code violations per 1,000 residents, which is a rate requiring a population denominator. This is an ordinary ranking, not an association or correlation question.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending",
+              "relationship": false
+            },
+            "describe": "total population by census tract to use as the per-1,000-residents denominator",
+            "search_terms": [
+              "total population",
+              "population"
+            ]
+          },
+          "source": {
+            "at": "2026-10-24T22:31:14.826Z",
+            "run": "r_20261024_df2840",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "model did not return valid JSON: sources.0.fields: Array must contain at most 12 element(s)",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-2",
+        "kind": "choice",
+        "content": "For \"count of code violations in 2025 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): The code violations dataset is the only available candidate, offering census-tract-level violation counts updated in 2025.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-43",
+        "kind": "choice",
+        "content": "For \"count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-20, confidence 0.87).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-20",
+        "kind": "choice",
+        "content": "For \"Count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 0.79).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      }
+    ],
+    "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-204",
+        "content": "For \"code violations recorded in Montgomery in 2025, placed into census tracts by location\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 1)."
+      },
+      {
+        "id": "mem-205",
+        "content": "For \"total population by census tract to use as the per-1,000-residents denominator\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 1)."
+      },
+      {
+        "id": "mem-206",
+        "content": "World state for Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?: [{\"id\":\"run:fieldwork:r_20261024_df2840\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?\"}},{\"id\":\"measure:r_20261024_df2840:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"code violations recorded in Montgomery in 2025, placed into census tracts by location\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\",\"code enforcement\",\"violations\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by code violations per 1,000 residents, which is a rate requiring a population denominator. This is an ordinary ranking, not an association or correlation question.\",\"rank_measure\":\"code violations per 1,000 residents, descending\"}}},{\"id\":\"measure:r_20261024_df2840:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"total population by census tract to use as the per-1,000-residents denominator\",\"kind\":\"health_estimate\",\"search_terms\":[\"total population\",\"population\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by code violations per 1,000 residents, which is a rate requiring a population denominator. This is an ordinary ranking, not an association or correlation question.\",\"rank_measure\":\"code violations per 1,000 residents, descending\"}}}]"
+      }
+    ]
+  }
+}

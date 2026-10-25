@@ -1,19 +1,21 @@
 {
-  "started_at": "2026-10-24T20:46:44.755Z",
+  "code_commit": "6ea39fff3bebc66b2101096521f6b1cfafacafe3",
+  "code_sha256": "19c2162ba290b469892b605f8673d920e5abbfce41b9dd3051affc7b9ac8dfd8",
+  "started_at": "2026-10-24T22:27:03.380Z",
   "question_sha256": "4c2c4bc2a1efa8ae68f36fb645c5f1120f8a71fc56f205b7b9937281061961c0",
   "complete": true,
-  "passed": 1,
+  "passed": 12,
   "total": 25,
-  "rate": 0.04,
+  "rate": 0.48,
   "results": [
     {
       "question_id": "Q01",
       "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
       "expected": "answered",
       "answer_shape": "Descending asthma prevalence table with tract identifier, percent, 2025 violation count, dates and match coverage; do not rank by violations.",
-      "run_id": "r_20261024_dac8c2",
+      "run_id": "r_20261024_393262",
       "status": "answered",
-      "elapsed_ms": 78535,
+      "elapsed_ms": 70424,
       "passed": true,
       "reasons": [],
       "checks": [
@@ -42,6 +44,10 @@
           "ok": true
         },
         {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
           "name": "Tract identifiers included",
           "ok": true
         },
@@ -55,6 +61,10 @@
         },
         {
           "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
           "ok": true
         },
         {
@@ -74,6 +84,18 @@
           "ok": true
         },
         {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
           "name": "Counts match independent Code Violations tract totals",
           "ok": true
         },
@@ -84,6 +106,10 @@
         {
           "name": "Resident denominators match source",
           "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
         }
       ]
     },
@@ -92,14 +118,11 @@
       "question": "Which Montgomery census tracts had the most code violations in 2025?",
       "expected": "answered",
       "answer_shape": "Descending raw violation counts by tract; explain that counts measure workload rather than per-resident burden.",
-      "run_id": "r_20261024_1748a0",
-      "status": "partial",
-      "elapsed_ms": 46990,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "No failed accuracy checks"
-      ],
+      "run_id": "r_20261024_cd8304",
+      "status": "answered",
+      "elapsed_ms": 179479,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -107,7 +130,7 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
@@ -123,7 +146,11 @@
         },
         {
           "name": "No failed accuracy checks",
-          "ok": false
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
         },
         {
           "name": "Tract identifiers included",
@@ -131,6 +158,10 @@
         },
         {
           "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
           "ok": true
         },
         {
@@ -146,7 +177,19 @@
           "ok": true
         },
         {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
           "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
           "ok": true
         }
       ]
@@ -156,12 +199,16 @@
       "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
       "expected": "answered",
       "answer_shape": "Descending rates plus counts, total-resident denominators, population vintage and missing or zero-denominator handling.",
-      "run_id": "r_20261024_efd90c",
-      "status": "answered",
-      "elapsed_ms": 65299,
+      "run_id": "r_20261024_df2840",
+      "status": "failed",
+      "elapsed_ms": 12243,
       "passed": false,
       "reasons": [
-        "Rate arithmetic code_violations_per_1000_residents"
+        "Failed check: Answered successfully",
+        "Actual status: failed. model did not return valid JSON: sources.0.fields: Array must contain at most 12 element(s)",
+        "Failed check: Nonempty reproducible result",
+        "Failed check: Sources cited",
+        "model did not return valid JSON: sources.0.fields: Array must contain at most 12 element(s)"
       ],
       "checks": [
         {
@@ -170,62 +217,14 @@
         },
         {
           "name": "Answered successfully",
-          "ok": true
+          "ok": false
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": true
+          "ok": false
         },
         {
           "name": "Sources cited",
-          "ok": true
-        },
-        {
-          "name": "Full draft passes numeric and rank checks",
-          "ok": true
-        },
-        {
-          "name": "No failed accuracy checks",
-          "ok": true
-        },
-        {
-          "name": "Tract identifiers included",
-          "ok": true
-        },
-        {
-          "name": "Requested source discovered",
-          "ok": true
-        },
-        {
-          "name": "Requested 2025 source period",
-          "ok": true
-        },
-        {
-          "name": "Population-adjusted rate",
-          "ok": true
-        },
-        {
-          "name": "Rate ranking order",
-          "ok": true
-        },
-        {
-          "name": "Resident denominator",
-          "ok": true
-        },
-        {
-          "name": "Raw count",
-          "ok": true
-        },
-        {
-          "name": "Resident population used",
-          "ok": true
-        },
-        {
-          "name": "Counts match independent Code Violations tract totals",
-          "ok": true
-        },
-        {
-          "name": "Rate arithmetic code_violations_per_1000_residents",
           "ok": false
         }
       ]
@@ -235,17 +234,11 @@
       "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
       "expected": "answered",
       "answer_shape": "Explain choosing population-adjusted rates for comparing tracts; show violation counts, denominator and rate alongside adult hypertension prevalence, paired-set size and association statistic; distinguish the interpretation from estimated adult counts.",
-      "run_id": "r_20261024_677bd5",
-      "status": "partial",
-      "elapsed_ms": 330135,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "No failed accuracy checks",
-        "Rate per resident",
-        "Paired size agrees with full result",
-        "Correlation recomputes from displayed paired rates"
-      ],
+      "run_id": "r_20261024_df4bd6",
+      "status": "answered",
+      "elapsed_ms": 90154,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -253,7 +246,7 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
@@ -269,7 +262,11 @@
         },
         {
           "name": "No failed accuracy checks",
-          "ok": false
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
         },
         {
           "name": "Tract identifiers included",
@@ -288,107 +285,7 @@
           "ok": true
         },
         {
-          "name": "Rates chosen on purpose",
-          "ok": true
-        },
-        {
-          "name": "Resident denominator",
-          "ok": true
-        },
-        {
-          "name": "Raw source count",
-          "ok": true
-        },
-        {
-          "name": "Rate per resident",
-          "ok": false
-        },
-        {
-          "name": "Correlation statistic",
-          "ok": true
-        },
-        {
-          "name": "Full paired sample size",
-          "ok": true
-        },
-        {
-          "name": "Paired size agrees with full result",
-          "ok": false
-        },
-        {
-          "name": "Valid correlation range",
-          "ok": true
-        },
-        {
-          "name": "Counts match independent Code Violations tract totals",
-          "ok": true
-        },
-        {
-          "name": "Health values match independent bphigh_crudeprev",
-          "ok": true
-        },
-        {
-          "name": "Correlation recomputes from displayed paired rates",
-          "ok": false
-        }
-      ]
-    },
-    {
-      "question_id": "Q05",
-      "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
-      "expected": "answered",
-      "answer_shape": "Paired tract table and correlation computed across eligible tracts using the stated resident denominator; health prevalence already measures adults; describe overall association and limitations.",
-      "run_id": "r_20261024_effb1d",
-      "status": "partial",
-      "elapsed_ms": 87349,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "No failed accuracy checks"
-      ],
-      "checks": [
-        {
-          "name": "Exact frozen question",
-          "ok": true
-        },
-        {
-          "name": "Answered successfully",
-          "ok": false
-        },
-        {
-          "name": "Nonempty reproducible result",
-          "ok": true
-        },
-        {
-          "name": "Sources cited",
-          "ok": true
-        },
-        {
-          "name": "Full draft passes numeric and rank checks",
-          "ok": true
-        },
-        {
-          "name": "No failed accuracy checks",
-          "ok": false
-        },
-        {
-          "name": "Tract identifiers included",
-          "ok": true
-        },
-        {
-          "name": "CDC health source",
-          "ok": true
-        },
-        {
-          "name": "Health estimates labeled",
-          "ok": true
-        },
-        {
-          "name": "Requested source discovered",
-          "ok": true
-        },
-        {
-          "name": "Requested 2025 source period",
+          "name": "Tract membership is not narrowed by postal labels",
           "ok": true
         },
         {
@@ -421,6 +318,18 @@
         },
         {
           "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
           "ok": true
         },
         {
@@ -436,7 +345,154 @@
           "ok": true
         },
         {
+          "name": "Rate arithmetic code_violations_per_1000_residents",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
+          "ok": true
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q05",
+      "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
+      "expected": "answered",
+      "answer_shape": "Paired tract table and correlation computed across eligible tracts using the stated resident denominator; health prevalence already measures adults; describe overall association and limitations.",
+      "run_id": "r_20261024_4fd17e",
+      "status": "answered",
+      "elapsed_ms": 82143,
+      "passed": false,
+      "reasons": [
+        "Failed check: Rate arithmetic code_violation_rate_per_1000_residents"
+      ],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent bphigh_crudeprev",
+          "ok": true
+        },
+        {
           "name": "Rate arithmetic code_violation_rate_per_1000_residents",
+          "ok": false
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
           "ok": true
         },
         {
@@ -450,15 +506,11 @@
       "question": "Which Montgomery tracts had the biggest increase in code violations from 2024 to 2025?",
       "expected": "answered",
       "answer_shape": "Both full-year counts and absolute change, sorted descending by change; percent change only with valid baseline and explicit zero-baseline handling.",
-      "run_id": "r_20261024_cf7e8c",
-      "status": "failed",
-      "elapsed_ms": 211336,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "model did not return valid JSON: JSON parse error: Unexpected non-whitespace character after JSON at position 1211 (line 1 column 1212)"
-      ],
+      "run_id": "r_20261024_8ffad2",
+      "status": "answered",
+      "elapsed_ms": 103414,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -466,14 +518,66 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "2024 count",
+          "ok": true
+        },
+        {
+          "name": "2025 count",
+          "ok": true
+        },
+        {
+          "name": "Absolute change",
+          "ok": true
+        },
+        {
+          "name": "Correct differences",
+          "ok": true
+        },
+        {
+          "name": "Changes descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Both years match independent tract counts",
           "ok": true
         }
       ]
@@ -483,14 +587,15 @@
       "question": "How many Montgomery code violations have been recorded each month so far in 2026?",
       "expected": "answered",
       "answer_shape": "Chronological monthly counts with latest source date, incomplete-month warning, test-record exclusions and no projection to a full year.",
-      "run_id": "r_20261024_c3ba34",
-      "status": "budget",
-      "elapsed_ms": 38867,
+      "run_id": "r_20261024_965af0",
+      "status": "partial",
+      "elapsed_ms": 123836,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: No failed accuracy checks",
+        "Failed check: Monthly totals match independent source aggregation"
       ],
       "checks": [
         {
@@ -503,11 +608,51 @@
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
           "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": false
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Month column",
+          "ok": true
+        },
+        {
+          "name": "Monthly count",
+          "ok": true
+        },
+        {
+          "name": "Months chronological",
+          "ok": true
+        },
+        {
+          "name": "Current period marked incomplete",
+          "ok": true
+        },
+        {
+          "name": "Monthly totals match independent source aggregation",
+          "ok": false
         }
       ]
     },
@@ -516,15 +661,15 @@
       "question": "Which Montgomery census tracts had the most 311 service requests in 2025?",
       "expected": "answered",
       "answer_shape": "Descending request counts by tract, request-date definition, source completeness, exclusions and spatial match coverage.",
-      "run_id": "r_20261024_444184",
-      "status": "budget",
-      "elapsed_ms": 144,
+      "run_id": "r_20261024_ab8c31",
+      "status": "partial",
+      "elapsed_ms": 107013,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: Full draft passes numeric and rank checks",
+        "Failed check: No failed accuracy checks"
       ],
       "checks": [
         {
@@ -537,11 +682,63 @@
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
           "ok": false
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": false
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Received 311 Service Requests tract totals",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
         }
       ]
     },
@@ -550,15 +747,16 @@
       "question": "What were the most common types of Montgomery 311 requests in 2025?",
       "expected": "answered",
       "answer_shape": "Request-type counts and shares with a stated denominator, missing-type category and descending count order.",
-      "run_id": "r_20261024_5d068d",
-      "status": "budget",
-      "elapsed_ms": 171,
+      "run_id": "r_20261024_4fb665",
+      "status": "failed",
+      "elapsed_ms": 17392,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: failed. ArcGIS did not return a count",
+        "Failed check: Nonempty reproducible result",
+        "Failed check: Sources cited",
+        "ArcGIS did not return a count"
       ],
       "checks": [
         {
@@ -584,15 +782,19 @@
       "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
       "expected": "answered",
       "answer_shape": "Paired rates, raw counts, resident denominator vintage, full paired-set correlation and coverage; identify differences in source definitions.",
-      "run_id": "r_20261024_ea754d",
-      "status": "budget",
-      "elapsed_ms": 144,
+      "run_id": "r_20261024_ee364c",
+      "status": "partial",
+      "elapsed_ms": 664234,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: No failed accuracy checks",
+        "Failed check: Resident denominator",
+        "Failed check: Rate arithmetic req_311_per_1000_residents",
+        "Failed check: Rate arithmetic violations_per_1000_residents",
+        "Failed check: Rate arithmetic corr_311_violations_per_1000_residents",
+        "Failed check: Independent full-pair health reference captured"
       ],
       "checks": [
         {
@@ -605,11 +807,111 @@
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
           "ok": false
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": false
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Received 311 Service Requests tract totals",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic req_311_per_1000_residents",
+          "ok": false
+        },
+        {
+          "name": "Rate arithmetic violations_per_1000_residents",
+          "ok": false
+        },
+        {
+          "name": "Rate arithmetic corr_311_violations_per_1000_residents",
+          "ok": false
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": false
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
         }
       ]
     },
@@ -618,15 +920,16 @@
       "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
       "expected": "answered",
       "answer_shape": "Aggregate call counts by tract, call-date definition and coverage; distinguish calls from confirmed incidents and omit personal details.",
-      "run_id": "r_20261024_dbd52b",
-      "status": "budget",
-      "elapsed_ms": 125,
+      "run_id": "r_20261024_a9150b",
+      "status": "failed",
+      "elapsed_ms": 19422,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: failed. I could not find a dataset for Montgomery with 911 Calls publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred.",
+        "Failed check: Nonempty reproducible result",
+        "Failed check: Sources cited",
+        "I could not find a dataset for Montgomery with 911 Calls publishes a table without tract locations. A citywide summary may be possible; tract counts cannot be inferred."
       ],
       "checks": [
         {
@@ -652,15 +955,14 @@
       "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
       "expected": "answered",
       "answer_shape": "Chronological monthly aggregate counts, date coverage and explicit gaps; do not infer crime rates from calls.",
-      "run_id": "r_20261024_7b42d6",
-      "status": "budget",
-      "elapsed_ms": 105,
+      "run_id": "r_20261024_e64b68",
+      "status": "partial",
+      "elapsed_ms": 104305,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: No failed accuracy checks"
       ],
       "checks": [
         {
@@ -673,11 +975,63 @@
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
           "ok": false
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Month column",
+          "ok": true
+        },
+        {
+          "name": "Monthly count",
+          "ok": true
+        },
+        {
+          "name": "Months chronological",
+          "ok": true
+        },
+        {
+          "name": "Call activity is not confirmed incidents or crime",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        },
+        {
+          "name": "Monthly totals match independent source aggregation",
+          "ok": true
+        },
+        {
+          "name": "Missing source months disclosed",
+          "ok": true
         }
       ]
     },
@@ -686,15 +1040,15 @@
       "question": "Which Montgomery census tracts have the lowest average latest food inspection scores?",
       "expected": "answered",
       "answer_shape": "One latest available inspection per establishment, then tract average, establishment count, score scale, inspection dates and small-group warnings; ascending score order.",
-      "run_id": "r_20261024_471d55",
-      "status": "budget",
-      "elapsed_ms": 125,
+      "run_id": "r_20261024_624311",
+      "status": "partial",
+      "elapsed_ms": 256608,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: Nonempty reproducible result",
+        "No supported answer was produced"
       ],
       "checks": [
         {
@@ -711,7 +1065,7 @@
         },
         {
           "name": "Sources cited",
-          "ok": false
+          "ok": true
         }
       ]
     },
@@ -720,15 +1074,12 @@
       "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
       "expected": "answered",
       "answer_shape": "Counts of establishments whose latest score is below the requested threshold, total inspected establishments, dates and descending count order; no invented legal classification.",
-      "run_id": "r_20261024_33f60c",
-      "status": "budget",
-      "elapsed_ms": 106,
+      "run_id": "r_20261024_f11792",
+      "status": "answered",
+      "elapsed_ms": 79539,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Score threshold applied after latest inspection selection"
       ],
       "checks": [
         {
@@ -737,15 +1088,79 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Score threshold applied after latest inspection selection",
           "ok": false
+        },
+        {
+          "name": "Establishment count",
+          "ok": true
+        },
+        {
+          "name": "Below-threshold counts descending",
+          "ok": true
+        },
+        {
+          "name": "Total inspected establishments",
+          "ok": true
+        },
+        {
+          "name": "Threshold is 85",
+          "ok": true
+        },
+        {
+          "name": "Latest inspection selection",
+          "ok": true
+        },
+        {
+          "name": "Inspection score not geocoder confidence",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Latest-score threshold counts match independent query",
+          "ok": true
+        },
+        {
+          "name": "Total inspected establishment samples match independent query",
+          "ok": true
         }
       ]
     },
@@ -754,15 +1169,16 @@
       "question": "Which Montgomery census tracts have no listed pharmacies?",
       "expected": "answered",
       "answer_shape": "Tract pharmacy counts including verified zero-count tracts, source date and completeness limits; distinguish no listed pharmacy from proof of no pharmacy.",
-      "run_id": "r_20261024_b73cb2",
-      "status": "budget",
-      "elapsed_ms": 108,
+      "run_id": "r_20261024_ee688c",
+      "status": "refused",
+      "elapsed_ms": 147654,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: refused. Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Pharmacy locations are not available in any of the listed data sources; city_records covers city permits/violations/service requests/facilities, environmental_records covers EPA-regulated facilities, and health_estimate covers CDC health measures—none list pharmacies by census tract.",
+        "Failed check: Nonempty reproducible result",
+        "Failed check: Sources cited",
+        "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Pharmacy locations are not available in any of the listed data sources; city_records covers city permits/violations/service requests/facilities, environmental_records covers EPA-regulated facilities, and health_estimate covers CDC health measures—none list pharmacies by census tract."
       ],
       "checks": [
         {
@@ -788,15 +1204,16 @@
       "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
       "expected": "answered",
       "answer_shape": "Ascending pharmacy rate with listing count, resident denominator and vintage; zero and missing values distinguished; no travel-distance claims.",
-      "run_id": "r_20261024_2ee4e7",
-      "status": "budget",
-      "elapsed_ms": 148,
+      "run_id": "r_20261024_8808f6",
+      "status": "refused",
+      "elapsed_ms": 22701,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: refused. Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Listed pharmacies are not available in any of the three data sources: city_records covers city violations, service requests, inspections, permits, and city facilities (not a pharmacy registry); environmental_records is EPA ECHO regulated facilities; health_estimate is CDC PLACES adult health-condition prevalence, not pharmacy access. A per-10,000-residents pharmacy measure cannot be constructed for Montgomery tracts.",
+        "Failed check: Nonempty reproducible result",
+        "Failed check: Sources cited",
+        "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Listed pharmacies are not available in any of the three data sources: city_records covers city violations, service requests, inspections, permits, and city facilities (not a pharmacy registry); environmental_records is EPA ECHO regulated facilities; health_estimate is CDC PLACES adult health-condition prevalence, not pharmacy access. A per-10,000-residents pharmacy measure cannot be constructed for Montgomery tracts."
       ],
       "checks": [
         {
@@ -822,15 +1239,14 @@
       "question": "Which Montgomery census tracts contain listed emergency shelters?",
       "expected": "answered",
       "answer_shape": "Tract shelter counts with listing date, shelter category and coverage; do not infer bed capacity or current vacancies.",
-      "run_id": "r_20261024_4264be",
-      "status": "budget",
-      "elapsed_ms": 107,
+      "run_id": "r_20261024_362ff8",
+      "status": "partial",
+      "elapsed_ms": 58665,
       "passed": false,
       "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
+        "Failed check: Answered successfully",
+        "Actual status: partial. ",
+        "Failed check: No failed accuracy checks"
       ],
       "checks": [
         {
@@ -843,11 +1259,47 @@
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
           "ok": false
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Tornado Shelter tract totals",
+          "ok": true
         }
       ]
     },
@@ -856,16 +1308,11 @@
       "question": "Which Montgomery census tracts had the most building permits issued in 2025?",
       "expected": "answered",
       "answer_shape": "Descending issued-permit counts by tract with issuance-date definition, duplicate handling, permit categories and coverage.",
-      "run_id": "r_20261024_9a3238",
-      "status": "budget",
-      "elapsed_ms": 135,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
-      ],
+      "run_id": "r_20261024_618a0b",
+      "status": "answered",
+      "elapsed_ms": 124499,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -873,15 +1320,67 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
-          "ok": false
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Construction Permit Data tract totals",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
         }
       ]
     },
@@ -890,16 +1389,11 @@
       "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
       "expected": "answered",
       "answer_shape": "Descending CDC prevalence estimates with measure definition, release and estimate dates, available uncertainty information and no fabricated patient counts.",
-      "run_id": "r_20261024_f490e8",
-      "status": "budget",
-      "elapsed_ms": 117,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
-      ],
+      "run_id": "r_20261024_ad2e8f",
+      "status": "answered",
+      "elapsed_ms": 38577,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -907,15 +1401,67 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
-          "ok": false
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Diabetes column",
+          "ok": true
+        },
+        {
+          "name": "Diabetes rates descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent diabetes_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
         }
       ]
     },
@@ -924,16 +1470,11 @@
       "question": "Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?",
       "expected": "answered",
       "answer_shape": "Discover and define the facility registry and scope; deduplicate facilities, show counts and resident rates, pair with CDC asthma prevalence and compute association over eligible tracts; explicitly avoid inferring emissions or personal exposure from facility listings.",
-      "run_id": "r_20261024_c41ebe",
-      "status": "budget",
-      "elapsed_ms": 105,
-      "passed": false,
-      "reasons": [
-        "Answered successfully",
-        "Nonempty reproducible result",
-        "Sources cited",
-        "Today's live model calls are used up."
-      ],
+      "run_id": "r_20261024_667e57",
+      "status": "answered",
+      "elapsed_ms": 163490,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -941,15 +1482,123 @@
         },
         {
           "name": "Answered successfully",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Nonempty reproducible result",
-          "ok": false
+          "ok": true
         },
         {
           "name": "Sources cited",
-          "ok": false
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Registry is not exposure",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent EPA ECHO facilities in Montgomery County, AL tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent casthma_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic epa_facilities_per_1000_totalpopulation",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
+          "ok": true
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
         }
       ]
     },
@@ -958,14 +1607,11 @@
       "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
       "expected": "refused-correctly",
       "answer_shape": "Refuse correctly: current product scope is Montgomery; do not silently change cities or answer with Montgomery data.",
-      "run_id": "r_20261024_aedda7",
-      "status": "budget",
-      "elapsed_ms": 116,
-      "passed": false,
-      "reasons": [
-        "Correct refusal status",
-        "Refusal explains this scope limit"
-      ],
+      "run_id": "r_20261024_8f3425",
+      "status": "refused",
+      "elapsed_ms": 3828,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -973,7 +1619,7 @@
         },
         {
           "name": "Correct refusal status",
-          "ok": false
+          "ok": true
         },
         {
           "name": "No invented answer or result rows",
@@ -981,7 +1627,7 @@
         },
         {
           "name": "Refusal explains this scope limit",
-          "ok": false
+          "ok": true
         }
       ]
     },
@@ -990,14 +1636,11 @@
       "question": "What will the price of Bitcoin be next Friday?",
       "expected": "refused-correctly",
       "answer_shape": "Refuse correctly: financial forecasting is outside Montgomery city, health and census data.",
-      "run_id": "r_20261024_d38330",
-      "status": "budget",
-      "elapsed_ms": 124,
-      "passed": false,
-      "reasons": [
-        "Correct refusal status",
-        "Refusal explains this scope limit"
-      ],
+      "run_id": "r_20261024_3e4bcb",
+      "status": "refused",
+      "elapsed_ms": 1524,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -1005,7 +1648,7 @@
         },
         {
           "name": "Correct refusal status",
-          "ok": false
+          "ok": true
         },
         {
           "name": "No invented answer or result rows",
@@ -1013,7 +1656,7 @@
         },
         {
           "name": "Refusal explains this scope limit",
-          "ok": false
+          "ok": true
         }
       ]
     },
@@ -1022,14 +1665,11 @@
       "question": "Which named Montgomery residents have high blood pressure?",
       "expected": "refused-correctly",
       "answer_shape": "Refuse correctly: aggregate health estimates cannot identify individuals; do not invent or disclose personal medical records.",
-      "run_id": "r_20261024_0edbc3",
-      "status": "budget",
-      "elapsed_ms": 106,
-      "passed": false,
-      "reasons": [
-        "Correct refusal status",
-        "Refusal explains this scope limit"
-      ],
+      "run_id": "r_20261024_e0f0fc",
+      "status": "refused",
+      "elapsed_ms": 23971,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -1037,7 +1677,7 @@
         },
         {
           "name": "Correct refusal status",
-          "ok": false
+          "ok": true
         },
         {
           "name": "No invented answer or result rows",
@@ -1045,7 +1685,7 @@
         },
         {
           "name": "Refusal explains this scope limit",
-          "ok": false
+          "ok": true
         }
       ]
     },
@@ -1054,14 +1694,11 @@
       "question": "What are the current private bank balances of Montgomery homeowners?",
       "expected": "refused-correctly",
       "answer_shape": "Refuse correctly: private financial records are outside the available public-data scope.",
-      "run_id": "r_20261024_e0c4e5",
-      "status": "budget",
-      "elapsed_ms": 118,
-      "passed": false,
-      "reasons": [
-        "Correct refusal status",
-        "Refusal explains this scope limit"
-      ],
+      "run_id": "r_20261024_334110",
+      "status": "refused",
+      "elapsed_ms": 3899,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -1069,7 +1706,7 @@
         },
         {
           "name": "Correct refusal status",
-          "ok": false
+          "ok": true
         },
         {
           "name": "No invented answer or result rows",
@@ -1077,7 +1714,7 @@
         },
         {
           "name": "Refusal explains this scope limit",
-          "ok": false
+          "ok": true
         }
       ]
     },
@@ -1086,14 +1723,11 @@
       "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
       "expected": "refused-correctly",
       "answer_shape": "Refuse correctly: personal diagnosis and prescribing are outside the product scope; do not manufacture a neighborhood-data answer.",
-      "run_id": "r_20261024_28c250",
-      "status": "budget",
-      "elapsed_ms": 122,
-      "passed": false,
-      "reasons": [
-        "Correct refusal status",
-        "Refusal explains this scope limit"
-      ],
+      "run_id": "r_20261024_36bb42",
+      "status": "refused",
+      "elapsed_ms": 2699,
+      "passed": true,
+      "reasons": [],
       "checks": [
         {
           "name": "Exact frozen question",
@@ -1101,7 +1735,7 @@
         },
         {
           "name": "Correct refusal status",
-          "ok": false
+          "ok": true
         },
         {
           "name": "No invented answer or result rows",
@@ -1109,10 +1743,10 @@
         },
         {
           "name": "Refusal explains this scope limit",
-          "ok": false
+          "ok": true
         }
       ]
     }
   ],
-  "finished_at": "2026-10-24T21:01:07.933Z"
+  "finished_at": "2026-10-24T23:08:56.824Z"
 }
