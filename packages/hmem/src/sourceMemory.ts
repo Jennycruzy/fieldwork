@@ -1,12 +1,15 @@
 // Fieldwork's memory of public data sources, kept in H-MEM.
 // Every write carries its source (the run) and confidence; every read is recorded by H-MEM's trust ledger.
 
+import {createHash} from "node:crypto";
+import {embed} from "./engine/embeddings.js";
 import type { HMEM } from "./engine/index.js";
 import type { FeedbackKind, MemoryRecord } from "./engine/types.js";
 
 export type SourceFactKind = "choice" | "wiring" | "quality" | "join" | "repair";
 
 export interface SourceFact {
+  key?: string;
   kind: SourceFactKind;
   runId: string;
   content: string;
@@ -28,11 +31,14 @@ const KIND_TAG = (k: SourceFactKind) => `fw:${k}`;
 
 // MemoryStoreService.add: a long-term factual memory with provenance pointing at the run that learned it.
 export function remember(mem: HMEM, f: SourceFact): MemoryRecord {
+  const tag=f.key?`fact-key:${createHash("sha256").update(f.key).digest("hex")}`:undefined;
+  const old=tag?mem.store.all().find(m=>m.tags.includes(tag)):undefined;
+  if(old)return mem.store.update(old.id,{content:f.content,embedding:embed(f.content),entities:mem.store.extractEntities(f.content),confidence:f.confidence,source:`fieldwork:run:${f.runId}`,provenance:{origin:"plan_completion",learnedAt:mem.clock(),label:`Learned in run ${f.runId}`,refs:f.refs}});
   return mem.add({
     content: f.content,
     type: "factual",
     layer: "long_term",
-    tags: [KIND_TAG(f.kind), "fieldwork", ...(f.datasetTitle ? [`dataset:${slug(f.datasetTitle)}`] : [])],
+    tags: [...(tag?[tag]:[]), KIND_TAG(f.kind), "fieldwork", ...(f.datasetTitle ? [`dataset:${slug(f.datasetTitle)}`] : [])],
     confidence: f.confidence,
     source: `fieldwork:run:${f.runId}`,
     provenance: { origin: "plan_completion", learnedAt: mem.clock(), label: `Learned in run ${f.runId}`, refs: f.refs },

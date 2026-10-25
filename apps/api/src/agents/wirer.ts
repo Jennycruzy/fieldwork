@@ -44,6 +44,12 @@ const privateField=/owner|contractor|address|phone|email|complaint|remark|descri
 
 // Each wiring round gets its own table names (Zetaris refuses to redefine a session table).
 export async function wire(ctx: Ctx, p: Plan, chosen: Chosen[], revision?: string, version = 1): Promise<Wired[]> {
+  const signature=JSON.stringify({plan:p,chosen:chosen.map(c=>[c.measureId,c.candidate.url,c.fields,c.geometryType]),version});
+  const cached=ctx.world?.entities().find(e=>e.id===`wiring:${ctx.runId}:verified`);
+  if(!revision&&cached?.attrs.runId===ctx.runId&&cached.attrs.signature===signature&&Array.isArray(cached.attrs.wired)) {
+    await ctx.trace.log({agent:"wirer",action:"world_reuse",status:"ok",note:"Reused this run's verified wiring from the World Model; plan, source fields and revision match."});
+    return structuredClone(cached.attrs.wired) as Wired[];
+  }
   const remembered = chosen.flatMap((c) => recall(ctx.memory, `Dataset "${c.candidate.title}" wiring filter fields`, { kinds: ["wiring", "quality"], topN: 2 }));
   ctx.recalled.push(...remembered);
   const { value } = await ctx.models.wirer.json(
@@ -101,6 +107,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     const measure=ctx.world.entities().find((e)=>e.type==="measure"&&e.id.endsWith(`:${w.measureId}`));
     if(measure) await ctx.world.relate({from:measure.id,type:"wired as",to:entity.id,source});
   }
+  if(ctx.world)await ctx.world.upsertContext({type:"wiring",externalKey:{system:ctx.runId,id:"verified"},attrs:{runId:ctx.runId,signature,wired:out},source:provenance(ctx,"wirer")});
   return out;
 }
 

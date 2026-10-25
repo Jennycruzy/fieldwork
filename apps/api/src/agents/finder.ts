@@ -1,7 +1,7 @@
 import { ChoiceSchema, FieldworkError, type Plan } from "@fieldwork/core";
 import { getJson, layerInfo, searchEpa, searchMontgomeryHub, searchSocrata, socrataColumns, type Candidate } from "@fieldwork/sources";
 import { recall, type Recalled } from "@fieldwork/hmem";
-import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { SYSTEM_BASE, provenance, dataBlock, type Ctx } from "./context.js";
 
 export interface Chosen {
   measureId: string;
@@ -43,8 +43,14 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
     memories.set(m.id, got);
     ctx.recalled.push(...got);
     // Reuse needs a confident earlier choice, for a measure close enough, whose dataset the live search returned again.
+    const measureEntity=ctx.world?.entities().find(e=>e.type==="measure"&&e.id===`measure:${ctx.runId}:${m.id}`);
+    const worldCandidate=measureEntity?ctx.world?.view("sources").neighborsOf(measureEntity.id,{via:"selected"}).find(e=>e.attrs.measure===m.describe&&m.candidates.some(c=>c.url===e.attrs.url)):undefined;
+    if(worldCandidate) {
+      const index=m.candidates.findIndex(c=>c.url===worldCandidate.attrs.url);
+      reused.set(m.id,{index,memory:{id:worldCandidate.id,content:`"${m.candidates[index]!.title}"`,kind:"choice",confidence:1,relevance:1,source:"current run World Model"}});
+    }
     const hit = got.find((r) => r.kind === "choice" && r.confidence >= 0.75 && r.relevance >= 0.3 && m.candidates.some((c) => r.content.includes(`"${c.title}"`)));
-    if (hit) reused.set(m.id, { index: m.candidates.findIndex((c) => hit.content.includes(`"${c.title}"`)), memory: hit });
+    if (hit&&!worldCandidate) reused.set(m.id, { index: m.candidates.findIndex((c) => hit.content.includes(`"${c.title}"`)), memory: hit });
     await ctx.trace.log({
       agent: "memory",
       action: "recall",
@@ -103,6 +109,12 @@ Prefer current, official, record-level or tract-level data. When several release
       cand.licence=metadata.license?.name ?? metadata.licenseId ?? "No license statement supplied in metadata";cand.licenceUrl=metadataUrl;
     }
     chosen.push({ measureId: m.id, measure: m.describe, candidate: cand, reason: c.reason, fields, geometryType:info?.geometryType, maxRecordCount:info?.maxRecordCount });
+    if(ctx.world) {
+      const source=provenance(ctx,"finder");
+      const entity=await ctx.world.upsertEntity({type:"candidate",externalKey:{system:ctx.runId,id:`${m.id}:${cand.kind==="epa_facilities"?cand.title:cand.id}`},attrs:{measure:m.describe,title:cand.title,url:cand.url,fields,geometryType:info?.geometryType??null,selected:true},source});
+      const measure=ctx.world.entities().find(e=>e.id===`measure:${ctx.runId}:${m.id}`);
+      if(measure)await ctx.world.relate({from:measure.id,type:"selected",to:entity.id,source});
+    }
     await ctx.trace.log({ agent: "finder", action: "choose", status: "ok", note: `${m.describe} → "${cand.title}" (${fields.length} fields). ${c.reason}` });
   }
   if (chosen.length !== p.measures.length) throw new FieldworkError("NO_SOURCE", "all of the requested measures. Review the discovered candidates in the trace.");

@@ -47,3 +47,18 @@ for (const file of ["f1e7f5", "58bb8f", "217d18"])
         expect(db.query).not.toHaveBeenCalled();
         expect(searchSocrata).toHaveBeenCalled();
     });
+
+import {WorldModel} from "../../../packages/world/src/index.js";
+test("Finder writes observed source metadata and reads the same live-rediscovered World choice",async()=>{
+ const fixture=JSON.parse(readFileSync("evidence/sources/live-probes.json","utf8"))[0];
+ vi.mocked(searchMontgomeryHub).mockResolvedValue([fixture.candidate]);
+ vi.mocked(layerInfo).mockResolvedValue({url:fixture.candidate.url,name:fixture.candidate.title,fields:fixture.fields,maxRecordCount:1000,geometryType:fixture.geometry});
+ const world=new WorldModel(),runId="r_20261025_abcdef",today=new Date("2026-10-25");
+ const p={in_scope:true,geography:"tract" as const,measures:[{id:"requests",describe:"311 requests",kind:"city_records" as const,search_terms:["311"]}],output:"ranking" as const};
+ await world.upsertEntity({type:"measure",externalKey:{system:runId,id:"requests"},attrs:p.measures[0],source:{kind:"planner",at:today.toISOString()}});
+ const json=vi.fn(async()=>({value:{choices:[{measure_id:"requests",candidate_index:0,reason:"Unverified selection explanation"}]}}));
+ const ctx={world,runId,today,cfg:{place:{name:"Montgomery, AL"}},memory:new HMEM(),recalled:[],trace:{log:vi.fn()},models:{finder:{json}}} as unknown as Ctx;
+ await find(ctx,p);expect(world.entities().some(e=>e.type==="candidate"&&e.attrs.geometryType===fixture.geometry)).toBe(true);
+ await find(ctx,p);expect(json).toHaveBeenCalledTimes(1);
+ expect(JSON.stringify(world.context())).not.toContain("Unverified selection explanation");
+});

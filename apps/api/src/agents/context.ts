@@ -39,6 +39,6 @@ export function dataBlock(label: string, value: unknown): string {
 export function shared(ctx: Ctx): string {
   if(!ctx.world) return "";
   const state=ctx.world.context();
-  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>e.type!=="tract"),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
+  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>e.type!=="tract"&&e.type!=="wiring"),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
 }
 export function provenance(ctx: Ctx, role: string) { return {kind: role, at: ctx.today.toISOString(), run:ctx.runId}; }

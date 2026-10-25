@@ -1,6 +1,7 @@
 // What a run teaches Fieldwork, written to H-MEM at the end of the run.
 
-import { feedback, remember, saveMemory, slug, embed } from "@fieldwork/hmem";
+import { feedback, remember as addFact, saveMemory, slug, embed, type HMEM, type SourceFact } from "@fieldwork/hmem";
+import {syncWorld} from "./worldMemory.js";
 import type { Ctx } from "./agents/context.js";
 import type { Chosen } from "./agents/finder.js";
 import type { Wired } from "./agents/wirer.js";
@@ -16,6 +17,7 @@ export interface RunLessons {
 }
 
 export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number): Promise<void> {
+  const remember=(memory:HMEM,f:SourceFact)=>addFact(memory,{...f,key:JSON.stringify([l.question.toLowerCase().replace(/\s+/g," ").trim(),f.kind,f.content.replace(/r_\d{8}_[0-9a-f]{6}/g,"<run>").replace(/fw_[0-9a-f]{6}_/g,"fw_<run>_")])});
   const ok = l.status === "answered";
   const added: string[] = [];
   const conf = ok ? 0.8 : 0.5;
@@ -63,9 +65,9 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
   }
 
   if(ctx.world) {
-    const facts=ctx.world.entities().filter((e)=>e.type!=="tract");
-    added.push(remember(ctx.memory,{kind:"quality",runId:ctx.runId,content:`World state for ${l.question}: ${JSON.stringify(facts.map((e)=>({id:e.id,type:e.type,attrs:e.attrs}))).slice(0,6000)}`,confidence:ok ? 0.8:0.4,refs:facts.map((e)=>`world:${e.id}`)}).id);
-    await ctx.trace.log({agent:"memory",action:"world_sync",status:"ok",note:`World Model shared ${ctx.world.entities().length} entities and ${ctx.world.edges().length} relationships; run-end state saved to H-MEM with world provenance.`});
+    const synced=syncWorld(ctx.memory,ctx.world,l.question,ctx.runId,l.status);
+    added.push(...synced);
+    await ctx.trace.log({agent:"memory",action:"world_sync",status:"ok",note:`World Model synchronized ${synced.length} complete entity memories with stable keys and relationship provenance.`});
   }
   // Memories that agents used in this run: helpful if the run was answered, not helpful only if it failed
   // for a reason the memories could be part of (a model provider failing says nothing about them).

@@ -40,3 +40,21 @@ test("personal fields cannot enter grouped counts",async()=>{
  expect(result?.groupField).toBeUndefined();expect(result?.fields).not.toContain("OwnerName");
  expect(JSON.stringify(vi.mocked(ctx.zetaris.query).mock.calls)).not.toContain("OwnerName");
 });
+
+import {WorldModel} from "../../../packages/world/src/index.js";
+test("verified World Model wiring changes the Wirer's decision and revisions invalidate reuse",async()=>{
+ const {ctx,log}=context(["200","200"]);
+ ctx.world=new WorldModel({namespace:ctx.runId});
+ ctx.today=new Date("2026-10-25");
+ const json=vi.fn(ctx.models.wirer.json);
+ ctx.models.wirer.json=json as typeof ctx.models.wirer.json;
+ const first=await wire(ctx,plan,[choice]);
+ const second=await wire(ctx,plan,[choice]);
+ expect(second).toEqual(first);expect(json).toHaveBeenCalledTimes(1);
+ expect(log.mock.calls.some(([e])=>e.action==="world_reuse")).toBe(true);
+ await wire(ctx,plan,[choice],"Recheck source coverage",2);
+ expect(json).toHaveBeenCalledTimes(2);
+ const other={...ctx,runId:"r_20261025_123456"};
+ await wire(other,plan,[choice]);
+ expect(json).toHaveBeenCalledTimes(3);
+});
