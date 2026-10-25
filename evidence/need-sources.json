@@ -1,0 +1,52 @@
+[
+  {
+    "title": "CDC: About PLACES: Local Data for Better Health",
+    "url": "https://www.cdc.gov/places/about/index.html",
+    "quote": "Local health problems and priority health risk behaviors for action.",
+    "file": "browser-0.txt",
+    "claim": "CDC identifies local health problems and priorities as a use of PLACES. This does not establish use of Fieldwork.",
+    "verified_exact": true,
+    "accessed_at": "2026-10-24T21:34:14.453421+00:00",
+    "retrieved_sha256": "d9560eb274eccf5a5b44f9f9687b1c8e3aef18f37e6f5a6b475cdfa052b0d6de"
+  },
+  {
+    "title": "CDC: Frequently Asked Questions \u2014 Using the Data",
+    "url": "https://www.cdc.gov/places/faqs/index.html",
+    "quote": "Identify the health issues facing a local area or neighborhoods.",
+    "file": "cdc-faqs-full.txt",
+    "claim": "CDC describes neighborhood health issue identification as an intended use; its caveats also prohibit evaluating local interventions using these estimates alone.",
+    "verified_exact": true,
+    "accessed_at": "2026-10-24T21:34:14.454004+00:00",
+    "retrieved_sha256": "de1a8eaa109890caa844e121933bbe251f5723af0dcf4a020810865eaeb9f4ea"
+  },
+  {
+    "title": "WSFA: Montgomery seeks blight ordinance for dilapidated buildings",
+    "url": "https://www.wsfa.com/2022/03/31/montgomery-seeks-blight-ordinance-dilapidated-buildings/",
+    "quote": "give the city more flexibility to address the dozens of vacant, dilapidated homes and commercial buildings across the city.",
+    "file": "primary-3.txt",
+    "claim": "Original reporting documents a local council discussion about vacant and dilapidated properties. Historical reporting, not a claim about current law.",
+    "verified_exact": true,
+    "accessed_at": "2026-10-24T21:34:14.454127+00:00",
+    "retrieved_sha256": "64923c30b7eb657674476b8ca8b430e29a0c5519c18ea2b8bfb8c88adda724d0"
+  },
+  {
+    "title": "Greenlund et al.: PLACES: Local Data for Better Health",
+    "url": "https://www.cdc.gov/pcd/issues/2022/21_0459.htm",
+    "quote": "Effective planning and decision making rely on credible health information.",
+    "claim": "The original methods paper explains the local information gap and planning need; this is not evidence of Fieldwork use.",
+    "file": "cdc-paper-2022.txt",
+    "verified_exact": true,
+    "accessed_at": "2026-10-24T21:37:17.305070+00:00",
+    "retrieved_sha256": "365a5e81bbb194a3b8368061da5af2967bff674694d58a2dcf956e93b604c980"
+  },
+  {
+    "title": "Carlson et al.: Linking Local-Level Chronic Disease and Social Vulnerability Measures to Inform Planning Efforts: A COPD Example",
+    "url": "https://www.cdc.gov/pcd/issues/2023/23_0025.htm",
+    "quote": "Examples of how to combine and use data across different sources are lacking.",
+    "claim": "The original study identifies a gap in cross-source analysis examples and demonstrates joining health and vulnerability data; it does not prove an association between Montgomery code enforcement and health.",
+    "file": "cdc-paper-2023.txt",
+    "verified_exact": true,
+    "accessed_at": "2026-10-24T21:37:17.305242+00:00",
+    "retrieved_sha256": "35604113ec78d4541a189e3e188bf3f249d0e3d882f94bb967f9b92cc7332781"
+  }
+]
