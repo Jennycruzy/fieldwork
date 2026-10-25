@@ -43,3 +43,17 @@ const q11Stop:RecordedAnswer={id:"r_20261024_a9150b",question:q11.question,statu
 test("Q11 passes when Fieldwork stops because the 911 source has no tract locations",()=>{expect(gradeQuestion(q11,q11Stop).passed).toBe(true);});
 test("Q11 does not pass on a budget failure or an invented tract answer",()=>{expect(gradeQuestion(q11,{...q11Stop,answer:{message:"Daily model budget reached; try again tomorrow."}}).passed).toBe(false);expect(gradeQuestion(q11,{...q11Stop,status:"answered",answer:{...q11Stop.answer,headers:["geoid","calls"],rows:[["01101000100","5"]]}}).passed).toBe(false);});
 test("frozen questions allow only recorded amendments",()=>{const o=[{id:"Q11",question:"Q?",expected:"answered",answer_shape:"A"}];const am=[{id:"Q11",from:{expected:"answered",answer_shape:"A"},to:{expected:"stopped-honestly",answer_shape:"B"}}];expect(checkFrozen(o,[{...o[0]!,expected:"stopped-honestly",answer_shape:"B"}],am)).toBeUndefined();expect(checkFrozen(o,[{...o[0]!,expected:"stopped-honestly",answer_shape:"B"}],[])).toBeDefined();expect(checkFrozen(o,[{...o[0]!,question:"Other?",expected:"stopped-honestly",answer_shape:"B"}],am)).toBeDefined();expect(checkFrozen(o,o,am)).toBeDefined();});
+
+import {readFileSync} from "node:fs";
+test("monthly comparison uses the question year despite previous-year reference months",()=>{
+ const run=JSON.parse(readFileSync("evidence/runs/r_20261025_617a2f.run.json","utf8"));
+ const reference=JSON.parse(readFileSync("evidence/runs/r_20261025_617a2f.reference.json","utf8"));
+ const q=JSON.parse(readFileSync("evidence/questions.json","utf8")).questions.find((q:{id:string})=>q.id==="Q07");
+ const check=(r:RecordedAnswer)=>gradeQuestion(q,r,reference).checks.find(c=>c.name==="Monthly totals match independent source aggregation")!.ok;
+ expect(reference.observations[0].months.some((r:string[])=>r[0]==="2025")).toBe(true);
+ expect(check(run)).toBe(true);
+ reference.observations[0].months.reverse();
+ expect(check(run)).toBe(true);
+ const bad=structuredClone(run);bad.answer.rows[0][2]=String(Number(bad.answer.rows[0][2])+1);
+ expect(check(bad)).toBe(false);
+});

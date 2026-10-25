@@ -83,7 +83,7 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
       check("Incomplete source year disclosed",/incomplete|partial|missing|gaps?|coverage|only.*months?/i.test(text)||text.includes(`2025-${String(last).padStart(2,"0")}`)||new RegExp(`\\b${monthName}\\b`,"i").test(text));
     }
     if(["Q07","Q12"].includes(q.id)) {
-      const month=col(/month|period/i),count=countCol(/count|violat|calls/i);const expected=new Map(observation.months.map(r=>[Number(r[1]),Number(q.id==="Q12"?r[3]:r[2])]));
+      const month=col(/month|period/i),count=countCol(/count|violat|calls/i);const questionYear=Number(q.question.match(/\b(?:19|20)\d{2}\b/)?.[0]??a.plan?.years?.from);const expected=new Map(observation.months.filter(r=>Number(r[0])===questionYear).map(r=>[Number(r[1]),Number(q.id==="Q12"?r[3]:r[2])]));
       const parseMonth=monthNumber;
       check("Monthly totals match independent source aggregation",month>=0&&count>=0&&rows.every(r=>Number(r[count])===expected.get(parseMonth(r[month])))&&rows.length===expected.size);
       if(q.id==="Q12"&&expected.size<12)check("Missing source months disclosed",/gap|missing|incomplete|not.*(?:month|year)|coverage/i.test(text));
