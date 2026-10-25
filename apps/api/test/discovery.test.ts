@@ -62,3 +62,15 @@ test("Finder writes observed source metadata and reads the same live-rediscovere
  await find(ctx,p);expect(json).toHaveBeenCalledTimes(1);
  expect(JSON.stringify(world.context())).not.toContain("Unverified selection explanation");
 });
+
+test("a restrictive inspection phrase is broadened using its own catalog keywords",async()=>{
+ const missing=JSON.parse(readFileSync("evidence/runs/r_20261025_7a0692.run.json","utf8"));
+ const source=JSON.parse(readFileSync("evidence/runs/r_20261025_617926.run.json","utf8")).answer.sources[0];
+ const candidate={catalog:"montgomery_hub" as const,id:"inspection-source",kind:"arcgis_layer" as const,title:source.title,url:source.url,description:source.description};
+ vi.mocked(searchMontgomeryHub).mockImplementation(async term=>term==="food"?[candidate]:[]);
+ vi.mocked(layerInfo).mockResolvedValue({url:source.url,name:source.title,fields:[{name:"Score_1",type:"esriFieldTypeInteger"}],maxRecordCount:1000,geometryType:"esriGeometryPoint"});
+ const ctx={cfg:{place:{name:"Montgomery, AL"}},memory:new HMEM(),recalled:[],trace:{log:vi.fn()},models:{finder:{json:async()=>({value:{choices:[{measure_id:"m1",candidate_index:0,reason:"Published food inspection scores"}]}})}}} as unknown as Ctx;
+ const result=await find(ctx,missing.answer.plan);
+ expect(searchMontgomeryHub).toHaveBeenCalledWith("food",6);
+ expect(result[0]?.candidate.url).toBe(source.url);
+});

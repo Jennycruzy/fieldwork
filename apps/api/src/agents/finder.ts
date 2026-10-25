@@ -19,15 +19,30 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
   for (const m of p.measures) {
     const seen = new Set<string>();
     const cands: Candidate[] = [];
+    const searched:string[]=[];
     const terms = m.kind === "health_estimate" && p.geography === "tract" ? ["PLACES census tract", ...m.search_terms] : m.kind === "environmental_records" ? m.search_terms.slice(0,1) : m.search_terms;
     for (const term of terms) {
+      searched.push(term);
       const found =
         m.kind === "health_estimate"
           ? await searchSocrata(p.geography === "tract" && !/census tract/i.test(term) ? `${term} census tract` : term, ["data.cdc.gov"], 6)
           : m.kind === "environmental_records" ? await searchEpa(ctx.cfg.place.stateAbbr,ctx.cfg.place.countyName) : await searchMontgomeryHub(term, 6);
       for (const c of found) if (!seen.has(c.id)) (seen.add(c.id), cands.push(c));
     }
-    await ctx.trace.log({ agent: "finder", action: "search", status: cands.length ? "ok" : "error", note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${m.search_terms.map((t) => `"${t}"`).join(", ")}` });
+    if(cands.length===0&&m.kind!=="environmental_records") {
+      // Long natural-language phrases can be too restrictive for catalog search.
+      // Broaden from the request's own words, without an inventory of known sources.
+      const tokens=[...new Set(terms.flatMap(term=>term.toLowerCase().match(/[a-z]{4,}/g)??[]))].slice(0,6);
+      for(const token of tokens) {
+        if(searched.includes(token))continue;
+        searched.push(token);
+        const found=m.kind==="health_estimate"?await searchSocrata(p.geography==="tract"?`${token} census tract`:token,["data.cdc.gov"],6):await searchMontgomeryHub(token,6);
+        for(const c of found)if(!seen.has(c.id)){seen.add(c.id);cands.push(c);}
+        await ctx.trace.log({agent:"finder",action:"broaden_search",status:found.length?"ok":"info",note:`Broadened catalog search to "${token}": ${found.length} candidates.`});
+        if(cands.length)break;
+      }
+    }
+    await ctx.trace.log({ agent: "finder", action: "search", status: cands.length ? "ok" : "error", note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${searched.map((t) => `"${t}"`).join(", ")}` });
     perMeasure.push({ id: m.id, describe: m.describe, kind: m.kind, candidates: cands.slice(0, 8) });
   }
 
