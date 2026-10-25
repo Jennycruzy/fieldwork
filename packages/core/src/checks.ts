@@ -130,10 +130,14 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const missing: string[] = [];
   for (const original of texts) {
     const t = expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-");
-    for(const clause of rowClauses(t,names)) {
-      const named=names.map((name,i)=>mentions(clause,name)?i:-1).filter(i=>i>=0);
+    for(const sentence of t.split(/;|[!?]|\.(?=\s+[A-Z])/)) {
+    let previousRows:number[]=[];
+    for(const clause of rowClauses(sentence,names)) {
+      const direct=names.map((name,i)=>mentions(clause,name)?i:-1).filter(i=>i>=0);
+      const named=direct.length?direct:previousRows;
+      if(direct.length)previousRows=direct;
       const allowed=named.length?cellValues(named.map(i=>rows[i]!)):values;
-      const content=withoutNames(spellNumbers(knownIdentifiers(clause,facts,names)),names)
+      const content=withoutNames(spellNumbers(knownIdentifiers(clause,facts,names,new Map(headers.map((h,j)=>[h.toLowerCase(),new Set((named.length?named.map(i=>rows[i]!):rows).map(r=>r[j]??""))])))),names)
         .replace(/\b\d+(?:st|nd|rd|th)\b/gi," ")
         .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
         .replace(/\b(the|all)\s+(\d+)(?=\s+(?:tracts|rows|areas)\b)/gi,(match,article:string,n:string)=>[rows.length,...columns.flatMap(j=>[rows.filter(r=>r[j]!=null&&Number(r[j])>0).length,rows.filter(r=>r[j]!=null&&Number(r[j])===0).length])].includes(Number(n))?article:match)
@@ -145,6 +149,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         const n=normaliseNumber(raw);
         if(!allowed.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*)\b/i.test(clause))))missing.push(n);
       }
+    }
     }
   }
 
@@ -186,6 +191,8 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       }
       const claimed = claimedRankDir(clause)?.rank;
       if (said < 0) {
+        const cohort=spellNumbers(clause).match(/\b(?:all\s+)?(\d+)\s+(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
+        if(claimed!==undefined&&/\ball\b/i.test(clause)&&(!cohort||Number(cohort[1])===rows.length)&&rows.length>0&&rows.every((_,i)=>rankOf(i)===claimed))continue;
         // A rank claim about no row in particular ("eleven tracts share the third-highest rate") can't be checked.
         if (claimed !== undefined && !/top \w+ tracts? (by|are)|^the top/i.test(clause)) order.push(`"${clause}" makes a ranking claim that names no row`);
         continue;
@@ -270,7 +277,7 @@ function nearAny(n: string, values: Set<string>): boolean {
 const WORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20 };
 
 function spellNumbers(t: string): string {
-  return t.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b(?=\s+(tracts?|neighborhoods?|areas?|records?))/gi, (w) => String(WORDS[w.toLowerCase()]));
+  return t.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b(?=\s+(?:Montgomery\s+)?(?:census\s+)?(?:listed\s+)?(tracts?|neighborhoods?|areas?|records?|shelters?|pharmacies|requests?|violations?|calls?|establishments?))/gi, (w) => String(WORDS[w.toLowerCase()]));
 }
 
 // "Census Tract 11" or "Tract 11" in the text names a row; its number is not a value claim.
@@ -367,11 +374,12 @@ export function claimedRank(t: string): number | undefined {
   return undefined;
 }
 
-function knownIdentifiers(text: string, facts: string[], names:string[]=[]): string {
+function knownIdentifiers(text: string, facts: string[], names:string[]=[],identifiers=new Map<string,Set<string>>()): string {
   text=text.replace(/\bnumeric suffix\s*\(e\.g\.,?\s*(\d+(?:\.\d+)?)\)/gi,(match,id:string)=>names.some(n=>n.toLowerCase()===`census tract ${id}`)? "known tract identifier":match);
   return text.replace(/\b(countyfips|tractfips|geoid)\s*[:=]\s*['"]?(\d+)['"]?/gi,(match,field:string,id:string)=>{
     const expression=new RegExp(`\\b${field}\\s*[:=]\\s*['"]?${id}['"]?`,"i");
-    return facts.some((f)=>expression.test(f)) ? " " : match;
+    const known=identifiers.get(field.toLowerCase());
+    return (known?known.has(id):facts.some((f)=>expression.test(f))) ? " " : match;
   });
 }
 

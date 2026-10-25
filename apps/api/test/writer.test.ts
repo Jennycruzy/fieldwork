@@ -21,3 +21,23 @@ test("weighted call metadata sets the monthly unit and always supplies its cavea
  expect(checkDraft(["Montgomery 911 calls were 44,752 in February."],a.headers,a.rows,facts).ok).toBe(true);
  expect(checkDraft(["Montgomery 911 calls were 47,828 in February."],a.headers,a.rows,facts).ok).toBe(false);
 });
+
+import {primaryRankFacts} from "../src/agents/writer.js";
+test("the recorded unequal violation counts never share a code-computed rank or tie group",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261025_ea19d3.run.json","utf8")).answer;
+ const facts=primaryRankFacts(a.headers,a.rows,a.plan.analysis.rank_measure);
+ const one=facts.rows.find(r=>r[0]==="Census Tract 3")!,two=facts.rows.find(r=>r[0]==="Census Tract 17")!;
+ const rank=facts.headers.indexOf("primary_rank");
+ expect(one[1]).toBe("702");expect(two[1]).toBe("670");expect(one[rank]).not.toBe(two[rank]);
+ expect(facts.tie_groups.some(g=>g.names.includes(one[0]!)&&g.names.includes(two[0]!))).toBe(false);
+});
+test("the entire recorded zero-pharmacy cohort has explicit first rank and tie size",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261025_3a4e21.run.json","utf8")).answer;
+ const facts=primaryRankFacts(a.headers,a.rows,a.plan.analysis.rank_measure);
+ const rank=facts.headers.indexOf("primary_rank"),size=facts.headers.indexOf("tie_size");
+ expect(facts.rows).toHaveLength(48);
+ expect(facts.rows.every(r=>r[rank]==="1"&&r[size]==="48")).toBe(true);
+ expect(facts.tie_groups[0]?.names).toHaveLength(48);
+ expect(checkDraft(["All 48 Montgomery census tracts in this result are ranked 1st."],a.headers,a.rows,a.checks.map((c:{detail:string})=>c.detail)).ok).toBe(true);
+ expect(checkDraft(["All 13 Montgomery census tracts in this result are ranked 1st."],a.headers,a.rows,["13 days since update"]).ok).toBe(false);
+});

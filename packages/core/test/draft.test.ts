@@ -254,3 +254,15 @@ it("a request-channel identifier does not become a numeric tract claim",()=>{
  const a=recorded25("a5f032");
  expect(checkDraft(["Tract 22.01 is among the top tracts for 311 requests."],a.headers,a.rows).ok).toBe(true);
 });
+
+it("bound counts reject words while explicit row identifiers remain metadata",()=>{
+ const a=recorded25("fe9fd0");
+ expect(checkDraft(["Tract 22.01 has four listed shelters."],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Tract 22.01 has 1 shelter (geoid: 01101002201)."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Tract 22.01 has 1 shelter (geoid: 01101003303)."],a.headers,a.rows).ok).toBe(false);
+});
+
+it("a continuation cannot borrow another row's measure or a small free count",()=>{
+ const a=recorded25("fe9fd0");
+ expect(checkDraft(["Tract 22.01 has 1 shelter and the most with 4."],a.headers,a.rows).ok).toBe(false);
+});
