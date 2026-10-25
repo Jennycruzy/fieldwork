@@ -129,7 +129,12 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const monthColumn=headers.findIndex(h=>/^month$/i.test(h));
   const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];
   const calendarRows=/^(year|month)$/i.test(headers[0]??"")&&monthColumn>=0;
-  const names = rows.map((r) => calendarRows ? monthNames[Number(r[monthColumn])-1]??String(r[monthColumn]??"") : String(r[nameCol] ?? ""));
+  const names = rows.map((r) => calendarRows ? monthNames[Number(r[monthColumn])-1]??String(r[monthColumn]??"") : tidyHyphens(String(r[nameCol] ?? "")));
+  // Group sizes a sentence may count: all rows, rows at zero, rows above zero, rows sharing one value.
+  const cohorts=new Set<string>([String(rows.length)]);
+  for(const j of columns){const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
+   cohorts.add(String(cells.filter(x=>x===0).length));cohorts.add(String(cells.filter(x=>x>0).length));
+   const by=new Map<number,number>();for(const x of cells)by.set(x,(by.get(x)??0)+1);if(by.size<=12)for(const n of by.values())cohorts.add(String(n));}
   const missing: string[] = [];
   for (const original of texts) {
     const t = normaliseText(original);
@@ -145,13 +150,16 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\b\d+(?:st|nd|rd|th)\b/gi," ")
         .replace(/\bper\s+(?:1,?000|10,?000)\b/gi," ")
         .replace(/\b(the|all)\s+(\d+)(?=\s+(?:tracts|rows|areas)\b)/gi,(match,article:string,n:string)=>[rows.length,...columns.flatMap(j=>[rows.filter(r=>r[j]!=null&&Number(r[j])>0).length,rows.filter(r=>r[j]!=null&&Number(r[j])===0).length])].includes(Number(n))?article:match)
-        .replace(/\btop\s+(\d+)(?=\s+(?:tracts?|rows?|areas?))/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
+        .replace(/\btop\s+(\d+)\b/gi,(match,n:string)=>Number(n)<=rows.length?"top":match)
+        .replace(/\b(\d+)(?=\s+(?:of\s+\d+\s+)?(?:[A-Za-z-]+\s+){0,2}(?:tracts?|months?|rows?|areas?|categories|types)\b)/gi,(match,n:string)=>cohorts.has(String(Number(n)))?" ":match)
+        .replace(/\b(?:of|out of)\s+(\d+)(?=\s+(?:[A-Za-z-]+\s+){0,2}(?:tracts?|months?|rows?|areas?|categories|types)\b)/gi,(match,n:string)=>cohorts.has(String(Number(n)))?" ":match)
+        .replace(/\b(?:at\s+)?rank(?:ed|s|ing)?\s+(?:at\s+)?\d{1,3}\b/gi," ranked ")
         .replace(/\bfor\s+311\s+requests\b/gi,match=>headers.some(h=>/request|311/i.test(h))?"for service requests":match)
         .replace(/\b911(?=\s+calls\b)/gi,()=>facts.some(f=>/\b911\b|Call_Count_By_Origin/.test(f))?"":"911")
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
-        if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*)\b/i.test(clause))))missing.push(n);
+        if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[])&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower)\b/i.test(clause))))missing.push(n);
       }
     }
     }
@@ -226,16 +234,20 @@ function rowClauses(text: string, names: string[]): string[] {
   });
 }
 
-// Derived claims need a reproducible operation within one numeric measure column.
-function derivedNumber(text: string, headers: string[], rows: (string|null)[][]): boolean {
+// Derived claims need a reproducible operation within one numeric measure column: the column total, or a
+// difference or percent change between the rows the sentence names (between the highest, lowest, first and
+// last rows when it names none). Any pair of 71 rows would make almost every small number "derived".
+function derivedNumber(text: string, headers: string[], rows: (string|null)[][], named: number[] = []): boolean {
  const target=Number(text),places=(text.split(".")[1]??"").length;
  const equal=(x:number)=>Number.isFinite(x)&&Number(x.toFixed(places))===target;
  for(const j of valueColumns(headers)) {
-  const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
-  if(!cells.length)continue;
-  if(equal(cells.reduce((a,b)=>a+b,0)))return true;
-  for(const a of cells)for(const b of cells) {
-   if(equal(b-a)||(a!==0&&equal((b-a)/a*100)))return true;
+  const indexed=rows.map((r,i)=>({i,v:r[j]})).filter((x):x is {i:number;v:string}=>x.v!=null&&/^-?\d+(?:\.\d+)?$/.test(x.v)).map(x=>({i:x.i,v:Number(x.v)}));
+  if(!indexed.length)continue;
+  if(equal(indexed.reduce((a,b)=>a+b.v,0)))return true;
+  const max=indexed.reduce((a,b)=>b.v>a.v?b:a),min=indexed.reduce((a,b)=>b.v<a.v?b:a);
+  const pool=named.length?indexed.filter(x=>named.includes(x.i)):[max,min,indexed[0]!,indexed[indexed.length-1]!];
+  for(const a of pool)for(const b of pool) {
+   if(equal(b.v-a.v)||(a.v!==0&&equal((b.v-a.v)/a.v*100)))return true;
   }
  }
  return false;
@@ -317,8 +329,16 @@ const UNIVERSAL = /\b(?:in|across|for) (?:every|each|all(?: the)?) (?:rows?|trac
 const PATTERN = /correlat|associat|pattern|relationship|higher|lower|\bmore\b|fewer|increas|decreas|\brise|\brose|\bfall|\bfell|\btend/i;
 
 // Dashes become "-"; "most recent" is about time, not rank; "ranked 1st through 5th" describes the order.
+function tidyHyphens(s:string):string {
+ return s.replace(/\s*-\s*(?=[A-Za-z])/g,"-");
+}
+
+const MONTHS="January|February|March|April|May|June|July|August|September|October|November|December";
+// Dates are not data values: "October 25, 2026" keeps its month (a calendar row name), "2026-10-25" goes.
 function normaliseText(original:string):string {
- return expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-")
+ return tidyHyphens(expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-"))
+  .replace(/\b\d{4}-\d{2}(?:-\d{2})?(?:T[\d:.]+Z?)?\b/g," ")
+  .replace(new RegExp(`\\b(${MONTHS})\\s+\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?\\s+\\d{4})?`,"g"),"$1")
   .replace(/\bmost recent\b/gi,"latest")
   .replace(/\b(?:\d{1,2}(?:st|nd|rd|th)|first|second|third)\s+(?:through|to)\s+(?:\d{1,2}(?:st|nd|rd|th)|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth)\b/gi,"in order");
 }

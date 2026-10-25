@@ -13,7 +13,7 @@ export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[],
         role: "system",
         content: `${SYSTEM_BASE}
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
-Use only numbers in the rows or verified column sums, within-column differences, and percent changes. The result_summary gives the full cohort size. For rankings the result table contains primary_rank, rank_text and tie_size computed in code for every row. Copy these fields exactly. Use only the supplied tie_groups: adjacent rows or rounded display values do not establish a tie. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
+Use only numbers in the rows or in computed_figures. For a total, difference, percent change or group size, copy it from computed_figures; never compute one yourself. The result_summary gives the full cohort size. For rankings the result table contains primary_rank, rank_text and tie_size computed in code for every row. Copy these fields exactly. Use only the supplied tie_groups: adjacent rows or rounded display values do not establish a tie. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
 For current listings give the retrieval date, and state when source publication or event dates are unknown. Keep the survey or estimate year distinct from a CDC release year; if the underlying year is not supplied, say it is not established here. Mention CDC or model-based health estimates only if a listed source is CDC. For relationship comparisons, report the correlation and paired sample size; do not introduce tract rankings or named examples.
 Use the supplied primary_measure_ranks exactly if you mention an ordinal rank; omit other rank claims.
 The how_sure line is checked too: no claims of certainty, statistical significance, causation or a universal pattern. A correlation is a descriptive association, not proof. Quote the paired_tracts value for correlation sample size, not the preview length. State the plan's choice of counts or rates and correct denominator in the answer. Never treat a repeated correlation column as evidence of consistency. Do not add ranking claims for supporting measures.
@@ -24,7 +24,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
         role: "user",
         content:
           `Question: ${question}\n` +
-          dataBlock("result_summary",{row_count:joined.result.rows.length,rank_rows:rankFacts?joined.result.rows.length:0,zero_columns:joined.result.headers.filter((h,j)=>j>0&&joined.result.rows.length>0&&joined.result.rows.every(r=>r[j]!=null&&Number(r[j])===0))}) + "\n" + dataBlock("primary_measure_ranks", rankFacts ? {measure:joined.result.headers[1],direction:rankFacts.direction,tie_groups:rankFacts.tie_groups}:[]) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : rankFacts ? [rankFacts.headers,...rankFacts.rows] : [joined.result.headers, ...joined.result.rows]) +
+          dataBlock("result_summary",{row_count:joined.result.rows.length,rank_rows:rankFacts?joined.result.rows.length:0,zero_columns:joined.result.headers.filter((h,j)=>j>0&&joined.result.rows.length>0&&joined.result.rows.every(r=>r[j]!=null&&Number(r[j])===0))}) + "\n" + dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) + "\n" + dataBlock("primary_measure_ranks", rankFacts ? {measure:joined.result.headers[1],direction:rankFacts.direction,tie_groups:rankFacts.tie_groups}:[]) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : rankFacts ? [rankFacts.headers,...rankFacts.rows] : [joined.result.headers, ...joined.result.rows]) +
           "\n" +
           dataBlock("checks", checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`)) +
           "\n" +
@@ -59,4 +59,26 @@ export function primaryRankFacts(headers:string[],rows:(string|null)[][],rankMea
   return [...row,String(rank),ordinal(rank),String(names.length)];
  });
  return {direction:ascending?"ascending":"descending",headers:[...headers,"primary_rank","rank_text","tie_size"],rows:ranked,tie_groups:[...groups.values()]};
+}
+
+// Totals, extremes, differences, percent changes and group sizes for the first measure column, computed in code
+// so the Writer copies them (25 Oct: "sums to 16,388" for 16,409, "32.4% higher" for 32.6%).
+export function computedFigures(headers:string[],rows:(string|null)[][]) {
+ const calendar=headers[0]==="year"&&headers[1]==="month";
+ const nameCol=calendar?-1:Math.max(0,headers.findIndex(h=>/^(?:name|tract_name|tract|category|area_name)$/i.test(h)));
+ const label=(r:(string|null)[])=>calendar?`${["January","February","March","April","May","June","July","August","September","October","November","December"][Number(r[1])-1]} ${r[0]}`:String(r[nameCol]??"");
+ const j=headers.findIndex((h,k)=>k!==nameCol&&!/^(?:year|month|geoid|tractfips|name)$/i.test(h)&&rows.some(r=>r[k]!=null&&Number.isFinite(Number(r[k]))));
+ if(j<0||!rows.length)return {};
+ const cells=rows.map(r=>({row:r,v:r[j]==null?NaN:Number(r[j])})).filter(x=>Number.isFinite(x.v));
+ if(!cells.length)return {};
+ const round=(x:number,d=2)=>Number(x.toFixed(d));
+ const pct=(a:number,b:number)=>a===0?null:round((b-a)/a*100,1);
+ const max=cells.reduce((a,b)=>b.v>a.v?b:a),min=cells.reduce((a,b)=>b.v<a.v?b:a),first=cells[0]!,last=cells[cells.length-1]!;
+ const counts=new Map<number,number>();for(const c of cells)counts.set(c.v,(counts.get(c.v)??0)+1);
+ return {measure:headers[j],total:round(cells.reduce((a,b)=>a+b.v,0)),rows_with_values:cells.length,
+  highest:{row:label(max.row),value:max.v},lowest:{row:label(min.row),value:min.v},
+  highest_minus_lowest:round(max.v-min.v),highest_vs_lowest_percent:pct(min.v,max.v),
+  ...(calendar?{first:{row:label(first.row),value:first.v},last:{row:label(last.row),value:last.v},last_minus_first:round(last.v-first.v),last_vs_first_percent:pct(first.v,last.v)}:{}),
+  rows_at_zero:cells.filter(c=>c.v===0).length,rows_above_zero:cells.filter(c=>c.v>0).length,
+  ...(counts.size<=12?{rows_per_value:[...counts].map(([value,rows])=>({value,rows}))}:{})};
 }

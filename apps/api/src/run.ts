@@ -196,6 +196,9 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
       Object.assign(draft,supportedDraft(draft,joined.result.headers,joined.result.rows,facts));
       out.checks.push({id:"answer_draft",ok:false,detail:"Unsupported statements were omitted after the Writer rewrite; the answer remains partial."});
     }
+    const coverage = out.checks.find((c) => c.id.startsWith("source_dates_") && /\bOnly \d+ calendar months?\b/.test(c.detail));
+    const text = [draft.headline, ...draft.points, draft.how_sure, ...draft.caveats].join(" ");
+    if (coverage && !/incomplete|partial|missing|coverage|only \d+ (?:of \d+ )?(?:calendar )?months?/i.test(text)) draft.caveats.push(coverage.detail.slice(coverage.detail.search(/\bOnly \d+ calendar/)));
     if (out.status === "partial") draft.caveats.push(notice("PARTIAL", "Review the flagged checks below.").message);
     out.answer = draft;
     out.view = await saveAnswerView(ctx, joined.sql);
