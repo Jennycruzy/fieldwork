@@ -34,6 +34,7 @@ export function rateArithmeticChecks(result:{headers:string[];rows:(string|null)
  const tokens=(s:string)=>s.toLowerCase().split("_").map(w=>w.replace(/s$/,"")).filter(w=>!["per","1000","10000","rate","resident","adult","count","total","population","n"].includes(w));
  for(const [i,h] of headers.entries()) {
   if(/corr/i.test(h)||!/(?:^|_)per_?(?:1_?000|10_?000)|(?:^|_)rate(?:_|$)/i.test(h))continue;
+  if(/asthma|blood|diabet|prevalence|hypertens|crudeprev/i.test(h)&&!/(?:^|_)per_/i.test(h))continue;
   const scale=/10_?000/.test(h)?10000:1000;
   const adult=/adult|18plus/i.test(h);
   const denominator=headers.findIndex(v=>!/per_|rate|corr/i.test(v)&&(adult?/adult_population|totalpop18plus|^adults$|denominator/i:/total_?population|resident_population|^population$|^residents$|denominator/i).test(v));

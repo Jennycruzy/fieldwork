@@ -1,0 +1,12 @@
+{
+  "id": "r_20261025_d6337e",
+  "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+  "created_at": "2026-10-25T14:57:25.935Z",
+  "finished_at": "2026-10-25T15:01:07.377Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "message": "Incomplete benchmark attempt interrupted to correct an Evaluator regression; not a completed result."
+  }
+}

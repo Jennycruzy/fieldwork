@@ -37,3 +37,8 @@ test("rates recompute from the recorded population and count, including alternat
  const bad=JSON.parse(readFileSync("evidence/runs/r_20261024_ee364c.run.json","utf8")).answer;
  expect(rateArithmeticChecks(bad).some(c=>!c.ok)).toBe(true);
 });
+
+test("published CDC prevalence is not reconstructed as an event rate",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261024_393262.run.json","utf8")).answer;
+ expect(rateArithmeticChecks(a)).toEqual([]);
+});
