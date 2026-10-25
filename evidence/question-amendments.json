@@ -27,6 +27,19 @@
       "reason": "Compare monthly totals only with observations from the question's requested calendar year. The captured reference also contains preceding-year October and November; month numbers alone do not define a period.",
       "evidence": "evidence/runs/r_20261025_617a2f.reference.json",
       "effect": "Grading correction only; question texts, order and expected outcomes are unchanged."
+    },
+    {
+      "id": "rate_columns",
+      "question_ids": [
+        "Q05",
+        "Q10",
+        "Q20"
+      ],
+      "approved_by": "reviewer",
+      "approved_at": "2026-10-25",
+      "reason": "The rate-arithmetic check treated correlation columns named after their rates (corr_epa_facilities_per_1000_residents_vs_adult_asthma_prevalence) as rates, and did not recognise an EPA count column named fac_count. Q20 r_20261025_f5b9ce displays correct rates (884 / 3541 x 1000 = 249.65), yet failed both lines.",
+      "evidence": "evidence/runs/r_20261025_f5b9ce.run.json",
+      "effect": "Grading correction only; question texts, order and expected outcomes are unchanged. Rate columns are still recomputed from their count and population."
     }
   ]
 }

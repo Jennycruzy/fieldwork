@@ -57,3 +57,13 @@ test("monthly comparison uses the question year despite previous-year reference 
  const bad=structuredClone(run);bad.answer.rows[0][2]=String(Number(bad.answer.rows[0][2])+1);
  expect(check(bad)).toBe(false);
 });
+
+test("grader correction rate_columns: a correlation column is not a rate and fac_count is the EPA count (Q20, 25 Oct)",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261025_f5b9ce.run.json","utf8")).answer;
+ const q={id:"Q20",question:"Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?",expected:"answered",answer_shape:"x"};
+ const run={id:"r",question:q.question,status:"answered",rounds:1,answer:a} as RecordedAnswer;
+ const names=(g:ReturnType<typeof gradeQuestion>)=>g.checks.filter(c=>/^Rate arithmetic/.test(c.name));
+ const ref={tracts:[],counts:[],health:[]};expect(names(gradeQuestion(q,run,ref)).map(c=>[c.name,c.ok])).toEqual([["Rate arithmetic epa_facilities_per_1000_totalpopulation",true]]);
+ const wrong={...run,answer:{...a,rows:a.rows.map((r:(string|null)[],k:number)=>k===0?[r[0],"1.0",...r.slice(2)]:r)}};
+ expect(names(gradeQuestion(q,wrong,ref)).every(c=>c.ok)).toBe(false);
+});

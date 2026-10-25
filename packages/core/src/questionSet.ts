@@ -69,9 +69,10 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
   }
   const pop=col(a.plan?.analysis?.denominator==="adults" ? /^(?:totalpop18plus|adult_population|adults|denominator)$/i : /^(?:totalpopulation|total_population|population|resident_population|residents|denominator)$/i);const populationField=a.plan?.analysis?.denominator==="adults"?"totalpop18plus":"totalpopulation";const health=reference.health.find(v=>v.headers.includes(populationField));
   if(pop>=0&&health) {const j=health.headers.indexOf(populationField),values=new Map(health.rows.map(r=>[r[0],Number(r[j])]));check("Resident denominators match source",rows.every(r=>Number(r[pop])===values.get(id(r)!)));}
-  const rateCols=h.map((v,i)=>({v,i})).filter(({v})=>/per_?(?:1_?000|10_?000).*(?:resident|adult|total_?population)/i.test(v)||(["Q03","Q16"].includes(q.id)&&/rate/i.test(v)));
+  // A correlation column named after its rates is not a rate (grader correction rate_columns, 25 Oct).
+  const rateCols=h.map((v,i)=>({v,i})).filter(({v})=>!/corr/i.test(v)&&(/per_?(?:1_?000|10_?000).*(?:resident|adult|total_?population)/i.test(v)||(["Q03","Q16"].includes(q.id)&&/rate/i.test(v))));
   for(const {v,i} of rateCols) {
-    const pattern=q.id==="Q16"||/pharma/i.test(v)?/pharma/i:/facilit|epa/i.test(v)?/facilit|epa/i:/311|request/i.test(v)?/311|request/i:/violat|code/i;
+    const pattern=q.id==="Q16"||/pharma/i.test(v)?/pharma/i:/facilit|epa/i.test(v)?/facilit|epa|fac_/i:/311|request/i.test(v)?/311|request/i:/violat|code/i;
     const numerator=countCol(pattern);const divisor=q.id==="Q16"||/10_?000/.test(v)?10000:1000;
     check(`Rate arithmetic ${v}`,numerator>=0&&pop>=0&&rows.every(r=>Number(r[pop])>0&&Math.abs(Number(r[i])-Number(r[numerator])/Number(r[pop])*divisor)<1e-5));
   }
