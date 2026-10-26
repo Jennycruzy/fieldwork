@@ -2,14 +2,26 @@ import { useEffect, useState } from "react";
 import { api, type RunSummary, type RunRecord, type RunEvent } from "../api";
 import { Link } from "../Link";
 import { when } from "../format";
+import { Story } from "../Story";
 import needSources from "../../../../evidence/need-sources.json";
 import { quantile } from "../../../../packages/core/src/questionSet";
 import need from "../../../../evidence/need.json";
 import questions from "../../../../evidence/questions.json";
+const STATUS: Record<string, string> = {
+  answered: "Answered",
+  partial: "Partly answered",
+  refused: "Refused: outside what Fieldwork answers",
+  failed: "Stopped without an answer",
+  budget: "Stopped: daily model-call limit reached",
+  running: "Running",
+};
+
 export function History() {
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [error, setError] = useState("");
   const [local, setLocal] = useState(false);
+  const [all, setAll] = useState(false);
+  const [shown, setShown] = useState(30);
   useEffect(() => {
     api.runs().then(
       (v) => setRuns(v.runs),
@@ -25,23 +37,39 @@ export function History() {
   return (
     <section className="card">
       <h1>Earlier answers</h1>
-      <label>
-        <input type="checkbox" checked={local} onChange={(e) => setLocal(e.target.checked)} /> This browser
-        only
-      </label>
+      <div className="filters">
+        <label>
+          <input type="checkbox" checked={all} onChange={(e) => setAll(e.target.checked)} /> Show every run,
+          including refusals and runs that stopped
+        </label>
+        <label>
+          <input type="checkbox" checked={local} onChange={(e) => setLocal(e.target.checked)} /> This browser
+          only
+        </label>
+      </div>
       {error && <p role="alert">{error}</p>}
-      <ul>
+      <ul className="history">
         {runs
-          .filter((v) => !local || ids.includes(v.id))
+          .filter((v) => (all || v.status === "answered") && (!local || ids.includes(v.id)))
+          .slice(0, shown)
           .map((v) => (
             <li key={v.id}>
               <Link href={`/a/${v.id}`}>{v.question}</Link>
               <p className="muted">
-                {v.mode === "recorded" ? "Recorded run" : "Live run"} · {when(v.created_at)} · {v.status}
+                <span className={v.status === "answered" ? "pass" : "fail"}>
+                  {STATUS[v.status] ?? v.status}
+                </span>{" "}
+                · {v.mode === "recorded" ? "recorded" : "live"} · {when(v.created_at)}
               </p>
             </li>
           ))}
       </ul>
+      {runs.filter((v) => (all || v.status === "answered") && (!local || ids.includes(v.id))).length >
+        shown && (
+        <button className="ghost" onClick={() => setShown((n) => n + 30)}>
+          Show more
+        </button>
+      )}
       {local && ids.length === 0 && <p>No answers saved in this browser yet.</p>}
     </section>
   );
@@ -61,45 +89,11 @@ export function How({ id }: { id: string }) {
         <h1>How it worked</h1>
         <p>{data?.run.question}</p>
         {error && <p role="alert">{error}</p>}
-        <Link href={`/a/${id}`}>Answer</Link> · <Link href={`/run/${id}`}>Step graph</Link>
+        <Link href={`/a/${id}`}>Back to the answer</Link> · <Link href={`/run/${id}`}>Replay the run</Link>
       </section>
       <section className="card">
-        <h2>Full trace</h2>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                {["Step", "Time", "Agent", "Action", "Model served", "Duration", "Rows", "What happened"].map(
-                  (h) => (
-                    <th key={h}>{h}</th>
-                  ),
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {data?.events.map((e) => (
-                <tr key={e.seq}>
-                  <td>{e.seq}</td>
-                  <td>{e.ts}</td>
-                  <td>{e.agent}</td>
-                  <td>{e.action}</td>
-                  <td>{e.modelServed ?? "—"}</td>
-                  <td>{e.latencyMs ?? e.zetarisMs ?? "—"} ms</td>
-                  <td>{e.rows ?? "—"}</td>
-                  <td>
-                    {e.note}
-                    {e.sql && (
-                      <details>
-                        <summary>Zetaris query</summary>
-                        <pre>{e.sql}</pre>
-                      </details>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <h2>What each agent did</h2>
+        <Story events={data?.events ?? []} />
       </section>
       <section className="card memory-details">
         <h2>Removed sentences</h2>
@@ -114,27 +108,33 @@ export function How({ id }: { id: string }) {
         )}
         <h2>H-MEM memories used</h2>
         {data?.run.answer?.memories?.length ? (
-          <ul>
-            {data.run.answer.memories.map((m, i) => (
-              <li key={`${m.id}-${i}`}>
-                <strong>{m.kind}</strong> · {m.id}
-                <p>{m.content}</p>
-              </li>
-            ))}
-          </ul>
+          <details>
+            <summary>{data.run.answer.memories.length} memories recalled</summary>
+            <ul>
+              {data.run.answer.memories.map((m, i) => (
+                <li key={`${m.id}-${i}`}>
+                  <strong>{m.kind}</strong> · {m.id}
+                  <p>{m.content}</p>
+                </li>
+              ))}
+            </ul>
+          </details>
         ) : (
           <p>This recording has no saved memory contents. Recall events below show what was recorded.</p>
         )}
         <h2>Memories written</h2>
         {data?.run.answer?.memoryWrites?.length ? (
-          <ul>
-            {data.run.answer.memoryWrites.map((m) => (
-              <li key={m.id}>
-                {m.id}
-                <p>{m.content}</p>
-              </li>
-            ))}
-          </ul>
+          <details>
+            <summary>{data.run.answer.memoryWrites.length} memories written</summary>
+            <ul>
+              {data.run.answer.memoryWrites.map((m) => (
+                <li key={m.id}>
+                  {m.id}
+                  <p>{m.content}</p>
+                </li>
+              ))}
+            </ul>
+          </details>
         ) : (
           <p>This recording includes no saved memory-write contents.</p>
         )}

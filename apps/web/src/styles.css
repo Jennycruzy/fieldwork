@@ -829,3 +829,10 @@ code,
 .follow {
   margin-bottom: 14px;
 }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 8px 0 12px;
+}
