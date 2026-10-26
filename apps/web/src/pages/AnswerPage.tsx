@@ -77,6 +77,7 @@ export function AnswerPage({ id }: { id: string }) {
         ) : (
           <p className="error">{run.answer?.message ?? "This run has no answer."}</p>
         )}
+        {!!run.answer?.removed_sentences?.length && <p role="status">{run.answer.removed_sentences.length} sentences removed because they could not be checked against the rows. <Link href={"/how/"+id}>Read the trace</Link>.</p>}
         <div className="row">
           <Link href={`/how/${run.id}`} className="button ghost">
             How it worked

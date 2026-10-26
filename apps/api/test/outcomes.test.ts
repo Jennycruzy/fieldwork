@@ -43,7 +43,17 @@ test("three unsuccessful evaluations remain partial with the explanation",async(
  vi.mocked(evaluate).mockImplementation(async()=>({verdict:{verdict:"REVISE",target:"join",instruction:"Recheck the result",reasons:[]},checks:[]}));
  const result=await ask(cfg,db,"Count Montgomery records");expect(result.status).toBe("partial");expect(result.rounds).toBe(3);expect(result.answer?.caveats.join(" ")).toContain("could not fully support an answer");
 });
-test("an unsupported point is omitted after one Writer rewrite without upgrading the status",async()=>{
+test("three unsupported drafts keep no unchecked points and remain partial when none survive",async()=>{
  vi.mocked(write).mockImplementation(async()=>({headline:"A has 12 records.",points:["A has 5555 records."],how_sure:"A descriptive count.",caveats:[]}));
- const result=await ask(cfg,db,"Count Montgomery records");expect(write).toHaveBeenCalledTimes(2);expect(result.status).toBe("partial");expect(result.answer?.headline).toBe("A has 12 records.");expect(result.answer?.points).toEqual([]);expect(result.checks.some((c)=>c.id==="answer_draft"&&!c.ok)).toBe(true);
+ const result=await ask(cfg,db,"Count Montgomery records");expect(write).toHaveBeenCalledTimes(3);expect(result.status).toBe("partial");expect(result.answer?.headline).toBe("A has 12 records.");expect(result.answer?.points).toEqual([]);expect(result.checks.some((c)=>c.id==="answer_draft"&&c.ok)).toBe(true);
+});
+
+test("three drafts receive exact previous problems and an approved result retains surviving checked points",async()=>{
+ vi.mocked(write).mockImplementation(async()=>({headline:"A has 12 records.",points:["A has 12 records.","A has 5555 records."],how_sure:"A descriptive count.",caveats:[]}));
+ const result=await ask(cfg,db,"Count Montgomery records");
+ expect(write).toHaveBeenCalledTimes(3);
+ for(const call of vi.mocked(write).mock.calls.slice(1))expect(call[7]).toBe(JSON.stringify(["the number 5555 is not in the result rows"]));
+ expect(result.status).toBe("answered");expect(result.answer?.points).toEqual(["A has 12 records."]);
+ expect(result.removed_sentences).toEqual(["A has 5555 records."]);
+ expect(result.drafts).toHaveLength(3);
 });

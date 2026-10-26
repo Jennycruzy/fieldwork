@@ -44,6 +44,7 @@ export interface RunRecord {
   rounds: number;
   mode: "live" | "recorded";
   answer: {
+    removed_sentences?: string[];
     computed_figures?: {id:string;value:number;formula:string;rows:number[];labels:string[];column?:string}[];
     memoryWrites?: {id:string;content:string}[];
     world?: {entities:{id:string;type:string;attrs:Record<string,unknown>}[];edges:{from:string;to:string;type:string}[]};

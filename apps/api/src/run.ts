@@ -1,6 +1,6 @@
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
-import { computeFigureLedger, checkDraft, supportedDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
+import { computeFigureLedger, checkDraft, finalizeDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
@@ -44,6 +44,7 @@ export interface RunOutcome {
   providerFailed?: boolean; // the run stopped because a model provider failed, not because of the data
   view?: string; // the answer saved in Zetaris, e.g. fieldwork_answers.answer_b552f2
   message?: string;
+  removed_sentences?: string[];
   computed_figures?: ReturnType<typeof computeFigureLedger>;
   drafts?: { headline: string; points: string[]; how_sure: string; caveats: string[]; problems: string[] }[]; // drafts the answer check sent back
 }
@@ -87,7 +88,10 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         : `Meterless Runtime ${rt.state} at ${rt.baseUrl}: ${rt.reason} Using OpenRouter Nemotron.`,
   });
   if (!primary.length && !cfg.openrouterKey) throw new Error(`Meterless Runtime is ${rt.state} at ${rt.baseUrl} and no OPENROUTER_API_KEY is set.`);
-  const budget: Budget = dbBudget(db, cfg.dailyCalls);
+  let runCalls=0;
+  const dailyBudget=dbBudget(db,cfg.dailyCalls);
+  const budget: Budget = {take:async()=>{const ok=await dailyBudget.take();if(ok)runCalls++;return ok;}};
+
   const cloud = cfg.openrouterKey ? new OpenRouterProvider(cfg.openrouterKey, { allowPaid: process.env.FW_ALLOW_PAID_MODELS === "1" }) : undefined;
   const models = Object.fromEntries(
     (Object.keys(MODELS) as Role[]).map((role) => {
@@ -182,26 +186,37 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     const quotable = [...new Set([...asked, ...(tractCount ? [String(tractCount)] : [])])];
     if (quotable.length) out.checks.push({ id: "quotable_numbers", ok: true, detail: `Quotable numbers: ${quotable.join(", ")} (${[asked.length ? "from the question" : "", tractCount ? `${tractCount} census tracts compared` : ""].filter(Boolean).join("; ")})` });
     let draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds);
-    const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), `Evaluator rounds: ${out.rounds}`];
+    const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), "Evaluator rounds: "+out.rounds];
     let dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
-    if (!dc.ok) {
-      const problems = [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems].join("; ");
-      await trace.log({ agent: "evaluator", action: "check:draft", status: "error", note: `Sent the draft back to the Writer: ${problems}` });
-      out.drafts = [{ ...draft, problems: [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems] }];
-      draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds, problems);
-      dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
+    let draftCount=1;
+    while(!dc.ok && draftCount<3 && runCalls<8+3*(out.rounds-1)){
+      const problems=[...dc.missingNumbers.map(n=>"the number "+n+" is not in the result rows"),...dc.orderProblems];
+      (out.drafts??=[]).push({...draft,problems});
+      await trace.log({agent:"evaluator",action:"check:draft",status:"error",note:"Draft "+draftCount+" returned to Writer: "+JSON.stringify(problems)});
+      draft=await write(ctx,question,p,wired,joined,out.checks,out.rounds,JSON.stringify(problems));
+      draftCount++;
+      dc=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts);
     }
-    await trace.log({ agent: "evaluator", action: "check:draft", status: dc.ok ? "ok" : "error", note: dc.ok ? "Every number in the answer is in the result rows, and rankings follow the row order" : `Still flagged: ${[...dc.missingNumbers, ...dc.orderProblems].join("; ")}` });
-    if (!dc.ok) {
-      (out.drafts ??= []).push({ ...draft, problems: [...dc.missingNumbers.map((n) => `the number ${n} is not in the result rows`), ...dc.orderProblems] });
-      out.status = "partial";
-      Object.assign(draft,supportedDraft(draft,joined.result.headers,joined.result.rows,facts));
-      out.checks.push({id:"answer_draft",ok:false,detail:"Unsupported statements were omitted after the Writer rewrite; the answer remains partial."});
+    await trace.log({agent:"writer",action:"draft_count",status:"info",note:"Writer drafts: "+draftCount+"; model calls so far: "+runCalls});
+    if(!dc.ok){
+      (out.drafts??=[]).push({...draft,problems:[...dc.missingNumbers.map(n=>"the number "+n+" is not in the result rows"),...dc.orderProblems]});
+      const kept=finalizeDraft(draft,joined.result.headers,joined.result.rows,facts);
+      draft=kept.draft;out.removed_sentences=kept.removed;
+      await trace.log({agent:"writer",action:"removed_sentences",status:"info",note:JSON.stringify({count:kept.removed.length,text:kept.removed})});
+      dc=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts);
+      if(!dc.ok||!draft.points.length)out.status="partial";
     }
+    out.checks.push({id:"answer_draft",ok:dc.ok,detail:dc.ok?"Every shown sentence passes the numeric and rank checks.":"Some draft statements could not be verified."});
+    await trace.log({agent:"evaluator",action:"check:draft",status:dc.ok?"ok":"error",note:out.checks.at(-1)!.detail});
     const coverage = out.checks.find((c) => c.id.startsWith("source_dates_") && /\bOnly \d+ calendar months?\b/.test(c.detail));
     const text = [draft.headline, ...draft.points, draft.how_sure, ...draft.caveats].join(" ");
     if (coverage && !/incomplete|partial|missing|coverage|only \d+ (?:of \d+ )?(?:calendar )?months?/i.test(text)) draft.caveats.push(coverage.detail.slice(coverage.detail.search(/\bOnly \d+ calendar/)));
     if (out.status === "partial") draft.caveats.push(notice("PARTIAL", "Review the flagged checks below.").message);
+    const final=finalizeDraft(draft,joined.result.headers,joined.result.rows,facts);
+    draft=final.draft;
+    if(final.removed.length)(out.removed_sentences??=[]).push(...final.removed);
+    if(!draft.points.length)out.status="partial";
+    if(!checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts).ok)throw new Error("Final answer verification failed");
     out.answer = draft;
     out.view = await saveAnswerView(ctx, joined.sql);
     return out;
@@ -234,7 +249,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         memoryWrites: ctx.writtenMemories, intervals: ctx.intervals, world: world.context(), tracts: ctx.tractShapes, memories: ctx.recalled.map(({ id, kind, content, confidence }) => ({ id, kind, content, confidence })),
         plan: out.plan,
         sql: out.joined?.sql,
-        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, computed_figures:out.computed_figures, drafts: out.drafts, message: out.message }),
+        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, computed_figures:out.computed_figures, removed_sentences:out.removed_sentences, drafts: out.drafts, message: out.message }),
     ]);
     await trace.log({ agent: "run", action: "finish", status: out.status === "answered" ? "ok" : "info", note: `status ${out.status} after ${out.rounds} round(s)` });
   }

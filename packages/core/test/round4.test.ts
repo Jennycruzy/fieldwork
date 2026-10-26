@@ -40,3 +40,11 @@ test("the current month is code-labelled and cannot receive a comparative rank",
  expect(checkDraft(["October 2026 has the lowest count at 1."],h,rows,facts).ok).toBe(false);
  expect(checkDraft(["October 2026 has 1 record so far."],h,rows,facts).ok).toBe(true);
 });
+import {finalizeDraft}from "../src/checks.js";
+test("sentence filtering keeps verified points and rebuilds an invalid headline from rows",()=>{
+ const h=["tract_name","shelter_count"],rows=[["Census Tract 22.01","1"],["Census Tract 4","0"]];
+ const result=finalizeDraft({headline:"Tract 22.01 has 4 shelters.",points:["Tract 22.01 has 1 shelter. Tract 22.01 has 8 shelters."],how_sure:"These are listed shelters.",caveats:[]},h,rows,[]);
+ expect(result.removed).toEqual(["Tract 22.01 has 4 shelters.","Tract 22.01 has 8 shelters."]);
+ expect(result.draft.points).toEqual(["Tract 22.01 has 1 shelter."]);
+ expect(checkDraft([result.draft.headline,...result.draft.points,result.draft.how_sure],h,rows).ok).toBe(true);
+});

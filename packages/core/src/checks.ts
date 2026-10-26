@@ -494,3 +494,25 @@ export function supportedDraft<T extends {headline:string;points:string[];how_su
   how_sure:supported(draft.how_sure)?draft.how_sure:"Some draft statements could not be checked. Only supported statements are shown; review the flagged checks.",
  };
 }
+
+// Check atomic sentences, preserving valid prose when another sentence fails.
+export function finalizeDraft<T extends {headline:string;points:string[];how_sure:string;caveats:string[]}>(draft:T,headers:string[],rows:(string|null)[][],facts:string[]) {
+ const removed:string[]=[];
+ const pass=(s:string)=>checkDraft([s],headers,rows,facts).ok;
+ const filter=(text:string)=>text.split(/(?<=[.!?])\s+(?=[A-Z])/).filter(s=>{
+  if(pass(s))return true;removed.push(s);return false;
+ }).join(" ");
+ let headline=draft.headline;
+ if(!pass(headline)){
+  removed.push(headline);
+  const count=computeFigureLedger(headers,rows).find(f=>f.id==="row_count")!.value;
+  const nc=nameColumn(headers),vc=valueColumns(headers)[0];
+  const calendar=headers.findIndex(h=>/^month$/i.test(h));
+  const name=calendar>=0?["January","February","March","April","May","June","July","August","September","October","November","December"][Number(rows[0]?.[calendar])-1]:rows[0]?.[nc];
+  const top=name&&vc!==undefined?" Result for "+name+": "+headers[vc]!.replace(/_/g," ")+" "+rows[0]![vc]+".":"";
+  const template="The result contains "+count+" rows."+top;
+  headline=pass(template)?template:"The result contains "+count+" rows.";
+ }
+ const answer={...draft,headline,points:draft.points.map(filter).filter(Boolean),how_sure:filter(draft.how_sure),caveats:draft.caveats.map(filter).filter(Boolean)};
+ return {draft:answer,removed};
+}
