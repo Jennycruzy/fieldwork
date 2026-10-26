@@ -359,6 +359,8 @@ async function askWithLease(
             p,
             wired,
             bridged.map((b) => b.label),
+            why,
+            joined.sql,
           ),
         );
       } else if (ev.verdict.target === "wire") {
@@ -371,6 +373,8 @@ async function askWithLease(
             p,
             wired,
             bridged.map((b) => b.label),
+            why,
+            joined.sql,
           ),
         );
       } else {
