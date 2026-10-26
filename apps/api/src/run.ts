@@ -1,6 +1,7 @@
 import { redact } from "../../../packages/scout/src/index.js";
 import { ScoutGuard, GuardedZetarisClient, contentSafety } from "./scoutGuard.js";
 import { answerLineage, type AnswerLineage } from "./lineage.js";
+import { answerDataQuality, type AnswerDataQuality } from "./dataQuality.js";
 import { makeFinderEmbeddings } from "./finderEmbeddings.js";
 import { runBudget, RunCallLimit } from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
@@ -69,6 +70,7 @@ const MODELS: Record<Role, string[]> = {
 
 export interface RunOutcome {
   lineage?: AnswerLineage;
+  dataQuality?: AnswerDataQuality;
   runId: string;
   status: "answered" | "partial" | "refused" | "failed" | "budget";
   rounds: number;
@@ -540,6 +542,24 @@ async function askWithLease(
             : (out.lineage.message ?? "Lineage unavailable"),
       });
     }
+    // The tract model describes Montgomery's tracts, so another configured place is not checked against it.
+    if (cfg.answerDataQuality && p.geography === "tract" && !cfg.place.tractsTable) {
+      out.dataQuality = await answerDataQuality(ctx.zetaris, bridged.length > 0);
+      await trace.log({
+        agent: "run",
+        action: "data_quality",
+        status: out.dataQuality.status === "passed" ? "ok" : "error",
+        note:
+          out.dataQuality.status === "unavailable"
+            ? (out.dataQuality.message ?? "Data-quality check unavailable")
+            : out.dataQuality.results
+                .map(
+                  (r) =>
+                    `${r.table}.${r.rule}: ${r.valid.toLocaleString("en-US")}/${r.total.toLocaleString("en-US")} valid`,
+                )
+                .join("; "),
+      });
+    }
     return out;
   } catch (e) {
     if (e instanceof RunCallLimit) {
@@ -634,6 +654,7 @@ async function askWithLease(
           sql: out.joined?.sql,
           view: out.view,
           lineage: out.lineage,
+          data_quality: out.dataQuality,
           scout: scout?.snapshot(),
           skipped_sources: scout?.skipped,
           writer_chunks: ctx.writerChunkState?.engine,

@@ -20,3 +20,12 @@ foreign-key check confirms that every per-tract count refers to a real tract, so
 Results, including total, valid and invalid records for each rule, are written to
 `evidence/governed-capabilities.json`, next to the answer-lineage check (`INFER SQLTABLE SOURCES SPEC`). The command
 refuses to run between 23:54 and 01:00 UTC, the window reserved for the nightly question batch.
+
+## On each answer
+
+With `FW_ANSWER_DQ=1`, every Montgomery tract answer runs the tract rules after it is saved. An answer built on
+city records also runs the count rules, including the foreign key, which covers the answer's own counts because
+`tract_count` is activated as a live query over `fw_pg.tract_counts`. The results appear on the answer page under
+the Zetaris query and in the trace. The rules run side by side. Measured on 26 Oct 2026, they added 1.6 s to a
+tract answer and 5.1 s to one with city counts (291,381 count rows). The setting stays off until a full question
+batch measures that cost against the speed targets.

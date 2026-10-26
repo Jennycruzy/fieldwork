@@ -25,6 +25,7 @@ export interface Config {
   meterless: { baseUrl: string; token?: string; model: string };
   dailyCalls: number;
   answerLineage?: boolean;
+  answerDataQuality?: boolean;
   markovianWriter?: boolean;
   scoutGuard?: boolean;
   finderEmbeddings?: boolean;
@@ -89,6 +90,7 @@ export function config(): Config {
     },
     dailyCalls: Number(process.env.FW_DAILY_CALLS ?? 45),
     answerLineage: process.env.FW_ANSWER_LINEAGE === "1",
+    answerDataQuality: process.env.FW_ANSWER_DQ === "1",
     finderEmbeddings: process.env.FW_FINDER_EMBEDDINGS === "1",
     scoutGuard: process.env.FW_SCOUT_GUARD === "1",
     markovianWriter: process.env.FW_MARKOVIAN_WRITER === "1",

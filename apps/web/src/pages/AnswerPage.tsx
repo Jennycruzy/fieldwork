@@ -261,6 +261,20 @@ export function AnswerPage({ id }: { id: string }) {
               . Checked {when(run.answer.lineage.checked_at)}.
             </p>
           )}
+          {run.answer?.data_quality && (
+            <p className="muted">
+              Data quality in Zetaris ({run.answer.data_quality.model.split(".").pop()}):{" "}
+              {run.answer.data_quality.status === "unavailable"
+                ? "unavailable — " + run.answer.data_quality.message
+                : run.answer.data_quality.results
+                    .map(
+                      (r) =>
+                        `${r.table}.${r.rule} ${r.valid.toLocaleString("en-US")}/${r.total.toLocaleString("en-US")} valid`,
+                    )
+                    .join(", ")}
+              . Checked {when(run.answer.data_quality.checked_at)}.
+            </p>
+          )}
           {run.answer?.sql && (
             <details open={!!selected}>
               <summary>The Zetaris query</summary>

@@ -84,6 +84,13 @@ export interface RunRecord {
       query_sources: { datasource: string; alias: string }[];
       message?: string;
     };
+    data_quality?: {
+      status: "passed" | "failed" | "unavailable";
+      checked_at: string;
+      model: string;
+      results: { rule: string; table: string; type: string; total: number; valid: number; invalid: number }[];
+      message?: string;
+    };
     headers?: string[];
     rows?: (string | null)[][];
     checks?: { ok: boolean; detail: string }[];
