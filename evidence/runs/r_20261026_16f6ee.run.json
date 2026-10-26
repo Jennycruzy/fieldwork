@@ -1,0 +1,1555 @@
+{
+  "id": "r_20261026_16f6ee",
+  "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+  "created_at": "2026-10-26T07:50:18.051Z",
+  "finished_at": "2026-10-26T07:50:56.951Z",
+  "status": "answered",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT year, month, SUM(value) AS call_activity_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_16f6ee' AND source='m1_city' AND month IS NOT NULL AND year >= 2025 AND year <= 2025 GROUP BY year, month ORDER BY year, month",
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "trend",
+      "analysis": {
+        "basis": "counts",
+        "reason": "Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.",
+        "denominator": "none",
+        "rank_measure": "monthly 911 call count, ordered by month",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Monthly count of Montgomery 911 calls in 2025",
+          "search_terms": [
+            "911 calls",
+            "emergency calls",
+            "service requests",
+            "calls"
+          ]
+        }
+      ],
+      "geography": "city",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "2025",
+        "1",
+        "47828.0"
+      ],
+      [
+        "2025",
+        "2",
+        "44752.0"
+      ],
+      [
+        "2025",
+        "3",
+        "49847.0"
+      ],
+      [
+        "2025",
+        "4",
+        "50027.0"
+      ],
+      [
+        "2025",
+        "5",
+        "53299.0"
+      ],
+      [
+        "2025",
+        "6",
+        "50357.0"
+      ],
+      [
+        "2025",
+        "7",
+        "59349.0"
+      ],
+      [
+        "2025",
+        "8",
+        "54913.0"
+      ],
+      [
+        "2025",
+        "9",
+        "53450.0"
+      ],
+      [
+        "2025",
+        "10",
+        "49794.0"
+      ],
+      [
+        "2025",
+        "11",
+        "46670.0"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_16f6ee",
+    "world": {
+      "edges": [
+        {
+          "id": "ad9c87af86a575fe9abde4cc88c57cf59d61e7add24200269a26dd217dfd90cf",
+          "to": "candidate:r_20261026_16f6ee:m1:1fc59cd352224e80bab3bf8a99da907c",
+          "from": "measure:r_20261026_16f6ee:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T07:50:18.632Z"
+        },
+        {
+          "id": "f43e3fe6f31a281634a547475ef6237f9a178e1709f1d037bbdbc20f402ef3b5",
+          "to": "source:r_20261026_16f6ee:m1_city",
+          "from": "measure:r_20261026_16f6ee:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-26T07:50:18.632Z"
+        },
+        {
+          "id": "d4eaaa0823f5edf61816200d0612c199164d09b572d8a51462991ac83d9c8367",
+          "to": "source:r_20261026_16f6ee:m1_city",
+          "from": "finding:r_20261026_16f6ee:query",
+          "type": "joins to",
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "joiner"
+          },
+          "context": "source:r_20261026_16f6ee:m1_city",
+          "validFrom": "2026-10-26T07:50:18.632Z"
+        },
+        {
+          "id": "cf136808ed787b8fff7d8aaea846eb15fb2093934ff5be42005af7e586b6d3b1",
+          "to": "finding:r_20261026_16f6ee:query",
+          "from": "finding:r_20261026_16f6ee:approval-1",
+          "type": "supports",
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "evaluator"
+          },
+          "validFrom": "2026-10-26T07:50:18.632Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_16f6ee",
+          "type": "run",
+          "attrs": {
+            "question": "How did the monthly number of Montgomery 911 calls change during 2025?"
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.631Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_16f6ee:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.",
+              "denominator": "none",
+              "rank_measure": "monthly 911 call count, ordered by month",
+              "relationship": false
+            },
+            "describe": "Monthly count of Montgomery 911 calls in 2025",
+            "search_terms": [
+              "911 calls",
+              "emergency calls",
+              "service requests",
+              "calls"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_16f6ee:m1:1fc59cd352224e80bab3bf8a99da907c",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+            "title": "911 Calls",
+            "fields": [
+              {
+                "name": "Year",
+                "type": "integer",
+                "alias": "Year"
+              },
+              {
+                "name": "Month",
+                "type": "string",
+                "alias": "Month"
+              },
+              {
+                "name": "Call_Category",
+                "type": "string",
+                "alias": "Call Category"
+              },
+              {
+                "name": "Phone_Service_Provider_Type",
+                "type": "string",
+                "alias": "Phone Service Provider Type"
+              },
+              {
+                "name": "Call_Count_by_Phone_Service_Pro",
+                "type": "integer",
+                "alias": "Call Count by Phone Service Provider Type"
+              },
+              {
+                "name": "Call_Origin",
+                "type": "string",
+                "alias": "Call Origin"
+              },
+              {
+                "name": "Call_Count_By_Origin",
+                "type": "integer",
+                "alias": "Call Count by Origin"
+              },
+              {
+                "name": "FID",
+                "type": "oid",
+                "alias": "FID"
+              }
+            ],
+            "measure": "Monthly count of Montgomery 911 calls in 2025",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "source:r_20261026_16f6ee:m1_city",
+          "type": "source",
+          "attrs": {
+            "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+            "title": "911 Calls",
+            "fields": [
+              "FID",
+              "Year",
+              "Month",
+              "Call_Count_By_Origin"
+            ],
+            "filter": "Year = 2025",
+            "tables": [
+              "fw_16f6ee_m1_city_p0"
+            ],
+            "records": 132
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "wiring:r_20261026_16f6ee:verified",
+          "type": "wiring",
+          "attrs": {
+            "runId": "r_20261026_16f6ee",
+            "wired": [
+              {
+                "label": "m1_city",
+                "shape": "arcgis_table",
+                "title": "911 Calls",
+                "where": "Year = 2025",
+                "capped": false,
+                "fields": [
+                  "FID",
+                  "Year",
+                  "Month",
+                  "Call_Count_By_Origin"
+                ],
+                "tables": [
+                  "fw_16f6ee_m1_city_p0"
+                ],
+                "licence": "No explicit license supplied in the catalog",
+                "measure": "Monthly count of Montgomery 911 calls in 2025",
+                "measureId": "m1",
+                "sourceUrl": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+                "valueKind": "count",
+                "yearField": "Year",
+                "accessedAt": "2026-10-26T07:50:29.192Z",
+                "groupField": "Month",
+                "licenceUrl": "https://www.arcgis.com/home/item.html?id=1fc59cd352224e80bab3bf8a99da907c",
+                "monthField": "Month",
+                "valueField": "Call_Count_By_Origin",
+                "sourceCount": 132,
+                "zetarisCount": 132,
+                "categoryField": "Month",
+                "objectIdField": "FID",
+                "catalogUpdatedAt": "2025-08-07T16:08:08.000Z",
+                "catalogDescription": "This dataset shows the number of 911 calls per month by category, origin, and phone service provider.",
+                "excludedTestRecords": 0
+              }
+            ],
+            "signature": "{\"plan\":{\"in_scope\":true,\"scope_limit\":null,\"out_of_scope_reason\":null,\"geography\":\"city\",\"years\":{\"from\":2025,\"to\":2025},\"measures\":[{\"id\":\"m1\",\"describe\":\"Monthly count of Montgomery 911 calls in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"911 calls\",\"emergency calls\",\"service requests\",\"calls\"]}],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.\",\"rank_measure\":\"monthly 911 call count, ordered by month\"},\"output\":\"trend\"},\"chosen\":[[\"m1\",\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",[{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"Call_Category\",\"alias\":\"Call Category\",\"type\":\"string\"},{\"name\":\"Phone_Service_Provider_Type\",\"alias\":\"Phone Service Provider Type\",\"type\":\"string\"},{\"name\":\"Call_Count_by_Phone_Service_Pro\",\"alias\":\"Call Count by Phone Service Provider Type\",\"type\":\"integer\"},{\"name\":\"Call_Origin\",\"alias\":\"Call Origin\",\"type\":\"string\"},{\"name\":\"Call_Count_By_Origin\",\"alias\":\"Call Count by Origin\",\"type\":\"integer\"},{\"name\":\"FID\",\"alias\":\"FID\",\"type\":\"oid\"}],null]],\"version\":1}"
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "finding:r_20261026_16f6ee:query",
+          "type": "finding",
+          "attrs": {
+            "sql": "SELECT year, month, SUM(value) AS call_activity_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_16f6ee' AND source='m1_city' AND month IS NOT NULL AND year >= 2025 AND year <= 2025 GROUP BY year, month ORDER BY year, month",
+            "rows": 11,
+            "headers": [
+              "year",
+              "month",
+              "call_activity_count"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "joiner"
+          }
+        },
+        {
+          "id": "round:r_20261026_16f6ee:1",
+          "type": "round",
+          "attrs": {
+            "checks": [
+              {
+                "id": "rows_m1_city",
+                "ok": true,
+                "detail": "m1_city: Zetaris rows 132 vs source's own count 132"
+              },
+              {
+                "id": "has_rows",
+                "ok": true,
+                "detail": "11 result rows"
+              },
+              {
+                "id": "measure_values",
+                "ok": true,
+                "detail": "every measure column has real values"
+              },
+              {
+                "id": "duplicates",
+                "ok": true,
+                "detail": "0 duplicate case IDs removed before tract counting."
+              },
+              {
+                "id": "source_accessed_m1_city",
+                "ok": true,
+                "detail": "911 Calls: retrieved 2026-10-26. Catalog updated 2025-08-07; retrieval is not an event or inspection date."
+              },
+              {
+                "id": "source_definition_m1_city",
+                "ok": true,
+                "detail": "Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider."
+              },
+              {
+                "id": "call_units_m1_city",
+                "ok": true,
+                "detail": "This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates."
+              },
+              {
+                "id": "source_dates_m1_city",
+                "ok": true,
+                "detail": "911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+              },
+              {
+                "id": "analysis_basis",
+                "ok": true,
+                "detail": "counts; denominator: none. Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed."
+              }
+            ],
+            "verdict": "APPROVE"
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "evaluator"
+          }
+        },
+        {
+          "id": "finding:r_20261026_16f6ee:approval-1",
+          "type": "finding",
+          "attrs": {
+            "round": 1,
+            "status": "approved",
+            "reasons": [
+              "Monthly 911 call counts for 11 months of 2025 are provided, directly showing change; no population denominator needed."
+            ],
+            "instruction": null
+          },
+          "source": {
+            "at": "2026-10-26T07:50:18.632Z",
+            "run": "r_20261026_16f6ee",
+            "kind": "evaluator"
+          }
+        }
+      ]
+    },
+    "answer": {
+      "points": [
+        "February 2025 recorded the lowest monthly total at 44,752 calls, while July 2025 peaked at 59,349 calls, a difference of 14,597 calls."
+      ],
+      "caveats": [
+        "Only 11 months are available; December 2025 is pending and not included in the trend.",
+        "Counts are weighted call-center activity totals, not confirmed incident counts or crime rates.",
+        "A 1-month change of -2.4% is a net difference; individual month-to-month swings are larger (up to 32.6%).",
+        "These are weighted call-center activity totals, not confirmed incidents or crime statistics."
+      ],
+      "headline": "Montgomery 911 calls fell 2.4% from January to November 2025, with a 1,158-call drop and a 32.6% surge from February to July.",
+      "how_sure": "The data covers 11 of 12 calendar months in 2025 (January through November); December 2025 is not yet recorded, so the trend reflects 11 months of activity."
+    },
+    "checks": [
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 132 vs source's own count 132"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "11 result rows"
+      },
+      {
+        "id": "measure_values",
+        "ok": true,
+        "detail": "every measure column has real values"
+      },
+      {
+        "id": "duplicates",
+        "ok": true,
+        "detail": "0 duplicate case IDs removed before tract counting."
+      },
+      {
+        "id": "source_accessed_m1_city",
+        "ok": true,
+        "detail": "911 Calls: retrieved 2026-10-26. Catalog updated 2025-08-07; retrieval is not an event or inspection date."
+      },
+      {
+        "id": "source_definition_m1_city",
+        "ok": true,
+        "detail": "Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider."
+      },
+      {
+        "id": "call_units_m1_city",
+        "ok": true,
+        "detail": "This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates."
+      },
+      {
+        "id": "source_dates_m1_city",
+        "ok": true,
+        "detail": "911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros."
+      },
+      {
+        "id": "analysis_basis",
+        "ok": true,
+        "detail": "counts; denominator: none. Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed."
+      },
+      {
+        "id": "quotable_numbers",
+        "ok": true,
+        "detail": "Quotable numbers: 911 (from the question)"
+      },
+      {
+        "id": "answer_draft",
+        "ok": true,
+        "detail": "Every shown sentence passes the numeric and rank checks."
+      }
+    ],
+    "drafts": [
+      {
+        "points": [
+          "The lowest monthly count was 44,752 in February 2025; the highest was 59,349 in July 2025, a difference of 14,597 calls.",
+          "Monthly counts fluctuated: 47,828 in January, 49,847 in March, 50,027 in April, 53,299 in May, 50,357 in June, 54,913 in August, 53,450 in September, 49,794 in October, and 46,670 in November.",
+          "The first month (January) had 47,828 calls; the last recorded month (November) had 46,670 calls, a decrease of 1,158 calls (-2.4%).",
+          "The 11-month total of 911 calls was 560,286.",
+          "Only 11 of 12 calendar months had recorded data; one month had no source rows, so full-year coverage is not established."
+        ],
+        "caveats": [
+          "Only 11 months of data are available; December 2025 is not included and its count is unknown.",
+          "Counts are model-based estimates from the 911 Calls dataset; they do not measure crime rates or confirmed incidents.",
+          "One month had no source rows; absence does not imply zero calls.",
+          "These are weighted call-center activity totals, not confirmed incidents or crime statistics."
+        ],
+        "headline": "911 calls rose from 44,752 in February to a peak of 59,349 in July, then fell to 46,670 in November, a net decline of 1,158 calls over the 11 recorded months of 2025.",
+        "how_sure": "Counts are from the 911 Calls dataset (132 records retrieved 2026-10-26); monthly coverage is 2025-01 through 2025-11 (11 distinct months). One month lacks source rows, so full annual coverage is not confirmed. No population denominator is used; raw counts show workload change.",
+        "problems": [
+          "the number 1158 is not in the result rows",
+          "the number 14597 is not in the result rows",
+          "the number -2.4 is not in the result rows"
+        ]
+      },
+      {
+        "points": [
+          "Call counts ranged from 44,752 in February to 59,349 in July, a difference of 14,597 calls.",
+          "January started at 47,828 calls; November ended at 46,670, a drop of 1,158 calls (-2.4%).",
+          "July's 59,349 calls were 32.6% higher than February's 44,752, the largest month‑to‑month swing in the year.",
+          "Monthly counts fluctuated throughout 2025, with six months above 50,000 and five months below."
+        ],
+        "caveats": [
+          "Only 11 months are recorded; December 2025 is missing and its value is unknown.",
+          "Counts are weighted call‑center activity totals, not a count of individual calls or confirmed emergencies.",
+          "No population denominator is applied; trends reflect workload changes, not per‑capita rates.",
+          "These are weighted call-center activity totals, not confirmed incidents or crime statistics."
+        ],
+        "headline": "Montgomery 911 calls fell 2.4% from January to November 2025, with a 32.6% spike in July and a low of 44,752 calls in February.",
+        "how_sure": "Data cover 11 of 12 calendar months in 2025 (January through November); December is absent and not confirmed as zero. Figures are raw call‑center activity counts, not crime rates or confirmed incidents.",
+        "problems": [
+          "the number 32.6 is not in the result rows",
+          "the number 1158 is not in the result rows",
+          "the number -2.4 is not in the result rows",
+          "the number 50 is not in the result rows",
+          "\"February's 44,752, the largest month-to-month swing in the year.\" puts February at rank 1, but in the rows it is rank 11 by call_activity_count"
+        ]
+      },
+      {
+        "points": [
+          "January 2025 started at 47,828 calls; November 2025 ended at 46,670 calls, a net decrease of 1,158 calls (-2.4%).",
+          "February 2025 recorded the lowest monthly total at 44,752 calls, while July 2025 peaked at 59,349 calls, a difference of 14,597 calls.",
+          "The month-to-month change ranged from a 17.86% increase (May to June) to a 7.47% decrease (June to July).",
+          "Five of the eleven months in 2025 had call counts below 48,000, and six months exceeded 50,000 calls."
+        ],
+        "caveats": [
+          "Only 11 months are available; December 2025 is pending and not included in the trend.",
+          "Counts are weighted call-center activity totals, not confirmed incident counts or crime rates.",
+          "A 1-month change of -2.4% is a net difference; individual month-to-month swings are larger (up to 32.6%).",
+          "These are weighted call-center activity totals, not confirmed incidents or crime statistics."
+        ],
+        "headline": "Montgomery 911 calls fell 2.4% from January to November 2025, with a 1,158-call drop and a 32.6% surge from February to July.",
+        "how_sure": "The data covers 11 of 12 calendar months in 2025 (January through November); December 2025 is not yet recorded, so the trend reflects 11 months of activity.",
+        "problems": [
+          "the number 1158 is not in the result rows",
+          "the number -2.4 is not in the result rows",
+          "the number 7.47 is not in the result rows",
+          "the number 48000 is not in the result rows",
+          "the number 50000 is not in the result rows"
+        ]
+      }
+    ],
+    "headers": [
+      "year",
+      "month",
+      "call_activity_count"
+    ],
+    "sources": [
+      {
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+        "label": "m1_city",
+        "title": "911 Calls",
+        "filter": "Year = 2025",
+        "licence": "No explicit license supplied in the catalog",
+        "records": 132,
+        "accessedAt": "2026-10-26T07:50:29.192Z",
+        "licenceUrl": "https://www.arcgis.com/home/item.html?id=1fc59cd352224e80bab3bf8a99da907c",
+        "description": "This dataset shows the number of 911 calls per month by category, origin, and phone service provider.",
+        "sourceCount": 132,
+        "catalogUpdatedAt": "2025-08-07T16:08:08.000Z"
+      }
+    ],
+    "memories": [
+      {
+        "id": "mem-936",
+        "kind": "choice",
+        "content": "For \"Monthly count of Montgomery 911 / emergency calls for service in 2025\" in Montgomery, AL, dataset \"911 Calls\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0) was read through Zetaris: 132 records; fields FID, Year, Month, Call_Count_By_Origin. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 0.8
+      },
+      {
+        "id": "mem-585",
+        "kind": "choice",
+        "content": "For \"Count of listed pharmacies in each Montgomery census tract\" in Montgomery, AL, dataset \"Pharmacy Locator\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer) was read through Zetaris: 33 records; fields OBJECTID, custCOMPANY_NAME. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-247",
+        "kind": "choice",
+        "content": "For \"Count of food establishments whose latest inspection score is below 85, grouped by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Food Scores\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer): Directly provides food inspection scores for Montgomery establishments grouped by census tract, matching the measure and marked newest in series.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-559",
+        "kind": "quality",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request.",
+        "confidence": 0.87
+      },
+      {
+        "id": "mem-324",
+        "kind": "quality",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request.",
+        "confidence": 0.77
+      }
+    ],
+    "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-999",
+        "content": "{\"catalog_source\":{\"candidate\":{\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=1fc59cd352224e80bab3bf8a99da907c\",\"catalog\":\"montgomery_hub\",\"id\":\"1fc59cd352224e80bab3bf8a99da907c\",\"title\":\"911 Calls\",\"description\":\"This dataset shows the number of 911 calls per month by category, origin, and phone service provider.\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"kind\":\"arcgis_layer\",\"modified\":\"2025-08-07T16:08:08.000Z\"},\"kind\":\"city_records\",\"terms\":[\"911 calls\",\"emergency calls\",\"service requests\",\"calls\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T07:50:18.632Z\"}}"
+      },
+      {
+        "id": "mem-1000",
+        "content": "For \"Monthly count of Montgomery 911 calls in 2025\" in Montgomery, AL, dataset \"911 Calls\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0) was read through Zetaris: 132 records; fields FID, Year, Month, Call_Count_By_Origin. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-564",
+        "content": "Dataset \"911 Calls\" wires into Zetaris as arcgis_table; filter Year = 2025; fields FID, Year, Month, Call_Count_By_Origin; 132 of 132 source records read."
+      },
+      {
+        "id": "mem-937",
+        "content": "A working Zetaris join for \"How did the monthly number of Montgomery 911 calls change during 2025?\": SELECT year, month, SUM(value) AS call_activity_count FROM fw_pg.tract_observations WHERE run_id='<run_id>' AND source='m1_city' AND month IS NOT NULL AND year >= 2025 AND year <= 2025 GROUP BY year, month ORDER BY year, month"
+      },
+      {
+        "id": "mem-565",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_16f6ee\",\"type\":\"run\",\"attrs\":{\"question\":\"How did the monthly number of Montgomery 911 calls change during 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T07:50:18.631Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-566",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_16f6ee:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Monthly count of Montgomery 911 calls in 2025\",\"kind\":\"city_records\",\"search_terms\":[\"911 calls\",\"emergency calls\",\"service requests\",\"calls\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.\",\"rank_measure\":\"monthly 911 call count, ordered by month\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[{\"from\":\"measure:r_20261026_16f6ee:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_16f6ee:m1:1fc59cd352224e80bab3bf8a99da907c\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"ad9c87af86a575fe9abde4cc88c57cf59d61e7add24200269a26dd217dfd90cf\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"},{\"from\":\"measure:r_20261026_16f6ee:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261026_16f6ee:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"f43e3fe6f31a281634a547475ef6237f9a178e1709f1d037bbdbc20f402ef3b5\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"}]}"
+      },
+      {
+        "id": "mem-567",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_16f6ee:m1:1fc59cd352224e80bab3bf8a99da907c\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Monthly count of Montgomery 911 calls in 2025\",\"title\":\"911 Calls\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"fields\":[{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"Call_Category\",\"alias\":\"Call Category\",\"type\":\"string\"},{\"name\":\"Phone_Service_Provider_Type\",\"alias\":\"Phone Service Provider Type\",\"type\":\"string\"},{\"name\":\"Call_Count_by_Phone_Service_Pro\",\"alias\":\"Call Count by Phone Service Provider Type\",\"type\":\"integer\"},{\"name\":\"Call_Origin\",\"alias\":\"Call Origin\",\"type\":\"string\"},{\"name\":\"Call_Count_By_Origin\",\"alias\":\"Call Count by Origin\",\"type\":\"integer\"},{\"name\":\"FID\",\"alias\":\"FID\",\"type\":\"oid\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[{\"from\":\"measure:r_20261026_16f6ee:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_16f6ee:m1:1fc59cd352224e80bab3bf8a99da907c\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"ad9c87af86a575fe9abde4cc88c57cf59d61e7add24200269a26dd217dfd90cf\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"}]}"
+      },
+      {
+        "id": "mem-568",
+        "content": "{\"world_entity\":{\"id\":\"source:r_20261026_16f6ee:m1_city\",\"type\":\"source\",\"attrs\":{\"title\":\"911 Calls\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"tables\":[\"fw_16f6ee_m1_city_p0\"],\"filter\":\"Year = 2025\",\"fields\":[\"FID\",\"Year\",\"Month\",\"Call_Count_By_Origin\"],\"records\":132},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[{\"from\":\"measure:r_20261026_16f6ee:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261026_16f6ee:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"f43e3fe6f31a281634a547475ef6237f9a178e1709f1d037bbdbc20f402ef3b5\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"},{\"from\":\"finding:r_20261026_16f6ee:query\",\"type\":\"joins to\",\"to\":\"source:r_20261026_16f6ee:m1_city\",\"context\":\"source:r_20261026_16f6ee:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"d4eaaa0823f5edf61816200d0612c199164d09b572d8a51462991ac83d9c8367\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"}]}"
+      },
+      {
+        "id": "mem-569",
+        "content": "{\"world_entity\":{\"id\":\"wiring:r_20261026_16f6ee:verified\",\"type\":\"wiring\",\"attrs\":{\"runId\":\"r_20261026_16f6ee\",\"signature\":\"{\\\"plan\\\":{\\\"in_scope\\\":true,\\\"scope_limit\\\":null,\\\"out_of_scope_reason\\\":null,\\\"geography\\\":\\\"city\\\",\\\"years\\\":{\\\"from\\\":2025,\\\"to\\\":2025},\\\"measures\\\":[{\\\"id\\\":\\\"m1\\\",\\\"describe\\\":\\\"Monthly count of Montgomery 911 calls in 2025\\\",\\\"kind\\\":\\\"city_records\\\",\\\"search_terms\\\":[\\\"911 calls\\\",\\\"emergency calls\\\",\\\"service requests\\\",\\\"calls\\\"]}],\\\"analysis\\\":{\\\"basis\\\":\\\"counts\\\",\\\"denominator\\\":\\\"none\\\",\\\"relationship\\\":false,\\\"reason\\\":\\\"Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.\\\",\\\"rank_measure\\\":\\\"monthly 911 call count, ordered by month\\\"},\\\"output\\\":\\\"trend\\\"},\\\"chosen\\\":[[\\\"m1\\\",\\\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\\\",[{\\\"name\\\":\\\"Year\\\",\\\"alias\\\":\\\"Year\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Month\\\",\\\"alias\\\":\\\"Month\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Call_Category\\\",\\\"alias\\\":\\\"Call Category\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Phone_Service_Provider_Type\\\",\\\"alias\\\":\\\"Phone Service Provider Type\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Call_Count_by_Phone_Service_Pro\\\",\\\"alias\\\":\\\"Call Count by Phone Service Provider Type\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"Call_Origin\\\",\\\"alias\\\":\\\"Call Origin\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Call_Count_By_Origin\\\",\\\"alias\\\":\\\"Call Count by Origin\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"FID\\\",\\\"alias\\\":\\\"FID\\\",\\\"type\\\":\\\"oid\\\"}],null]],\\\"version\\\":1}\",\"wired\":[{\"measureId\":\"m1\",\"measure\":\"Monthly count of Montgomery 911 calls in 2025\",\"label\":\"m1_city\",\"title\":\"911 Calls\",\"shape\":\"arcgis_table\",\"yearField\":\"Year\",\"monthField\":\"Month\",\"categoryField\":\"Month\",\"valueField\":\"Call_Count_By_Origin\",\"valueKind\":\"count\",\"objectIdField\":\"FID\",\"tables\":[\"fw_16f6ee_m1_city_p0\"],\"fields\":[\"FID\",\"Year\",\"Month\",\"Call_Count_By_Origin\"],\"groupField\":\"Month\",\"where\":\"Year = 2025\",\"sourceCount\":132,\"zetarisCount\":132,\"capped\":false,\"excludedTestRecords\":0,\"sourceUrl\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"accessedAt\":\"2026-10-26T07:50:29.192Z\",\"catalogUpdatedAt\":\"2025-08-07T16:08:08.000Z\",\"catalogDescription\":\"This dataset shows the number of 911 calls per month by category, origin, and phone service provider.\",\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=1fc59cd352224e80bab3bf8a99da907c\"}]},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-725",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261026_16f6ee:query\",\"type\":\"finding\",\"attrs\":{\"sql\":\"SELECT year, month, SUM(value) AS call_activity_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_16f6ee' AND source='m1_city' AND month IS NOT NULL AND year >= 2025 AND year <= 2025 GROUP BY year, month ORDER BY year, month\",\"headers\":[\"year\",\"month\",\"call_activity_count\"],\"rows\":11},\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[{\"from\":\"finding:r_20261026_16f6ee:query\",\"type\":\"joins to\",\"to\":\"source:r_20261026_16f6ee:m1_city\",\"context\":\"source:r_20261026_16f6ee:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"d4eaaa0823f5edf61816200d0612c199164d09b572d8a51462991ac83d9c8367\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"},{\"from\":\"finding:r_20261026_16f6ee:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261026_16f6ee:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"cf136808ed787b8fff7d8aaea846eb15fb2093934ff5be42005af7e586b6d3b1\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"}]}"
+      },
+      {
+        "id": "mem-726",
+        "content": "{\"world_entity\":{\"id\":\"round:r_20261026_16f6ee:1\",\"type\":\"round\",\"attrs\":{\"verdict\":\"APPROVE\",\"checks\":[{\"id\":\"rows_m1_city\",\"ok\":true,\"detail\":\"m1_city: Zetaris rows 132 vs source's own count 132\"},{\"id\":\"has_rows\",\"ok\":true,\"detail\":\"11 result rows\"},{\"id\":\"measure_values\",\"ok\":true,\"detail\":\"every measure column has real values\"},{\"id\":\"duplicates\",\"ok\":true,\"detail\":\"0 duplicate case IDs removed before tract counting.\"},{\"id\":\"source_accessed_m1_city\",\"ok\":true,\"detail\":\"911 Calls: retrieved 2026-10-26. Catalog updated 2025-08-07; retrieval is not an event or inspection date.\"},{\"id\":\"source_definition_m1_city\",\"ok\":true,\"detail\":\"Published description for 911 Calls: This dataset shows the number of 911 calls per month by category, origin, and phone service provider.\"},{\"id\":\"call_units_m1_city\",\"ok\":true,\"detail\":\"This table contains call-center activity summaries, including emergency and non-emergency call categories. Sum the published Call_Count_By_Origin values; do not count rows or add parallel provider totals. These calls are not confirmed incidents and do not measure crime rates.\"},{\"id\":\"source_dates_m1_city\",\"ok\":true,\"detail\":\"911 Calls: event dates not published to not published; monthly coverage 2025-01 through 2025-11 (11 distinct months). Only 11 calendar months contain records; 1 have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.\"},{\"id\":\"analysis_basis\",\"ok\":true,\"detail\":\"counts; denominator: none. Raw monthly call counts directly show how the 911 workload changed month to month during 2025; no population denominator or cross-tract association is needed.\"}]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-727",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261026_16f6ee:approval-1\",\"type\":\"finding\",\"attrs\":{\"round\":1,\"status\":\"approved\",\"instruction\":null,\"reasons\":[\"Monthly 911 call counts for 11 months of 2025 are provided, directly showing change; no population denominator needed.\"]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"}},\"relationships\":[{\"from\":\"finding:r_20261026_16f6ee:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261026_16f6ee:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T07:50:18.632Z\",\"run\":\"r_20261026_16f6ee\"},\"id\":\"cf136808ed787b8fff7d8aaea846eb15fb2093934ff5be42005af7e586b6d3b1\",\"validFrom\":\"2026-10-26T07:50:18.632Z\"}]}"
+      }
+    ],
+    "computed_figures": [
+      {
+        "id": "row_count",
+        "kind": "count",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 11,
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "COUNT(result rows)"
+      },
+      {
+        "id": "distinct_periods",
+        "kind": "count",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 11,
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "COUNT(DISTINCT (year,month))"
+      },
+      {
+        "id": "calendar_months",
+        "kind": "count",
+        "rows": [],
+        "value": 12,
+        "labels": [],
+        "formula": "MONTHS_PER_CALENDAR_YEAR (calendar definition; not an observed-data count)"
+      },
+      {
+        "id": "distinct_year",
+        "kind": "count",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 1,
+        "column": "year",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "COUNT(DISTINCT year)"
+      },
+      {
+        "id": "distinct_month",
+        "kind": "count",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 11,
+        "column": "month",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "COUNT(DISTINCT month)"
+      },
+      {
+        "id": "call_activity_count_total",
+        "kind": "total",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 560286,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "SUM(call_activity_count)"
+      },
+      {
+        "id": "call_activity_count_zero_count",
+        "kind": "count",
+        "rows": [],
+        "value": 0,
+        "column": "call_activity_count",
+        "labels": [],
+        "formula": "COUNT(rows WHERE call_activity_count = 0)"
+      },
+      {
+        "id": "call_activity_count_positive_count",
+        "kind": "count",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "value": 11,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count > 0)"
+      },
+      {
+        "id": "call_activity_count_group_47828",
+        "kind": "count",
+        "rows": [
+          0
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 47828)"
+      },
+      {
+        "id": "call_activity_count_group_44752",
+        "kind": "count",
+        "rows": [
+          1
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 44752)"
+      },
+      {
+        "id": "call_activity_count_group_49847",
+        "kind": "count",
+        "rows": [
+          2
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "March 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 49847)"
+      },
+      {
+        "id": "call_activity_count_group_50027",
+        "kind": "count",
+        "rows": [
+          3
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "April 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 50027)"
+      },
+      {
+        "id": "call_activity_count_group_53299",
+        "kind": "count",
+        "rows": [
+          4
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "May 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 53299)"
+      },
+      {
+        "id": "call_activity_count_group_50357",
+        "kind": "count",
+        "rows": [
+          5
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "June 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 50357)"
+      },
+      {
+        "id": "call_activity_count_group_59349",
+        "kind": "count",
+        "rows": [
+          6
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 59349)"
+      },
+      {
+        "id": "call_activity_count_group_54913",
+        "kind": "count",
+        "rows": [
+          7
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "August 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 54913)"
+      },
+      {
+        "id": "call_activity_count_group_53450",
+        "kind": "count",
+        "rows": [
+          8
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "September 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 53450)"
+      },
+      {
+        "id": "call_activity_count_group_49794",
+        "kind": "count",
+        "rows": [
+          9
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "October 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 49794)"
+      },
+      {
+        "id": "call_activity_count_group_46670",
+        "kind": "count",
+        "rows": [
+          10
+        ],
+        "value": 1,
+        "column": "call_activity_count",
+        "labels": [
+          "November 2025"
+        ],
+        "formula": "COUNT(rows WHERE call_activity_count = 46670)"
+      },
+      {
+        "id": "call_activity_count_min",
+        "kind": "minimum",
+        "rows": [
+          1
+        ],
+        "value": 44752,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025"
+        ],
+        "formula": "MIN(call_activity_count)"
+      },
+      {
+        "id": "call_activity_count_max",
+        "kind": "maximum",
+        "rows": [
+          6
+        ],
+        "value": 59349,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025"
+        ],
+        "formula": "MAX(call_activity_count)"
+      },
+      {
+        "id": "call_activity_count_first_3_total",
+        "kind": "total",
+        "rows": [
+          0,
+          1,
+          2
+        ],
+        "value": 142427,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025"
+        ],
+        "formula": "SUM(call_activity_count in first 3 result rows)"
+      },
+      {
+        "id": "call_activity_count_first_5_total",
+        "kind": "total",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "value": 245753,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025"
+        ],
+        "formula": "SUM(call_activity_count in first 5 result rows)"
+      },
+      {
+        "id": "call_activity_count_first_10_total",
+        "kind": "total",
+        "rows": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "value": 513616,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025",
+          "March 2025",
+          "April 2025",
+          "May 2025",
+          "June 2025",
+          "July 2025",
+          "August 2025",
+          "September 2025",
+          "October 2025"
+        ],
+        "formula": "SUM(call_activity_count in first 10 result rows)"
+      },
+      {
+        "id": "call_activity_count_named_total_1_6",
+        "kind": "total",
+        "rows": [
+          1,
+          6
+        ],
+        "value": 104101,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "July 2025"
+        ],
+        "formula": "SUM(call_activity_count in rows 2,7)"
+      },
+      {
+        "id": "call_activity_count_difference_1:6",
+        "kind": "difference",
+        "rows": [
+          1,
+          6
+        ],
+        "value": 14597,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "July 2025"
+        ],
+        "formula": "call_activity_count[row 7] - call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_percent_1:6",
+        "kind": "percent_change",
+        "rows": [
+          1,
+          6
+        ],
+        "value": 32.61753664640686,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "July 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 7] - call_activity_count[row 2]) / call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_difference_0:10",
+        "kind": "difference",
+        "rows": [
+          0,
+          10
+        ],
+        "value": -1158,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "November 2025"
+        ],
+        "formula": "call_activity_count[row 11] - call_activity_count[row 1]"
+      },
+      {
+        "id": "call_activity_count_percent_0:10",
+        "kind": "percent_change",
+        "rows": [
+          0,
+          10
+        ],
+        "value": -2.421175880237518,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "November 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 11] - call_activity_count[row 1]) / call_activity_count[row 1]"
+      },
+      {
+        "id": "call_activity_count_difference_1:0",
+        "kind": "difference",
+        "rows": [
+          1,
+          0
+        ],
+        "value": 3076,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "January 2025"
+        ],
+        "formula": "call_activity_count[row 1] - call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_percent_1:0",
+        "kind": "percent_change",
+        "rows": [
+          1,
+          0
+        ],
+        "value": 6.873435824097247,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "January 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 1] - call_activity_count[row 2]) / call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_difference_0:1",
+        "kind": "difference",
+        "rows": [
+          0,
+          1
+        ],
+        "value": -3076,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025"
+        ],
+        "formula": "call_activity_count[row 2] - call_activity_count[row 1]"
+      },
+      {
+        "id": "call_activity_count_percent_0:1",
+        "kind": "percent_change",
+        "rows": [
+          0,
+          1
+        ],
+        "value": -6.431379108472026,
+        "column": "call_activity_count",
+        "labels": [
+          "January 2025",
+          "February 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 2] - call_activity_count[row 1]) / call_activity_count[row 1]"
+      },
+      {
+        "id": "call_activity_count_difference_1:2",
+        "kind": "difference",
+        "rows": [
+          1,
+          2
+        ],
+        "value": 5095,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "March 2025"
+        ],
+        "formula": "call_activity_count[row 3] - call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_percent_1:2",
+        "kind": "percent_change",
+        "rows": [
+          1,
+          2
+        ],
+        "value": 11.38496603503754,
+        "column": "call_activity_count",
+        "labels": [
+          "February 2025",
+          "March 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 3] - call_activity_count[row 2]) / call_activity_count[row 2]"
+      },
+      {
+        "id": "call_activity_count_difference_2:3",
+        "kind": "difference",
+        "rows": [
+          2,
+          3
+        ],
+        "value": 180,
+        "column": "call_activity_count",
+        "labels": [
+          "March 2025",
+          "April 2025"
+        ],
+        "formula": "call_activity_count[row 4] - call_activity_count[row 3]"
+      },
+      {
+        "id": "call_activity_count_percent_2:3",
+        "kind": "percent_change",
+        "rows": [
+          2,
+          3
+        ],
+        "value": 0.3611049812426023,
+        "column": "call_activity_count",
+        "labels": [
+          "March 2025",
+          "April 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 4] - call_activity_count[row 3]) / call_activity_count[row 3]"
+      },
+      {
+        "id": "call_activity_count_difference_3:4",
+        "kind": "difference",
+        "rows": [
+          3,
+          4
+        ],
+        "value": 3272,
+        "column": "call_activity_count",
+        "labels": [
+          "April 2025",
+          "May 2025"
+        ],
+        "formula": "call_activity_count[row 5] - call_activity_count[row 4]"
+      },
+      {
+        "id": "call_activity_count_percent_3:4",
+        "kind": "percent_change",
+        "rows": [
+          3,
+          4
+        ],
+        "value": 6.540468147200512,
+        "column": "call_activity_count",
+        "labels": [
+          "April 2025",
+          "May 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 5] - call_activity_count[row 4]) / call_activity_count[row 4]"
+      },
+      {
+        "id": "call_activity_count_difference_4:5",
+        "kind": "difference",
+        "rows": [
+          4,
+          5
+        ],
+        "value": -2942,
+        "column": "call_activity_count",
+        "labels": [
+          "May 2025",
+          "June 2025"
+        ],
+        "formula": "call_activity_count[row 6] - call_activity_count[row 5]"
+      },
+      {
+        "id": "call_activity_count_percent_4:5",
+        "kind": "percent_change",
+        "rows": [
+          4,
+          5
+        ],
+        "value": -5.519803373421641,
+        "column": "call_activity_count",
+        "labels": [
+          "May 2025",
+          "June 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 6] - call_activity_count[row 5]) / call_activity_count[row 5]"
+      },
+      {
+        "id": "call_activity_count_difference_5:6",
+        "kind": "difference",
+        "rows": [
+          5,
+          6
+        ],
+        "value": 8992,
+        "column": "call_activity_count",
+        "labels": [
+          "June 2025",
+          "July 2025"
+        ],
+        "formula": "call_activity_count[row 7] - call_activity_count[row 6]"
+      },
+      {
+        "id": "call_activity_count_percent_5:6",
+        "kind": "percent_change",
+        "rows": [
+          5,
+          6
+        ],
+        "value": 17.856504557459736,
+        "column": "call_activity_count",
+        "labels": [
+          "June 2025",
+          "July 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 7] - call_activity_count[row 6]) / call_activity_count[row 6]"
+      },
+      {
+        "id": "call_activity_count_difference_6:7",
+        "kind": "difference",
+        "rows": [
+          6,
+          7
+        ],
+        "value": -4436,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025",
+          "August 2025"
+        ],
+        "formula": "call_activity_count[row 8] - call_activity_count[row 7]"
+      },
+      {
+        "id": "call_activity_count_percent_6:7",
+        "kind": "percent_change",
+        "rows": [
+          6,
+          7
+        ],
+        "value": -7.474430908692649,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025",
+          "August 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 8] - call_activity_count[row 7]) / call_activity_count[row 7]"
+      },
+      {
+        "id": "call_activity_count_difference_7:8",
+        "kind": "difference",
+        "rows": [
+          7,
+          8
+        ],
+        "value": -1463,
+        "column": "call_activity_count",
+        "labels": [
+          "August 2025",
+          "September 2025"
+        ],
+        "formula": "call_activity_count[row 9] - call_activity_count[row 8]"
+      },
+      {
+        "id": "call_activity_count_percent_7:8",
+        "kind": "percent_change",
+        "rows": [
+          7,
+          8
+        ],
+        "value": -2.664214302624151,
+        "column": "call_activity_count",
+        "labels": [
+          "August 2025",
+          "September 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 9] - call_activity_count[row 8]) / call_activity_count[row 8]"
+      },
+      {
+        "id": "call_activity_count_difference_8:9",
+        "kind": "difference",
+        "rows": [
+          8,
+          9
+        ],
+        "value": -3656,
+        "column": "call_activity_count",
+        "labels": [
+          "September 2025",
+          "October 2025"
+        ],
+        "formula": "call_activity_count[row 10] - call_activity_count[row 9]"
+      },
+      {
+        "id": "call_activity_count_percent_8:9",
+        "kind": "percent_change",
+        "rows": [
+          8,
+          9
+        ],
+        "value": -6.840037418147801,
+        "column": "call_activity_count",
+        "labels": [
+          "September 2025",
+          "October 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 10] - call_activity_count[row 9]) / call_activity_count[row 9]"
+      },
+      {
+        "id": "call_activity_count_difference_9:10",
+        "kind": "difference",
+        "rows": [
+          9,
+          10
+        ],
+        "value": -3124,
+        "column": "call_activity_count",
+        "labels": [
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "call_activity_count[row 11] - call_activity_count[row 10]"
+      },
+      {
+        "id": "call_activity_count_percent_9:10",
+        "kind": "percent_change",
+        "rows": [
+          9,
+          10
+        ],
+        "value": -6.273848254809816,
+        "column": "call_activity_count",
+        "labels": [
+          "October 2025",
+          "November 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 11] - call_activity_count[row 10]) / call_activity_count[row 10]"
+      },
+      {
+        "id": "call_activity_count_difference_6:1",
+        "kind": "difference",
+        "rows": [
+          6,
+          1
+        ],
+        "value": -14597,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025",
+          "February 2025"
+        ],
+        "formula": "call_activity_count[row 2] - call_activity_count[row 7]"
+      },
+      {
+        "id": "call_activity_count_percent_6:1",
+        "kind": "percent_change",
+        "rows": [
+          6,
+          1
+        ],
+        "value": -24.595191157391024,
+        "column": "call_activity_count",
+        "labels": [
+          "July 2025",
+          "February 2025"
+        ],
+        "formula": "100 * (call_activity_count[row 2] - call_activity_count[row 7]) / call_activity_count[row 7]"
+      }
+    ],
+    "removed_sentences": [
+      "January 2025 started at 47,828 calls; November 2025 ended at 46,670 calls, a net decrease of 1,158 calls (-2.4%).",
+      "The month-to-month change ranged from a 17.86% increase (May to June) to a 7.47% decrease (June to July).",
+      "Five of the eleven months in 2025 had call counts below 48,000, and six months exceeded 50,000 calls."
+    ]
+  }
+}
