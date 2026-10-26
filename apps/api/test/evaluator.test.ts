@@ -44,3 +44,43 @@ test("200 rows cannot represent the recorded source's 250 request types",()=>{
  expect(categoryTotalsCheck(categories,a).ok).toBe(false);
  expect(categoryTotalsCheck(categories,{headers:["category","record_count"],rows:categories}).ok).toBe(true);
 });
+
+test("inspection means retain the complete latest cohort with an explicit small-sample flag",()=>{
+ const sql=inspectionSummarySql("r_20261026_abcdef","Lowest average latest inspection scores",{in_scope:true,geography:"tract",output:"ranking",measures:[]},[{normalized:true,valueKind:"score",label:"inspections"}as Wired])!;
+ expect(sql).toContain("COUNT(*) AS establishment_count");
+ expect(sql).toContain("CASE WHEN COUNT(*) < 30 THEN 'small sample' ELSE 'larger sample' END AS sample_note");
+ expect(sql).not.toContain("HAVING");
+ expect(latestInspectionCheck("Lowest average latest inspection scores",[["a","e","2025-01-01","80","1"]],{headers:["name","average_latest_inspection_score","establishment_count","sample_note","geoid"],rows:[["A","80","1","small sample","a"]]}).ok).toBe(true);
+ expect(latestInspectionCheck("Lowest average latest inspection scores",[["a","e","2025-01-01","80","1"]],{headers:["name","average_latest_inspection_score","establishment_count","sample_note","geoid"],rows:[["A","90","1","small sample","a"]]}).ok).toBe(false);
+});
+
+import {positiveMembershipCheck} from "../src/agents/evaluator.js";
+test("positive membership rejects empty tracts, omissions and duplicate tracts",()=>{
+ const source=[["a"],["b"]],headers=["name","service_count","geoid"],rows=[["A","1","a"],["B","2","b"]];
+ expect(positiveMembershipCheck(source,{headers,rows}).ok).toBe(true);
+ expect(positiveMembershipCheck(source,{headers,rows:[...rows,["C","0","c"]]}).ok).toBe(false);
+ expect(positiveMembershipCheck(source,{headers,rows:rows.slice(0,1)}).ok).toBe(false);
+ expect(positiveMembershipCheck(source,{headers,rows:[rows[0]!,rows[0]!]}).ok).toBe(false);
+});
+test("the Evaluator receives disclosure instructions while small samples and accuracy checks stay visible",async()=>{
+ const json=vi.fn(async()=>({value:{verdict:"APPROVE",target:null,instruction:null,reasons:["Keep the small-sample warning"]}}));
+ const ctx={cfg:{place:{countyName:"Example",stateAbbr:"AL",stateFips:"01",countyFips:"101"}},today:new Date("2026-10-26"),trace:{log:vi.fn()},zetaris:{query:async()=>({rows:[["a","entity","2025-01-01","80","1"]]})},models:{evaluator:{json}}}as unknown as Ctx;
+ const p={in_scope:true,geography:"tract"as const,output:"ranking"as const,measures:[],analysis:{basis:"counts"as const,denominator:"none"as const,relationship:false,rank_measure:"lowest average score",reason:"Descriptive establishment averages"}};
+ const wired=[{label:"inspections",title:"Inspection Scores",normalized:true,valueKind:"score",where:"1=1",sourceCount:1,zetarisCount:1,excludedTestRecords:0}]as Wired[];
+ const ev=await evaluate(ctx,"Lowest average latest inspection scores",p,wired,[],{sql:inspectionSummarySql("r_20261026_abcdef","Lowest average latest inspection scores",p,wired)!,result:{headers:["name","average_latest_inspection_score","establishment_count","sample_note","geoid"],rows:[["A","80","1","small sample","a"]],total:1,ms:0,wallMs:0}},1);
+ expect(ev.checks.find(c=>c.id==="sample_size")?.ok).toBe(false);
+ expect(ev.checks.find(c=>c.id==="latest_inspection_values")?.ok).toBe(true);
+ const prompt=JSON.stringify(json.mock.calls);
+ expect(prompt).toContain("Do not replan, rewire or revise SQL solely to add these notes");
+ expect(prompt).toContain("Do not invent a minimum group size");
+ expect(ev.verdict.verdict).toBe("APPROVE");
+});
+
+test("a model approval cannot override an incomplete positive membership list",async()=>{
+ const ctx={cfg:{place:{countyName:"Example",stateAbbr:"AL",stateFips:"01",countyFips:"101"}},today:new Date("2026-10-26"),trace:{log:vi.fn()},zetaris:{query:async()=>({rows:[["a"],["b"]]})},models:{evaluator:{json:async()=>({value:{verdict:"APPROVE",reasons:[]}})}}}as unknown as Ctx;
+ const p={in_scope:true,geography:"tract"as const,output:"list"as const,measures:[],analysis:{basis:"counts"as const,denominator:"none"as const,relationship:false,rank_measure:"none",reason:"Listed facilities"}};
+ const wired=[{label:"services",title:"Listed Services",where:"1=1",sourceCount:3,zetarisCount:3,excludedTestRecords:0}]as Wired[];
+ const ev=await evaluate(ctx,"Which areas contain listed facilities?",p,wired,[{label:"services",matched:3,total:3,invalid:0,unmatched:0,duplicates:0,tractsWithRecords:2}],{sql:"SELECT name,count,geoid FROM data",result:{headers:["name","service_count","geoid"],rows:[["A","1","a"]],total:1,ms:0,wallMs:0}},1);
+ expect(ev.checks.find(c=>c.id==="positive_membership")?.ok).toBe(false);
+ expect(ev.verdict.verdict).toBe("REVISE");expect(ev.verdict.target).toBe("join");
+});

@@ -50,6 +50,7 @@ export function tractSummarySql(runId:string,question:string,p:Plan,wired:Wired[
  if(p.analysis.relationship){
   where.push("CAST(h."+denominator+" AS DOUBLE)>0","h."+healthField+" IS NOT NULL");
  }else if(city&&!cdc&&/\b(no|zero|without)\b/i.test(question))where.push("COALESCE(n.n,0)=0");
+ else if(city&&!cdc&&p.output==="list")where.push("COALESCE(n.n,0)>0");
  const base="SELECT "+columns.join(",")+from+(where.length?" WHERE "+where.join(" AND "):"");
  const order=" ORDER BY "+metric+(asc?" ASC":" DESC")+" NULLS LAST,tract_name";
  if(!p.analysis.relationship)return base+order;

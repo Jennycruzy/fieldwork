@@ -48,3 +48,11 @@ test("facility-registry answers always distinguish listings from emissions and e
  expect(answer.caveats).toContain("Facility registry listings are not measurements of emissions or personal exposure.");
  expect(checkDraft(answer.caveats,a.headers,a.rows).ok).toBe(true);
 });
+
+test("a small-sample warning is always disclosed even if the model omits caveats",async()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261026_f8e028.run.json","utf8")).answer;
+ const ctx={models:{writer:{json:vi.fn(async()=>({value:{headline:"The table describes inspection scores.",points:["Establishment counts are shown for each tract."],how_sure:"Latest listed inspections were compared.",caveats:[]}}))}},trace:{log:vi.fn()}}as unknown as Ctx;
+ const answer=await write(ctx,"Lowest average latest inspection scores",a.plan,[],{sql:a.sql,result:{headers:a.headers,rows:a.rows,total:a.rows.length,ms:0,wallMs:0}},a.checks,1);
+ expect(answer.caveats.some(c=>c.includes("Small establishment samples"))).toBe(true);
+ expect(checkDraft(answer.caveats,a.headers,a.rows,a.checks.map((c:{detail:string})=>c.detail)).ok).toBe(true);
+});

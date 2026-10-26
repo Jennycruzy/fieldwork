@@ -100,3 +100,10 @@ test("a revision bypasses every compiled template and executes the requested mod
   expect(result.sql).toBe(scenario.sql);expect(query).toHaveBeenCalledWith(scenario.sql,expect.any(Number));
  }
 });
+
+test("positive facility membership lists exclude empty tracts while workload rankings retain them",()=>{
+ const list=tractSummarySql(id,"Which areas contain listed services?",{...plan,output:"list"},[city],["m1_city"])!;
+ expect(list).toContain("WHERE COALESCE(n.n,0)>0");
+ expect(tractSummarySql(id,"Which areas have no listed services?",{...plan,output:"list"},[city],["m1_city"])).toContain("WHERE COALESCE(n.n,0)=0");
+ expect(tractSummarySql(id,"Most listed services",plan,[city],["m1_city"])).not.toContain("WHERE COALESCE(n.n,0)>0");
+});

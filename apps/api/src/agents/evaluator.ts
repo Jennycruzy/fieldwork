@@ -41,6 +41,11 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     excludedTestRecords: wired.reduce((n, w) => n + w.excludedTestRecords, 0),
   });
   if(zeroProof)checks.push(zeroProof);
+  if(p.geography==="tract"&&p.output==="list"&&p.analysis?.basis==="counts"&&wired.length===1&&!/\b(no|zero|without)\b/i.test(question)&&bridged.length===1&&!wired.find(w=>w.label===bridged[0]!.label)?.capped){
+    const source=bridged[0]!;
+    const present=await ctx.zetaris.query(`SELECT geoid FROM fw_pg.tract_counts WHERE run_id='${ctx.runId}' AND source='${source.label}' AND grp='all' AND n>0`,500);
+    checks.push(positiveMembershipCheck(present.rows,joined.result));
+  }
   for(const w of wired.filter(w=>w.valueKind==="score")) {
     checks.push({id:"latest_source_selection",ok:!/\bScore(?:_1)?\s*[<>=]/i.test(w.where),detail:"Retrieve full inspection histories before latest-per-establishment selection; apply score thresholds in the analysis only."});
   }
@@ -89,6 +94,8 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
         content: `${SYSTEM_BASE}
 You are the Evaluator. Challenge the work before anyone sees it. Decide APPROVE or REVISE.
 Filters listed under sources_as_wired are already applied before the SQL runs; do not ask for them again.
+Coverage, partial periods and retrieval-date limits reported by passing code checks are disclosure requirements for the Writer; code appends the coverage caveat. Do not replan, rewire or revise SQL solely to add these notes.
+sample_size is a warning about interpretation, not an incorrect aggregate. When each row exposes its establishment count and sample_note flags small groups, keep the complete cohort and state the warning in reasons for the Writer. Do not invent a minimum group size or suppress valid groups merely to remove that warning. Actual failed accuracy checks still require repair.
 REVISE (with one concrete instruction) when: the result does not answer the question asked; a needed column is missing; the comparison is unfair (e.g. raw counts where tracts differ a lot in population and the question implies a rate); the time filter does not match the plan; or a code check failed and the SQL can fix it.
 target "join" = the SQL must change; "wire" = a dataset filter or field must change; "plan" = the wrong data was chosen.
 Check the plan analysis: state whether counts or rates answer the question and why in reasons. Relationships must compare population-adjusted city rates with health prevalence, not estimated adult counts. Check denominator labels against SQL (totalpopulation means residents; totalpop18plus means adults), full paired-set size before display limits, and ORDER BY the requested ranking measure. A repeated correlation value is one statistic, not independent confirmation in every row. Check missing values and zero counts separately.
@@ -121,7 +128,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     p.analysis?.relationship?4000:2000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
-  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
+  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","positive_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
   if (empty) {
     value.verdict = "REVISE";
     value.target = empty.id === "analysis_basis" ? "plan" : empty.id==="latest_source_selection"||(empty.id==="has_rows"&&wired.some(w=>w.sourceCount===0)) ? "wire" : "join";
@@ -195,4 +202,11 @@ export function categoryTotalsCheck(source:(string|null)[][],result:{headers:str
  const expected=new Map(source.map(r=>[r[0],Number(r[1])]));
  const ok=source.length<10000&&count>=0&&result.rows.length===expected.size&&new Set(result.rows.map(r=>r[0])).size===expected.size&&result.rows.every(r=>Number(r[count])===expected.get(r[0]));
  return {id:"category_totals",ok,detail:ok?`All ${expected.size} category totals match the independently aggregated source observations.`:`The source has ${expected.size} categories; return every category and its correct weighted total before describing shares or ranks.`};
+}
+
+export function positiveMembershipCheck(source:(string|null)[][],result:{headers:string[];rows:(string|null)[][]}):CheckResult {
+ const geo=result.headers.findIndex(h=>/^(geoid|tractfips)$/i.test(h)),expected=new Set(source.map(r=>r[0]));
+ const actual=result.rows.map(r=>r[geo]);
+ const ok=geo>=0&&expected.size>0&&actual.length===expected.size&&new Set(actual).size===actual.length&&actual.every(id=>expected.has(id));
+ return {id:"positive_membership",ok,detail:ok?"Listed tracts exactly match the distinct tracts with positive independently counted source records.":"Return each tract with positive source counts exactly once; exclude tracts without listed records."};
 }

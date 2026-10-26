@@ -45,6 +45,10 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     const caveat="Facility registry listings are not measurements of emissions or personal exposure.";
     if(!value.caveats.includes(caveat))value.caveats.push(caveat);
   }
+  if(checks.some(c=>c.id==="sample_size"&&!c.ok)){
+    const caveat="Small establishment samples or population denominators are flagged in the checks; comparisons describe the listed records and should be interpreted cautiously.";
+    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  }
   for(const c of checks.filter(c=>c.ok&&c.id==="partial_month"))if(!value.caveats.includes(c.detail))value.caveats.push(c.detail);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");

@@ -108,7 +108,7 @@ export function inspectionSummarySql(runId:string,question:string,p:Plan,wired:W
  const w=wired[0],threshold=question.match(/\b(?:below|less than|under)\s+(\d+(?:\.\d+)?)/i)?.[1];
  const cte=`WITH ranked AS (SELECT geoid, entity_key, value AS inspection_score, ROW_NUMBER() OVER (PARTITION BY entity_key ORDER BY event_date DESC NULLS LAST, record_id DESC) AS rn FROM fw_pg.tract_observations WHERE run_id='${runId}' AND source='${w.label}'), latest AS (SELECT geoid, entity_key, inspection_score FROM ranked WHERE rn=1 AND inspection_score IS NOT NULL) `;
  if(threshold)return cte+`SELECT t.name, SUM(CASE WHEN l.inspection_score < ${Number(threshold)} THEN 1 ELSE 0 END) AS below_threshold_count, COUNT(l.entity_key) AS total_inspected_establishments, t.geoid FROM fw_pg.tracts t LEFT JOIN latest l ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY below_threshold_count DESC,t.name`;
- if(/\b(average|mean)\b/i.test(question))return cte+"SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, t.geoid FROM latest l JOIN fw_pg.tracts t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name";
+ if(/\b(average|mean)\b/i.test(question))return cte+"SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, CASE WHEN COUNT(*) < 30 THEN 'small sample' ELSE 'larger sample' END AS sample_note, t.geoid FROM latest l JOIN fw_pg.tracts t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name";
 }
 
 // The model sometimes writes this run's id in its short form (r_28edaa for r_20261025_28edaa, 25 Oct Q10),
