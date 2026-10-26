@@ -525,7 +525,7 @@ export function finalizeDraft<T extends {headline:string;points:string[];how_sur
 export function figureLedgerForTexts(headers:string[],rows:(string|null)[][],texts:string[]){
  const month=headers.findIndex(h=>/^month$/i.test(h)),name=nameColumn(headers);
  const names=rows.map(r=>month>=0?["January","February","March","April","May","June","July","August","September","October","November","December"][Number(r[month])-1]??"":String(r[name]??""));
- const groups=texts.filter(t=>/difference|change|higher|lower|above|below|more|fewer|range|increas|decreas|combined|\\bsum\\b|\\btotal\\b/i.test(t)).map(text=>{
+ const groups=texts.filter(t=>/difference|change|higher|lower|above|below|more|fewer|range|increas|decreas|combined|\bsum\b|\btotal\b/i.test(t)).map(text=>{
   const t=normaliseText(text);return names.map((n,i)=>mentions(t,n)?i:-1).filter(i=>i>=0);
  }).filter(g=>g.length>1);
  return computeFigureLedger(headers,rows,groups);

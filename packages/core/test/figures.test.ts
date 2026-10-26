@@ -25,3 +25,7 @@ test("a quoted comparison between arbitrary named rows keeps both source rows an
  const periods=computeFigureLedger(["year","month","record_count"],[["2025","1","10"],["2026","1","20"]]);
  expect(periods.find(f=>f.id==="distinct_periods")?.value).toBe(2);expect(periods.find(f=>f.id==="distinct_month")?.value).toBe(1);
 });
+test("a named subset total retains the exact contributing rows",()=>{
+ const fs=figureLedgerForTexts(["tract_name","record_count"],[["Tract 1","80"],["Tract 2","70"],["Tract 3","60"],["Tract 4","30"],["Tract 5","20"]],["The total for Tract 2 and Tract 4 is 100 records."]);
+ expect(fs.find(f=>f.id==="record_count_named_total_1_3")).toMatchObject({value:100,rows:[1,3]});
+});
