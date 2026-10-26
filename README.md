@@ -4,6 +4,8 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **Live Desk:** https://fieldwork.38-49-216-59.sslip.io
 
+Latest full batch: **21/25** (median 98.4 s, p90 198.6 s) on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
 > Fieldwork searches the city's open data hub and the CDC catalog, picks *Code Violations* and *CDC PLACES*, reads every record through Zetaris, places each violation in its census tract, joins the two sources by tract, checks the arithmetic independently, and writes a short answer with a map, a chart, the SQL and a trace of every step.
@@ -88,6 +90,19 @@ If a requested SQL change fails one of these checks, Fieldwork keeps the earlier
 
 ## Sponsor technology
 
+| Technology | What it does in Fieldwork | Measured | Check it |
+| --- | --- | --- | --- |
+| Zetaris Lightning | Every source record and every answer passes through it | Each run checks its row counts against the source's own count | Live run page, `evidence/runs/` |
+| Zetaris USL and data quality | The `montgomery_neighborhoods` model over Fieldwork's tract tables | 6/6 data-quality checks pass; 291,381/291,381 tract counts refer to a real tract | `npm run governed-model`, `evidence/governed-capabilities.json` |
+| Zetaris lineage | Source tables of each saved answer, from `INFER SQLTABLE SOURCES` | The saved view's sources matched the answer's query on a recorded run | `evidence/lineage-proof.json` |
+| Recipes for zetaris/getting-started | Discovered sources exported in that repo's own format | 3 recipes verified live: 71, 15,439 and 71 records | `npm run recipe:verify`, `evidence/recipes/drafts.json` |
+| Meterless H-MEM | Source memory shared across runs | H-MEM conformance 13/13 | `npm run conformance:hmem` |
+| Meterless World Model | Each run's entities and relationships | World Model conformance 8/8 | `npm run conformance:world` |
+| Meterless Markovian | Bounded Writer state over long tables (off by default) | Markovian conformance 8/8 | `npm run conformance:markovian` |
+| Meterless Scout Intent | Signed contracts; inspects untrusted source metadata (off by default) | Scout harness 32/32 examples; 30/30 poisoned descriptions blocked, 0/25 real ones | `npm run conformance:scout`, `evidence/scout/` |
+| Meterless Runtime provider | Primary model route when a Runtime is reachable | Contract test server | `tools/contract-runtime` |
+| NVIDIA Nemotron | Every model request | The model that served each request is in every trace | Live run page |
+
 ### Zetaris: the data layer
 
 All source data flows through Zetaris Lightning:
@@ -98,18 +113,24 @@ All source data flows through Zetaris Lightning:
 - The Joiner's query runs in Zetaris, through the SQL API.
 - `CREATE SCHEMASTORE CONTAINER` and `CREATE SCHEMASTORE VIEW` save each answer as a view in `fieldwork_answers`.
 - A read-only guard (`packages/zetaris/src/sql.ts`) refuses any model-written statement that could change data.
+- A Unified Semantic Layer model, `montgomery_neighborhoods`, is activated over the tract and tract-count tables. Its keys and data-quality rules check what every join relies on ([docs/governed-model.md](docs/governed-model.md)). With `FW_ANSWER_DQ=1`, the results appear on each tract answer.
+- With `FW_ANSWER_LINEAGE=1`, each answer shows the source tables Zetaris reports for its saved view.
 
-Fieldwork also contributed a verified recipe fix upstream: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36).
+Fieldwork also contributes back. A verified recipe fix is open upstream: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36). Sources Fieldwork discovers can be exported as recipes in that repo's own format and verified against a live Zetaris instance ([docs/recipes.md](docs/recipes.md)).
 
 ### Meterless: memory, world model and runtime
 
 - **H-MEM engine** (`packages/hmem`): source memory. Each run stores which datasets answered which needs, which filters worked and which failed, with trust feedback on every memory it recalled. The Finder reuses a verified choice without a model call. Memories persist in Postgres. Meterless's own conformance suite runs against this module: `npm run conformance:hmem`.
 - **World Model** (`packages/world`): Fieldwork's own implementation of the Meterless World Model. Each run's sources, tracts, findings and Evaluator challenges become entities with stable keys and relationship provenance. It passes Meterless's unmodified conformance suite: `npm run conformance:world`.
+- **Markovian** (`packages/markovian`): Fieldwork's own implementation of the Meterless Markovian engine. With `FW_MARKOVIAN_WRITER=1`, the Writer reads long tract tables in bounded chunks and carries forward only facts that pass the answer checks. It passes Meterless's unmodified conformance runner: `npm run conformance:markovian`.
+- **Scout Intent** (`packages/scout`): Fieldwork's own implementation of the Meterless Scout Intent engine. With `FW_SCOUT_GUARD=1`, each question gets a signed execution contract, and dataset titles, descriptions and columns written by strangers on public portals are inspected before they reach a prompt ([docs/scout.md](docs/scout.md)). It passes Meterless's unmodified evaluation harness: `npm run conformance:scout`.
 - **Meterless Runtime provider** (`packages/llm/src/meterless.ts`): implements the Runtime 1.4 provider contract (v4). Fieldwork tries the Runtime first and reports its status on every run. `tools/contract-runtime` is a contract test server for this provider.
 
 ### NVIDIA Nemotron: every agent
 
 Every agent runs on NVIDIA Nemotron: `nemotron-3.5-super-vl` for planning, SQL and evaluation, and `nemotron-3.5-lightning` for search, wiring and writing. When no Meterless Runtime is reachable, the requests go through OpenRouter. Each role has a second model route, which is asked only after the first has taken 30 seconds. The trace records the model that served every request.
+
+Two more Nemotron models are built in and off by default. `nemotron-3.5-content-safety` gives suspicious source metadata a second check under Scout. `nemotron-3.5-embed-8b` (with the 1B model as fallback) ranks discovered datasets against each measure, with vectors cached in Postgres, under `FW_FINDER_EMBEDDINGS=1` ([docs/embeddings.md](docs/embeddings.md)).
 
 ## Evaluation
 
@@ -121,6 +142,10 @@ Fieldwork is measured on a frozen set of 25 questions ([`evidence/questions.json
 Each question is graded in code against an independent reference read from the sources: source choice, tract identifiers, sort order, recomputed rates and differences, membership, disclosures and refusals. The question file is fingerprinted, and any change to a question or to a grading rule is recorded as an amendment with its reason.
 
 Every full batch is published, including failures, with step timings: see the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation) or [`evidence/EVAL.md`](evidence/EVAL.md). The raw results and traces are under [`evidence/question-set/`](evidence/question-set/) and [`evidence/runs/`](evidence/runs/).
+
+### Portability
+
+Fieldwork was pointed at Louisville, Kentucky with no Louisville-specific code. It found the city's property-maintenance violations and CDC PLACES cold. The first three runs failed or ended partial. The city layer holds only the last 30 days, CDC publishes no asthma estimate for Kentucky tracts, and a query template sorted by a supporting measure. After two generic fixes, a question about violations and short sleep answered in 92 s with 7 model calls. Every run, failure and open item is in [docs/portability.md](docs/portability.md) and on the Evaluation page.
 
 ## Run it yourself
 
@@ -148,6 +173,9 @@ cp .env.example .env   # then fill it in
 | `OPENROUTER_API_KEY` | Nemotron through OpenRouter when no Runtime is reachable |
 | `FW_DAILY_CALLS` | Daily model-call cap (default 45) |
 | `FW_PORT`, `FW_HOST` | Desk and API address |
+| `FW_ANSWER_LINEAGE`, `FW_ANSWER_DQ` | Zetaris lineage and data-quality results on each answer (off by default) |
+| `FW_MARKOVIAN_WRITER`, `FW_SCOUT_GUARD`, `FW_FINDER_EMBEDDINGS` | Markovian Writer, Scout inspection, embedding ranking (off by default) |
+| `FW_PLACE`, `FW_FRESH_MEMORY` | Portability runs: another place, and an empty unsaved source memory |
 
 ### Use it
 
@@ -165,6 +193,9 @@ npm run typecheck
 npm test                   # unit and integration tests
 npm run conformance:hmem   # Meterless H-MEM conformance
 npm run conformance:world  # Meterless World Model conformance
+npm run conformance:markovian  # Meterless Markovian conformance
+npm run conformance:scout  # Meterless Scout Intent evaluation harness
+npm run check:claims       # every number in this README against its evidence
 npm run format:check
 npm run wordscan
 npm run build
@@ -186,7 +217,12 @@ packages/
   llm/          Model chain with route fallback, OpenRouter and Meterless providers
   hmem/         Meterless H-MEM engine and Fieldwork's source memory
   world/        World Model implementation, tested by Meterless's conformance suite
-scripts/        Question-set runner, evaluation publisher, live-path browser check, privacy scan
+  markovian/    Markovian engine implementation, tested by Meterless's conformance runner
+  scout/        Scout Intent implementation, tested by Meterless's evaluation harness
+  embeddings/   Nemotron embedding ranking and its Postgres vector cache
+  recipes/      Recipe export in zetaris/getting-started's format
+docs/           Governed model, recipes, Scout, embeddings, portability
+scripts/        Question-set runner, evaluation publisher, live-path browser check, privacy scan, claims check
 tools/          Meterless provider contract test server
 evidence/       Question set, batch results, run traces, need sources
 ```

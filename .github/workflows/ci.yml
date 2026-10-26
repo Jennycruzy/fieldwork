@@ -17,5 +17,6 @@ jobs:
       - run: npm run conformance:world
       - run: npm run conformance:markovian
       - run: npm run conformance:scout
+      - run: npm run check:claims
       - run: npm run build
       - run: npm run wordscan

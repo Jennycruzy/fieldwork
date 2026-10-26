@@ -25,6 +25,7 @@
     "format:check": "prettier --check .",
     "recipe": "tsx scripts/recipe.ts",
     "recipe:verify": "tsx scripts/recipe-verify.ts",
+    "check:claims": "tsx scripts/check-claims.ts",
     "governed-model": "tsx scripts/governed-model.ts",
     "conformance:markovian": "MARKOVIAN_IMPL=$PWD/packages/markovian/src/index.ts tsx packages/markovian/conformance/runner.ts",
     "conformance:scout": "tsx scripts/scout-conformance.ts"
