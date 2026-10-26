@@ -62,7 +62,7 @@ import {computeFigureLedger} from "@fieldwork/core";
 test("Writer prompts retain totals, cohort sizes and extreme comparisons without every adjacent ranked pair",()=>{
  const headers=["tract_name","facility_rate","facility_count","totalpopulation","geoid"];
  const rows=Array.from({length:71},(_,i)=>["Area "+i,String(i/10),String(i),String(100+i),"geo"+i]);
- const full=computeFigureLedger(headers,rows),compact=computedFigures(headers,rows).ledger!;
+ const full=computeFigureLedger(headers,rows),compact=(computedFigures(headers,rows) as {ledger:Omit<ReturnType<typeof computeFigureLedger>[number],"labels">[]}).ledger;
  expect(compact.length).toBeLessThan(full.length*.6);
  for(const f of full.filter(f=>f.kind!=="difference"&&f.kind!=="percent_change"))expect(compact.some(c=>c.id===f.id)).toBe(true);
  expect(compact.some(f=>f.kind==="difference"&&f.rows.includes(0)&&f.rows.includes(70))).toBe(true);
@@ -72,6 +72,6 @@ test("Writer prompts retain totals, cohort sizes and extreme comparisons without
 });
 test("monthly prompts retain every adjacent period comparison with formula and source rows",()=>{
  const headers=["year","month","record_count"],rows=Array.from({length:12},(_,i)=>["2025",String(i+1),String(20+i)]);
- const full=computeFigureLedger(headers,rows),compact=computedFigures(headers,rows).ledger!;
+ const full=computeFigureLedger(headers,rows),compact=(computedFigures(headers,rows) as {ledger:Omit<ReturnType<typeof computeFigureLedger>[number],"labels">[]}).ledger;
  expect(compact).toEqual(full.map(({labels,...f})=>f));
 });
