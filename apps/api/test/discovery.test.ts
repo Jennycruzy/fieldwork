@@ -2,11 +2,11 @@ import { expect, test, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { HMEM } from "@fieldwork/hmem";
 import { find } from "../src/agents/finder.js";
-import { searchMontgomeryHub, searchSocrata, socrataColumns, layerInfo } from "@fieldwork/sources";
+import { searchCityHub, searchSocrata, socrataColumns, layerInfo } from "@fieldwork/sources";
 import type { Ctx } from "../src/agents/context.js";
 vi.mock("@fieldwork/sources", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@fieldwork/sources")>()),
-  searchMontgomeryHub: vi.fn(),
+  searchCityHub: vi.fn(),
   resolveLayerUrl: vi.fn(async (u: string) => u),
   getJson: vi.fn(async () => ({ license: { name: "Public Domain" } })),
   searchSocrata: vi.fn(),
@@ -15,7 +15,7 @@ vi.mock("@fieldwork/sources", async (importOriginal) => ({
 }));
 test("empty source cache and empty memory still discover the live-captured 311 dataset", async () => {
   const fixture = JSON.parse(readFileSync("evidence/sources/live-probes.json", "utf8"))[0];
-  vi.mocked(searchMontgomeryHub).mockResolvedValue([fixture.candidate]);
+  vi.mocked(searchCityHub).mockResolvedValue([fixture.candidate]);
   vi.mocked(layerInfo).mockResolvedValue({
     url: fixture.candidate.url,
     name: fixture.candidate.title,
@@ -26,7 +26,7 @@ test("empty source cache and empty memory still discover the live-captured 311 d
   const memory = new HMEM();
   const db = { query: vi.fn(async () => ({ rows: [] })) };
   const ctx = {
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     db,
     memory,
     recalled: [],
@@ -50,14 +50,14 @@ test("empty source cache and empty memory still discover the live-captured 311 d
     output: "ranking",
   });
   expect(result[0]?.candidate.id).toBe(fixture.candidate.id);
-  expect(searchMontgomeryHub).toHaveBeenCalledWith("311", 6);
+  expect(searchCityHub).toHaveBeenCalledWith("311", 6, "https://opendata.montgomeryal.gov");
   expect(ctx.recalled).toHaveLength(0);
   expect(db.query).not.toHaveBeenCalled();
 });
 test("empty live discovery reaches NO_SOURCE instead of choosing a remembered dataset", async () => {
-  vi.mocked(searchMontgomeryHub).mockResolvedValue([]);
+  vi.mocked(searchCityHub).mockResolvedValue([]);
   const ctx = {
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory: new HMEM(),
     recalled: [],
     trace: { log: vi.fn() },
@@ -75,7 +75,7 @@ for (const file of ["f1e7f5", "58bb8f", "217d18"])
   test(`recorded sample plan ${file} rediscovers sources with both caches empty`, async () => {
     const fixture = JSON.parse(readFileSync("evidence/sources/catalogs.json", "utf8"));
     const plan = JSON.parse(readFileSync(`evidence/runs/r_20261024_${file}.run.json`, "utf8")).answer.plan;
-    vi.mocked(searchMontgomeryHub).mockResolvedValue(fixture.city);
+    vi.mocked(searchCityHub).mockResolvedValue(fixture.city);
     vi.mocked(searchSocrata).mockResolvedValue(fixture.cdc);
     vi.mocked(layerInfo).mockImplementation(
       async (url) => fixture.cityInfo[fixture.city.find((c: { url: string }) => c.url === url).id],
@@ -86,7 +86,9 @@ for (const file of ["f1e7f5", "58bb8f", "217d18"])
     const memory = new HMEM();
     const db = { query: vi.fn(async () => ({ rows: [] })) };
     const ctx = {
-      cfg: { place: { name: "Montgomery, AL" } },
+      cfg: {
+        place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" },
+      },
       db,
       memory,
       recalled: [],
@@ -115,7 +117,7 @@ for (const file of ["f1e7f5", "58bb8f", "217d18"])
 import { WorldModel } from "../../../packages/world/src/index.js";
 test("Finder writes observed source metadata and reads the same live-rediscovered World choice", async () => {
   const fixture = JSON.parse(readFileSync("evidence/sources/live-probes.json", "utf8"))[0];
-  vi.mocked(searchMontgomeryHub).mockResolvedValue([fixture.candidate]);
+  vi.mocked(searchCityHub).mockResolvedValue([fixture.candidate]);
   vi.mocked(layerInfo).mockResolvedValue({
     url: fixture.candidate.url,
     name: fixture.candidate.title,
@@ -149,7 +151,7 @@ test("Finder writes observed source metadata and reads the same live-rediscovere
     world,
     runId,
     today,
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory: new HMEM(),
     recalled: [],
     trace: { log: vi.fn() },
@@ -176,7 +178,7 @@ test("a restrictive inspection phrase is broadened using its own catalog keyword
     url: source.url,
     description: source.description,
   };
-  vi.mocked(searchMontgomeryHub).mockImplementation(async (term) => (term === "food" ? [candidate] : []));
+  vi.mocked(searchCityHub).mockImplementation(async (term) => (term === "food" ? [candidate] : []));
   vi.mocked(layerInfo).mockResolvedValue({
     url: source.url,
     name: source.title,
@@ -185,7 +187,7 @@ test("a restrictive inspection phrase is broadened using its own catalog keyword
     geometryType: "esriGeometryPoint",
   });
   const ctx = {
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory: new HMEM(),
     recalled: [],
     trace: { log: vi.fn() },
@@ -200,7 +202,7 @@ test("a restrictive inspection phrase is broadened using its own catalog keyword
     },
   } as unknown as Ctx;
   const result = await find(ctx, missing.answer.plan);
-  expect(searchMontgomeryHub).toHaveBeenCalledWith("food", 6);
+  expect(searchCityHub).toHaveBeenCalledWith("food", 6, "https://opendata.montgomeryal.gov");
   expect(result[0]?.candidate.url).toBe(source.url);
 });
 test("broadening tries every request word: 'building' alone matched Weather Sirens, 'permits' finds the permit data", async () => {
@@ -220,7 +222,7 @@ test("broadening tries every request word: 'building' alone matched Weather Sire
     url: "https://example.invalid/Construction_Permits/FeatureServer/0",
     description: "Construction permits",
   };
-  vi.mocked(searchMontgomeryHub).mockImplementation(async (term) =>
+  vi.mocked(searchCityHub).mockImplementation(async (term) =>
     term === "building" ? [sirens] : term === "permits" ? [permits] : [],
   );
   vi.mocked(layerInfo).mockResolvedValue({
@@ -232,7 +234,7 @@ test("broadening tries every request word: 'building' alone matched Weather Sire
   });
   let offered: string[] = [];
   const ctx = {
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory: new HMEM(),
     recalled: [],
     trace: { log: vi.fn() },
@@ -258,8 +260,8 @@ test("broadening tries every request word: 'building' alone matched Weather Sire
     ],
     output: "ranking",
   });
-  expect(searchMontgomeryHub).toHaveBeenCalledWith("building", 6);
-  expect(searchMontgomeryHub).toHaveBeenCalledWith("permits", 6);
+  expect(searchCityHub).toHaveBeenCalledWith("building", 6, "https://opendata.montgomeryal.gov");
+  expect(searchCityHub).toHaveBeenCalledWith("permits", 6, "https://opendata.montgomeryal.gov");
   expect(offered).toEqual(["Weather Sirens", "Construction Permit Data"]);
   expect(result[0]?.candidate.title).toBe("Construction Permit Data");
 });
@@ -267,7 +269,7 @@ test("broadening tries every request word: 'building' alone matched Weather Sire
 import { remember } from "@fieldwork/hmem";
 import { rememberedCandidate } from "../src/agents/finder.js";
 test("a recent verified source memory skips catalogue searches while schema validation stays live", async () => {
-  vi.mocked(searchMontgomeryHub).mockClear();
+  vi.mocked(searchCityHub).mockClear();
   vi.mocked(layerInfo).mockClear();
   const fixture = JSON.parse(readFileSync("evidence/sources/live-probes.json", "utf8"))[0],
     memory = new HMEM();
@@ -290,7 +292,7 @@ test("a recent verified source memory skips catalogue searches while schema vali
   });
   const ctx = {
     today: new Date("2026-10-26T01:00:00Z"),
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory,
     recalled: [],
     trace: { log: vi.fn() },
@@ -305,7 +307,7 @@ test("a recent verified source memory skips catalogue searches while schema vali
   const m = { id: "m", describe: "311 requests", kind: "city_records" as const, search_terms: ["311"] };
   const result = await find(ctx, { in_scope: true, geography: "tract", measures: [m], output: "ranking" });
   expect(result[0]?.fields.length).toBeGreaterThan(0);
-  expect(searchMontgomeryHub).not.toHaveBeenCalled();
+  expect(searchCityHub).not.toHaveBeenCalled();
   expect(layerInfo).toHaveBeenCalledTimes(1);
   ctx.today = new Date("2026-10-28");
   expect(rememberedCandidate(ctx, m)).toBeUndefined();
@@ -336,7 +338,7 @@ test("a shared generic catalogue term cannot reuse a different measure's cached 
   const ctx = {
     memory,
     today: new Date("2026-10-26T01:00:00Z"),
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     recalled: [],
   } as unknown as Ctx;
   expect(

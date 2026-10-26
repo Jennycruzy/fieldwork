@@ -28,14 +28,48 @@ export interface Config {
   markovianWriter?: boolean;
   scoutGuard?: boolean;
   finderEmbeddings?: boolean;
-  place: {
-    name: string;
-    stateFips: string;
-    countyFips: string;
-    countyName: string;
-    stateAbbr: string;
-    hub: string;
-  };
+  freshMemory?: boolean;
+  place: Place;
+}
+
+export interface Place {
+  name: string;
+  city: string;
+  region: string;
+  stateFips: string;
+  countyFips: string;
+  countyName: string;
+  stateAbbr: string;
+  hub: string;
+  tractsTable?: string;
+}
+
+const MONTGOMERY: Place = {
+  name: "Montgomery, AL",
+  city: "Montgomery",
+  region: "Montgomery, Alabama",
+  stateFips: "01",
+  countyFips: "101",
+  countyName: "Montgomery",
+  stateAbbr: "AL",
+  hub: "https://opendata.montgomeryal.gov",
+};
+
+// FW_PLACE names a JSON file describing another place, for portability runs only. The product serves Montgomery.
+function place(): Place {
+  const file = process.env.FW_PLACE;
+  if (!file) return MONTGOMERY;
+  const p = JSON.parse(readFileSync(file, "utf8")) as Place;
+  const text = [p.name, p.city, p.region, p.countyName, p.stateAbbr];
+  if (
+    text.some((t) => typeof t !== "string" || !/^[A-Za-z .,'-]{2,60}$/.test(t)) ||
+    !/^\d{2}$/.test(p.stateFips) ||
+    !/^\d{3}$/.test(p.countyFips) ||
+    !/^https:\/\/[a-z0-9.-]+$/.test(p.hub) ||
+    (p.tractsTable !== undefined && !/^tracts_\d{5}$/.test(p.tractsTable))
+  )
+    throw new Error("FW_PLACE does not describe a valid place");
+  return p;
 }
 
 export function config(): Config {
@@ -58,14 +92,8 @@ export function config(): Config {
     finderEmbeddings: process.env.FW_FINDER_EMBEDDINGS === "1",
     scoutGuard: process.env.FW_SCOUT_GUARD === "1",
     markovianWriter: process.env.FW_MARKOVIAN_WRITER === "1",
+    freshMemory: process.env.FW_FRESH_MEMORY === "1",
     // The product's scope: Montgomery, Alabama (city open data hub + Montgomery County census tracts).
-    place: {
-      name: "Montgomery, AL",
-      stateFips: "01",
-      countyFips: "101",
-      countyName: "Montgomery",
-      stateAbbr: "AL",
-      hub: "https://opendata.montgomeryal.gov",
-    },
+    place: place(),
   };
 }

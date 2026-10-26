@@ -4,14 +4,14 @@ import {
   layerInfo,
   resolveLayerUrl,
   searchEpa,
-  searchMontgomeryHub,
+  searchCityHub,
   searchSocrata,
   socrataColumns,
   type Candidate,
 } from "@fieldwork/sources";
 import { rankFinderCandidates } from "../finderEmbeddings.js";
 import { recall, type Recalled } from "@fieldwork/hmem";
-import { SYSTEM_BASE, provenance, dataBlock, type Ctx } from "./context.js";
+import { systemBase, provenance, dataBlock, type Ctx } from "./context.js";
 
 export interface Chosen {
   measureId: string;
@@ -62,7 +62,7 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
               )
             : m.kind === "environmental_records"
               ? await searchEpa(ctx.cfg.place.stateAbbr, ctx.cfg.place.countyName)
-              : await searchMontgomeryHub(term, 6);
+              : await searchCityHub(term, 6, ctx.cfg.place.hub);
         for (const c of found) if (!seen.has(c.id)) seen.add(c.id), cands.push(c);
       }
       if (cands.length === 0 && m.kind !== "environmental_records") {
@@ -81,7 +81,7 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
                   ["data.cdc.gov"],
                   6,
                 )
-              : await searchMontgomeryHub(token, 6);
+              : await searchCityHub(token, 6, ctx.cfg.place.hub);
           for (const c of found)
             if (!seen.has(c.id)) {
               seen.add(c.id);
@@ -99,7 +99,7 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
         agent: "finder",
         action: "search",
         status: cands.length ? "ok" : "error",
-        note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${searched.map((t) => `"${t}"`).join(", ")}`,
+        note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : `${ctx.cfg.place.city}'s open data hub`} for ${searched.map((t) => `"${t}"`).join(", ")}`,
       });
       return { id: m.id, describe: m.describe, kind: m.kind, candidates: cands.slice(0, 8) };
     }),
@@ -199,7 +199,7 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
             [
               {
                 role: "system",
-                content: `${SYSTEM_BASE}
+                content: `${systemBase(ctx)}
 You are the Finder. For each measure pick the one candidate dataset that best measures it for ${ctx.cfg.place.name}${p.geography === "tract" ? " at census-tract level (prefer the newest CDC PLACES census tract release for health measures)" : ""}.
 Prefer current, official, record-level or tract-level data. When several releases of the same series exist, choose the one marked newest_in_series unless it lacks the measure. Shape: {"choices": [{"measure_id": "m1", "candidate_index": 0, "reason": "one sentence"}]}`,
               },

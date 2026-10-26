@@ -7,7 +7,7 @@ import {
   type Plan,
   type Verdict,
 } from "@fieldwork/core";
-import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, tractsTable, dataBlock, type Ctx } from "./context.js";
 import type { Bridged } from "./bridge.js";
 import type { Joined } from "./joiner.js";
 import type { Wired } from "./wirer.js";
@@ -46,7 +46,7 @@ export async function evaluate(
     !wired.find((w) => w.label === bridged[0]!.label)?.capped
   ) {
     const source = bridged[0]!;
-    const all = await ctx.zetaris.query("SELECT geoid,name FROM fw_pg.tracts", 500);
+    const all = await ctx.zetaris.query(`SELECT geoid,name FROM ${tractsTable(ctx)}`, 500);
     const present = await ctx.zetaris.query(
       `SELECT geoid FROM fw_pg.tract_counts WHERE run_id='${ctx.runId}' AND source='${source.label}' AND grp='all' AND n>0`,
       500,
@@ -229,7 +229,7 @@ export async function evaluate(
     [
       {
         role: "system",
-        content: `${SYSTEM_BASE}
+        content: `${systemBase(ctx)}
 You are the Evaluator. Challenge the work before anyone sees it. Decide APPROVE or REVISE.
 Filters listed under sources_as_wired are already applied before the SQL runs; do not ask for them again.
 Coverage, partial periods and retrieval-date limits reported by passing code checks are disclosure requirements for the Writer; code appends the coverage caveat. Do not replan, rewire or revise SQL solely to add these notes.
@@ -250,7 +250,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
           dataBlock(
             "sources_as_wired",
             [
-              `fw_pg.tracts: all ${ctx.cfg.place.countyName} County, ${ctx.cfg.place.stateAbbr} census tracts (state ${ctx.cfg.place.stateFips}, county ${ctx.cfg.place.countyFips}); already county-scoped`,
+              `${tractsTable(ctx)}: all ${ctx.cfg.place.countyName} County, ${ctx.cfg.place.stateAbbr} census tracts (state ${ctx.cfg.place.stateFips}, county ${ctx.cfg.place.countyFips}); already county-scoped`,
               ...wired.map(
                 (w) =>
                   `${w.label} = "${w.title}": filtered AT THE SOURCE with ${w.where}; ${w.zetarisCount} records${w.shape === "arcgis_features" || w.shape === "epa_facilities" ? "; counted per tract into fw_pg.tract_counts (run_id/source columns only identify this run's counts)" : ""}`,

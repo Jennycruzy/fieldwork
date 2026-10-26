@@ -30,6 +30,7 @@ function context(statuses: string[]) {
   const ctx = {
     runId: "r_20261024_abcdef",
     runShort: "abcdef",
+    cfg: { place: { region: "Montgomery, Alabama" } },
     memory: new HMEM(),
     recalled: [],
     trace: { log },

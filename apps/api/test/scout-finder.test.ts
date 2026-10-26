@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mocks = vi.hoisted(() => ({ search: vi.fn(), info: vi.fn() }));
 vi.mock("@fieldwork/sources", async () => ({
   ...(await vi.importActual("@fieldwork/sources")),
-  searchMontgomeryHub: mocks.search,
+  searchCityHub: mocks.search,
   resolveLayerUrl: async (u: string) => u,
   layerInfo: mocks.info,
 }));
@@ -33,7 +33,7 @@ const setup = () => {
   const ctx = {
     scout,
     trace,
-    cfg: { place: { name: "Montgomery, AL" } },
+    cfg: { place: { name: "Montgomery, AL", city: "Montgomery", hub: "https://opendata.montgomeryal.gov" } },
     memory: { store: { all: () => [] } },
     recalled: [],
     models: { finder: { json } },

@@ -14,10 +14,9 @@ export interface Candidate {
   domain?: string;
 }
 
-const MONTGOMERY_HUB = "https://opendata.montgomeryal.gov/api/search/v1/collections/dataset/items";
-
-export async function searchMontgomeryHub(query: string, limit = 8): Promise<Candidate[]> {
-  const url = `${MONTGOMERY_HUB}?q=${encodeURIComponent(query)}&limit=${limit}`;
+// Searches a city's ArcGIS Hub site, for example https://opendata.montgomeryal.gov.
+export async function searchCityHub(query: string, limit: number, hub: string): Promise<Candidate[]> {
+  const url = `${hub}/api/search/v1/collections/dataset/items?q=${encodeURIComponent(query)}&limit=${limit}`;
   const body = (await getJson(url)) as {
     features?: {
       id: string;

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { checkDraft, type CheckResult, type Plan } from "@fieldwork/core";
 import { Markovian, type MarkovianRun } from "../../../packages/markovian/src/index.js";
-import { SYSTEM_BASE, dataBlock, type Ctx } from "./agents/context.js";
+import { systemBase, dataBlock, type Ctx } from "./agents/context.js";
 import type { Joined } from "./agents/joiner.js";
 export interface ChunkFact {
   row_index: number;
@@ -64,7 +64,7 @@ export async function writerChunks(
           {
             role: "system",
             content:
-              SYSTEM_BASE +
+              systemBase(ctx) +
               "\nProduce at most two short facts about individual named rows in this bounded data chunk. Copy numeric row cells exactly. Return their global row_index. Do not use ranks, extrema, totals or cohort sizes; those are supplied separately by code. Avoid repeating carried facts. This JSON adapter supplies state/completion markers, so return only {facts:[{row_index:0,text:...}]}.",
           },
           {

@@ -2,7 +2,7 @@ import { tractSummarySql } from "./queryTemplates.js";
 import { SqlSchema, type Plan } from "@fieldwork/core";
 import { checkSql, ZetarisError, type QueryResult } from "@fieldwork/zetaris";
 import { recall } from "@fieldwork/hmem";
-import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, tractsTable, dataBlock, type Ctx } from "./context.js";
 import type { Wired } from "./wirer.js";
 
 export interface Joined {
@@ -14,7 +14,7 @@ export interface Joined {
 // Describes every table the Joiner may use, exactly as Zetaris will see it.
 export function tableCatalog(ctx: Ctx, wired: Wired[], bridged: string[]): string[] {
   const lines = [
-    `fw_pg.tracts(geoid STRING, name STRING, arealand_m2 BIGINT): all ${ctx.cfg.place.countyName} County census tracts`,
+    `${tractsTable(ctx)}(geoid STRING, name STRING, arealand_m2 BIGINT): all ${ctx.cfg.place.countyName} County census tracts`,
   ];
   for (const w of wired) {
     if (w.normalized)
@@ -53,7 +53,9 @@ export async function join(
     ? `\nThe Evaluator sent this back: ${revision}\nPrevious SQL:\n${previousSql ?? ""}`
     : "";
   // A revision only reaches the model when the compiled template would repeat the previous SQL.
-  const compiled = revision ? compiledSql(ctx.runId, question, p, wired, bridged) : undefined;
+  const compiled = revision
+    ? compiledSql(ctx.runId, question, p, wired, bridged, tractsTable(ctx))
+    : undefined;
   if (compiled && compiled !== previousSql) feedback = "";
   // Zetaris checks the SQL; if it refuses, its exact error goes back to the Joiner (up to 2 repairs).
   for (let attempt = 0; ; attempt++) {
@@ -86,7 +88,9 @@ async function joinOnce(
     topN: 2,
   });
   ctx.recalled.push(...examples);
-  const template = feedback ? undefined : compiledSql(ctx.runId, question, p, wired, bridged);
+  const template = feedback
+    ? undefined
+    : compiledSql(ctx.runId, question, p, wired, bridged, tractsTable(ctx));
   const { value } = template
     ? {
         value: {
@@ -99,7 +103,7 @@ async function joinOnce(
         [
           {
             role: "system",
-            content: `${SYSTEM_BASE}
+            content: `${systemBase(ctx)}
 You are the Joiner. Write ONE Zetaris Lightning SQL SELECT (Spark SQL dialect) that answers the question from the tables listed.
 Source filters were applied before these tables were registered; do not add state or year filters again. Only reference columns listed in the catalog. Name every output column for what it holds (request_count, violation_count), never n, cnt or c.
 For time changes, group the observations by year or month; year-on-year differences use conditional aggregation and return both counts. Monthly results must be chronological; request-type summaries return counts, shares and denominators. Never count rows instead of call totals when the source rows are pre-aggregated. Zero-count pharmacy tracts require all tracts LEFT JOIN counts, not an inner join. For latest inspection queries use the observations table, not tract_counts; score rows refer to value as inspection_score (the source role is Score_1). A threshold count also returns total_inspected_establishments for each tract and sorts the below-threshold count descending.
@@ -168,12 +172,13 @@ export function compiledSql(
   p: Plan,
   wired: Wired[],
   bridged: string[],
+  tracts = "fw_pg.tracts",
 ): string | undefined {
   return (
     monthlySummarySql(runId, question, p, wired) ??
     categorySummarySql(runId, p, wired) ??
-    inspectionSummarySql(runId, question, p, wired) ??
-    tractSummarySql(runId, question, p, wired, bridged)
+    inspectionSummarySql(runId, question, p, wired, tracts) ??
+    tractSummarySql(runId, question, p, wired, bridged, tracts)
   );
 }
 
@@ -221,6 +226,7 @@ export function inspectionSummarySql(
   question: string,
   p: Plan,
   wired: Wired[],
+  tracts = "fw_pg.tracts",
 ): string | undefined {
   if (
     p.geography !== "tract" ||
@@ -236,12 +242,12 @@ export function inspectionSummarySql(
   if (threshold)
     return (
       cte +
-      `SELECT t.name, SUM(CASE WHEN l.inspection_score < ${Number(threshold)} THEN 1 ELSE 0 END) AS below_threshold_count, COUNT(l.entity_key) AS total_inspected_establishments, t.geoid FROM fw_pg.tracts t LEFT JOIN latest l ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY below_threshold_count DESC,t.name`
+      `SELECT t.name, SUM(CASE WHEN l.inspection_score < ${Number(threshold)} THEN 1 ELSE 0 END) AS below_threshold_count, COUNT(l.entity_key) AS total_inspected_establishments, t.geoid FROM ${tracts} t LEFT JOIN latest l ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY below_threshold_count DESC,t.name`
     );
   if (/\b(average|mean)\b/i.test(question))
     return (
       cte +
-      "SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, CASE WHEN COUNT(*) < 30 THEN 'small sample' ELSE 'larger sample' END AS sample_note, t.geoid FROM latest l JOIN fw_pg.tracts t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name"
+      `SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, CASE WHEN COUNT(*) < 30 THEN 'small sample' ELSE 'larger sample' END AS sample_note, t.geoid FROM latest l JOIN ${tracts} t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name`
     );
 }
 

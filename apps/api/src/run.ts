@@ -33,7 +33,7 @@ import {
   createAnswerContainer,
   createAnswerView,
 } from "@fieldwork/zetaris";
-import { loadMemory } from "@fieldwork/hmem";
+import { HMEM, loadMemory } from "@fieldwork/hmem";
 import { learnFromRun } from "./memory.js";
 import type { Config } from "./config.js";
 import { dbBudget, migrate, type Db } from "./db.js";
@@ -201,7 +201,7 @@ async function askWithLease(
     }),
   ) as Record<Role, ModelChain>;
 
-  const memory = await loadMemory(db);
+  const memory = cfg.freshMemory ? new HMEM({ actor: "fieldwork" }) : await loadMemory(db);
   const ledgerLoaded = memory.ledger.all().length;
   const repairs: string[] = [];
   trace.onEvent((e) => {
@@ -572,19 +572,20 @@ async function askWithLease(
       note: "Model calls used: " + allowance.calls + " / " + allowance.limit + " allowed for this run.",
     });
     try {
-      await learnFromRun(
-        ctx,
-        {
-          question,
-          status: out.status,
-          providerFailed: out.providerFailed,
-          chosen: out.chosen,
-          wired: out.wired,
-          joinSql: out.joined?.sql,
-          repairs,
-        },
-        ledgerLoaded,
-      );
+      if (!cfg.freshMemory)
+        await learnFromRun(
+          ctx,
+          {
+            question,
+            status: out.status,
+            providerFailed: out.providerFailed,
+            chosen: out.chosen,
+            wired: out.wired,
+            joinSql: out.joined?.sql,
+            repairs,
+          },
+          ledgerLoaded,
+        );
     } catch (e) {
       await trace.log({
         agent: "memory",

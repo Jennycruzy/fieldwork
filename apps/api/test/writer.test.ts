@@ -20,7 +20,11 @@ test("weighted call metadata sets the monthly unit and always supplies its cavea
     },
   ] as Wired[];
   const json = vi.fn(async () => ({ value: { ...structuredClone(a.answer), caveats: [] } }));
-  const ctx = { models: { writer: { json } }, trace: { log: vi.fn() } } as unknown as Ctx;
+  const ctx = {
+    cfg: { place: { region: "Montgomery, Alabama" } },
+    models: { writer: { json } },
+    trace: { log: vi.fn() },
+  } as unknown as Ctx;
   const answer = await write(
     ctx,
     run.question,
@@ -97,6 +101,7 @@ test("facility-registry answers always distinguish listings from emissions and e
       },
     },
     trace: { log: vi.fn() },
+    cfg: { place: { region: "Montgomery, Alabama" } },
   } as unknown as Ctx;
   const answer = await write(
     ctx,
@@ -131,6 +136,7 @@ test("a small-sample warning is always disclosed even if the model omits caveats
       },
     },
     trace: { log: vi.fn() },
+    cfg: { place: { region: "Montgomery, Alabama" } },
   } as unknown as Ctx;
   const answer = await write(
     ctx,

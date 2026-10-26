@@ -1,5 +1,5 @@
 import { PlanSchema, type Plan } from "@fieldwork/core";
-import { shared, provenance, SYSTEM_BASE, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, type Ctx } from "./context.js";
 
 const SHAPE = `{
  "in_scope": boolean,
@@ -16,11 +16,11 @@ export async function plan(ctx: Ctx, question: string, revision?: string): Promi
   const messages = [
     {
       role: "system" as const,
-      content: `${SYSTEM_BASE}
+      content: `${systemBase(ctx)}
 You are the Planner. Turn the user's question into a data plan.
 Catalogs to search for ${ctx.cfg.place.name}:
-- city_records: the City of Montgomery's open data hub (records such as code violations, service requests, calls, inspections, permits, facilities), as map points with dates and types.
-- environmental_records: EPA ECHO regulated facility registry, scoped to Montgomery County; listings are not emissions or exposure measurements.
+- city_records: the City of ${ctx.cfg.place.city}'s open data hub (records such as code violations, service requests, calls, inspections, permits, facilities), as map points with dates and types.
+- environmental_records: EPA ECHO regulated facility registry, scoped to ${ctx.cfg.place.countyName} County; listings are not emissions or exposure measurements.
 - health_estimate: CDC PLACES estimates for adults by census tract (e.g. asthma, diabetes, housing insecurity, food insecurity, lack of transportation, depression), with tract population.
 Use one measure per data series, not separate measures for individual years or months. Time comparisons use years and group the source observations by year/month.
 Use "tract" geography when city records must be compared with health estimates (city records are placed into census tracts by location).

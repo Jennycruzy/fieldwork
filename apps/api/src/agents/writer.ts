@@ -1,6 +1,6 @@
 import { writerChunks } from "../writerChunks.js";
 import { computeFigureLedger, AnswerSchema, type Answer, type CheckResult, type Plan } from "@fieldwork/core";
-import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { systemBase, dataBlock, type Ctx } from "./context.js";
 import type { Joined } from "./joiner.js";
 import type { Wired } from "./wirer.js";
 
@@ -25,7 +25,7 @@ export async function write(
     [
       {
         role: "system",
-        content: `${SYSTEM_BASE}
+        content: `${systemBase(ctx)}
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
 Use exact figures only: never approximate to round thousands (use 44,752, never 45,000). Display counts as integers and rates or percentage changes to at most two decimals. Every number must come from a row cell or computed_figures. Never sum rates or call their sum an average. Never call a partial month or year the lowest/highest, or rank it against full periods. Never use rank words without naming the row, except a supplied tie group with its exact size and rank. Describe thresholds only when the actual checks establish them.
 Use only numbers in the rows or in computed_figures. For a total, difference, percent change or group size, copy it from computed_figures; never compute one yourself. The result_summary gives the full cohort size. For rankings the result table contains primary_rank, rank_text and tie_size computed in code for every row. Copy these fields exactly. Use only the supplied tie_groups: adjacent rows or rounded display values do not establish a tie. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.

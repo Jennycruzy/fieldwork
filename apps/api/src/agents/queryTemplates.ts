@@ -8,13 +8,14 @@ export function tractSummarySql(
   p: Plan,
   wired: Wired[],
   bridged: string[],
+  tracts = "fw_pg.tracts",
 ): string | undefined {
   if (p.geography !== "tract" || !p.analysis) return;
   if (!wired.length || wired.some((w) => w.capped)) return;
   const counts = wired.filter((w) => bridged.includes(w.label));
   const health = wired.filter((w) => w.shape === "socrata_list" && w.fields.includes("tractfips"));
   if (counts.length === 2 && health.length === 1 && wired.length === 3 && p.analysis.relationship)
-    return pairedCountRatesSql(runId, p, counts, health[0]!);
+    return pairedCountRatesSql(runId, p, counts, health[0]!, tracts);
   if (counts.length > 1 || health.length > 1 || wired.length !== counts.length + health.length) return;
   const city = counts[0],
     cdc = health[0];
@@ -73,7 +74,9 @@ export function tractSummarySql(
       a +
       ",COALESCE(n.later_count,0) AS count_" +
       b +
-      ",t.geoid FROM fw_pg.tracts t LEFT JOIN totals n ON t.geoid=n.geoid ORDER BY count_change " +
+      ",t.geoid FROM " +
+      tracts +
+      " t LEFT JOIN totals n ON t.geoid=n.geoid ORDER BY count_change " +
       (ascending ? "ASC" : "DESC") +
       ",tract_name"
     );
@@ -96,7 +99,7 @@ export function tractSummarySql(
     columns.push("CAST(h." + denominator + " AS DOUBLE) AS " + denominator);
   if (healthField && needsRate) columns.push("CAST(h." + healthField + " AS DOUBLE) AS " + healthAlias);
   columns.push("t.geoid");
-  let from = " FROM fw_pg.tracts t";
+  let from = " FROM " + tracts + " t";
   if (city)
     from +=
       " LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='" +
@@ -126,7 +129,13 @@ export function tractSummarySql(
   return "WITH paired AS (" + base + ") SELECT " + projection.join(",") + " FROM paired" + order;
 }
 
-function pairedCountRatesSql(runId: string, p: Plan, counts: Wired[], health: Wired): string | undefined {
+function pairedCountRatesSql(
+  runId: string,
+  p: Plan,
+  counts: Wired[],
+  health: Wired,
+  tracts: string,
+): string | undefined {
   const safe = (s: string) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(s);
   if (
     !/^r_\d{8}_[0-9a-f]{6}$/.test(runId) ||
@@ -160,7 +169,9 @@ function pairedCountRatesSql(runId: string, p: Plan, counts: Wired[], health: Wi
   const paired =
     "SELECT " +
     selected.join(",") +
-    " FROM fw_pg.tracts t LEFT JOIN totals n ON n.geoid=t.geoid LEFT JOIN session." +
+    " FROM " +
+    tracts +
+    " t LEFT JOIN totals n ON n.geoid=t.geoid LEFT JOIN session." +
     health.tables[0] +
     " h ON h.tractfips=t.geoid WHERE CAST(h." +
     population +

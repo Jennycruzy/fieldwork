@@ -14,7 +14,7 @@ import {
   statsUrl,
 } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
-import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, dataBlock, type Ctx } from "./context.js";
 import type { Chosen } from "./finder.js";
 
 export interface Wired {
@@ -98,7 +98,7 @@ export async function wire(
   const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
     {
       role: "system",
-      content: `${SYSTEM_BASE}
+      content: `${systemBase(ctx)}
 You are the Wirer. For each chosen dataset decide the filter and the fields needed to answer the plan.
 ArcGIS layers use SQL-92 where clauses on their own fields (e.g. Year = '2025' when Year is a string, CaseDate >= DATE '2025-01-01' for dates).
 Socrata (CDC) datasets use SoQL where clauses (e.g. countyfips = '01101'). The county restriction is added for you; do not add it.

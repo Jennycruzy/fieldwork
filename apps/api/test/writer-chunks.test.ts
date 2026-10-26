@@ -33,7 +33,7 @@ test("the Writer processes real row chunks with checked carryover and no repeate
       calls: [],
     });
   const ctx = {
-    cfg: { markovianWriter: true },
+    cfg: { markovianWriter: true, place: { region: "Montgomery, Alabama" } },
     models: { writer: { json } },
     trace: { log: vi.fn() },
   } as unknown as Ctx;
@@ -74,7 +74,7 @@ test("unchecked claims cannot enter the carried state, and the default path make
       calls: [],
     });
   const ctx = {
-    cfg: { markovianWriter: false },
+    cfg: { markovianWriter: false, place: { region: "Montgomery, Alabama" } },
     models: { writer: { json } },
     trace: { log: vi.fn() },
   } as unknown as Ctx;
