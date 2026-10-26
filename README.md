@@ -35,7 +35,8 @@ Answering this used to mean an analyst finding the datasets, cleaning them, geoc
 | **History** (`/history`) | Earlier answers, replayable step by step. |
 | **Check it yourself** (`/check`) | The public documents behind the need, with exact quotations and retrieval dates. |
 | **Evaluation** (`/evaluation`) | Every full question-set batch, including failures, with per-step timings. |
-| **Settings** (`/settings`) | Connect a Meterless Runtime by pasting its connect link. |
+| **How it works** (`/how-it-works`) | The agent loop, what decides an answer, and the sponsor technology with its measured results. |
+| **Settings** (`/settings`) | Whether a Meterless Runtime is connected, a connection test, and how to connect one. |
 
 Every answer is also saved in Zetaris as a view (`fieldwork_answers.answer_<id>`), so it can be queried with SQL alongside the sources it came from.
 
@@ -183,6 +184,7 @@ cp .env.example .env   # then fill it in
 npm run ask -- "Which Montgomery census tracts had the most 311 service requests in 2025?"   # one run in the terminal
 npm start                  # Desk and API
 npm run sample             # Desk with recorded runs, no model calls
+npm run runtime -- --connect '<link>'   # test a Meterless Runtime connect link and print its two settings
 npm run questions          # run the full question set
 ```
 

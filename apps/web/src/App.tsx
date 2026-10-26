@@ -62,8 +62,9 @@ export function App() {
         )}
       </main>
       <footer className="foot">
-        Montgomery, AL public data: city open data hub, CDC PLACES, US Census TIGERweb. Joined in Zetaris;
-        memory by Meterless H-MEM.
+        Public data from the City of Montgomery open data hub, CDC PLACES and US Census TIGERweb. Joined in
+        Zetaris; memory, run state and checks by Meterless engines; every model request served by NVIDIA
+        Nemotron. <Link href="/how-it-works">How it works</Link>
       </footer>
     </>
   );

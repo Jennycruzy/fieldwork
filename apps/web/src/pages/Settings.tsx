@@ -26,9 +26,15 @@ export function Settings() {
   return (
     <section className="card">
       <h1>Model providers</h1>
+      <p>
+        When a Meterless Runtime is connected and online at the start of a run, every model request goes
+        through it. Otherwise Fieldwork uses NVIDIA Nemotron through OpenRouter, and the run's trace says
+        which route served each request.
+      </p>
       <p className="muted">
-        Meterless Runtime is the primary provider when it is online at run start. Nightshift is not hosted
-        here. If it isn't reachable when a run starts, the run says so in its trace and uses the fallback.
+        To connect a Runtime, run <code>npm run runtime -- --connect '&lt;connect link&gt;'</code> on the
+        server. It tests the link and prints the two settings to add to <code>.env</code>. Nightshift, the
+        desktop app that hosts a Runtime, has no Linux build, so this public server runs without one.
       </p>
 
       <div className="provider">

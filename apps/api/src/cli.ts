@@ -6,16 +6,17 @@ import { openDb } from "./db.js";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ask } from "./run.js";
 import { serializeRun } from "./evidence.js";
-import { MeterlessProvider, autoDetect } from "@fieldwork/llm";
+import { MeterlessProvider, autoDetect, parseConnectLink } from "@fieldwork/llm";
 
 async function main(): Promise<number> {
   loadEnvFile();
   const [cmd, ...rest] = process.argv.slice(2);
+  if (cmd === "runtime" && rest[0] === "--connect") return runtimeConnect(rest[1] ?? "");
   if (cmd === "runtime") return runtimeStatus(rest[0] === "--detect");
   if (cmd === "export" && rest[0]) return exportRun(rest[0]);
   if (cmd !== "ask" || rest.length === 0) {
     console.error(
-      'Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect] | fieldwork export <run id>',
+      'Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect | --connect <link>] | fieldwork export <run id>',
     );
     return 2;
   }
@@ -94,6 +95,22 @@ async function runtimeStatus(detect: boolean): Promise<number> {
   for (const c of await new MeterlessProvider(s.baseUrl, token).classes())
     console.log(`  ${c.id.padEnd(10)} ${c.state}${c.why ? ` (${c.why})` : ""}`);
   return 0;
+}
+
+// fieldwork runtime --connect <link>: test a Meterless Runtime connect link and print the two settings for .env.
+async function runtimeConnect(link: string): Promise<number> {
+  const parsed = parseConnectLink(link);
+  if (!parsed) {
+    console.error("That is not a Meterless Runtime connect link (http://<host>:<port>/connect#k=<key>).");
+    return 2;
+  }
+  const s = await new MeterlessProvider(parsed.baseUrl, parsed.token).status();
+  console.log(`Meterless Runtime: ${s.state} at ${s.baseUrl}`);
+  console.log(`  ${s.reason}`);
+  console.log("Add these two lines to .env on the server, then restart Fieldwork:");
+  console.log(`METERLESS_BASE_URL=${parsed.baseUrl}`);
+  console.log(`METERLESS_RUNTIME_TOKEN=${parsed.token}`);
+  return s.state === "online" ? 0 : 1;
 }
 
 main().then(

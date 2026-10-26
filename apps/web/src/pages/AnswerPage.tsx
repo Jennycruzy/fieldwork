@@ -141,8 +141,11 @@ export function AnswerPage({ id }: { id: string }) {
         )}
         {!!run.answer?.removed_sentences?.length && (
           <p role="status">
-            {run.answer.removed_sentences.length} sentences removed because they could not be checked against
-            the rows. <Link href={"/how/" + id}>Read the trace</Link>.
+            {run.answer.removed_sentences.length}{" "}
+            {run.answer.removed_sentences.length === 1
+              ? "sentence was removed because it"
+              : "sentences were removed because they"}{" "}
+            could not be checked against the rows. <Link href={"/how/" + id}>Read the trace</Link>.
           </p>
         )}
         <div className="row">
@@ -157,8 +160,8 @@ export function AnswerPage({ id }: { id: string }) {
 
       <section className="card">
         <h2>Keep exploring</h2>
-        <button onClick={() => start(run.question)}>Re-run live</button>
         <form
+          className="follow"
           onSubmit={(e) => {
             e.preventDefault();
             start(`Follow-up to: ${run.question} ${follow}`);
@@ -177,9 +180,16 @@ export function AnswerPage({ id }: { id: string }) {
         </form>
         {error && <p role="alert">{error}</p>}
         <div className="row">
-          <button onClick={csv}>Export CSV</button>
-          <button onClick={() => citations(false)}>Citations (text)</button>
-          <button onClick={() => citations(true)}>Citations (Markdown)</button>
+          <button onClick={() => start(run.question)}>Re-run live</button>
+          <button className="ghost" onClick={csv}>
+            Export CSV
+          </button>
+          <button className="ghost" onClick={() => citations(false)}>
+            Citations (text)
+          </button>
+          <button className="ghost" onClick={() => citations(true)}>
+            Citations (Markdown)
+          </button>
         </div>
       </section>
       <Visuals

@@ -591,6 +591,12 @@ form input {
   display: block;
   width: 100%;
   box-sizing: border-box;
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
   margin: 8px 0;
 }
 .table-wrap td {
@@ -818,4 +824,8 @@ code,
 .fail {
   background: var(--bad-soft);
   color: var(--bad);
+}
+
+.follow {
+  margin-bottom: 14px;
 }
