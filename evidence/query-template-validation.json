@@ -1,0 +1,272 @@
+{
+  "purpose": "SQL validation only; not an official evaluation batch or score",
+  "results": [
+    {
+      "run_id": "r_20261026_1c7227",
+      "sql": "SELECT t.name AS tract_name,CAST(h.casthma_crudeprev AS DOUBLE) AS casthma_prevalence,COALESCE(n.n,0) AS code_violations_count,CAST(h.totalpop18plus AS DOUBLE) AS totalpop18plus,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_1c7227' AND n.source='m2_city' AND n.grp='all' LEFT JOIN session.probe_1c7227_0 h ON h.tractfips=t.geoid ORDER BY casthma_prevalence DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "casthma_prevalence",
+        "code_violations_count",
+        "totalpop18plus",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "mixed; denominator: adults. The question ranks tracts by adult asthma prevalence percentage and lists raw 2025 code violation counts per tract; no cross-tract correlation or rate denominator is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: adult asthma prevalence percentage, descending; retain its value before supporting columns."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_42fb27",
+      "sql": "SELECT t.name AS tract_name,COALESCE(n.n,0) * 1000.0 / NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS code_violations_count_per_1000_totalpopulation,COALESCE(n.n,0) AS code_violations_count,CAST(h.totalpopulation AS DOUBLE) AS totalpopulation,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_42fb27' AND n.source='m1_city' AND n.grp='all' LEFT JOIN session.probe_42fb27_1 h ON h.tractfips=t.geoid ORDER BY code_violations_count_per_1000_totalpopulation DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "code_violations_count_per_1000_totalpopulation",
+        "code_violations_count",
+        "totalpopulation",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: residents. The question asks for a ranking of tracts by code violations per 1,000 residents, which is a workload-style rate using total population as the denominator, not an association between two measures."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: code violations per 1,000 residents, descending; retain its value before supporting columns."
+        },
+        {
+          "id": "rate_arithmetic_1",
+          "ok": true,
+          "detail": "code_violations_count_per_1000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 1000."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_647dd1",
+      "sql": "WITH paired AS (SELECT t.name AS tract_name,COALESCE(n.n,0) * 1000.0 / NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS code_violations_count_per_1000_totalpopulation,COALESCE(n.n,0) AS code_violations_count,CAST(h.totalpopulation AS DOUBLE) AS totalpopulation,CAST(h.bphigh_crudeprev AS DOUBLE) AS bphigh_prevalence,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_647dd1' AND n.source='m1_city' AND n.grp='all' LEFT JOIN session.probe_647dd1_1 h ON h.tractfips=t.geoid WHERE CAST(h.totalpopulation AS DOUBLE)>0 AND h.bphigh_crudeprev IS NOT NULL) SELECT tract_name,code_violations_count_per_1000_totalpopulation,code_violations_count,totalpopulation,bphigh_prevalence,CORR(code_violations_count_per_1000_totalpopulation,bphigh_prevalence) OVER () AS rate_prevalence_correlation,COUNT(*) OVER () AS paired_tracts,geoid FROM paired ORDER BY code_violations_count_per_1000_totalpopulation DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "code_violations_count_per_1000_totalpopulation",
+        "code_violations_count",
+        "totalpopulation",
+        "bphigh_prevalence",
+        "rate_prevalence_correlation",
+        "paired_tracts",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: residents. The question asks whether tracts with more code violations also have more adults with high blood pressure, a cross-tract association. This requires population-adjusted rates: city code violations per 1,000 residents compared with CDC adult high-blood-pressure prevalence percentages, using total population as the resident denominator."
+        },
+        {
+          "id": "relationship_rates",
+          "ok": true,
+          "detail": "Relationships need labeled per-resident or per-adult rates, the matching population field, correlation, and the full paired_tracts count before any display limit."
+        },
+        {
+          "id": "rate_arithmetic_1",
+          "ok": true,
+          "detail": "code_violations_count_per_1000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 1000."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_bd237a",
+      "sql": "WITH totals AS (SELECT geoid,SUM(CASE WHEN year=2024 THEN value ELSE 0 END) AS earlier_count,SUM(CASE WHEN year=2025 THEN value ELSE 0 END) AS later_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_bd237a' AND source='m1_city' AND geoid IS NOT NULL GROUP BY geoid) SELECT t.name AS tract_name,COALESCE(n.later_count,0)-COALESCE(n.earlier_count,0) AS count_change,COALESCE(n.earlier_count,0) AS count_2024,COALESCE(n.later_count,0) AS count_2025,t.geoid FROM fw_pg.tracts t LEFT JOIN totals n ON t.geoid=n.geoid ORDER BY count_change DESC,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "count_change",
+        "count_2024",
+        "count_2025",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "counts; denominator: none. The question asks for the largest increase in code violation workload by tract, which is answered by raw counts of violations in each year grouped by tract; no health or population denominator is needed for a count-based ranking."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: increase in code violation count from 2024 to 2025, descending; retain its value before supporting columns."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_d0a9da",
+      "sql": "SELECT t.name AS tract_name,COALESCE(n.n,0) AS received_311_service_requests_count,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_d0a9da' AND n.source='m1_city' AND n.grp='all' ORDER BY received_311_service_requests_count DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "received_311_service_requests_count",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "counts; denominator: none. The question asks for a workload ranking of service requests by tract, so raw counts of city records per tract directly answer which tracts had the most. No health denominator or cross-source correlation is needed."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: m1 count of 311 service requests per tract, descending; retain its value before supporting columns."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_857dda",
+      "sql": "WITH totals AS (SELECT geoid,SUM(CASE WHEN source='m1_city' THEN n ELSE 0 END) AS c0,SUM(CASE WHEN source='m2_city' THEN n ELSE 0 END) AS c1 FROM fw_pg.tract_counts WHERE run_id='r_20261026_857dda' AND grp='all' AND source IN ('m1_city','m2_city') GROUP BY geoid), paired AS (SELECT t.name AS tract_name,COALESCE(n.c0,0)*1000.0/NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS received_311_service_requests_count_per_1000_totalpopulation,COALESCE(n.c1,0)*1000.0/NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS code_violations_count_per_1000_totalpopulation,COALESCE(n.c0,0) AS received_311_service_requests_count,COALESCE(n.c1,0) AS code_violations_count,CAST(h.totalpopulation AS DOUBLE) AS totalpopulation,t.geoid FROM fw_pg.tracts t LEFT JOIN totals n ON n.geoid=t.geoid LEFT JOIN session.probe_857dda_2 h ON h.tractfips=t.geoid WHERE CAST(h.totalpopulation AS DOUBLE)>0) SELECT tract_name,received_311_service_requests_count_per_1000_totalpopulation,code_violations_count_per_1000_totalpopulation,received_311_service_requests_count,code_violations_count,totalpopulation,CORR(received_311_service_requests_count_per_1000_totalpopulation,code_violations_count_per_1000_totalpopulation) OVER () AS rate_correlation,COUNT(*) OVER () AS paired_tracts,geoid FROM paired ORDER BY received_311_service_requests_count_per_1000_totalpopulation DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "received_311_service_requests_count_per_1000_totalpopulation",
+        "code_violations_count_per_1000_totalpopulation",
+        "received_311_service_requests_count",
+        "code_violations_count",
+        "totalpopulation",
+        "rate_correlation",
+        "paired_tracts",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: residents. The question asks whether tracts with higher 311 requests per 1,000 residents also have higher code violations per 1,000 residents, a cross-tract association between two city-record rates. Both series are computed per 1,000 residents for 2025 using totalpopulation as the denominator. The join preserves the full population cohort: LEFT JOIN aggregated event counts onto tracts, COALESCE request_count and violation_count to 0, keep only totalpopulation non-null and greater than 0, and compute CORR and COUNT(*) OVER () over the complete paired set before the LIMIT."
+        },
+        {
+          "id": "relationship_rates",
+          "ok": true,
+          "detail": "Relationships need labeled per-resident or per-adult rates, the matching population field, correlation, and the full paired_tracts count before any display limit."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: 311 requests per 1,000 residents, descending; retain its value before supporting columns."
+        },
+        {
+          "id": "rate_arithmetic_1",
+          "ok": true,
+          "detail": "received_311_service_requests_count_per_1000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 1000."
+        },
+        {
+          "id": "rate_arithmetic_2",
+          "ok": true,
+          "detail": "code_violations_count_per_1000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 1000."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_215483",
+      "sql": "SELECT t.name AS tract_name,COALESCE(n.n,0) * 10000.0 / NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS pharmacy_locator_count_per_10000_totalpopulation,COALESCE(n.n,0) AS pharmacy_locator_count,CAST(h.totalpopulation AS DOUBLE) AS totalpopulation,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_215483' AND n.source='m1_city' AND n.grp='all' LEFT JOIN session.probe_215483_1 h ON h.tractfips=t.geoid ORDER BY pharmacy_locator_count_per_10000_totalpopulation ASC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "pharmacy_locator_count_per_10000_totalpopulation",
+        "pharmacy_locator_count",
+        "totalpopulation",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: residents. The question asks for a ranking of tracts by pharmacy density (pharmacies per 10,000 residents), which is a rate using resident population as the denominator, not an association between two variables."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: pharmacies per 10,000 residents, ascending (fewest first); retain its value before supporting columns."
+        },
+        {
+          "id": "rate_arithmetic_1",
+          "ok": true,
+          "detail": "pharmacy_locator_count_per_10000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 10000."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_af0a23",
+      "sql": "SELECT t.name AS tract_name,CAST(h.diabetes_crudeprev AS DOUBLE) AS diabetes_prevalence,CAST(h.totalpop18plus AS DOUBLE) AS totalpop18plus,t.geoid FROM fw_pg.tracts t LEFT JOIN session.probe_af0a23_0 h ON h.tractfips=t.geoid ORDER BY diabetes_prevalence DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "diabetes_prevalence",
+        "totalpop18plus",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: adults. The question asks for a ranking of Montgomery census tracts by adult diabetes prevalence, a CDC PLACES percentage already expressed per adult population; no cross-series association is requested. Sort by the numeric prevalence value descending (cast text to numeric), with NULL prevalence tracts last."
+        },
+        {
+          "id": "ranking_order",
+          "ok": true,
+          "detail": "Sort by the requested measure: adult diabetes prevalence, descending (numeric cast); retain its value before supporting columns."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    },
+    {
+      "run_id": "r_20261026_0a10d7",
+      "sql": "WITH paired AS (SELECT t.name AS tract_name,COALESCE(n.n,0) * 1000.0 / NULLIF(CAST(h.totalpopulation AS DOUBLE),0) AS epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation,COALESCE(n.n,0) AS epa_echo_facilities_in_montgomery_county_al_count,CAST(h.totalpopulation AS DOUBLE) AS totalpopulation,CAST(h.casthma_crudeprev AS DOUBLE) AS casthma_prevalence,t.geoid FROM fw_pg.tracts t LEFT JOIN fw_pg.tract_counts n ON n.geoid=t.geoid AND n.run_id='r_20261026_0a10d7' AND n.source='m1_cdc' AND n.grp='all' LEFT JOIN session.probe_0a10d7_1 h ON h.tractfips=t.geoid WHERE CAST(h.totalpopulation AS DOUBLE)>0 AND h.casthma_crudeprev IS NOT NULL) SELECT tract_name,epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation,epa_echo_facilities_in_montgomery_county_al_count,totalpopulation,casthma_prevalence,CORR(epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation,casthma_prevalence) OVER () AS rate_prevalence_correlation,COUNT(*) OVER () AS paired_tracts,geoid FROM paired ORDER BY epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation DESC NULLS LAST,tract_name",
+      "rows": 71,
+      "headers": [
+        "tract_name",
+        "epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation",
+        "epa_echo_facilities_in_montgomery_county_al_count",
+        "totalpopulation",
+        "casthma_prevalence",
+        "rate_prevalence_correlation",
+        "paired_tracts",
+        "geoid"
+      ],
+      "checks": [
+        {
+          "id": "analysis_basis",
+          "ok": true,
+          "detail": "rates; denominator: residents. The question asks whether tracts with more EPA facilities per 1,000 residents also have higher adult asthma prevalence, a cross-tract association requiring population-adjusted facility rates compared with CDC adult asthma prevalence percentages."
+        },
+        {
+          "id": "relationship_rates",
+          "ok": true,
+          "detail": "Relationships need labeled per-resident or per-adult rates, the matching population field, correlation, and the full paired_tracts count before any display limit."
+        },
+        {
+          "id": "rate_arithmetic_1",
+          "ok": true,
+          "detail": "epa_echo_facilities_in_montgomery_county_al_count_per_1000_totalpopulation: recomputed every displayed rate from raw counts, its population denominator and scaling by 1000."
+        }
+      ],
+      "primary_measure_matches_saved_rows": true
+    }
+  ]
+}
