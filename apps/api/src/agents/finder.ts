@@ -166,7 +166,7 @@ export function rememberedCandidate(ctx:Ctx,m:Plan["measures"][number]):Candidat
    if(!c||c.kind!==m.kind||c.place!==ctx.cfg.place.name)continue;
    const age=ctx.today.getTime()-Date.parse(c.observed_at);
    if(!Number.isFinite(age)||age<0||age>86400000)continue;
-   if(!m.search_terms.some(t=>c.terms.some(old=>key(t)===key(old))))continue;
+   if(JSON.stringify(m.search_terms.map(key).sort())!==JSON.stringify(c.terms.map(key).sort()))continue;
    if(c.candidate.kind==="socrata_resource"&&!c.candidate.title.includes(String(ctx.today.getUTCFullYear()))&&ctx.today.getUTCMonth()===0)continue;
    ctx.recalled.push({id:record.id,content:record.content,confidence:record.confidence,relevance:1,kind:"choice",source:record.source});
    return structuredClone(c.candidate);

@@ -103,3 +103,11 @@ test("a recent verified source memory skips catalogue searches while schema vali
  ctx.today=new Date("2026-10-28");expect(rememberedCandidate(ctx,m)).toBeUndefined();
  expect(rememberedCandidate({...ctx,today:new Date("2026-10-26T01:00:00Z")},{...m,search_terms:["food"]})).toBeUndefined();
 });
+test("a shared generic catalogue term cannot reuse a different measure's cached source",()=>{
+ const memory=new HMEM();
+ const candidate=JSON.parse(readFileSync("evidence/sources/live-probes.json","utf8"))[0].candidate;
+ remember(memory,{kind:"choice",runId:"old",confidence:.9,content:JSON.stringify({catalog_source:{candidate,kind:"city_records",terms:["Montgomery","311"],place:"Montgomery, AL",observed_at:"2026-10-26T00:00:00Z"}})});
+ const ctx={memory,today:new Date("2026-10-26T01:00:00Z"),cfg:{place:{name:"Montgomery, AL"}},recalled:[]}as unknown as Ctx;
+ expect(rememberedCandidate(ctx,{id:"m",kind:"city_records",describe:"Food records",search_terms:["Montgomery","food"]})).toBeUndefined();
+ expect(rememberedCandidate(ctx,{id:"m",kind:"city_records",describe:"311 records",search_terms:["311","Montgomery"]})?.id).toBe(candidate.id);
+});
