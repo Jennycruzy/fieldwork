@@ -1,0 +1,208 @@
+{
+  "id": "r_20261026_dc20d9",
+  "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
+  "created_at": "2026-10-26T00:21:13.634Z",
+  "finished_at": "2026-10-26T00:21:31.770Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for a workload ranking of tracts by raw 911 call volume, not an association with health or other measures, so counts are appropriate and no population denominator is needed.",
+        "denominator": "none",
+        "rank_measure": "m1, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of 911 calls for service in each Montgomery census tract during 2025",
+          "search_terms": [
+            "911 calls",
+            "calls for service",
+            "emergency calls"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "83706a1631964f23cd141c36cb3f7a1bc61328c7e45f1b89e9ea73df583cf871",
+          "to": "candidate:r_20261026_dc20d9:m1:1fc59cd352224e80bab3bf8a99da907c",
+          "from": "measure:r_20261026_dc20d9:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T00:21:14.039Z",
+            "run": "r_20261026_dc20d9",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T00:21:14.039Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_dc20d9",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts had the most 911 calls in 2025?"
+          },
+          "source": {
+            "at": "2026-10-26T00:21:14.038Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_dc20d9:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for a workload ranking of tracts by raw 911 call volume, not an association with health or other measures, so counts are appropriate and no population denominator is needed.",
+              "denominator": "none",
+              "rank_measure": "m1, descending",
+              "relationship": false
+            },
+            "describe": "Count of 911 calls for service in each Montgomery census tract during 2025",
+            "search_terms": [
+              "911 calls",
+              "calls for service",
+              "emergency calls"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T00:21:14.039Z",
+            "run": "r_20261026_dc20d9",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_dc20d9:m1:1fc59cd352224e80bab3bf8a99da907c",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+            "title": "911 Calls",
+            "fields": [
+              {
+                "name": "Year",
+                "type": "integer",
+                "alias": "Year"
+              },
+              {
+                "name": "Month",
+                "type": "string",
+                "alias": "Month"
+              },
+              {
+                "name": "Call_Category",
+                "type": "string",
+                "alias": "Call Category"
+              },
+              {
+                "name": "Phone_Service_Provider_Type",
+                "type": "string",
+                "alias": "Phone Service Provider Type"
+              },
+              {
+                "name": "Call_Count_by_Phone_Service_Pro",
+                "type": "integer",
+                "alias": "Call Count by Phone Service Provider Type"
+              },
+              {
+                "name": "Call_Origin",
+                "type": "string",
+                "alias": "Call Origin"
+              },
+              {
+                "name": "Call_Count_By_Origin",
+                "type": "integer",
+                "alias": "Call Count by Origin"
+              },
+              {
+                "name": "FID",
+                "type": "oid",
+                "alias": "FID"
+              }
+            ],
+            "measure": "Count of 911 calls for service in each Montgomery census tract during 2025",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-26T00:21:14.039Z",
+            "run": "r_20261026_dc20d9",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "911 Calls publishes no tract locations, so tract counts cannot be inferred.",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-585",
+        "kind": "choice",
+        "content": "For \"Count of listed pharmacies in each Montgomery census tract\" in Montgomery, AL, dataset \"Pharmacy Locator\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer) was read through Zetaris: 33 records; fields OBJECTID, custCOMPANY_NAME. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 0.87
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-559",
+        "kind": "quality",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request.",
+        "confidence": 0.87
+      },
+      {
+        "id": "mem-324",
+        "kind": "quality",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request.",
+        "confidence": 0.81
+      }
+    ],
+    "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-559",
+        "content": "Dataset \"911 Calls\" publishes a nonspatial table with no tract locations; it was not successfully wired for this request."
+      },
+      {
+        "id": "mem-560",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_dc20d9\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts had the most 911 calls in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T00:21:14.038Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-561",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_dc20d9:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of 911 calls for service in each Montgomery census tract during 2025\",\"kind\":\"city_records\",\"search_terms\":[\"911 calls\",\"calls for service\",\"emergency calls\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for a workload ranking of tracts by raw 911 call volume, not an association with health or other measures, so counts are appropriate and no population denominator is needed.\",\"rank_measure\":\"m1, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T00:21:14.039Z\",\"run\":\"r_20261026_dc20d9\"}},\"relationships\":[{\"from\":\"measure:r_20261026_dc20d9:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_dc20d9:m1:1fc59cd352224e80bab3bf8a99da907c\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:21:14.039Z\",\"run\":\"r_20261026_dc20d9\"},\"id\":\"83706a1631964f23cd141c36cb3f7a1bc61328c7e45f1b89e9ea73df583cf871\",\"validFrom\":\"2026-10-26T00:21:14.039Z\"}]}"
+      },
+      {
+        "id": "mem-562",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_dc20d9:m1:1fc59cd352224e80bab3bf8a99da907c\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Count of 911 calls for service in each Montgomery census tract during 2025\",\"title\":\"911 Calls\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0\",\"fields\":[{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"integer\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"Call_Category\",\"alias\":\"Call Category\",\"type\":\"string\"},{\"name\":\"Phone_Service_Provider_Type\",\"alias\":\"Phone Service Provider Type\",\"type\":\"string\"},{\"name\":\"Call_Count_by_Phone_Service_Pro\",\"alias\":\"Call Count by Phone Service Provider Type\",\"type\":\"integer\"},{\"name\":\"Call_Origin\",\"alias\":\"Call Origin\",\"type\":\"string\"},{\"name\":\"Call_Count_By_Origin\",\"alias\":\"Call Count by Origin\",\"type\":\"integer\"},{\"name\":\"FID\",\"alias\":\"FID\",\"type\":\"oid\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:21:14.039Z\",\"run\":\"r_20261026_dc20d9\"}},\"relationships\":[{\"from\":\"measure:r_20261026_dc20d9:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_dc20d9:m1:1fc59cd352224e80bab3bf8a99da907c\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:21:14.039Z\",\"run\":\"r_20261026_dc20d9\"},\"id\":\"83706a1631964f23cd141c36cb3f7a1bc61328c7e45f1b89e9ea73df583cf871\",\"validFrom\":\"2026-10-26T00:21:14.039Z\"}]}"
+      }
+    ]
+  }
+}

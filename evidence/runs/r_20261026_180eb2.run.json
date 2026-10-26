@@ -1,0 +1,706 @@
+{
+  "id": "r_20261026_180eb2",
+  "question": "How many Montgomery code violations have been recorded each month so far in 2026?",
+  "created_at": "2026-10-26T00:14:11.986Z",
+  "finished_at": "2026-10-26T00:15:28.915Z",
+  "status": "partial",
+  "rounds": 1,
+  "mode": "live",
+  "answer": {
+    "sql": "SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_180eb2' AND source='m1_city' AND month IS NOT NULL AND year >= 2026 AND year <= 2026 GROUP BY year, month ORDER BY year, month",
+    "plan": {
+      "years": {
+        "to": 2026,
+        "from": 2026
+      },
+      "output": "trend",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.",
+        "denominator": "none",
+        "rank_measure": "monthly code violation count, ordered chronologically by month",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Montgomery code violations recorded each month in 2026",
+          "search_terms": [
+            "code violations"
+          ]
+        }
+      ],
+      "geography": "city",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "rows": [
+      [
+        "2026",
+        "1",
+        "760.0"
+      ],
+      [
+        "2026",
+        "2",
+        "668.0"
+      ],
+      [
+        "2026",
+        "3",
+        "1794.0"
+      ],
+      [
+        "2026",
+        "4",
+        "2029.0"
+      ],
+      [
+        "2026",
+        "5",
+        "1983.0"
+      ],
+      [
+        "2026",
+        "6",
+        "2521.0"
+      ],
+      [
+        "2026",
+        "7",
+        "2399.0"
+      ],
+      [
+        "2026",
+        "8",
+        "1664.0"
+      ],
+      [
+        "2026",
+        "9",
+        "1897.0"
+      ],
+      [
+        "2026",
+        "10",
+        "694.0"
+      ]
+    ],
+    "view": "fieldwork_answers.answer_180eb2",
+    "world": {
+      "edges": [
+        {
+          "id": "40abf0f1336df31b714e323d9cc26102930e492aaa72c51124be9e239b797c81",
+          "to": "candidate:r_20261026_180eb2:m1:e58056aeb8354e0d80483dab81ee2899",
+          "from": "measure:r_20261026_180eb2:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T00:14:12.267Z"
+        },
+        {
+          "id": "02f8f72f9575e7e7b7c559a060645bd932547e9d6eeb6f7bf0aae152826e452e",
+          "to": "source:r_20261026_180eb2:m1_city",
+          "from": "measure:r_20261026_180eb2:m1",
+          "type": "wired as",
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "wirer"
+          },
+          "validFrom": "2026-10-26T00:14:12.267Z"
+        },
+        {
+          "id": "9c7a2c5a84868c9b6e35764de41f41b0962646ce70e66d9fe6a65626fe0c541f",
+          "to": "source:r_20261026_180eb2:m1_city",
+          "from": "finding:r_20261026_180eb2:query",
+          "type": "joins to",
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "joiner"
+          },
+          "context": "source:r_20261026_180eb2:m1_city",
+          "validFrom": "2026-10-26T00:14:12.267Z"
+        },
+        {
+          "id": "3f1f62c373c2bd9f5bc44bf046e834bde1d2e210fb3eed25ff952b4978fbd3ca",
+          "to": "finding:r_20261026_180eb2:query",
+          "from": "finding:r_20261026_180eb2:approval-1",
+          "type": "supports",
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "evaluator"
+          },
+          "validFrom": "2026-10-26T00:14:12.267Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_180eb2",
+          "type": "run",
+          "attrs": {
+            "question": "How many Montgomery code violations have been recorded each month so far in 2026?"
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.266Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_180eb2:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.",
+              "denominator": "none",
+              "rank_measure": "monthly code violation count, ordered chronologically by month",
+              "relationship": false
+            },
+            "describe": "Montgomery code violations recorded each month in 2026",
+            "search_terms": [
+              "code violations"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_180eb2:m1:e58056aeb8354e0d80483dab81ee2899",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+            "title": "Code Violations",
+            "fields": [
+              {
+                "name": "OffenceNum",
+                "type": "string",
+                "alias": "OffenceNum"
+              },
+              {
+                "name": "CaseDate",
+                "type": "dateonly",
+                "alias": "CaseDate"
+              },
+              {
+                "name": "CaseType",
+                "type": "string",
+                "alias": "CaseType"
+              },
+              {
+                "name": "CaseStatus",
+                "type": "string",
+                "alias": "CaseStatus"
+              },
+              {
+                "name": "LienStatus",
+                "type": "string",
+                "alias": "LienStatus"
+              },
+              {
+                "name": "ParcelNo",
+                "type": "string",
+                "alias": "ParcelNo"
+              },
+              {
+                "name": "CouncilDistrict",
+                "type": "string",
+                "alias": "CouncilDistrict"
+              },
+              {
+                "name": "City",
+                "type": "string",
+                "alias": "City"
+              },
+              {
+                "name": "STATE",
+                "type": "string",
+                "alias": "State"
+              },
+              {
+                "name": "Zip",
+                "type": "integer",
+                "alias": "Zip"
+              },
+              {
+                "name": "ComplaintRem",
+                "type": "string",
+                "alias": "ComplaintRem"
+              },
+              {
+                "name": "OBJECTID",
+                "type": "oid",
+                "alias": "ObjectID"
+              },
+              {
+                "name": "ParcelNo_X",
+                "type": "double",
+                "alias": "ParcelNo_X"
+              },
+              {
+                "name": "ParcelNo_Y",
+                "type": "double",
+                "alias": "ParcelNo_Y"
+              },
+              {
+                "name": "Address1",
+                "type": "string",
+                "alias": "Address1"
+              },
+              {
+                "name": "Year",
+                "type": "string",
+                "alias": "Year"
+              },
+              {
+                "name": "Month",
+                "type": "string",
+                "alias": "Month"
+              },
+              {
+                "name": "GlobalID",
+                "type": "globalid",
+                "alias": "GlobalID"
+              },
+              {
+                "name": "created_user",
+                "type": "string",
+                "alias": "created_user"
+              },
+              {
+                "name": "created_date",
+                "type": "date",
+                "alias": "created_date"
+              },
+              {
+                "name": "last_edited_user",
+                "type": "string",
+                "alias": "last_edited_user"
+              },
+              {
+                "name": "last_edited_date",
+                "type": "date",
+                "alias": "last_edited_date"
+              }
+            ],
+            "measure": "Montgomery code violations recorded each month in 2026",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "source:r_20261026_180eb2:m1_city",
+          "type": "source",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+            "title": "Code Violations",
+            "fields": [
+              "OBJECTID",
+              "CaseDate",
+              "Year",
+              "Month",
+              "OffenceNum"
+            ],
+            "filter": "Year = '2026'",
+            "tables": [
+              "fw_180eb2_m1_city_p0",
+              "fw_180eb2_m1_city_p1",
+              "fw_180eb2_m1_city_p2",
+              "fw_180eb2_m1_city_p3",
+              "fw_180eb2_m1_city_p4",
+              "fw_180eb2_m1_city_p5",
+              "fw_180eb2_m1_city_p6",
+              "fw_180eb2_m1_city_p7",
+              "fw_180eb2_m1_city_p8",
+              "fw_180eb2_m1_city_p9"
+            ],
+            "records": 18407
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "wiring:r_20261026_180eb2:verified",
+          "type": "wiring",
+          "attrs": {
+            "runId": "r_20261026_180eb2",
+            "wired": [
+              {
+                "label": "m1_city",
+                "shape": "arcgis_features",
+                "title": "Code Violations",
+                "where": "Year = '2026'",
+                "capped": false,
+                "fields": [
+                  "OBJECTID",
+                  "CaseDate",
+                  "Year",
+                  "Month",
+                  "OffenceNum"
+                ],
+                "tables": [
+                  "fw_180eb2_m1_city_p0",
+                  "fw_180eb2_m1_city_p1",
+                  "fw_180eb2_m1_city_p2",
+                  "fw_180eb2_m1_city_p3",
+                  "fw_180eb2_m1_city_p4",
+                  "fw_180eb2_m1_city_p5",
+                  "fw_180eb2_m1_city_p6",
+                  "fw_180eb2_m1_city_p7",
+                  "fw_180eb2_m1_city_p8",
+                  "fw_180eb2_m1_city_p9"
+                ],
+                "licence": "No explicit license supplied in the catalog",
+                "measure": "Montgomery code violations recorded each month in 2026",
+                "dateField": "CaseDate",
+                "measureId": "m1",
+                "sourceUrl": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+                "valueKind": "count",
+                "yearField": "Year",
+                "accessedAt": "2026-10-26T00:14:23.976Z",
+                "groupField": "Month",
+                "licenceUrl": "https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899",
+                "monthField": "Month",
+                "caseIdField": "OffenceNum",
+                "sourceCount": 18407,
+                "zetarisCount": 18407,
+                "categoryField": "Month",
+                "objectIdField": "OBJECTID",
+                "catalogUpdatedAt": "2025-07-18T18:45:07.000Z",
+                "catalogDescription": "This layer displays the locations of code violations across the city.",
+                "excludedTestRecords": 0
+              }
+            ],
+            "signature": "{\"plan\":{\"in_scope\":true,\"scope_limit\":null,\"out_of_scope_reason\":null,\"geography\":\"city\",\"years\":{\"from\":2026,\"to\":2026},\"measures\":[{\"id\":\"m1\",\"describe\":\"Montgomery code violations recorded each month in 2026\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\"]}],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.\",\"rank_measure\":\"monthly code violation count, ordered chronologically by month\"},\"output\":\"trend\"},\"chosen\":[[\"m1\",\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",[{\"name\":\"OffenceNum\",\"alias\":\"OffenceNum\",\"type\":\"string\"},{\"name\":\"CaseDate\",\"alias\":\"CaseDate\",\"type\":\"dateonly\"},{\"name\":\"CaseType\",\"alias\":\"CaseType\",\"type\":\"string\"},{\"name\":\"CaseStatus\",\"alias\":\"CaseStatus\",\"type\":\"string\"},{\"name\":\"LienStatus\",\"alias\":\"LienStatus\",\"type\":\"string\"},{\"name\":\"ParcelNo\",\"alias\":\"ParcelNo\",\"type\":\"string\"},{\"name\":\"CouncilDistrict\",\"alias\":\"CouncilDistrict\",\"type\":\"string\"},{\"name\":\"City\",\"alias\":\"City\",\"type\":\"string\"},{\"name\":\"STATE\",\"alias\":\"State\",\"type\":\"string\"},{\"name\":\"Zip\",\"alias\":\"Zip\",\"type\":\"integer\"},{\"name\":\"ComplaintRem\",\"alias\":\"ComplaintRem\",\"type\":\"string\"},{\"name\":\"OBJECTID\",\"alias\":\"ObjectID\",\"type\":\"oid\"},{\"name\":\"ParcelNo_X\",\"alias\":\"ParcelNo_X\",\"type\":\"double\"},{\"name\":\"ParcelNo_Y\",\"alias\":\"ParcelNo_Y\",\"type\":\"double\"},{\"name\":\"Address1\",\"alias\":\"Address1\",\"type\":\"string\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"string\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"esriGeometryPoint\"]],\"version\":1}"
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "wirer"
+          }
+        },
+        {
+          "id": "finding:r_20261026_180eb2:query",
+          "type": "finding",
+          "attrs": {
+            "sql": "SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_180eb2' AND source='m1_city' AND month IS NOT NULL AND year >= 2026 AND year <= 2026 GROUP BY year, month ORDER BY year, month",
+            "rows": 10,
+            "headers": [
+              "year",
+              "month",
+              "record_count"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "joiner"
+          }
+        },
+        {
+          "id": "round:r_20261026_180eb2:1",
+          "type": "round",
+          "attrs": {
+            "checks": [
+              {
+                "id": "rows_m1_city",
+                "ok": true,
+                "detail": "m1_city: Zetaris rows 18,407 vs source's own count 18,407"
+              },
+              {
+                "id": "has_rows",
+                "ok": true,
+                "detail": "10 result rows"
+              },
+              {
+                "id": "measure_values",
+                "ok": true,
+                "detail": "every measure column has real values"
+              },
+              {
+                "id": "partial_period",
+                "ok": true,
+                "detail": "2026 is still in progress: its figures are \"so far\" (to 2026-10-26) and are not compared with full years without saying so"
+              },
+              {
+                "id": "duplicates",
+                "ok": true,
+                "detail": "0 duplicate case IDs removed before tract counting."
+              },
+              {
+                "id": "source_accessed_m1_city",
+                "ok": true,
+                "detail": "Code Violations: retrieved 2026-10-26. Catalog updated 2025-07-18; retrieval is not an event or inspection date."
+              },
+              {
+                "id": "source_definition_m1_city",
+                "ok": true,
+                "detail": "Published description for Code Violations: This layer displays the locations of code violations across the city."
+              },
+              {
+                "id": "source_dates_m1_city",
+                "ok": true,
+                "detail": "Code Violations: event dates 2025-10-01T00:00:00.000Z to 2026-10-16T00:00:00.000Z; monthly coverage 2025-10 through 2026-10 (12 distinct months)."
+              },
+              {
+                "id": "analysis_basis",
+                "ok": true,
+                "detail": "counts; denominator: none. The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested."
+              }
+            ],
+            "verdict": "APPROVE"
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "evaluator"
+          }
+        },
+        {
+          "id": "finding:r_20261026_180eb2:approval-1",
+          "type": "finding",
+          "attrs": {
+            "round": 1,
+            "status": "approved",
+            "reasons": [
+              "Raw monthly counts are the correct basis for this workload question; no rate, denominator, or cross-tract/health comparison is needed.",
+              "Time filter is year 2026 only, matching the plan; result covers Jan-Oct 2026, i.e. \"so far\" as of the 2026-10-26 run date.",
+              "All code checks pass: source rows (18,407) match, 10 result rows, no duplicate issue, partial-period caveat noted.",
+              "Output is ordered chronologically by year, month as specified; no missing columns or unfair comparison."
+            ],
+            "instruction": null
+          },
+          "source": {
+            "at": "2026-10-26T00:14:12.267Z",
+            "run": "r_20261026_180eb2",
+            "kind": "evaluator"
+          }
+        }
+      ]
+    },
+    "answer": {
+      "points": [
+        "Monthly counts range from 668 in February 2026 to 2,521 in June 2026",
+        "Total violations recorded through October 2026: 16,409"
+      ],
+      "caveats": [
+        "Data covers only through October 2026; November and December 2026 counts are not yet available",
+        "Counts are raw monthly totals, not rates per population or per area",
+        "Source publication dates for individual monthly records are not specified; event dates span 2025-10-01 to 2026-10-16",
+        "I could not fully support an answer after the checks. Here is what the data shows and what remains uncertain. Review the flagged checks below."
+      ],
+      "headline": "Some draft statements could not be verified; review the result rows and checks.",
+      "how_sure": "Counts are from the Code Violations layer retrieved 2026-10-26; 10 of 10 months in 2026 have recorded values; figures are \"so far\" through October 2026 and are not compared with full-year totals without that caveat"
+    },
+    "checks": [
+      {
+        "id": "rows_m1_city",
+        "ok": true,
+        "detail": "m1_city: Zetaris rows 18,407 vs source's own count 18,407"
+      },
+      {
+        "id": "has_rows",
+        "ok": true,
+        "detail": "10 result rows"
+      },
+      {
+        "id": "measure_values",
+        "ok": true,
+        "detail": "every measure column has real values"
+      },
+      {
+        "id": "partial_period",
+        "ok": true,
+        "detail": "2026 is still in progress: its figures are \"so far\" (to 2026-10-26) and are not compared with full years without saying so"
+      },
+      {
+        "id": "duplicates",
+        "ok": true,
+        "detail": "0 duplicate case IDs removed before tract counting."
+      },
+      {
+        "id": "source_accessed_m1_city",
+        "ok": true,
+        "detail": "Code Violations: retrieved 2026-10-26. Catalog updated 2025-07-18; retrieval is not an event or inspection date."
+      },
+      {
+        "id": "source_definition_m1_city",
+        "ok": true,
+        "detail": "Published description for Code Violations: This layer displays the locations of code violations across the city."
+      },
+      {
+        "id": "source_dates_m1_city",
+        "ok": true,
+        "detail": "Code Violations: event dates 2025-10-01T00:00:00.000Z to 2026-10-16T00:00:00.000Z; monthly coverage 2025-10 through 2026-10 (12 distinct months)."
+      },
+      {
+        "id": "analysis_basis",
+        "ok": true,
+        "detail": "counts; denominator: none. The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested."
+      },
+      {
+        "id": "answer_draft",
+        "ok": false,
+        "detail": "Unsupported statements were omitted after the Writer rewrite; the answer remains partial."
+      }
+    ],
+    "drafts": [
+      {
+        "points": [
+          "January 2026: 760 violations",
+          "February 2026: 668 violations (lowest)",
+          "March 2026: 1,794 violations",
+          "April 2026: 2,029 violations",
+          "May 2026: 1,983 violations",
+          "June 2026: 2,521 violations (highest)"
+        ],
+        "caveats": [
+          "2026 figures are partial (through October) and not comparable to full-year totals",
+          "Counts are raw monthly totals; no rate per population is provided",
+          "Source publication dates for individual monthly records are not specified"
+        ],
+        "headline": "Montgomery recorded 16,409 code violations from January through October 2026, with monthly counts ranging from 668 in February to 2,521 in June.",
+        "how_sure": "Counts are from the Code Violations layer retrieved 2026-10-26; 10 of 10 months in 2026 have recorded values; figures are \"so far\" as the year is still in progress through October 26, 2026.",
+        "problems": [
+          "the number 16409 is not in the result rows"
+        ]
+      },
+      {
+        "points": [
+          "Monthly counts range from 668 in February 2026 to 2,521 in June 2026",
+          "Total violations recorded through October 2026: 16,409",
+          "October 2026 count (694) is 66 fewer than January 2026 (760), an 8.7% decrease",
+          "June 2026 had the highest count at 2,521, 277.4% above the February 2026 low of 668"
+        ],
+        "caveats": [
+          "Data covers only through October 2026; November and December 2026 counts are not yet available",
+          "Counts are raw monthly totals, not rates per population or per area",
+          "Source publication dates for individual monthly records are not specified; event dates span 2025-10-01 to 2026-10-16"
+        ],
+        "headline": "Montgomery recorded 694 code violations in October 2026, the lowest monthly count so far this year, and 760 in January 2026, the highest.",
+        "how_sure": "Counts are from the Code Violations layer retrieved 2026-10-26; 10 of 10 months in 2026 have recorded values; figures are \"so far\" through October 2026 and are not compared with full-year totals without that caveat",
+        "problems": [
+          "the number 8.7 is not in the result rows",
+          "the number 277.4 is not in the result rows",
+          "\"Montgomery recorded 694 code violations in October 2026, the lowest monthly count so far this year\" puts October at rank 1 from the bottom, but in the rows it is rank 2 by record_count",
+          "\"and 760 in January 2026, the highest.\" puts January at rank 1, but in the rows it is rank 8 by record_count"
+        ]
+      }
+    ],
+    "headers": [
+      "year",
+      "month",
+      "record_count"
+    ],
+    "sources": [
+      {
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "label": "m1_city",
+        "title": "Code Violations",
+        "filter": "Year = '2026'",
+        "licence": "No explicit license supplied in the catalog",
+        "records": 18407,
+        "accessedAt": "2026-10-26T00:14:23.976Z",
+        "licenceUrl": "https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899",
+        "description": "This layer displays the locations of code violations across the city.",
+        "sourceCount": 18407,
+        "catalogUpdatedAt": "2025-07-18T18:45:07.000Z"
+      }
+    ],
+    "memories": [
+      {
+        "id": "mem-43",
+        "kind": "choice",
+        "content": "For \"count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-20, confidence 0.87).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-20",
+        "kind": "choice",
+        "content": "For \"Count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 0.79).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-207",
+        "kind": "choice",
+        "content": "For \"code violations in Montgomery census tracts this year\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-43, confidence 0.97).",
+        "confidence": 0.9
+      },
+      {
+        "id": "mem-46",
+        "kind": "join",
+        "content": "A working Zetaris join for \"Which Montgomery census tracts have the highest adult asthma rates, and how many code violations were reported in each this year?\": SELECT t.name AS tract_name, t.geoid, CAST(c.casthma_crudeprev AS DOUBLE) AS adult_asthma_rate, CAST(c.totalpopulation AS DOUBLE) AS total_population, COALESCE(v.n, 0) AS code_violations_2026 FROM fw_pg.tracts AS t LEFT JOIN session.fw_<run>_m1_cdc AS c ON c.tractfips = t.geoid LEFT JOIN fw_pg.tract_counts AS v ON v.geoid = t.geoid AND v.run_id = '<run_id>' AND v.source = 'm2_city' AND v.grp = 'all' WHERE c.casthma_crudeprev IS NOT NULL ORDER BY adult_asthma_rate DESC LIMIT 50",
+        "confidence": 1
+      },
+      {
+        "id": "mem-23",
+        "kind": "join",
+        "content": "A working Zetaris join for \"Which Montgomery census tracts have the highest adult asthma rates, and how many code violations were reported in each this year?\": SELECT t.name AS tract_name, t.geoid, CAST(c.casthma_crudeprev AS DOUBLE) AS adult_asthma_rate, CAST(c.totalpopulation AS DOUBLE) AS population, COALESCE(v.n, 0) AS code_violations_2026 FROM fw_pg.tracts AS t LEFT JOIN session.fw_<run>_m1_cdc AS c ON c.tractfips = t.geoid LEFT JOIN fw_pg.tract_counts AS v ON v.geoid = t.geoid AND v.run_id = '<run_id>' AND v.source = 'm2_city' AND v.grp = 'all' WHERE c.casthma_crudeprev IS NOT NULL ORDER BY adult_asthma_rate DESC LIMIT 50",
+        "confidence": 1
+      }
+    ],
+    "question": "How many Montgomery code violations have been recorded each month so far in 2026?",
+    "memoryWrites": [
+      {
+        "id": "mem-869",
+        "content": "For \"Montgomery code violations recorded each month in 2026\" in Montgomery, AL, dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0) was read through Zetaris: 18407 records; fields OBJECTID, CaseDate, Year, Month, OffenceNum. Catalog selection reasons are hypotheses, not verified capabilities."
+      },
+      {
+        "id": "mem-522",
+        "content": "Dataset \"Code Violations\" wires into Zetaris as arcgis_features in 10 pages of 2000; filter Year = '2026'; fields OBJECTID, CaseDate, Year, Month, OffenceNum; 18407 of 18407 source records read."
+      },
+      {
+        "id": "mem-523",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_180eb2\",\"type\":\"run\",\"attrs\":{\"question\":\"How many Montgomery code violations have been recorded each month so far in 2026?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T00:14:12.266Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-524",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_180eb2:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Montgomery code violations recorded each month in 2026\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.\",\"rank_measure\":\"monthly code violation count, ordered chronologically by month\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[{\"from\":\"measure:r_20261026_180eb2:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_180eb2:m1:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"40abf0f1336df31b714e323d9cc26102930e492aaa72c51124be9e239b797c81\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"},{\"from\":\"measure:r_20261026_180eb2:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261026_180eb2:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"02f8f72f9575e7e7b7c559a060645bd932547e9d6eeb6f7bf0aae152826e452e\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"}]}"
+      },
+      {
+        "id": "mem-525",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_180eb2:m1:e58056aeb8354e0d80483dab81ee2899\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Montgomery code violations recorded each month in 2026\",\"title\":\"Code Violations\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"fields\":[{\"name\":\"OffenceNum\",\"alias\":\"OffenceNum\",\"type\":\"string\"},{\"name\":\"CaseDate\",\"alias\":\"CaseDate\",\"type\":\"dateonly\"},{\"name\":\"CaseType\",\"alias\":\"CaseType\",\"type\":\"string\"},{\"name\":\"CaseStatus\",\"alias\":\"CaseStatus\",\"type\":\"string\"},{\"name\":\"LienStatus\",\"alias\":\"LienStatus\",\"type\":\"string\"},{\"name\":\"ParcelNo\",\"alias\":\"ParcelNo\",\"type\":\"string\"},{\"name\":\"CouncilDistrict\",\"alias\":\"CouncilDistrict\",\"type\":\"string\"},{\"name\":\"City\",\"alias\":\"City\",\"type\":\"string\"},{\"name\":\"STATE\",\"alias\":\"State\",\"type\":\"string\"},{\"name\":\"Zip\",\"alias\":\"Zip\",\"type\":\"integer\"},{\"name\":\"ComplaintRem\",\"alias\":\"ComplaintRem\",\"type\":\"string\"},{\"name\":\"OBJECTID\",\"alias\":\"ObjectID\",\"type\":\"oid\"},{\"name\":\"ParcelNo_X\",\"alias\":\"ParcelNo_X\",\"type\":\"double\"},{\"name\":\"ParcelNo_Y\",\"alias\":\"ParcelNo_Y\",\"type\":\"double\"},{\"name\":\"Address1\",\"alias\":\"Address1\",\"type\":\"string\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"string\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[{\"from\":\"measure:r_20261026_180eb2:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_180eb2:m1:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"40abf0f1336df31b714e323d9cc26102930e492aaa72c51124be9e239b797c81\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"}]}"
+      },
+      {
+        "id": "mem-526",
+        "content": "{\"world_entity\":{\"id\":\"source:r_20261026_180eb2:m1_city\",\"type\":\"source\",\"attrs\":{\"title\":\"Code Violations\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"tables\":[\"fw_180eb2_m1_city_p0\",\"fw_180eb2_m1_city_p1\",\"fw_180eb2_m1_city_p2\",\"fw_180eb2_m1_city_p3\",\"fw_180eb2_m1_city_p4\",\"fw_180eb2_m1_city_p5\",\"fw_180eb2_m1_city_p6\",\"fw_180eb2_m1_city_p7\",\"fw_180eb2_m1_city_p8\",\"fw_180eb2_m1_city_p9\"],\"filter\":\"Year = '2026'\",\"fields\":[\"OBJECTID\",\"CaseDate\",\"Year\",\"Month\",\"OffenceNum\"],\"records\":18407},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[{\"from\":\"measure:r_20261026_180eb2:m1\",\"type\":\"wired as\",\"to\":\"source:r_20261026_180eb2:m1_city\",\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"02f8f72f9575e7e7b7c559a060645bd932547e9d6eeb6f7bf0aae152826e452e\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"},{\"from\":\"finding:r_20261026_180eb2:query\",\"type\":\"joins to\",\"to\":\"source:r_20261026_180eb2:m1_city\",\"context\":\"source:r_20261026_180eb2:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"9c7a2c5a84868c9b6e35764de41f41b0962646ce70e66d9fe6a65626fe0c541f\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"}]}"
+      },
+      {
+        "id": "mem-527",
+        "content": "{\"world_entity\":{\"id\":\"wiring:r_20261026_180eb2:verified\",\"type\":\"wiring\",\"attrs\":{\"runId\":\"r_20261026_180eb2\",\"signature\":\"{\\\"plan\\\":{\\\"in_scope\\\":true,\\\"scope_limit\\\":null,\\\"out_of_scope_reason\\\":null,\\\"geography\\\":\\\"city\\\",\\\"years\\\":{\\\"from\\\":2026,\\\"to\\\":2026},\\\"measures\\\":[{\\\"id\\\":\\\"m1\\\",\\\"describe\\\":\\\"Montgomery code violations recorded each month in 2026\\\",\\\"kind\\\":\\\"city_records\\\",\\\"search_terms\\\":[\\\"code violations\\\"]}],\\\"analysis\\\":{\\\"basis\\\":\\\"counts\\\",\\\"denominator\\\":\\\"none\\\",\\\"relationship\\\":false,\\\"reason\\\":\\\"The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.\\\",\\\"rank_measure\\\":\\\"monthly code violation count, ordered chronologically by month\\\"},\\\"output\\\":\\\"trend\\\"},\\\"chosen\\\":[[\\\"m1\\\",\\\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\\\",[{\\\"name\\\":\\\"OffenceNum\\\",\\\"alias\\\":\\\"OffenceNum\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"CaseDate\\\",\\\"alias\\\":\\\"CaseDate\\\",\\\"type\\\":\\\"dateonly\\\"},{\\\"name\\\":\\\"CaseType\\\",\\\"alias\\\":\\\"CaseType\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"CaseStatus\\\",\\\"alias\\\":\\\"CaseStatus\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"LienStatus\\\",\\\"alias\\\":\\\"LienStatus\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"ParcelNo\\\",\\\"alias\\\":\\\"ParcelNo\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"CouncilDistrict\\\",\\\"alias\\\":\\\"CouncilDistrict\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"City\\\",\\\"alias\\\":\\\"City\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"STATE\\\",\\\"alias\\\":\\\"State\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Zip\\\",\\\"alias\\\":\\\"Zip\\\",\\\"type\\\":\\\"integer\\\"},{\\\"name\\\":\\\"ComplaintRem\\\",\\\"alias\\\":\\\"ComplaintRem\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"OBJECTID\\\",\\\"alias\\\":\\\"ObjectID\\\",\\\"type\\\":\\\"oid\\\"},{\\\"name\\\":\\\"ParcelNo_X\\\",\\\"alias\\\":\\\"ParcelNo_X\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"ParcelNo_Y\\\",\\\"alias\\\":\\\"ParcelNo_Y\\\",\\\"type\\\":\\\"double\\\"},{\\\"name\\\":\\\"Address1\\\",\\\"alias\\\":\\\"Address1\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Year\\\",\\\"alias\\\":\\\"Year\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"Month\\\",\\\"alias\\\":\\\"Month\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"GlobalID\\\",\\\"alias\\\":\\\"GlobalID\\\",\\\"type\\\":\\\"globalid\\\"},{\\\"name\\\":\\\"created_user\\\",\\\"alias\\\":\\\"created_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"created_date\\\",\\\"alias\\\":\\\"created_date\\\",\\\"type\\\":\\\"date\\\"},{\\\"name\\\":\\\"last_edited_user\\\",\\\"alias\\\":\\\"last_edited_user\\\",\\\"type\\\":\\\"string\\\"},{\\\"name\\\":\\\"last_edited_date\\\",\\\"alias\\\":\\\"last_edited_date\\\",\\\"type\\\":\\\"date\\\"}],\\\"esriGeometryPoint\\\"]],\\\"version\\\":1}\",\"wired\":[{\"measureId\":\"m1\",\"measure\":\"Montgomery code violations recorded each month in 2026\",\"label\":\"m1_city\",\"title\":\"Code Violations\",\"shape\":\"arcgis_features\",\"dateField\":\"CaseDate\",\"yearField\":\"Year\",\"monthField\":\"Month\",\"categoryField\":\"Month\",\"valueKind\":\"count\",\"objectIdField\":\"OBJECTID\",\"tables\":[\"fw_180eb2_m1_city_p0\",\"fw_180eb2_m1_city_p1\",\"fw_180eb2_m1_city_p2\",\"fw_180eb2_m1_city_p3\",\"fw_180eb2_m1_city_p4\",\"fw_180eb2_m1_city_p5\",\"fw_180eb2_m1_city_p6\",\"fw_180eb2_m1_city_p7\",\"fw_180eb2_m1_city_p8\",\"fw_180eb2_m1_city_p9\"],\"fields\":[\"OBJECTID\",\"CaseDate\",\"Year\",\"Month\",\"OffenceNum\"],\"caseIdField\":\"OffenceNum\",\"groupField\":\"Month\",\"where\":\"Year = '2026'\",\"sourceCount\":18407,\"zetarisCount\":18407,\"capped\":false,\"excludedTestRecords\":0,\"sourceUrl\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"accessedAt\":\"2026-10-26T00:14:23.976Z\",\"catalogUpdatedAt\":\"2025-07-18T18:45:07.000Z\",\"catalogDescription\":\"This layer displays the locations of code violations across the city.\",\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899\"}]},\"source\":{\"kind\":\"wirer\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-694",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261026_180eb2:query\",\"type\":\"finding\",\"attrs\":{\"sql\":\"SELECT year, month, SUM(value) AS record_count FROM fw_pg.tract_observations WHERE run_id='r_20261026_180eb2' AND source='m1_city' AND month IS NOT NULL AND year >= 2026 AND year <= 2026 GROUP BY year, month ORDER BY year, month\",\"headers\":[\"year\",\"month\",\"record_count\"],\"rows\":10},\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[{\"from\":\"finding:r_20261026_180eb2:query\",\"type\":\"joins to\",\"to\":\"source:r_20261026_180eb2:m1_city\",\"context\":\"source:r_20261026_180eb2:m1_city\",\"source\":{\"kind\":\"joiner\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"9c7a2c5a84868c9b6e35764de41f41b0962646ce70e66d9fe6a65626fe0c541f\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"},{\"from\":\"finding:r_20261026_180eb2:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261026_180eb2:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"3f1f62c373c2bd9f5bc44bf046e834bde1d2e210fb3eed25ff952b4978fbd3ca\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"}]}"
+      },
+      {
+        "id": "mem-695",
+        "content": "{\"world_entity\":{\"id\":\"round:r_20261026_180eb2:1\",\"type\":\"round\",\"attrs\":{\"verdict\":\"APPROVE\",\"checks\":[{\"id\":\"rows_m1_city\",\"ok\":true,\"detail\":\"m1_city: Zetaris rows 18,407 vs source's own count 18,407\"},{\"id\":\"has_rows\",\"ok\":true,\"detail\":\"10 result rows\"},{\"id\":\"measure_values\",\"ok\":true,\"detail\":\"every measure column has real values\"},{\"id\":\"partial_period\",\"ok\":true,\"detail\":\"2026 is still in progress: its figures are \\\"so far\\\" (to 2026-10-26) and are not compared with full years without saying so\"},{\"id\":\"duplicates\",\"ok\":true,\"detail\":\"0 duplicate case IDs removed before tract counting.\"},{\"id\":\"source_accessed_m1_city\",\"ok\":true,\"detail\":\"Code Violations: retrieved 2026-10-26. Catalog updated 2025-07-18; retrieval is not an event or inspection date.\"},{\"id\":\"source_definition_m1_city\",\"ok\":true,\"detail\":\"Published description for Code Violations: This layer displays the locations of code violations across the city.\"},{\"id\":\"source_dates_m1_city\",\"ok\":true,\"detail\":\"Code Violations: event dates 2025-10-01T00:00:00.000Z to 2026-10-16T00:00:00.000Z; monthly coverage 2025-10 through 2026-10 (12 distinct months).\"},{\"id\":\"analysis_basis\",\"ok\":true,\"detail\":\"counts; denominator: none. The question asks for raw monthly counts of recorded code violations, a workload measure; no cross-tract association or health comparison is requested.\"}]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-696",
+        "content": "{\"world_entity\":{\"id\":\"finding:r_20261026_180eb2:approval-1\",\"type\":\"finding\",\"attrs\":{\"round\":1,\"status\":\"approved\",\"instruction\":null,\"reasons\":[\"Raw monthly counts are the correct basis for this workload question; no rate, denominator, or cross-tract/health comparison is needed.\",\"Time filter is year 2026 only, matching the plan; result covers Jan-Oct 2026, i.e. \\\"so far\\\" as of the 2026-10-26 run date.\",\"All code checks pass: source rows (18,407) match, 10 result rows, no duplicate issue, partial-period caveat noted.\",\"Output is ordered chronologically by year, month as specified; no missing columns or unfair comparison.\"]},\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"}},\"relationships\":[{\"from\":\"finding:r_20261026_180eb2:approval-1\",\"type\":\"supports\",\"to\":\"finding:r_20261026_180eb2:query\",\"source\":{\"kind\":\"evaluator\",\"at\":\"2026-10-26T00:14:12.267Z\",\"run\":\"r_20261026_180eb2\"},\"id\":\"3f1f62c373c2bd9f5bc44bf046e834bde1d2e210fb3eed25ff952b4978fbd3ca\",\"validFrom\":\"2026-10-26T00:14:12.267Z\"}]}"
+      }
+    ]
+  }
+}

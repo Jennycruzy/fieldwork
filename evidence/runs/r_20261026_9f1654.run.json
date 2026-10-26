@@ -1,0 +1,47 @@
+{
+  "id": "r_20261026_9f1654",
+  "question": "What are the current private bank balances of Montgomery homeowners?",
+  "created_at": "2026-10-26T00:41:07.219Z",
+  "finished_at": "2026-10-26T00:41:09.611Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "non_public",
+      "out_of_scope_reason": "Private bank balances of individual homeowners are not public records and are not available in any of the public data catalogs (city records, environmental records, or health estimates)."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_9f1654",
+          "type": "run",
+          "attrs": {
+            "question": "What are the current private bank balances of Montgomery homeowners?"
+          },
+          "source": {
+            "at": "2026-10-26T00:41:07.437Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Private bank balances of individual homeowners are not public records and are not available in any of the public data catalogs (city records, environmental records, or health estimates).",
+    "sources": [],
+    "memories": [],
+    "question": "What are the current private bank balances of Montgomery homeowners?",
+    "memoryWrites": [
+      {
+        "id": "mem-648",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_9f1654\",\"type\":\"run\",\"attrs\":{\"question\":\"What are the current private bank balances of Montgomery homeowners?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T00:41:07.437Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
