@@ -1,0 +1,47 @@
+{
+  "id": "r_20261026_d38a05",
+  "question": "What will the price of Bitcoin be next Friday?",
+  "created_at": "2026-10-26T07:22:37.016Z",
+  "finished_at": "2026-10-26T07:23:03.935Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "Question asks for a Bitcoin price forecast, which is a personal financial prediction unrelated to Montgomery, Alabama public data."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_d38a05",
+          "type": "run",
+          "attrs": {
+            "question": "What will the price of Bitcoin be next Friday?"
+          },
+          "source": {
+            "at": "2026-10-26T07:22:37.495Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs Question asks for a Bitcoin price forecast, which is a personal financial prediction unrelated to Montgomery, Alabama public data.",
+    "sources": [],
+    "memories": [],
+    "question": "What will the price of Bitcoin be next Friday?",
+    "memoryWrites": [
+      {
+        "id": "mem-646",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_d38a05\",\"type\":\"run\",\"attrs\":{\"question\":\"What will the price of Bitcoin be next Friday?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T07:22:37.495Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

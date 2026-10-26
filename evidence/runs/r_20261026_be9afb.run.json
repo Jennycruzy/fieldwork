@@ -1,0 +1,205 @@
+{
+  "id": "r_20261026_be9afb",
+  "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
+  "created_at": "2026-10-26T07:07:55.312Z",
+  "finished_at": "2026-10-26T07:08:05.275Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "counts",
+        "reason": "The question asks which tracts have the most establishments meeting a condition, which is a raw workload count per tract, not an association between two variables.",
+        "denominator": "none",
+        "rank_measure": "Count of food establishments with latest inspection score below 85, descending by tract",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of food establishments in each Montgomery tract whose latest inspection score is below 85",
+          "search_terms": [
+            "food establishment",
+            "restaurant inspection",
+            "health inspection"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "21be9bda0f683c1b5317d2e820e1db5d1a800e85e74ac48a553dde2966804c21",
+          "to": "candidate:r_20261026_be9afb:m1:e9c926feae0444cc88d83a378e7526b9",
+          "from": "measure:r_20261026_be9afb:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T07:07:55.641Z",
+            "run": "r_20261026_be9afb",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T07:07:55.641Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_be9afb",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?"
+          },
+          "source": {
+            "at": "2026-10-26T07:07:55.640Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_be9afb:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "counts",
+              "reason": "The question asks which tracts have the most establishments meeting a condition, which is a raw workload count per tract, not an association between two variables.",
+              "denominator": "none",
+              "rank_measure": "Count of food establishments with latest inspection score below 85, descending by tract",
+              "relationship": false
+            },
+            "describe": "Count of food establishments in each Montgomery tract whose latest inspection score is below 85",
+            "search_terms": [
+              "food establishment",
+              "restaurant inspection",
+              "health inspection"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T07:07:55.641Z",
+            "run": "r_20261026_be9afb",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_be9afb:m1:e9c926feae0444cc88d83a378e7526b9",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0",
+            "title": "Food Scores",
+            "fields": [
+              {
+                "name": "ObjectID",
+                "type": "oid",
+                "alias": "ObjectID"
+              },
+              {
+                "name": "Status",
+                "type": "string",
+                "alias": "Status"
+              },
+              {
+                "name": "Score",
+                "type": "double",
+                "alias": "Score"
+              },
+              {
+                "name": "Match_type",
+                "type": "string",
+                "alias": "Match_type"
+              },
+              {
+                "name": "Match_addr",
+                "type": "string",
+                "alias": "Match Address"
+              },
+              {
+                "name": "Addr_type",
+                "type": "string",
+                "alias": "Address Type"
+              },
+              {
+                "name": "Establishment",
+                "type": "string",
+                "alias": "Establishment"
+              },
+              {
+                "name": "Address",
+                "type": "string",
+                "alias": "Address"
+              },
+              {
+                "name": "Date",
+                "type": "dateonly",
+                "alias": "Date"
+              },
+              {
+                "name": "Score_1",
+                "type": "integer",
+                "alias": "Score"
+              }
+            ],
+            "measure": "Count of food establishments in each Montgomery tract whose latest inspection score is below 85",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-26T07:07:55.641Z",
+            "run": "r_20261026_be9afb",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "ArcGIS did not return a count: 400  'Invalid field: Tract' parameter is invalid",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-247",
+        "kind": "choice",
+        "content": "For \"Count of food establishments whose latest inspection score is below 85, grouped by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Food Scores\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer): Directly provides food inspection scores for Montgomery establishments grouped by census tract, matching the measure and marked newest in series.",
+        "confidence": 0.94
+      },
+      {
+        "id": "mem-585",
+        "kind": "choice",
+        "content": "For \"Count of listed pharmacies in each Montgomery census tract\" in Montgomery, AL, dataset \"Pharmacy Locator\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer) was read through Zetaris: 33 records; fields OBJECTID, custCOMPANY_NAME. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-83",
+        "kind": "choice",
+        "content": "For \"adults with high blood pressure prevalence by tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-42, confidence 1).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-354",
+        "kind": "wiring",
+        "content": "Dataset \"EPA ECHO facilities in Montgomery County, AL\" wires into Zetaris as epa_facilities; filter current county registry; fields FacName, RegistryID, FacLat, FacLong, FacComplianceStatus, FacAccuracyMeters, FacDerivedStctyFIPS; 3436 of 3436 source records read.",
+        "confidence": 1
+      }
+    ],
+    "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
+    "memoryWrites": [
+      {
+        "id": "mem-580",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_be9afb\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery tracts have the most food establishments with a latest inspection score below 85?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T07:07:55.640Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-581",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_be9afb:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of food establishments in each Montgomery tract whose latest inspection score is below 85\",\"kind\":\"city_records\",\"search_terms\":[\"food establishment\",\"restaurant inspection\",\"health inspection\"],\"analysis\":{\"basis\":\"counts\",\"denominator\":\"none\",\"relationship\":false,\"reason\":\"The question asks which tracts have the most establishments meeting a condition, which is a raw workload count per tract, not an association between two variables.\",\"rank_measure\":\"Count of food establishments with latest inspection score below 85, descending by tract\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T07:07:55.641Z\",\"run\":\"r_20261026_be9afb\"}},\"relationships\":[{\"from\":\"measure:r_20261026_be9afb:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_be9afb:m1:e9c926feae0444cc88d83a378e7526b9\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:07:55.641Z\",\"run\":\"r_20261026_be9afb\"},\"id\":\"21be9bda0f683c1b5317d2e820e1db5d1a800e85e74ac48a553dde2966804c21\",\"validFrom\":\"2026-10-26T07:07:55.641Z\"}]}"
+      },
+      {
+        "id": "mem-582",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_be9afb:m1:e9c926feae0444cc88d83a378e7526b9\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Count of food establishments in each Montgomery tract whose latest inspection score is below 85\",\"title\":\"Food Scores\",\"url\":\"https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0\",\"fields\":[{\"name\":\"ObjectID\",\"alias\":\"ObjectID\",\"type\":\"oid\"},{\"name\":\"Status\",\"alias\":\"Status\",\"type\":\"string\"},{\"name\":\"Score\",\"alias\":\"Score\",\"type\":\"double\"},{\"name\":\"Match_type\",\"alias\":\"Match_type\",\"type\":\"string\"},{\"name\":\"Match_addr\",\"alias\":\"Match Address\",\"type\":\"string\"},{\"name\":\"Addr_type\",\"alias\":\"Address Type\",\"type\":\"string\"},{\"name\":\"Establishment\",\"alias\":\"Establishment\",\"type\":\"string\"},{\"name\":\"Address\",\"alias\":\"Address\",\"type\":\"string\"},{\"name\":\"Date\",\"alias\":\"Date\",\"type\":\"dateonly\"},{\"name\":\"Score_1\",\"alias\":\"Score\",\"type\":\"integer\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:07:55.641Z\",\"run\":\"r_20261026_be9afb\"}},\"relationships\":[{\"from\":\"measure:r_20261026_be9afb:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_be9afb:m1:e9c926feae0444cc88d83a378e7526b9\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T07:07:55.641Z\",\"run\":\"r_20261026_be9afb\"},\"id\":\"21be9bda0f683c1b5317d2e820e1db5d1a800e85e74ac48a553dde2966804c21\",\"validFrom\":\"2026-10-26T07:07:55.641Z\"}]}"
+      }
+    ]
+  }
+}
