@@ -29,3 +29,10 @@ test("the recorded inspection filters cannot discard the latest or all rows",()=
  expect(inspectionSourceWhere("Year=2025 AND Score_1 < 85","latest inspections")).toBe("Year=2025 AND 1=1");
  expect(inspectionSourceWhere("Status = 'Closed'","latest inspections of closed establishments")).toBe("Status = 'Closed'");
 });
+test("numeric literals in string fields use the source type for comparisons and IN lists",()=>{
+ const fields=[{name:"Year",type:"string"},{name:"Count",type:"integer"}];
+ expect(typedWhere("Year = 2025 AND Count = '12'",fields)).toBe("Year = '2025' AND Count = 12");
+ expect(typedWhere("Year IN (2024, 2025)",fields)).toBe("Year IN ('2024','2025')");
+ expect(typedWhere("Year = '2025'",fields)).toBe("Year = '2025'");
+ expect(typedWhere("Year >= 2025 AND Year < 2026",fields)).toBe("Year >= '2025' AND Year < '2026'");
+});

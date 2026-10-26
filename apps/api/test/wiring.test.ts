@@ -58,3 +58,14 @@ test("verified World Model wiring changes the Wirer's decision and revisions inv
  await wire(other,plan,[choice]);
  expect(json).toHaveBeenCalledTimes(3);
 });
+test("an invalid ArcGIS filter is traced and repaired once with the exact error",async()=>{
+ const{ctx,log}=context(["200"]);
+ const json=vi.fn(async()=>({value:{sources:[{measure_id:"city",where:"1=1",fields:["OBJECTID"]}]},calls:[]}));
+ ctx.models.wirer.json=json as unknown as typeof ctx.models.wirer.json;
+ vi.mocked(layerCount).mockRejectedValueOnce(new Error("ArcGIS did not return a count: 400 Invalid where clause")).mockResolvedValue(1);
+ const result=await wire(ctx,plan,[choice]);
+ expect(result).toHaveLength(1);expect(json).toHaveBeenCalledTimes(2);
+ const calls=json.mock.calls as unknown as {content:string}[][][];
+ expect(JSON.stringify(calls[1])).toContain("400 Invalid where clause");
+ expect(log.mock.calls.some(([e])=>e.action==="filter_error")).toBe(true);
+});

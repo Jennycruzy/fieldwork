@@ -92,7 +92,19 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     return c.candidate.kind === "epa_facilities" ? await wireEpa(ctx,p,c,label) : c.candidate.kind === "arcgis_layer" ? await wireArcgis(ctx, c, sourceWhere, fields, w.group_field && known.has(w.group_field) && !privateField.test(w.group_field) ? w.group_field : undefined, label) : await wireSocrata(ctx, c, w.where, fields, label);
   };
   const out: Wired[] = [];
-  for (const w of value.sources) { const built = await build(w); if (built) out.push(built); }
+  for (const w of value.sources) {
+    let built:Wired|undefined;
+    try{built=await build(w);}
+    catch(error){
+      if(!/ArcGIS did not return a count: 400/.test((error as Error).message))throw error;
+      await ctx.trace.log({agent:"wirer",action:"filter_error",status:"error",note:JSON.stringify({measure:w.measure_id,where:w.where,error:(error as Error).message})});
+      const again=await ctx.models.wirer.json([...messages,{role:"assistant",content:JSON.stringify(value)},{role:"user",content:"The source rejected the filter "+JSON.stringify(w.where)+" for measure "+w.measure_id+": "+(error as Error).message+". Repair that filter using only the listed fields and their exact types; ArcGIS SQL-92 supports date ranges, not arbitrary SQL functions. Keep the requested time period and do not broaden it. Return the complete required shape."}],WiringSchema,1500);
+      const fixed=again.value.sources.find(s=>s.measure_id===w.measure_id);
+      if(!fixed)throw error;
+      built=await build(fixed);
+    }
+    if(built)out.push(built);
+  }
   // A filter that matched nothing on a source that has records gets one more try, with the source's real values
   // (Q17 on 25 Oct guessed TYPE values the shelter layer does not have, three times).
   const hints = await emptyFilterHints(chosen, out);

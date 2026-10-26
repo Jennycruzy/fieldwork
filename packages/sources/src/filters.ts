@@ -32,6 +32,11 @@ export function typedWhere(where:string,fields:{name:string;type:string}[]):stri
   const name=f.name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
   result=result.replace(new RegExp(`\\b(${name}\\s*(?:<>|!=|<=|>=|=|<|>)\\s*)'(-?\\d+(?:\\.\\d+)?)'`,"gi"),"$1$2");
  }
+ for(const f of fields)if(/^(?:esriFieldType)?string$/i.test(f.type)){
+  const name=f.name.replace(/[^A-Za-z0-9_]/g,"\\$&");
+  result=result.replace(new RegExp("\\b("+name+"\\s*(?:<>|!=|<=|>=|=|<|>)\\s*)(-?\\d+(?:\\.\\d+)?)(?![\\w.'])","gi"),"$1'$2'");
+  result=result.replace(new RegExp("\\b("+name+"\\s+IN\\s*\\()([\\d.,\\s-]+)(\\))","gi"),(_,prefix:string,values:string,end:string)=>prefix+values.split(",").map(v=>"'"+v.trim()+"'").join(",")+end);
+ }
  return result;
 }
 
