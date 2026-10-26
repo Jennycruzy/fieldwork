@@ -17,3 +17,11 @@ test("supporting column and cohort totals have provenance; rates are not summed"
  expect(fs.find(f=>f.id==="pharmacies_per_10000_zero_totalpopulation_total")).toMatchObject({value:300,rows:[0,1]});
  expect(fs.some(f=>f.id==="pharmacies_per_10000_total")).toBe(false);
 });
+import{figureLedgerForTexts}from"../src/checks.js";
+test("a quoted comparison between arbitrary named rows keeps both source rows and its formula",()=>{
+ const rows=[["Tract 1","80"],["Tract 2","70"],["Tract 3","60"],["Tract 4","30"],["Tract 5","20"]];
+ const fs=figureLedgerForTexts(["tract_name","record_count"],rows,["Tract 2 had 40 more records than Tract 4."]);
+ expect(fs.find(f=>f.id==="record_count_difference_3:1")).toMatchObject({value:40,rows:[3,1],labels:["Tract 4","Tract 2"]});
+ const periods=computeFigureLedger(["year","month","record_count"],[["2025","1","10"],["2026","1","20"]]);
+ expect(periods.find(f=>f.id==="distinct_periods")?.value).toBe(2);expect(periods.find(f=>f.id==="distinct_month")?.value).toBe(1);
+});

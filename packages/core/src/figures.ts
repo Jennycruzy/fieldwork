@@ -2,7 +2,7 @@ export interface ComputedFigure {
  id:string; value:number; formula:string; column?:string;
  rows:number[]; labels:string[]; kind:"count"|"total"|"difference"|"percent_change"|"minimum"|"maximum";
 }
-export function computeFigureLedger(headers:string[],rows:(string|null)[][]):ComputedFigure[] {
+export function computeFigureLedger(headers:string[],rows:(string|null)[][],namedGroups:number[][]=[]):ComputedFigure[] {
  const out:ComputedFigure[]=[];
  const name=Math.max(0,headers.findIndex(h=>/^(name|tract_name|tract|category|area_name)$/i.test(h)));
  const month=headers.findIndex(h=>/^month$/i.test(h)),year=headers.findIndex(h=>/^year$/i.test(h));
@@ -12,6 +12,7 @@ export function computeFigureLedger(headers:string[],rows:(string|null)[][]):Com
  };
  const all=rows.map((_,i)=>i);
  add("row_count",rows.length,"COUNT(result rows)",all,"count");
+ if(month>=0){const periods=new Set(rows.map(r=>(year>=0?r[year]+"/":"")+r[month]));add("distinct_periods",periods.size,"COUNT(DISTINCT (year,month))",all,"count");}
  add("calendar_months",12,"MONTHS_PER_CALENDAR_YEAR (calendar definition; not an observed-data count)",[],"count");
  for(const [j,h] of headers.entries()){
   if(/^(year|month|period)$/i.test(h)){
@@ -28,7 +29,7 @@ export function computeFigureLedger(headers:string[],rows:(string|null)[][]):Com
    const indices=group.map(c=>c.i),condition=h+(suffix==="zero"?" = 0":" > 0");
    add(h+"_"+suffix+"_count",indices.length,"COUNT(rows WHERE "+condition+")",indices,"count",h);
    if(j===headers.findIndex((v,k)=>k!==name&&!/^(year|month|geoid|tractfips)$/i.test(v)))for(const [k,col]of headers.entries()){
-    if(k===j||k===name||/geoid|fips|id|year|month|rate|per_|prevalence|corr/i.test(col))continue;
+    if(k===j||k===name||/geoid|fips|(?:^|_)id(?:_|$)|year|month|rate|per_|prevalence|corr/i.test(col))continue;
     const values=indices.map(i=>rows[i]![k]);
     if(values.every(v=>v!=null&&v!==""&&Number.isFinite(Number(v))))add(h+"_"+suffix+"_"+col+"_total",values.reduce<number>((a,v)=>a+Number(v),0),"SUM("+col+" WHERE "+condition+")",indices,"total",col);
    }
@@ -41,6 +42,11 @@ export function computeFigureLedger(headers:string[],rows:(string|null)[][]):Com
   const pair=(a:typeof max,b:typeof max)=>{if(a.i!==b.i)pairs.set(a.i+":"+b.i,[a,b]);};
   pair(min,max);pair(cells[0]!,cells.at(-1)!);pair(cells[1]??max,cells[0]!);
   for(let i=1;i<cells.length;i++)pair(cells[i-1]!,cells[i]!);
+  for(const group of namedGroups){
+   const selected=cells.filter(c=>group.includes(c.i)),indices=selected.map(c=>c.i);
+   if(!rate&&indices.length>1)add(h+"_named_total_"+indices.join("_"),sum(indices),"SUM("+h+" in rows "+indices.map(i=>i+1).join(",")+")",indices,"total",h);
+   for(const a of selected)for(const b of selected)pair(a,b);
+  }
   for(const [key,[a,b]]of pairs){
    const expr=h+"[row "+(b.i+1)+"] - "+h+"[row "+(a.i+1)+"]";
    add(h+"_difference_"+key,b.v-a.v,expr,[a.i,b.i],"difference",h);

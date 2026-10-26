@@ -190,6 +190,9 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   };
   for (const original of texts) {
     const t = normaliseText(original);
+    for(const m of t.matchAll(/\b(?:Census\s+)?Tract\s+(\d+(?:\.\d+)?)/gi)){
+      if(!names.some(n=>n&&mentions("Census Tract "+m[1],n)))order.push("The tract identifier "+m[1]+" names no result row.");
+    }
     if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     for(const f of facts) {
       const partial=f.match(/^Partial month: ([A-Za-z]+) (\d{4})/);
@@ -354,7 +357,7 @@ function withoutNames(t: string, names: string[]): string {
       s=s.replace(new RegExp(`(?<![\\w.])${escaped}(?!\\w|\\.\\d)`,"gi")," ");
     }
   }
-  return s.replace(/\bTracts?\s+\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)*/gi, " ");
+  return s;
 }
 
 function mentions(t: string, name: string): boolean {
@@ -517,4 +520,13 @@ export function finalizeDraft<T extends {headline:string;points:string[];how_sur
  }
  const answer={...draft,headline,points:draft.points.map(filter).filter(Boolean),how_sure:filter(draft.how_sure),caveats:draft.caveats.map(filter).filter(Boolean)};
  return {draft:answer,removed};
+}
+
+export function figureLedgerForTexts(headers:string[],rows:(string|null)[][],texts:string[]){
+ const month=headers.findIndex(h=>/^month$/i.test(h)),name=nameColumn(headers);
+ const names=rows.map(r=>month>=0?["January","February","March","April","May","June","July","August","September","October","November","December"][Number(r[month])-1]??"":String(r[name]??""));
+ const groups=texts.filter(t=>/difference|change|higher|lower|above|below|more|fewer|range|increas|decreas|combined|\\bsum\\b|\\btotal\\b/i.test(t)).map(text=>{
+  const t=normaliseText(text);return names.map((n,i)=>mentions(t,n)?i:-1).filter(i=>i>=0);
+ }).filter(g=>g.length>1);
+ return computeFigureLedger(headers,rows,groups);
 }

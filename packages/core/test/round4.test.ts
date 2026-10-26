@@ -63,3 +63,9 @@ test("calendar totals and exact named-period changes accept real arithmetic and 
  expect(checkDraft(["Data covers 10 of 12 calendar months."],a.headers,a.rows).ok).toBe(true);
  expect(checkDraft(["Data covers 10 of 13 calendar months."],a.headers,a.rows).ok).toBe(false);
 });
+test("unknown identifiers in parenthesized or ordinary tract names never become free counts",()=>{
+ const h=["tract_name","shelter_count"],rows=[["Census Tract 55.02","0"],["Census Tract 57","0"]];
+ expect(checkDraft(["Two tracts (55.02, 57) each had 0 shelters."],h,rows).ok).toBe(true);
+ expect(checkDraft(["Two tracts (55.02, 999) each had 0 shelters."],h,rows).ok).toBe(false);
+ expect(checkDraft(["Tract 9 has 0 shelters."],h,rows).ok).toBe(false);
+});
