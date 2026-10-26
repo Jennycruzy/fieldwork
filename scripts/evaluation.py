@@ -3,9 +3,9 @@ import json,subprocess,math
 from pathlib import Path
 def read(path):return json.loads(subprocess.check_output(["git","show","HEAD:"+path],text=True))
 def quantile(a,q):
- if not a:return None
- a=sorted(a);p=(len(a)-1)*q;i=math.floor(p)
- return a[i]+(a[min(i+1,len(a)-1)]-a[i])*(p-i)
+ if not a:return 0
+ a=sorted(a);return a[max(0,math.ceil(q*len(a))-1)]
+
 def summarize(b,file):
  times=[r["elapsed_ms"]/1000 for r in b["results"]]
  return {**b,"file":file,"code_commit":b.get("code_commit",b.get("implementation_commit","Not recorded in original evidence")),"median_seconds":quantile(times,.5),"p90_seconds":quantile(times,.9)}

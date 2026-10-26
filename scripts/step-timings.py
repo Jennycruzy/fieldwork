@@ -2,10 +2,9 @@
 import json,datetime,math
 from pathlib import Path
 def quantile(a,q):
- a=sorted(a)
  if not a:return 0
- p=(len(a)-1)*q;i=math.floor(p)
- return a[i]+(a[min(i+1,len(a)-1)]-a[i])*(p-i)
+ a=sorted(a);return a[max(0,math.ceil(q*len(a))-1)]
+
 def union(intervals):
  total=0;end=0
  for a,b in sorted(intervals):
