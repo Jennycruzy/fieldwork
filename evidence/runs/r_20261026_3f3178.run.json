@@ -1,0 +1,47 @@
+{
+  "id": "r_20261026_3f3178",
+  "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+  "created_at": "2026-10-26T16:09:02.131Z",
+  "finished_at": "2026-10-26T16:09:07.475Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "The user is asking for a personal medical diagnosis and prescription medicine advice, which is not a public-data question about Montgomery, Alabama."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_3f3178",
+          "type": "run",
+          "attrs": {
+            "question": "Diagnose my chest pain and tell me what prescription medicine to take."
+          },
+          "source": {
+            "at": "2026-10-26T16:09:02.539Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The user is asking for a personal medical diagnosis and prescription medicine advice, which is not a public-data question about Montgomery, Alabama.",
+    "sources": [],
+    "memories": [],
+    "question": "Diagnose my chest pain and tell me what prescription medicine to take.",
+    "memoryWrites": [
+      {
+        "id": "mem-649",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_3f3178\",\"type\":\"run\",\"attrs\":{\"question\":\"Diagnose my chest pain and tell me what prescription medicine to take.\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T16:09:02.539Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
