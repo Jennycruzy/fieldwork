@@ -3,7 +3,8 @@ node_modules/
 dist/
 package-lock.json
 packages/hmem/
-packages/world/
+packages/world/conformance/
+packages/world/LICENSE-meterless-world
 packages/core/src/questionSet.ts
 scripts/question-set.ts
 *.md
