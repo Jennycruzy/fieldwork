@@ -26,3 +26,14 @@ test("parallel calls reserve the final slot and a denied daily call is not charg
   expect(await denied.budget.take()).toBe(false);
   expect(denied.calls).toBe(0);
 });
+
+test("a request the provider failed without a reply returns to the run allowance", async () => {
+  const take = vi.fn(async () => true),
+    r = runBudget({ take });
+  for (let i = 0; i < 8; i++) await r.budget.take();
+  r.budget.release?.();
+  r.budget.release?.();
+  expect(r.calls).toBe(6);
+  await r.budget.take();
+  expect(take).toHaveBeenCalledTimes(9);
+});

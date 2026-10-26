@@ -19,6 +19,8 @@ export interface CallRecord extends ChatResult {
 export interface Budget {
   // Returns false when the day's calls are used up.
   take(): Promise<boolean>;
+  // Called when a request produced no reply (provider 5xx or rate limit), so per-run limits can return it.
+  release?(): void;
 }
 
 export const unlimited: Budget = { take: async () => true };
@@ -238,6 +240,8 @@ export class ModelChain {
         });
         if (cancelled) throw error;
         const providerError = error instanceof ProviderError ? error : undefined;
+        if (providerError && (providerError.status >= 500 || providerError.status === 429))
+          (this.opts.budget ?? unlimited).release?.();
         if (providerError && !providerError.fallback) throw error;
         if (
           !providerError?.retryable ||

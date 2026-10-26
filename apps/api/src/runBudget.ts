@@ -22,6 +22,10 @@ export function runBudget(daily: Budget) {
         throw e;
       }
     },
+    // The daily cap still counts the failed request; only this run's allowance gets the call back.
+    release: () => {
+      if (calls > 0) calls--;
+    },
   };
   return {
     budget,
