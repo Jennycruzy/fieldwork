@@ -22,7 +22,8 @@
     "conformance:world": "WORLD_MODEL_IMPL=$PWD/packages/world/src/index.ts tsx packages/world/conformance/runner.ts",
     "questions": "tsx scripts/question-set.ts",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "recipe": "tsx scripts/recipe.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",

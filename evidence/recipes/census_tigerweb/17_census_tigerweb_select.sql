@@ -1,0 +1,6 @@
+-- Verification and examples for 17_census_tigerweb_create.sql
+-- Commented out so a bulk run does not issue extra source requests.
+-- Expected 71 records only for the source count checked 2026-10-26T18:00:58.890098+00:00.
+-- SELECT COUNT(*) AS record_count FROM fw_rec_census_tigerweb.records;
+-- SELECT COUNTY,COUNT(*) AS record_count FROM fw_rec_census_tigerweb.records GROUP BY COUNTY ORDER BY record_count DESC;
+-- Source year fields are administrative labels unless the source documentation establishes an event date.

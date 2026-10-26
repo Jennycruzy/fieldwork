@@ -1,0 +1,62 @@
+{
+  "drafts": [
+    {
+      "source_id": "yjkw-uj5s",
+      "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+      "status": "draft",
+      "verification": "unverified",
+      "branch": "draft/cdc_places_tracts",
+      "commit": "ea363f9d8efb1febb62a78e9317efd1825a00c90",
+      "files": [
+        "open_data/rest_apis/sql/non_rate_limited/15_cdc_places_tracts_create.sql",
+        "open_data/rest_apis/sql/non_rate_limited/15_cdc_places_tracts_select.sql"
+      ],
+      "checks": {
+        "manifest": "passed",
+        "relative_links": "passed"
+      },
+      "limit": "The upstream clone has no configured REST bearer key. Persistent-table statements have not run. Source policy access and licence ambiguity are recorded separately."
+    },
+    {
+      "source_id": "2b79b833cf2a44af8ee277972991fd78",
+      "title": "SDE.Code_Violations",
+      "status": "draft",
+      "verification": "unverified",
+      "branch": "draft/montgomery_arcgis",
+      "commit": "ac8b2c073d94345718b1616d3c9633234b11265a",
+      "files": [
+        "open_data/rest_apis/sql/non_rate_limited/16_montgomery_arcgis_create.sql",
+        "open_data/rest_apis/sql/non_rate_limited/16_montgomery_arcgis_select.sql"
+      ],
+      "checks": {
+        "manifest": "passed",
+        "relative_links": "passed"
+      },
+      "limit": "The upstream clone has no configured REST bearer key. Persistent-table statements have not run. Source policy access and licence ambiguity are recorded separately."
+    },
+    {
+      "source_id": "tiger-tracts",
+      "title": "Census TIGERweb census tracts",
+      "status": "draft",
+      "verification": "unverified",
+      "branch": "draft/census_tigerweb",
+      "commit": "e25825f92de7b0be14bfab4a6230f447615ecc3a",
+      "files": [
+        "open_data/rest_apis/sql/non_rate_limited/17_census_tigerweb_create.sql",
+        "open_data/rest_apis/sql/non_rate_limited/17_census_tigerweb_select.sql"
+      ],
+      "checks": {
+        "manifest": "passed",
+        "relative_links": "passed"
+      },
+      "limit": "The upstream clone has no configured REST bearer key. Persistent-table statements have not run. Source policy access and licence ambiguity are recorded separately."
+    }
+  ],
+  "existing_contributions": [
+    {
+      "title": "Singapore PM2.5",
+      "status": "opened",
+      "url": "https://github.com/zetaris/getting-started/pull/36"
+    }
+  ]
+}

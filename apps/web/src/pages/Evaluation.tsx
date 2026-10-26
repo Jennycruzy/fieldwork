@@ -1,3 +1,4 @@
+import recipes from "../../../../evidence/recipes/drafts.json";
 import data from "../../../../evidence/evaluation.json";
 import { Link } from "../Link";
 const seconds = (n: number) => n.toFixed(1);
@@ -143,6 +144,26 @@ export function Evaluation() {
               </table>
             </div>
           </details>
+        ))}
+      </section>
+      <section className="card evaluation">
+        <h2>Source recipes and contributions</h2>
+        <p>Drafts are local contributions awaiting live verification and review.</p>
+        {recipes.drafts.map((r) => (
+          <article key={r.source_id}>
+            <h3>{r.title}</h3>
+            <p>
+              {r.status} · {r.verification}
+            </p>
+          </article>
+        ))}
+        {recipes.existing_contributions.map((r) => (
+          <p key={r.url}>
+            <a href={r.url} target="_blank" rel="noreferrer">
+              {r.title}
+            </a>{" "}
+            · {r.status}
+          </p>
         ))}
       </section>
       <section className="card evaluation">
