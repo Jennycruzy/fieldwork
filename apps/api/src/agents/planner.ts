@@ -48,6 +48,20 @@ Shape: ${SHAPE}`,
     if(/\b(average|mean)\b.*\bscore/i.test(question)) {value.analysis.basis="scores";value.analysis.denominator="none";value.analysis.reason+=" Inspection scores are measured in source score points; establishment counts describe sample size, not population rates.";}
     const asksRelationship=/\b(correlat\w*|associat\w*|relationship|related|connection)\b|\b(do|does|are)\b[\s\S]*\balso\b|\b(more|higher|lower)\b[\s\S]*\b(more|higher|lower)\b/i.test(question);
     value.analysis.relationship=asksRelationship;
+    // An unadjusted year-to-year workload change is a difference of counts.
+    // Population series suggested by the model are not a request for rate adjustment.
+    const timeChange=value.years?.from!=null&&value.years.to!=null&&value.years.from!==value.years.to&&/increas|decreas|change|difference/i.test(value.analysis.rank_measure);
+    const requestedAdjustment=/\b(per|rates?|residents?|adults?|population|prevalence|percent(?:age)?|normali[sz]ed|adjusted)\b/i.test(question);
+    const citySeries=value.measures.filter(m=>m.kind==="city_records");
+    const ancillary=value.measures.filter(m=>m.kind!=="city_records");
+    const onlyPopulation=ancillary.every(m=>m.kind==="health_estimate"&&/\bpopulation\b/i.test(m.describe)&&!/prevalence|asthma|diabet|blood pressure|health outcome/i.test(m.describe));
+    if(!asksRelationship&&timeChange&&!requestedAdjustment&&value.analysis.basis!=="scores"&&citySeries.length===1&&onlyPopulation){
+      value.measures=citySeries;
+      value.analysis.basis="counts";value.analysis.denominator="none";
+      value.analysis.rank_measure="count change "+(/decreas|declin|fall|drop/i.test(question)?"ascending":"descending");
+      value.analysis.reason="Compare the recorded count in each requested year and rank their arithmetic difference; no population adjustment was requested.";
+    }
+
     if(!asksRelationship && value.measures.some((m)=>m.kind==="health_estimate") && value.measures.some((m)=>m.kind==="city_records") && !/\bper\b/i.test(question)) {
       value.analysis.basis="mixed";value.analysis.denominator="adults";
       value.analysis.reason += " CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.";
