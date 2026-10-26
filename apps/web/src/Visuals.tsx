@@ -12,6 +12,11 @@ export function download(name: string, content: Blob) {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+// Five classes, light to dark, so neighboring tracts with different values look different.
+const PALETTE = ["#d4ebe5", "#a3d3c6", "#62b09f", "#2f8a76", "#155e4f"];
+const short = (v: number) =>
+  Math.abs(v) >= 100 ? Math.round(v).toLocaleString("en-US") : String(+v.toFixed(1));
+
 export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: string) => void }) {
   const headers = run.answer?.headers ?? [],
     rows = run.answer?.rows ?? [];
@@ -27,15 +32,36 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
   const chart = useRef<HTMLDivElement>(null),
     mapNode = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState("");
-  const shapes = run.answer?.tracts;
+  const saved = run.answer?.tracts;
+  // Answers that never placed city records saved no boundaries; use the county's boundaries shipped with the Desk.
+  const [shipped, setShipped] = useState<{ geoid: string; rings: number[][][] }[]>();
+  const geoidColumn = headers.findIndex((h) => /^(geoid|tractfips)$/i.test(h));
+  const county = rows.find((r) => /^\d{11}$/.test(r[geoidColumn] ?? ""))?.[geoidColumn]?.slice(0, 5);
+  useEffect(() => {
+    if (saved?.length || !county) return;
+    fetch(`/tracts/${county}.json`)
+      .then((r) => (r.ok ? r.json() : undefined))
+      .then((body) => setShipped(body?.tracts))
+      .catch(() => setShipped(undefined));
+  }, [saved, county]);
+  const shapes = saved?.length ? saved : shipped;
+  const values = new Map(rows.map((r) => [r[geoidColumn], r[col] == null ? NaN : Number(r[col])]));
+  const names = new Map(rows.map((r) => [r[geoidColumn], r[0]]));
+  const sorted = [...values.values()].filter(Number.isFinite).sort((a, b) => a - b);
+  // Quantile breaks: each class holds about a fifth of the tracts with a value.
+  const breaks = sorted.length
+    ? [...new Set([1, 2, 3, 4].map((q) => sorted[Math.floor((q * sorted.length) / 5)]!))]
+    : [];
+  const classOf = (v: number) => breaks.filter((b) => v >= b).length;
+  const legend = sorted.length
+    ? [sorted[0]!, ...breaks].map((from, i) => ({
+        color: PALETTE[i]!,
+        label: `${short(from)} to ${short(i < breaks.length ? breaks[i]! : sorted[sorted.length - 1]!)}`,
+      }))
+    : [];
   useEffect(() => {
     if (!mapNode.current || !shapes?.length) return;
-    const geoid = headers.findIndex((h) => /^(geoid|tractfips)$/i.test(h));
-    const values = new Map(rows.map((r) => [r[geoid], r[col] == null ? NaN : Number(r[col])]));
-    const finite = [...values.values()].filter(Number.isFinite);
-    const max = Math.max(...finite, 1),
-      min = Math.min(...finite, 0);
-    const map = L.map(mapNode.current, { scrollWheelZoom: false });
+    const map = L.map(mapNode.current, { scrollWheelZoom: false, zoomSnap: 0.25 });
     if (run.mode !== "recorded")
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
@@ -53,12 +79,12 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
           };
         }) => {
           const v = values.get(f.properties.geoid);
+          const known = v !== undefined && Number.isFinite(v);
           return {
-            color: "#365468",
-            weight: 1,
-            fillColor: v === undefined || !Number.isFinite(v) ? "#999" : "#147d92",
-            fillOpacity:
-              v === undefined || !Number.isFinite(v) ? 0.15 : 0.2 + (0.65 * (v - min)) / (max - min || 1),
+            color: "#40524b",
+            weight: 0.8,
+            fillColor: known ? PALETTE[classOf(v)] : "#9aa49f",
+            fillOpacity: known ? 0.85 : 0.25,
           };
         },
         onEachFeature: (
@@ -74,13 +100,15 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
         ) => {
           const el = document.createElement("span");
           const v = values.get(f.properties.geoid);
-          el.textContent = `${f.properties.geoid}: ${Number.isFinite(v) ? v : "No result"} (${headers[col]})`;
+          el.textContent = `${names.get(f.properties.geoid) ?? f.properties.geoid}: ${
+            v !== undefined && Number.isFinite(v) ? v : "no result"
+          } (${headers[col]?.replace(/_/g, " ")})`;
           layer.bindTooltip(el);
           layer.on("click", () => onValue?.(f.properties.geoid));
         },
       },
     ).addTo(map);
-    map.fitBounds(layer.getBounds());
+    map.fitBounds(layer.getBounds(), { padding: [8, 8] });
     return () => map.remove();
   }, [shapes, col]);
   const png = async () => {
@@ -123,9 +151,31 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
         </select>
       </label>
       <p className="muted">
-        Chart shows the first {Math.min(rows.length, 15)} result rows in query order. Choose a measure to
-        update the chart and map.
+        Choose a measure to update the map and the chart. The chart shows the first{" "}
+        {Math.min(rows.length, 15)} result rows in query order.
       </p>
+      {shapes?.length ? (
+        <>
+          <div ref={mapNode} className="tract-map" role="region" aria-label="Map of census tracts" />
+          <ul className="legend" aria-label="Map legend">
+            {legend.map((l) => (
+              <li key={l.label}>
+                <span className="swatch" style={{ background: l.color }} aria-hidden="true" />
+                {l.label}
+              </li>
+            ))}
+            <li>
+              <span className="swatch none" aria-hidden="true" />
+              No result
+            </li>
+          </ul>
+          <p className="muted">
+            Darker means a higher {headers[col]?.replace(/_/g, " ")}; each shade holds about a fifth of the
+            tracts. Boundaries: US Census TIGERweb,{" "}
+            {saved?.length ? "read through Zetaris for this run." : "saved with Fieldwork."}
+          </p>
+        </>
+      ) : null}
       <div ref={chart} className="chart" role="img" aria-label={`Bar chart of ${headers[col]}`}>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart
@@ -148,27 +198,17 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
             <Tooltip />
             <Bar
               dataKey="value"
-              fill="#147d92"
+              fill="#2f8a76"
               isAnimationActive={false}
               onClick={(d) => onValue?.(String(d.value))}
             />
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <button onClick={png}>Export chart PNG</button>
+      <button className="ghost" onClick={png}>
+        Export chart PNG
+      </button>
       {notice && <p role="alert">{notice}</p>}
-      {shapes?.length ? (
-        <>
-          <h2>Neighborhoods (census tracts)</h2>
-          <div ref={mapNode} className="tract-map" role="region" aria-label="Map of census tracts" />
-          <p className="muted">
-            Darker shading means a higher {headers[col]?.replace(/_/g, " ")}. Gray means no result.
-            Boundaries: US Census TIGERweb, read through Zetaris.
-          </p>
-        </>
-      ) : (
-        <p className="muted">This earlier recording has no saved boundaries. Re-run live to include a map.</p>
-      )}
     </section>
   );
 }

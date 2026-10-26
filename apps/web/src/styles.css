@@ -223,7 +223,8 @@ button:disabled {
   opacity: 0.55;
   cursor: default;
 }
-.button.ghost {
+.button.ghost,
+button.ghost {
   background: transparent;
   color: var(--accent);
 }
@@ -535,9 +536,36 @@ code {
   display: inline;
 }
 .tract-map {
-  height: 360px;
+  height: 440px;
   isolation: isolate;
+  background: var(--code);
   border-radius: 12px;
+  margin-top: 12px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 4px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--line);
+}
+.swatch.none {
+  background: #9aa49f;
+  opacity: 0.4;
 }
 .chart {
   width: 100%;
@@ -575,7 +603,7 @@ form input {
     gap: 10px;
   }
   .tract-map {
-    height: 280px;
+    height: 320px;
   }
 }
 
@@ -612,4 +640,12 @@ form input {
     flex-wrap: wrap;
     gap: 0.7rem;
   }
+}
+
+/* Long formulas, identifiers and check details wrap instead of widening the page on a phone. */
+code,
+.checks li,
+.card p,
+.card li {
+  overflow-wrap: anywhere;
 }
