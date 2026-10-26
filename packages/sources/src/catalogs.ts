@@ -60,9 +60,30 @@ export async function searchSocrata(query: string, domains: string[] = ["data.cd
 }
 
 export async function getJson(url: string, timeoutMs = 60_000): Promise<unknown> {
-  const res = await fetch(url, { headers: { "User-Agent": "Fieldwork (github.com/Jennycruzy/fieldwork)" }, signal: AbortSignal.timeout(timeoutMs) });
-  if (!res.ok) throw new Error(`HTTP ${res.status} from ${new URL(url).host}`);
-  return res.json();
+  const deadline=Date.now()+timeoutMs;
+  for(let attempt=1;;attempt++){
+    try{
+      const res=await fetch(url,{headers:{"User-Agent":"Fieldwork (github.com/Jennycruzy/fieldwork)"},signal:AbortSignal.timeout(Math.max(1,deadline-Date.now()))});
+      if(!res.ok){
+        const error=new Error(`HTTP ${res.status} from ${new URL(url).host}`);
+        if(attempt<3&&(res.status===429||res.status>=500)&&Date.now()+200*attempt<deadline){
+          await res.body?.cancel();
+          await new Promise(resolve=>setTimeout(resolve,200*attempt));continue;
+        }
+        throw error;
+      }
+      return await res.json();
+    }catch(error){
+      const transient=error instanceof TypeError||(error instanceof Error&&["TimeoutError","AbortError"].includes(error.name));
+      if(!transient)throw error;
+      if(attempt>=3||Date.now()+200*attempt>=deadline){
+        const cause=error instanceof Error?error.cause:undefined;
+        const code=cause&&typeof cause==="object"&&"code" in cause?String(cause.code):error instanceof Error?error.name:"transport error";
+        throw new Error(`Source request to ${new URL(url).host} failed after ${attempt} attempt(s): ${code}`,{cause:error});
+      }
+      await new Promise(resolve=>setTimeout(resolve,200*attempt));
+    }
+  }
 }
 
 function stripHtml(s: string): string {
