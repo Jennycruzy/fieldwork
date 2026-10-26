@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-26T22:38:47.312822+00:00",
+  "command": "npm run conformance:hmem",
+  "passed": 13,
+  "total": 13,
+  "runner_sha256": "84b9d4d7b31cb19949210cf49fc3895c240742960c99b4d2c65b233135c2b291",
+  "upstream": "https://github.com/Meterless/Meterless/tree/main/engines/hmem/conformance"
+}

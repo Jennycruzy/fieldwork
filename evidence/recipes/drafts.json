@@ -18,7 +18,8 @@
       "verified_at": "2026-10-26T20:51:27.059Z",
       "zetaris_version": "2.4.3.1",
       "records": 71,
-      "run_log": "evidence/recipes/cdc_places_tracts/run-log.json"
+      "run_log": "evidence/recipes/cdc_places_tracts/run-log.json",
+      "name": "CDC PLACES census tracts"
     },
     {
       "source_id": "2b79b833cf2a44af8ee277972991fd78",
@@ -38,7 +39,8 @@
       "verified_at": "2026-10-26T20:51:14.355Z",
       "zetaris_version": "2.4.3.1",
       "records": 15439,
-      "run_log": "evidence/recipes/montgomery_arcgis/run-log.json"
+      "run_log": "evidence/recipes/montgomery_arcgis/run-log.json",
+      "name": "Montgomery code violations"
     },
     {
       "source_id": "tiger-tracts",
@@ -58,7 +60,8 @@
       "verified_at": "2026-10-26T20:51:22.941Z",
       "zetaris_version": "2.4.3.1",
       "records": 71,
-      "run_log": "evidence/recipes/census_tigerweb/run-log.json"
+      "run_log": "evidence/recipes/census_tigerweb/run-log.json",
+      "name": "Census TIGERweb tracts"
     }
   ],
   "existing_contributions": [

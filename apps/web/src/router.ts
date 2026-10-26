@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// Four routes, no router library: /, /run/<id>, /a/<id>, /settings.
+// Routes without a router library: /, /run/<id>, /a/<id>, /how/<id> and the named pages below.
 export type Route =
   | { page: "home" }
   | { page: "run"; id: string }
@@ -9,6 +9,7 @@ export type Route =
   | { page: "history" }
   | { page: "check" }
   | { page: "evaluation" }
+  | { page: "about" }
   | { page: "how"; id: string }
   | { page: "missing" };
 
@@ -18,6 +19,7 @@ export function parse(path: string): Route {
   if (path === "/history") return { page: "history" };
   if (path === "/evaluation") return { page: "evaluation" };
   if (path === "/check") return { page: "check" };
+  if (path === "/how-it-works") return { page: "about" };
   const h = path.match(/^\/how\/(r_\d{8}_[0-9a-f]{6})$/);
   if (h) return { page: "how", id: h[1]! };
   const m = path.match(/^\/(run|a)\/(r_\d{8}_[0-9a-f]{6})\/?$/);
