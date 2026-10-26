@@ -1,0 +1,65 @@
+{
+  "source_id": "tiger-tracts",
+  "ok": true,
+  "ran_at": "2026-10-26T20:51:22.941Z",
+  "zetaris_version": "2.4.3.1",
+  "engine_version": "3.5.3",
+  "statements": 5,
+  "records": 71,
+  "expected_records": 71,
+  "removed_first": [
+    {
+      "sql": "DROP VIEW census_tigerweb.records",
+      "error": "org.apache.hive.service.cli.HiveSQLException: Error running query: [TABLE_OR_VIEW_NOT_FOUND] org.apache.spark.sql.catalyst.analysis.NoSuchTableException: [TABLE_OR_VIEW_NOT_FOUND] The table or view `spark_catalog`.`census_tigerweb`.`records` cannot be found. Verify the spelling and correctness of th"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE census_tigerweb_rest.source_raw_p0",
+      "error": "Lightning Database : 'census_tigerweb_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE census_tigerweb_rest",
+      "error": "Lightning Database : 'census_tigerweb_rest' doesn't exist"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "CREATE LIGHTNING DATABASE CENSUS_TIGERWEB_REST DESCRIBE BY \"Fieldwork discovered public source\"",
+      "ms": 54
+    },
+    {
+      "sql": "CREATE SCHEMASTORE CONTAINER census_tigerweb",
+      "ms": 51
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p0 FROM CENSUS_TIGERWEB_REST REQUEST (endpoint \"https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/0/query?where=STATE%3D%2701%27+AND+COUNTY%3D%27101%27&outFields=GEOID%2CNAME%2CSTATE%2CCOUNTY%2CAREALAND&returnGeometry=true&outSR=4326&orderByFields=GEOID&resultOffset=0&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 833
+    },
+    {
+      "sql": "CACHE TABLE census_tigerweb_rest.source_raw_p0",
+      "ms": 171
+    },
+    {
+      "sql": "CREATE SCHEMASTORE VIEW records WITH CONTAINER census_tigerweb AS\nSELECT f.attributes.GEOID AS GEOID, f.attributes.NAME AS NAME, f.attributes.STATE AS STATE, f.attributes.COUNTY AS COUNTY, f.attributes.AREALAND AS AREALAND FROM census_tigerweb_rest.source_raw_p0 LATERAL VIEW explode(features) AS f",
+      "ms": 111
+    },
+    {
+      "sql": "SELECT COUNT(*) AS record_count FROM census_tigerweb.records",
+      "ms": 522,
+      "rows": [
+        [
+          "71"
+        ]
+      ]
+    },
+    {
+      "sql": "SELECT COUNTY,COUNT(*) AS record_count FROM census_tigerweb.records GROUP BY COUNTY ORDER BY record_count DESC",
+      "ms": 584,
+      "rows": [
+        [
+          "101",
+          "71"
+        ]
+      ]
+    }
+  ]
+}

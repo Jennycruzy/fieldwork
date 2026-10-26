@@ -1,0 +1,149 @@
+{
+  "source_id": "2b79b833cf2a44af8ee277972991fd78",
+  "ok": true,
+  "ran_at": "2026-10-26T20:51:14.355Z",
+  "zetaris_version": "2.4.3.1",
+  "engine_version": "3.5.3",
+  "statements": 19,
+  "records": 15439,
+  "expected_records": 15439,
+  "removed_first": [
+    {
+      "sql": "DROP VIEW montgomery_arcgis.records",
+      "error": "org.apache.hive.service.cli.HiveSQLException: Error running query: [TABLE_OR_VIEW_NOT_FOUND] org.apache.spark.sql.catalyst.analysis.NoSuchTableException: [TABLE_OR_VIEW_NOT_FOUND] The table or view `spark_catalog`.`montgomery_arcgis`.`records` cannot be found. Verify the spelling and correctness of "
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p0",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p1",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p2",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p3",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p4",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p5",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p6",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE montgomery_arcgis_rest.source_raw_p7",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE montgomery_arcgis_rest",
+      "error": "Lightning Database : 'montgomery_arcgis_rest' doesn't exist"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "CREATE LIGHTNING DATABASE MONTGOMERY_ARCGIS_REST DESCRIBE BY \"Fieldwork discovered public source\"",
+      "ms": 38
+    },
+    {
+      "sql": "CREATE SCHEMASTORE CONTAINER montgomery_arcgis",
+      "ms": 35
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p0 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=0&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 632
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p0",
+      "ms": 102
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p1 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=2000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 328
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p1",
+      "ms": 113
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p2 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=4000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 283
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p2",
+      "ms": 162
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p3 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=6000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 333
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p3",
+      "ms": 112
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p4 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=8000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 287
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p4",
+      "ms": 113
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p5 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=10000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 271
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p5",
+      "ms": 242
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p6 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=12000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 400
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p6",
+      "ms": 127
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p7 FROM MONTGOMERY_ARCGIS_REST REQUEST (endpoint \"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0/query?where=Year+%3D+%272025%27&outFields=OBJECTID%2CYear&returnGeometry=true&outSR=4326&orderByFields=OBJECTID&resultOffset=14000&resultRecordCount=2000&f=json\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 324
+    },
+    {
+      "sql": "CACHE TABLE montgomery_arcgis_rest.source_raw_p7",
+      "ms": 251
+    },
+    {
+      "sql": "CREATE SCHEMASTORE VIEW records WITH CONTAINER montgomery_arcgis AS\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p0 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p1 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p2 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p3 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p4 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p5 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p6 LATERAL VIEW explode(features) AS f\nUNION ALL\nSELECT f.attributes.OBJECTID AS OBJECTID, f.attributes.Year AS Year FROM montgomery_arcgis_rest.source_raw_p7 LATERAL VIEW explode(features) AS f",
+      "ms": 333
+    },
+    {
+      "sql": "SELECT COUNT(*) AS record_count FROM montgomery_arcgis.records",
+      "ms": 1293,
+      "rows": [
+        [
+          "15439"
+        ]
+      ]
+    },
+    {
+      "sql": "SELECT Year,COUNT(*) AS record_count FROM montgomery_arcgis.records GROUP BY Year ORDER BY record_count DESC",
+      "ms": 1888,
+      "rows": [
+        [
+          "2025",
+          "15439"
+        ]
+      ]
+    }
+  ]
+}

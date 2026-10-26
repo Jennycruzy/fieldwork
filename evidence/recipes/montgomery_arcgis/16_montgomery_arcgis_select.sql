@@ -1,6 +1,6 @@
 -- Verification and examples for 16_montgomery_arcgis_create.sql
 -- Commented out so a bulk run does not issue extra source requests.
 -- Expected 15439 records only for the source count checked 2026-10-26T18:00:58.890098+00:00.
--- SELECT COUNT(*) AS record_count FROM fw_rec_montgomery_arcgis.records;
--- SELECT Year,COUNT(*) AS record_count FROM fw_rec_montgomery_arcgis.records GROUP BY Year ORDER BY record_count DESC;
+-- SELECT COUNT(*) AS record_count FROM montgomery_arcgis.records;
+-- SELECT Year,COUNT(*) AS record_count FROM montgomery_arcgis.records GROUP BY Year ORDER BY record_count DESC;
 -- Source year fields are administrative labels unless the source documentation establishes an event date.

@@ -1,11 +1,11 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, realpathSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import { execFileSync } from "node:child_process";
-import { renderRecipe, type RecipeSource } from "../packages/recipes/src/index.js";
+import { renderRecipe, type RecipeRun, type RecipeSource } from "../packages/recipes/src/index.js";
 const id = process.argv[2],
   position = process.argv.indexOf("--repo");
 if (!id || position < 0)
-  throw new Error("Usage: npm run recipe -- <source id> --repo <local getting-started clone>");
+  throw new Error("Usage: npm run recipe -- <source id> --repo <local getting-started clone> [--verified]");
 const repo = realpathSync(process.argv[position + 1]!);
 if (repo === "/root/fieldwork" || repo === process.cwd())
   throw new Error("Use a separate local getting-started clone");
@@ -15,7 +15,15 @@ const source = (
   JSON.parse(readFileSync("evidence/recipes/sources.json", "utf8")).sources as RecipeSource[]
 ).find((s) => s.id === id);
 if (!source) throw new Error("Source id is not in the recorded discovered-source evidence");
-const generated = renderRecipe(source),
+// --verified uses the live run recorded by `npm run recipe:verify`.
+let run: RecipeRun | undefined;
+if (process.argv.includes("--verified")) {
+  const log = JSON.parse(readFileSync("evidence/recipes/" + source.slug + "/run-log.json", "utf8"));
+  if (!log.ok || log.source_id !== source.id)
+    throw new Error("No successful live run is recorded for this source");
+  run = log;
+}
+const generated = renderRecipe(source, run),
   branch = "draft/" + source.slug;
 if (
   execFileSync("git", ["status", "--porcelain"], {
@@ -65,13 +73,25 @@ mkdirSync(noteRoot, { recursive: true });
 const text =
   "# Add " +
   source.title +
-  " recipe\n\nAdds a persistent REST table, immediate caching, a records view, commented verification queries, and the manifest/catalog entries. The recipe is unverified: this clone's REST bearer-key preflight is not configured.\n\nLicence evidence is recorded in the catalog. No key or dataset rows are included.\n\nValidation: python3 scripts/onboard.py --check. The repo-wide relative-link check also passed. Live execution remains unverified.\n";
+  " recipe\n\nAdds a persistent REST table, immediate caching, a records view, commented verification queries, and the manifest/catalog entries. " +
+  (run
+    ? "Verified live on " +
+      run.ran_at.slice(0, 10) +
+      " against Zetaris " +
+      run.zetaris_version +
+      ": all " +
+      run.statements +
+      " create statements and both select queries ran, and `COUNT(*)` returned " +
+      run.records +
+      " rows, matching the source count recorded when the recipe was generated."
+    : "The recipe is unverified: it has not been run against a live instance.") +
+  "\n\nLicence evidence is recorded in the catalog. No key or dataset rows are included.\n\nValidation: python3 scripts/onboard.py --check. The repo-wide relative-link check also passed.\n";
 writeFileSync(join(noteRoot, source.slug + "-PR.md"), text);
 console.log(
   JSON.stringify({
     branch,
     files: [generated.createPath, generated.selectPath],
-    status: "unverified",
+    status: run ? "verified" : "unverified",
     pr_text: join(noteRoot, source.slug + "-PR.md"),
   }),
 );

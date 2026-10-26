@@ -1,0 +1,63 @@
+{
+  "source_id": "yjkw-uj5s",
+  "ok": true,
+  "ran_at": "2026-10-26T20:51:27.059Z",
+  "zetaris_version": "2.4.3.1",
+  "engine_version": "3.5.3",
+  "statements": 5,
+  "records": 71,
+  "expected_records": 71,
+  "removed_first": [
+    {
+      "sql": "DROP VIEW cdc_places_tracts.records"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE TABLE cdc_places_tracts_rest.source_raw_p0"
+    },
+    {
+      "sql": "DROP LIGHTNING DATABASE cdc_places_tracts_rest"
+    }
+  ],
+  "steps": [
+    {
+      "sql": "CREATE LIGHTNING DATABASE CDC_PLACES_TRACTS_REST DESCRIBE BY \"Fieldwork discovered public source\"",
+      "ms": 59
+    },
+    {
+      "sql": "CREATE SCHEMASTORE CONTAINER cdc_places_tracts",
+      "ms": 42,
+      "skipped": "A container named \"cdc_places_tracts\" already exists."
+    },
+    {
+      "sql": "CREATE LIGHTNING REST TABLE source_raw_p0 FROM CDC_PLACES_TRACTS_REST REQUEST (endpoint \"https://data.cdc.gov/resource/yjkw-uj5s.json?%24where=countyfips%3D%2701101%27&%24select=tractfips%2Ccountyfips%2Ctotalpopulation%2Ctotalpop18plus%2Ccasthma_crudeprev%2Cbphigh_crudeprev%2Cdiabetes_crudeprev&%24limit=50000\", method \"GET\", response_type \"JSON\", http_encoding \"URLENCODED\") HEADER () BODY ()",
+      "ms": 7155
+    },
+    {
+      "sql": "CACHE TABLE cdc_places_tracts_rest.source_raw_p0",
+      "ms": 330
+    },
+    {
+      "sql": "CREATE SCHEMASTORE VIEW records WITH CONTAINER cdc_places_tracts AS\nSELECT tractfips, countyfips, totalpopulation, totalpop18plus, casthma_crudeprev, bphigh_crudeprev, diabetes_crudeprev FROM cdc_places_tracts_rest.source_raw_p0",
+      "ms": 90
+    },
+    {
+      "sql": "SELECT COUNT(*) AS record_count FROM cdc_places_tracts.records",
+      "ms": 194,
+      "rows": [
+        [
+          "71"
+        ]
+      ]
+    },
+    {
+      "sql": "SELECT countyfips,COUNT(*) AS record_count FROM cdc_places_tracts.records GROUP BY countyfips ORDER BY record_count DESC",
+      "ms": 196,
+      "rows": [
+        [
+          "01101",
+          "71"
+        ]
+      ]
+    }
+  ]
+}

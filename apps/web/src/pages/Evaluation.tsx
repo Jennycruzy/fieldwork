@@ -148,12 +148,17 @@ export function Evaluation() {
       </section>
       <section className="card evaluation">
         <h2>Source recipes and contributions</h2>
-        <p>Drafts are local contributions awaiting live verification and review.</p>
+        <p>
+          Recipes Fieldwork generated, in zetaris/getting-started's format, for sources it discovered.
+          Verified means the scripts ran against a live Zetaris instance and returned the expected record
+          count. Each waits for review before it is opened upstream.
+        </p>
         {recipes.drafts.map((r) => (
           <article key={r.source_id}>
             <h3>{r.title}</h3>
             <p>
               {r.status} · {r.verification}
+              {r.verified_at ? " " + r.verified_at.slice(0, 10) : ""}
             </p>
           </article>
         ))}

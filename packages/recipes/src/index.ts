@@ -15,6 +15,14 @@ export interface RecipeSource {
   docs: string;
   checked_at: string;
 }
+// A live run of a recipe's create and select scripts, written by scripts/recipe-verify.ts.
+export interface RecipeRun {
+  ran_at: string;
+  zetaris_version: string;
+  engine_version: string;
+  statements: number;
+  records: number;
+}
 export interface RecipeFiles {
   createPath: string;
   selectPath: string;
@@ -29,8 +37,11 @@ const ident = (s: string) => {
   if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(s)) throw new Error("Unsafe SQL identifier");
   return s;
 };
-export function renderRecipe(source: RecipeSource): RecipeFiles {
+export function renderRecipe(source: RecipeSource, run?: RecipeRun): RecipeFiles {
   const slug = ident(source.slug);
+  if (run && run.records !== source.count)
+    throw new Error("The live record count does not match the recorded source count");
+  const day = run?.ran_at.slice(0, 10);
   if (
     !Number.isSafeInteger(source.number) ||
     source.number < 1 ||
@@ -49,8 +60,9 @@ export function renderRecipe(source: RecipeSource): RecipeFiles {
     throw new Error("Do not export credentials in source URLs");
   if (source.kind === "arcgis" && !source.fields.includes("OBJECTID") && !source.fields.includes("GEOID"))
     throw new Error("Paging needs a stable source key");
-  const db = "FW_REC_" + slug.toUpperCase(),
-    container = "fw_rec_" + slug;
+  // Upstream names the database <NAME>_REST and the container <name>; the two share one case-insensitive namespace.
+  const db = slug.toUpperCase() + "_REST",
+    container = slug;
   const prefix = String(source.number).padStart(2, "0") + "_" + slug;
   const dir = "open_data/rest_apis/sql/non_rate_limited";
   const createPath = dir + "/" + prefix + "_create.sql",
@@ -75,7 +87,15 @@ export function renderRecipe(source: RecipeSource): RecipeFiles {
       source.count +
       ". Recheck before running; regenerate paging if it changes.",
     "-- Licence: " + JSON.stringify(source.licence).replace(/[\r\n]/g, " "),
-    "-- Status: Unverified. Source shape is used by Fieldwork, but this persistent-table recipe has not run.",
+    run
+      ? "-- Status: Verified " +
+        day +
+        " on Zetaris " +
+        run.zetaris_version +
+        ": every statement here and both select queries ran; the records view returned " +
+        run.records +
+        " rows."
+      : "-- Status: Unverified. Source shape is used by Fieldwork, but this persistent-table recipe has not run.",
     "-- Anonymous requests may be throttled; cache each raw table and stop on HTTP 429.",
     "-- =============================================================================",
     "CREATE LIGHTNING DATABASE " + db + ' DESCRIBE BY "Fieldwork discovered public source";',
@@ -158,16 +178,22 @@ export function renderRecipe(source: RecipeSource): RecipeFiles {
       id: slug,
       kind: "rest",
       script: createPath,
-      status: "unverified",
+      status: run ? "verified" : "unverified",
       requires: [],
-      summary: source.title + "; discovered public source, persistent-table recipe not yet verified",
+      summary:
+        source.title +
+        (run
+          ? "; discovered public source, verified live " + day
+          : "; discovered public source, persistent-table recipe not yet verified"),
     },
     catalogRow:
       "| " +
       source.number +
       " | " +
       source.title +
-      " | Public data | See licence note below | No limit asserted; cache and stop on 429 | Unverified | " +
+      " | Public data | See licence note below | No limit asserted; cache and stop on 429 | " +
+      (run ? "Verified" : "Unverified") +
+      " | " +
       String.fromCharCode(96) +
       createPath.replace("open_data/rest_apis/", "") +
       String.fromCharCode(96) +
@@ -175,7 +201,19 @@ export function renderRecipe(source: RecipeSource): RecipeFiles {
     catalogNote:
       "\n## " +
       source.title +
-      "\n\n- Status: **Unverified**. The new persistent-table script has not been executed.\n- Source metadata checked: " +
+      "\n\n- Status: " +
+      (run
+        ? "**Verified** " +
+          day +
+          " on Zetaris " +
+          run.zetaris_version +
+          ". The create script's " +
+          run.statements +
+          " statements and the select script's queries ran against a live instance; `COUNT(*)` returned " +
+          run.records +
+          ", matching the source count."
+        : "**Unverified**. The new persistent-table script has not been executed.") +
+      "\n- Source metadata checked: " +
       source.checked_at +
       ".\n- Licence evidence: " +
       JSON.stringify(source.licence) +
@@ -197,6 +235,8 @@ export function renderRecipe(source: RecipeSource): RecipeFiles {
       source.title +
       "\n\nThe " +
       prefix +
-      " script pair registers a discovered public source, caches raw responses, and creates an aggregate-queryable records view. It is unverified. Recheck the source count before running; ArcGIS paging uses 2,000 records per page. Licence details and source access dates are in the catalog.\n",
+      " script pair registers a discovered public source, caches raw responses, and creates an aggregate-queryable records view. " +
+      (run ? "It was verified live on " + day + "." : "It is unverified.") +
+      " Recheck the source count before running; ArcGIS paging uses 2,000 records per page. Licence details and source access dates are in the catalog.\n",
   };
 }
