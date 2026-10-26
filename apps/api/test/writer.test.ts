@@ -41,3 +41,10 @@ test("the entire recorded zero-pharmacy cohort has explicit first rank and tie s
  expect(checkDraft(["All 48 Montgomery census tracts in this result are ranked 1st."],a.headers,a.rows,a.checks.map((c:{detail:string})=>c.detail)).ok).toBe(true);
  expect(checkDraft(["All 13 Montgomery census tracts in this result are ranked 1st."],a.headers,a.rows,["13 days since update"]).ok).toBe(false);
 });
+test("facility-registry answers always distinguish listings from emissions and exposure",async()=>{
+ const r=JSON.parse(readFileSync("evidence/runs/r_20261026_0a10d7.run.json","utf8")),a=r.answer;
+ const ctx={models:{writer:{json:vi.fn(async()=>({value:{headline:"The result describes facility listings.",points:["The rows contain tract-level counts."],how_sure:"The source is a facility registry.",caveats:[]}}))}},trace:{log:vi.fn()}}as unknown as Ctx;
+ const answer=await write(ctx,r.question,a.plan,[{shape:"epa_facilities",title:"Facility registry",where:"county scope",zetarisCount:100}]as Wired[],{sql:a.sql,result:{headers:a.headers,rows:a.rows,total:a.rows.length,ms:0,wallMs:0}},a.checks,r.rounds);
+ expect(answer.caveats).toContain("Facility registry listings are not measurements of emissions or personal exposure.");
+ expect(checkDraft(answer.caveats,a.headers,a.rows).ok).toBe(true);
+});

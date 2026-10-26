@@ -41,6 +41,10 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     const caveat="These are weighted call-center activity totals, not confirmed incidents or crime statistics.";
     if(!value.caveats.includes(caveat))value.caveats.push(caveat);
   }
+  if(wired.some(w=>w.shape==="epa_facilities")){
+    const caveat="Facility registry listings are not measurements of emissions or personal exposure.";
+    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  }
   for(const c of checks.filter(c=>c.ok&&c.id==="partial_month"))if(!value.caveats.includes(c.detail))value.caveats.push(c.detail);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
