@@ -10,6 +10,12 @@ export const SAMPLE_QUESTIONS = [
   "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
 ];
 
+const STEPS = ["Plan", "Find sources", "Wire into Zetaris", "Place in tracts", "Join", "Check", "Write"];
+
+// A finished answer worth showing: answered, with a written headline rather than the row-count fallback.
+const shown = (r: RunSummary) =>
+  r.status === "answered" && !!r.headline && !/^The result contains \d+ rows/i.test(r.headline);
+
 export function Home({ sample }: { sample: boolean }) {
   const [runs, setRuns] = useState<RunSummary[]>();
   const [active, setActive] = useState<string>();
@@ -27,11 +33,11 @@ export function Home({ sample }: { sample: boolean }) {
     );
   }, []);
 
-  const featured = runs?.find((r) => r.status === "answered" && r.headline);
+  const featured = runs?.find(shown);
   // The same question asked again shows once, newest first.
-  const earlier = runs?.filter(
-    (r, i) =>
-      r.headline && runs.findIndex((x) => x.question.toLowerCase() === r.question.toLowerCase()) === i,
+  const good = runs?.filter(shown);
+  const earlier = good?.filter(
+    (r, i) => good.findIndex((x) => x.question.toLowerCase() === r.question.toLowerCase()) === i,
   );
 
   async function ask(q: string) {
@@ -67,6 +73,14 @@ export function Home({ sample }: { sample: boolean }) {
         <p className="lede">
           Agents find the public datasets that answer your question, wire them into Zetaris, place city
           records into census tracts, join them, check the result and write the answer, with every step shown.
+        </p>
+        <ol className="graph strip" aria-label="How a question is answered">
+          {STEPS.map((s) => (
+            <li key={s}>{s}</li>
+          ))}
+        </ol>
+        <p>
+          <Link href="/how-it-works">How it works</Link>
         </p>
       </section>
 
@@ -150,11 +164,10 @@ export function Home({ sample }: { sample: boolean }) {
           <ul className="history">
             {earlier.slice(0, 8).map((r) => (
               <li key={r.id}>
-                <Link href={`/a/${r.id}`}>{r.headline ?? r.question}</Link>
-                <span className="muted">
-                  {" "}
-                  · {r.mode === "recorded" ? "recorded" : "live"} · {when(r.created_at)}
-                </span>
+                <Link href={`/a/${r.id}`}>{r.question}</Link>
+                <p className="muted">
+                  {r.headline} · {r.mode === "recorded" ? "recorded" : "live"} · {when(r.created_at)}
+                </p>
               </li>
             ))}
           </ul>

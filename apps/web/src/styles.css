@@ -768,3 +768,12 @@ code,
 .sponsors ul {
   padding-left: 18px;
 }
+
+.strip li {
+  background: var(--accent-soft);
+  color: var(--ink);
+  border-color: transparent;
+}
+.history p {
+  margin: 2px 0 10px;
+}
