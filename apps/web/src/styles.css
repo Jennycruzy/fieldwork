@@ -147,3 +147,10 @@ code { font-size: .88em; background: var(--code); padding: 1px 5px; border-radiu
 .number-link{font:inherit;color:var(--accent,#147d92);padding:0;border:0;background:none;text-decoration:underline;cursor:pointer;display:inline}.tract-map{height:360px;isolation:isolate;border-radius:12px}.chart{width:100%;min-width:0;color:#243746}.hash{overflow-wrap:anywhere}.top nav{display:flex;flex-wrap:wrap;gap:12px}select,input{max-width:100%}.row{flex-wrap:wrap}form input{display:block;width:100%;box-sizing:border-box;margin:8px 0}.table-wrap td{max-width:480px;overflow-wrap:anywhere}@media(max-width:480px){.top{flex-wrap:wrap;gap:10px}.tract-map{height:280px}}
 
 .memory-details { overflow-wrap: anywhere; min-width: 0; }
+
+.evaluation { overflow-wrap: anywhere; }
+.evaluation dd { margin: 0 0 1rem; }
+.evaluation .table-wrap table { min-width: 0; table-layout: fixed; width: 100%; }
+.evaluation td, .evaluation th { white-space: normal; overflow-wrap: anywhere; }
+.evaluation-question { border-top: 1px solid var(--line, currentColor); padding-block: 1rem; }
+@media (max-width: 600px) { .top { flex-wrap: wrap; } .top nav { flex-wrap: wrap; gap: .7rem; } }

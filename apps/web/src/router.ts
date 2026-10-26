@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
 // Four routes, no router library: /, /run/<id>, /a/<id>, /settings.
-export type Route = { page: "home" } | { page: "run"; id: string } | { page: "answer"; id: string } | { page: "settings" } | { page: "history" } | { page: "check" } | { page: "how"; id: string } | { page: "missing" };
+export type Route = { page: "home" } | { page: "run"; id: string } | { page: "answer"; id: string } | { page: "settings" } | { page: "history" } | { page: "check" } | { page: "evaluation" } | { page: "how"; id: string } | { page: "missing" };
 
 export function parse(path: string): Route {
   if (path === "/" || path === "") return { page: "home" };
   if (path === "/settings") return { page: "settings" };
   if (path === "/history") return { page: "history" };
+  if (path === "/evaluation") return {page:"evaluation"};
   if (path === "/check") return { page: "check" };
   const h = path.match(/^\/how\/(r_\d{8}_[0-9a-f]{6})$/);
   if (h) return { page: "how", id: h[1]! };

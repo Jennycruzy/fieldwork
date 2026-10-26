@@ -5,6 +5,7 @@ import { useRoute } from "./router";
 import { Home } from "./pages/Home";
 import { RunView } from "./pages/RunView";
 import { AnswerPage } from "./pages/AnswerPage";
+import {Evaluation} from "./pages/Evaluation";
 import { Settings } from "./pages/Settings";
 
 import { History, How, Check } from "./pages/Records";
@@ -28,6 +29,7 @@ export function App() {
           <Link href="/">Ask</Link>
           <Link href="/history">History</Link>
           <Link href="/check">Check</Link>
+          <Link href="/evaluation">Evaluation</Link>
           <Link href="/settings">Settings</Link>
         </nav>
       </header>
@@ -43,6 +45,7 @@ export function App() {
         {route.page === "history" && <History />}
         {route.page === "check" && <Check />}
         {route.page === "how" && <How id={route.id} />}
+        {route.page === "evaluation" && <Evaluation />}
         {route.page === "settings" && <Settings />}
         {route.page === "missing" && (
           <section className="card">
