@@ -71,7 +71,12 @@ test("rate templates retain count, matching denominator and requested scaling, i
 test("health rankings place prevalence before supporting counts without introducing a correlation", () => {
   const p = {
     ...plan,
-    analysis: { ...plan.analysis!, basis: "mixed" as const, denominator: "adults" as const },
+    analysis: {
+      ...plan.analysis!,
+      basis: "mixed" as const,
+      denominator: "adults" as const,
+      rank_measure: "condition prevalence descending",
+    },
   };
   const sql = tractSummarySql(
     id,
@@ -377,4 +382,26 @@ test("a revision after a plan change uses the new compiled template without a mo
   );
   expect(json).not.toHaveBeenCalled();
   expect(result.sql).toBe(compiled);
+});
+
+test("a count ranking keeps the count first and sorts by it when a health share only supports it", () => {
+  const p = {
+    ...plan,
+    analysis: {
+      ...plan.analysis!,
+      basis: "mixed" as const,
+      denominator: "adults" as const,
+      rank_measure: "event count, descending",
+    },
+  };
+  const sql = tractSummarySql(
+    id,
+    "Most events, and what share of adults have the condition",
+    p,
+    [city, health],
+    ["m1_city"],
+  )!;
+  expect(sql).toContain("SELECT t.name AS tract_name,COALESCE(n.n,0) AS");
+  expect(sql).toContain("CAST(h.condition_crudeprev AS DOUBLE) AS condition_prevalence");
+  expect(sql).toMatch(/ORDER BY public_events\w* DESC NULLS LAST,tract_name$/);
 });

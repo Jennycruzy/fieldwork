@@ -85,19 +85,27 @@ export function tractSummarySql(
   const scale = /\bper\s+10,?000\b/i.test(question) ? 10000 : 1000;
   const rateAlias = countAlias + "_per_" + scale + "_" + denominator;
   const asc = /lowest|fewest|smallest|ascending/i.test(p.analysis.rank_measure);
-  const metric = needsRate ? rateAlias : healthField ? healthAlias! : countAlias;
+  // A supporting health measure must not take over a ranking the plan states as a record count.
+  const healthRanked =
+    !!healthField &&
+    !(
+      city &&
+      /\b(count|counts|number|how many)\b/i.test(p.analysis.rank_measure) &&
+      !/prevalence|rate|percent|share/i.test(p.analysis.rank_measure)
+    );
+  const metric = needsRate ? rateAlias : healthRanked ? healthAlias! : countAlias;
   const columns: string[] = ["t.name AS tract_name"];
   if (needsRate)
     columns.push(
       "COALESCE(n.n,0) * " + scale + ".0 / NULLIF(CAST(h." + denominator + " AS DOUBLE),0) AS " + rateAlias,
     );
-  else if (healthField) columns.push("CAST(h." + healthField + " AS DOUBLE) AS " + healthAlias);
+  else if (healthRanked) columns.push("CAST(h." + healthField + " AS DOUBLE) AS " + healthAlias);
   else if (city) columns.push("COALESCE(n.n,0) AS " + countAlias);
   else return;
-  if (city && (needsRate || healthField)) columns.push("COALESCE(n.n,0) AS " + countAlias);
+  if (city && (needsRate || healthRanked)) columns.push("COALESCE(n.n,0) AS " + countAlias);
   if (cdc && cdc.fields.includes(denominator))
     columns.push("CAST(h." + denominator + " AS DOUBLE) AS " + denominator);
-  if (healthField && needsRate) columns.push("CAST(h." + healthField + " AS DOUBLE) AS " + healthAlias);
+  if (healthField && !healthRanked) columns.push("CAST(h." + healthField + " AS DOUBLE) AS " + healthAlias);
   columns.push("t.geoid");
   let from = " FROM " + tracts + " t";
   if (city)
