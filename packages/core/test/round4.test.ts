@@ -1,0 +1,34 @@
+import {test,expect} from "vitest";
+import {checkDraft} from "../src/checks.js";
+const h=["tract_name","request_count","geoid"];
+test("parenthesized and slash tract lists preserve identifiers and check their values",()=>{
+ const rows=[["Census Tract 55.02","0","a"],["Census Tract 55.04","0","b"],["Census Tract 57","0","c"]];
+ expect(checkDraft(["Three tracts (55.02, 55.04, 57) each had 0 requests."],h,rows).ok).toBe(true);
+ expect(checkDraft(["Three tracts (55.02, 55.04, 57) each had 8 requests."],h,rows).ok).toBe(false);
+ expect(checkDraft(["Tracts 55.02/55.04 share rank 1."],h,rows).ok).toBe(true);
+ expect(checkDraft(["Tracts 55.02/55.04 share rank 2."],h,rows).ok).toBe(false);
+});
+test("comparison binds the second rank to the comparison row and verifies arithmetic",()=>{
+ const rows=[["Census Tract 1","1419","a"],["Census Tract 25","1071","b"]];
+ expect(checkDraft(["Census Tract 1 led with 1,419 requests, 348 more than the second-ranked Tract 25."],h,rows).ok).toBe(true);
+ expect(checkDraft(["Census Tract 1 led with 1,419 requests, 141 more than the second-ranked Tract 25."],h,rows).ok).toBe(false);
+ expect(checkDraft(["Census Tract 1 led with 1,419 requests, 348 more than the first-ranked Tract 25."],h,rows).ok).toBe(false);
+});
+test("percent of an extreme gap is arithmetic rather than a rank on another column",()=>{
+ const rows=[["Census Tract 1","14","818"],["Census Tract 2","8.3","22"]];
+ const headers=["tract_name","asthma_rate","violation_count"];
+ expect(checkDraft(["The highest rate is 68.7% above the lowest rate."],headers,rows).ok).toBe(true);
+ expect(checkDraft(["The highest rate is 88.7% above the lowest rate."],headers,rows).ok).toBe(false);
+});
+test("verified filter thresholds are not row rankings and wrong thresholds fail",()=>{
+ const headers=["name","average_score","establishment_count"],rows=[["Census Tract 1","88","3"],["Census Tract 2","92","4"]];
+ expect(checkDraft(["Tracts with fewer than 2 establishments were excluded from the lowest-score ranking."],headers,rows,["Filter: fewer than 2 establishments excluded"]).ok).toBe(true);
+ expect(checkDraft(["Tracts with fewer than 4 establishments were excluded from the lowest-score ranking."],headers,rows,["Filter: fewer than 2 establishments excluded"]).ok).toBe(false);
+ expect(checkDraft(["Census Tract 2 has the lowest score at 92."],headers,rows).ok).toBe(false);
+});
+test("zero cohort tie size and rank must both match",()=>{
+ const headers=["tract_name","pharmacies_per_10000","pharmacy_count"],rows=[["Census Tract 1","0","0"],["Census Tract 2","0","0"],["Census Tract 3","2","1"]];
+ expect(checkDraft(["All 2 zero-pharmacy tracts are ranked 1st together in ascending order."],headers,rows).ok).toBe(true);
+ expect(checkDraft(["All 3 zero-pharmacy tracts are ranked 1st together in ascending order."],headers,rows).ok).toBe(false);
+ expect(checkDraft(["All 2 zero-pharmacy tracts are ranked 2nd together in ascending order."],headers,rows).ok).toBe(false);
+});

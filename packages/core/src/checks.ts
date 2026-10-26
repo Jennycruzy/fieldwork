@@ -176,6 +176,16 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   };
   for (const original of texts) {
     const t = normaliseText(original);
+    const cohortTie=spellNumbers(t).match(/\b(?:all\s+)?(\d+)\s+(?:zero-[a-z]+\s+)?(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
+    if(cohortTie && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
+      const j=valueColumns(headers)[0], count=Number(cohortTie[1]);
+      const zeros=j===undefined?[]:rows.filter(r=>r[j]!=null&&Number(r[j])===0);
+      const claim=claimedRank(t)??1;
+      const ascending=/ascending|fewest|lowest/i.test(t);
+      const rank=1+rows.filter(r=>r[j!]!=null&&(ascending?Number(r[j!])<0:Number(r[j!])>0)).length;
+      if(count!==zeros.length||claim!==rank)order.push("The stated zero-valued tie group size or rank does not match the rows.");
+      continue;
+    }
     if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
@@ -187,6 +197,14 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     }
     if (/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) continue;
     for(const sentence of t.split(/;|[!?]|\.(?=\s+[A-Z])/)) {
+    if (/\b(?:excluded|filtered out)\b/i.test(sentence) && /\bfewer than\s+\d+/i.test(sentence)) {
+      const threshold=Number(sentence.match(/fewer than\s+(\d+)/i)?.[1]);
+      const j=headers.findIndex(h=>/establishment.*count|group.*size/i.test(h));
+      if(j<0||rows.some(r=>r[j]==null||Number(r[j])<threshold))order.push("The stated exclusion threshold is contradicted by the rows.");
+      continue;
+    }
+    // Extreme-to-extreme arithmetic has no ordinal claim about an individual row.
+    if (/\bhighest\b/i.test(sentence)&&/\blowest\b/i.test(sentence)&&/\b(gap|above|below|difference|change)\b/i.test(sentence)&&!names.some(n=>mentions(sentence,n))) continue;
     let previous = -1;
     for (const clause of rowClauses(sentence, names)) {
       const named = names.findIndex(n => n && mentions(clause, n));
@@ -229,7 +247,10 @@ function rowClauses(text: string, names: string[]): string[] {
       const re = new RegExp(`(?<![\\w.])(?:${escaped(name)}|${escaped(short)})(?!\\w|\\.\\d)`, "gi");
       for (const m of clause.matchAll(re)) starts.add(m.index!);
     }
-    const cuts = [...starts].sort((a,b) => a-b).slice(1);
+    const cuts = [...starts].sort((a,b) => a-b).slice(1).map(pos=>{
+      const prefix=clause.slice(0,pos).match(/(?:the\s+)?(?:first|second|third|fourth|fifth|\d+(?:st|nd|rd|th))-ranked\s*$/i);
+      return prefix ? pos-prefix[0].length : pos;
+    });
     return [0,...cuts].map((start,i,all) => clause.slice(start,all[i+1]));
   });
 }
@@ -336,7 +357,7 @@ function tidyHyphens(s:string):string {
 const MONTHS="January|February|March|April|May|June|July|August|September|October|November|December";
 // Dates are not data values: "October 25, 2026" keeps its month (a calendar row name), "2026-10-25" goes.
 function normaliseText(original:string):string {
- return tidyHyphens(expandTractLists(original).replace(/[\u2010-\u2015\u2212]/g,"-"))
+ return tidyHyphens(expandTractLists(spellNumbers(original)).replace(/[\u2010-\u2015\u2212]/g,"-"))
   .replace(/\b\d{4}-\d{2}(?:-\d{2})?(?:T[\d:.]+Z?)?\b/g," ")
   .replace(new RegExp(`\\b(${MONTHS})\\s+\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?\\s+\\d{4})?`,"g"),"$1")
   .replace(/\bmost recent\b/gi,"latest")
@@ -403,6 +424,8 @@ const ORDINALS: Record<string, number> = { first: 1, second: 2, third: 3, fourth
 // "follows" / "is next" = rank 2; "third-highest", "ranks fourth", "ties for third", "5th" = that rank; "leads" / "highest" = 1.
 export function claimedRank(t: string): number | undefined {
   const s = t.toLowerCase();
+  const explicit=s.match(/\brank(?:ed|s)?\s+(?:at\s+)?(\d+)\b/);
+  if(explicit)return Number(explicit[1]);
   const ord = s.match(/\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d{1,2}(?:st|nd|rd|th))\b(?:[\s-]*(?:highest|lowest|most|fewest|place|ranked))?/);
   if (ord) {
     const w = ord[1]!;
@@ -410,7 +433,7 @@ export function claimedRank(t: string): number | undefined {
     if (/\b(rank|ranks|ranked|ties?|tied|is|at|place|highest|lowest|most|fewest)\b/.test(s) && n >= 1 && n <= 10) return n;
   }
   if (/\b(follows|comes next|is next|runner-up)\b/.test(s)) return 2;
-  if (/\b(leads|has the highest|has the most|tops)\b/.test(s)) return 1;
+  if (/\b(leads|led|has the highest|has the most|tops)\b/.test(s)) return 1;
   return undefined;
 }
 
@@ -424,6 +447,8 @@ function knownIdentifiers(text: string, facts: string[], names:string[]=[],ident
 }
 
 function expandTractLists(text:string):string {
+ text=text.replace(/\btracts\s*\((\d+(?:\.\d+)?(?:\s*,\s*\d+(?:\.\d+)?)+)\)/gi,(_,list:string)=>"tracts: "+(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>"Census Tract "+id).join(" and "));
+ text=text.replace(/\bTracts?\s+(\d+(?:\.\d+)?(?:\/\d+(?:\.\d+)?)+)/gi,(_,list:string)=>list.split("/").map(id=>"Census Tract "+id).join(" and "));
  return text.replace(/\b(?:Census\s+)?Tracts?\s*:?\s+(\d+(?:\.\d+)?(?:\s*(?:,\s*(?:and\s+)?|and)\s*\d+(?:\.\d+)?)+)/gi,(_,list:string)=>(list.match(/\d+(?:\.\d+)?/g)??[]).map(id=>`Census Tract ${id}`).join(" and "));
 }
 
