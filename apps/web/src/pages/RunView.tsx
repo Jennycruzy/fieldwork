@@ -3,6 +3,7 @@ import { api, watch, type RunEvent, type RunRecord } from "../api";
 import { Link } from "../Link";
 import { go } from "../router";
 import { modelName, secs } from "../format";
+import { Story } from "../Story";
 
 const STEPS = [
   { key: "PLAN", label: "Plan", agents: ["planner"] },
@@ -101,6 +102,8 @@ export function RunView({ id }: { id: string }) {
   const isRecorded = run?.mode === "recorded";
   const pageEvents = events.filter((e) => e.agent === "wirer" && /page \d+ of \d+/.test(e.note));
   const visibleEvents = events.filter((e) => !pageEvents.includes(e));
+  const provider = events.find((e) => e.agent === "runtime");
+  const budget = events.find((e) => e.action === "model_call_budget");
 
   if (missing)
     return (
@@ -133,6 +136,14 @@ export function RunView({ id }: { id: string }) {
           </label>
         )}
         <h1 className="q">{run?.question ?? "…"}</h1>
+        {provider && (
+          <p className="muted">
+            {/offline|isn't reachable/i.test(provider.note)
+              ? "Models: NVIDIA Nemotron through OpenRouter. No Meterless Runtime is connected; connect one in Settings."
+              : provider.note}
+            {budget && " " + budget.note}
+          </p>
+        )}
         <ol className="graph" aria-label="Steps">
           {STEPS.map((s) => (
             <li
@@ -154,54 +165,64 @@ export function RunView({ id }: { id: string }) {
       </section>
 
       <section className="card">
-        <h2>Every step</h2>
-        {pageEvents.length > 0 && (
-          <details>
-            <summary>Wiring pages: {pageEvents.length} recorded steps</summary>
-            <ul>
-              {pageEvents.map((e) => (
-                <li key={e.seq}>
-                  {e.note}
-                  {e.sql && (
-                    <details>
-                      <summary>Zetaris SQL</summary>
-                      <pre>{e.sql}</pre>
-                    </details>
+        <h2>What each agent did</h2>
+        <Story events={visibleEvents} />
+      </section>
+
+      <section className="card">
+        <details>
+          <summary>
+            <strong>Full trace</strong> · {events.length} events, including every model request and Zetaris
+            statement
+          </summary>
+          {pageEvents.length > 0 && (
+            <details>
+              <summary>Wiring pages: {pageEvents.length} recorded steps</summary>
+              <ul>
+                {pageEvents.map((e) => (
+                  <li key={e.seq}>
+                    {e.note}
+                    {e.sql && (
+                      <details>
+                        <summary>Zetaris SQL</summary>
+                        <pre>{e.sql}</pre>
+                      </details>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+          <ol className="steps">
+            {visibleEvents.map((e) => (
+              <li key={e.seq} className={`step ${e.status}`}>
+                <div className="step-head">
+                  <span className="agent">{AGENT_LABEL[e.agent] ?? e.agent}</span>
+                  <span className="action">{e.action.replace(/_/g, " ")}</span>
+                  {e.modelServed && (
+                    <span className="badge" title={e.modelServed}>
+                      {modelName(e.modelServed)} · {e.modelProvider} · {secs(e.latencyMs)}
+                    </span>
                   )}
-                </li>
-              ))}
-            </ul>
-          </details>
-        )}
-        <ol className="steps">
-          {visibleEvents.map((e) => (
-            <li key={e.seq} className={`step ${e.status}`}>
-              <div className="step-head">
-                <span className="agent">{AGENT_LABEL[e.agent] ?? e.agent}</span>
-                <span className="action">{e.action.replace(/_/g, " ")}</span>
-                {e.modelServed && (
-                  <span className="badge" title={e.modelServed}>
-                    {modelName(e.modelServed)} · {e.modelProvider} · {secs(e.latencyMs)}
-                  </span>
+                  {!e.modelServed && e.modelRequested && (
+                    <span className="badge">
+                      {modelName(e.modelRequested)} requested · no response
+                      {e.latencyMs ? ` · ${secs(e.latencyMs)}` : ""}
+                    </span>
+                  )}
+                  {e.zetarisMs !== undefined && <span className="badge z">Zetaris · {e.zetarisMs} ms</span>}
+                </div>
+                <p className="note">{e.note}</p>
+                {e.sql && (
+                  <details>
+                    <summary>Zetaris SQL</summary>
+                    <pre>{e.sql}</pre>
+                  </details>
                 )}
-                {!e.modelServed && e.modelRequested && (
-                  <span className="badge">
-                    {modelName(e.modelRequested)} requested · no response
-                    {e.latencyMs ? ` · ${secs(e.latencyMs)}` : ""}
-                  </span>
-                )}
-                {e.zetarisMs !== undefined && <span className="badge z">Zetaris · {e.zetarisMs} ms</span>}
-              </div>
-              <p className="note">{e.note}</p>
-              {e.sql && (
-                <details>
-                  <summary>Zetaris SQL</summary>
-                  <pre>{e.sql}</pre>
-                </details>
-              )}
-            </li>
-          ))}
-        </ol>
+              </li>
+            ))}
+          </ol>
+        </details>
       </section>
       {!!run?.answer?.skipped_sources?.length && (
         <section className="card">
