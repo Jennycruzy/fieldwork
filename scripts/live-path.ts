@@ -50,7 +50,7 @@ for(const label of ["Export CSV","Export chart PNG","Citations (text)","Citation
   const download=await pending;await download.saveAs(`${out}/${download.suggestedFilename()}`);
 }
 await page.getByRole("link",{name:"How it worked",exact:true}).click();await page.getByRole("heading",{name:"Full trace",exact:true}).waitFor();
-for(const route of ["/history","/check","/settings"]) { await page.goto(`${base}${route}`,{waitUntil:"networkidle"});if(!await page.locator("h1").count()) throw new Error(`No content at ${route}`);await page.screenshot({path:`${out}/${route.slice(1)}.png`,fullPage:true}); }
+for(const route of ["/history","/check","/evaluation","/settings"]) { await page.goto(`${base}${route}`,{waitUntil:"networkidle"});if(!await page.locator("h1").count()) throw new Error(`No content at ${route}`);await page.screenshot({path:`${out}/${route.slice(1)}.png`,fullPage:true}); if(route==="/evaluation"){for(const colorScheme of ["light","dark"] as const){await page.emulateMedia({colorScheme});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw new Error("Evaluation page scrolls sideways");if(await page.locator(".evaluation-question").count()!==25)throw new Error("Evaluation question evidence is incomplete");await page.screenshot({path:out+"/evaluation-"+colorScheme+".png",fullPage:true});}} }
 await page.getByRole("button",{name:"Test connection",exact:true}).click();await page.waitForTimeout(1000);
 const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
 if(overflow) throw new Error("Page scrolls sideways");

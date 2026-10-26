@@ -1,7 +1,7 @@
 import {runBudget,RunCallLimit} from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
-import { computeFigureLedger, checkDraft, finalizeDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
+import { computeFigureLedger, figureLedgerForTexts, checkDraft, finalizeDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
@@ -73,6 +73,12 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
   await db.query(`INSERT INTO runs (id, question) VALUES ($1, $2) ON CONFLICT (id) DO NOTHING`, [runId, question]);
   const trace = new Trace(db, runId);
   if (opts.onTrace) trace.onEvent(opts.onTrace);
+  const timed=async<T>(agent:string,fn:()=>Promise<T>):Promise<T>=>{
+    const started=Date.now();
+    await trace.log({agent,action:"step_start",status:"info",note:"Step started."});
+    try{return await fn();}
+    finally{await trace.log({agent,action:"step_finish",status:"info",latencyMs:Date.now()-started,note:"Step finished; wall time includes source queries, retries and model waits."});}
+  };
 
   // Meterless Runtime (Nightshift) is the primary provider whenever it answers at run start;
   // OpenRouter's Nemotron models are the fallback, and the trace says which one served each call.
@@ -127,7 +133,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
   const out: RunOutcome = { runId, status: "failed", rounds: 0, chosen: [], wired: [], bridged: [], checks: [] };
   try {
     await trace.log({ agent: "run", action: "start", status: "info", note: question });
-    let p = await plan(ctx, question);
+    let p = await timed("planner",()=>plan(ctx, question));
     out.plan = p;
     if(!p.analysis?.relationship){
       for(const role of ["joiner","evaluator"] as Role[]){
@@ -143,16 +149,16 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     }
 
     let wiring = 1;
-    let chosen = await find(ctx, p);
+    let chosen = await timed("finder",()=>find(ctx, p));
     out.chosen = chosen;
-    let wired = await wire(ctx, p, chosen, undefined, wiring);
+    let wired = await timed("wirer",()=>wire(ctx, p, chosen, undefined, wiring));
     out.wired = wired;
-    let bridged = await bridgeAll(ctx, p, wired);
-    let joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
+    let bridged = await timed("bridge",()=>bridgeAll(ctx, p, wired));
+    let joined = await timed("joiner",()=>join(ctx, question, p, wired, bridged.map((b) => b.label)));
 
     for (let round = 1; round <= 3; round++) {
       out.rounds = round;
-      const ev = await evaluate(ctx, question, p, wired, bridged, joined, round);
+      const ev = await timed("evaluator",()=>evaluate(ctx, question, p, wired, bridged, joined, round));
       out.checks = ev.checks;
       if (ev.verdict.verdict === "APPROVE" || round === 3) {
         out.status = ev.verdict.verdict === "APPROVE" ? "answered" : "partial";
@@ -161,26 +167,26 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
       allowance.evaluationRound(round+1);
       const why = ev.verdict.instruction ?? ev.verdict.reasons.join("; ");
       if (ev.verdict.target !== "plan") {
-        const reviewed = await plan(ctx, question, why);
+        const reviewed = await timed("planner",()=>plan(ctx, question, why));
         const keys = (x: Plan) => JSON.stringify(x.measures.map((m)=>[m.kind,m.search_terms]));
         if (keys(reviewed) !== keys(p)) ev.verdict.target = "plan";
         else { p=reviewed; out.plan=p; }
       }
       if (ev.verdict.target === "plan") {
-        p = await plan(ctx, question, why);
+        p = await timed("planner",()=>plan(ctx, question, why));
         out.plan = p;
         await trace.log({ agent: "planner", action: "replan", status: "ok", note: summarisePlan(p) });
-        chosen = await find(ctx, p);
+        chosen = await timed("finder",()=>find(ctx, p));
         out.chosen = chosen;
-        wired = await wire(ctx, p, chosen, undefined, ++wiring);
-        bridged = await bridgeAll(ctx, p, wired);
-        joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
+        wired = await timed("wirer",()=>wire(ctx, p, chosen, undefined, ++wiring));
+        bridged = await timed("bridge",()=>bridgeAll(ctx, p, wired));
+        joined = await timed("joiner",()=>join(ctx, question, p, wired, bridged.map((b) => b.label)));
       } else if (ev.verdict.target === "wire") {
-        wired = await wire(ctx, p, chosen, why, ++wiring);
-        bridged = await bridgeAll(ctx, p, wired);
-        joined = await join(ctx, question, p, wired, bridged.map((b) => b.label));
+        wired = await timed("wirer",()=>wire(ctx, p, chosen, why, ++wiring));
+        bridged = await timed("bridge",()=>bridgeAll(ctx, p, wired));
+        joined = await timed("joiner",()=>join(ctx, question, p, wired, bridged.map((b) => b.label)));
       } else {
-        joined = await join(ctx, question, p, wired, bridged.map((b) => b.label), why, joined.sql);
+        joined = await timed("joiner",()=>join(ctx, question, p, wired, bridged.map((b) => b.label), why, joined.sql));
       }
     }
     out.wired = wired;
@@ -192,7 +198,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     const asked = (question.match(/\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?/g) ?? []).map((n) => n.replace(/,/g, "")).filter((n) => !/^(?:19|20)\d\d$/.test(n));
     const quotable = [...new Set([...asked, ...(tractCount ? [String(tractCount)] : [])])];
     if (quotable.length) out.checks.push({ id: "quotable_numbers", ok: true, detail: `Quotable numbers: ${quotable.join(", ")} (${[asked.length ? "from the question" : "", tractCount ? `${tractCount} census tracts compared` : ""].filter(Boolean).join("; ")})` });
-    let draft = await write(ctx, question, p, wired, joined, out.checks, out.rounds);
+    let draft = await timed("writer",()=>write(ctx, question, p, wired, joined, out.checks, out.rounds));
     const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), "Evaluator rounds: "+out.rounds];
     let dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     let draftCount=1;
@@ -200,7 +206,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
       const problems=[...dc.missingNumbers.map(n=>"the number "+n+" is not in the result rows"),...dc.orderProblems];
       (out.drafts??=[]).push({...draft,problems});
       await trace.log({agent:"evaluator",action:"check:draft",status:"error",note:"Draft "+draftCount+" returned to Writer: "+JSON.stringify(problems)});
-      try{draft=await write(ctx,question,p,wired,joined,out.checks,out.rounds,JSON.stringify(problems));}
+      try{draft=await timed("writer",()=>write(ctx,question,p,wired,joined,out.checks,out.rounds,JSON.stringify(problems)));}
       catch(error){if(error instanceof RunCallLimit)break;throw error;}
       draftCount++;
       dc=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts);
@@ -225,6 +231,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     if(final.removed.length)(out.removed_sentences??=[]).push(...final.removed);
     if(!draft.points.length)out.status="partial";
     if(!checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts).ok)throw new Error("Final answer verification failed");
+    out.computed_figures=figureLedgerForTexts(joined.result.headers,joined.result.rows,[draft.headline,...draft.points,draft.how_sure,...draft.caveats]);
     out.answer = draft;
     out.view = await saveAnswerView(ctx, joined.sql);
     return out;

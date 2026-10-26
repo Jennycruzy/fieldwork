@@ -11,6 +11,7 @@ export interface Evaluation {
 
 // Code checks first; the model then judges whether the result answers the question, and can send work back.
 export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: Bridged[], joined: Joined, round: number): Promise<Evaluation> {
+  const codeStarted=Date.now();
   const b = bridged.reduce(
     (acc, x) => ({ matched: acc.matched + x.matched, total: acc.total + x.total, unmatched: acc.unmatched + x.unmatched, invalid: acc.invalid + x.invalid }),
     { matched: 0, total: 0, unmatched: 0, invalid: 0 },
@@ -78,6 +79,7 @@ export async function evaluate(ctx: Ctx, question: string, p: Plan, wired: Wired
     const c = checks.find((c) => c.id === id && !c.ok);
     if (c) await ctx.trace.log({ agent: "evaluator", action: code, status: "info", note: notice(code, c.detail).message });
   }
+  await ctx.trace.log({agent:"evaluator",action:"code_checks",status:"info",latencyMs:Date.now()-codeStarted,note:"Independent code-check wall time, including source queries."});
   const failed = checks.filter((c) => !c.ok);
   const rowsPreview = [joined.result.headers, ...joined.result.rows.slice(0, 12)]; // enough to judge; fewer tokens keeps the Evaluator fast
   const { value } = await ctx.models.evaluator.json(
