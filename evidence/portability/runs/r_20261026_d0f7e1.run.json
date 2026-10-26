@@ -1,0 +1,664 @@
+{
+  "id": "r_20261026_d0f7e1",
+  "question": "Which Louisville census tracts had the most code violations in 2025, and what is their adult asthma rate?",
+  "created_at": "2026-10-26T21:36:14.739Z",
+  "finished_at": "2026-10-26T21:37:10.312Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "mixed",
+        "reason": "The question asks for a workload ranking (tracts with the most code violations), which raw counts answer directly. Adult asthma rate is a supporting measure reported alongside each ranked tract, not a tested association, so no correlation is needed. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+        "denominator": "adults",
+        "rank_measure": "code violation count in 2025, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "Count of code violations in Louisville census tracts during 2025",
+          "search_terms": [
+            "code violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "Adult asthma prevalence percentage by census tract from CDC PLACES",
+          "search_terms": [
+            "asthma"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "4f4cbb11b809ab1794b0540e71bcf623781ed4a69ab414912eef7b61e2fc9507",
+          "to": "candidate:r_20261026_d0f7e1:m1:1fd891c3301c4c4581b86c338468fbe4",
+          "from": "measure:r_20261026_d0f7e1:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T21:36:14.823Z"
+        },
+        {
+          "id": "4f40c3f5d432ad079a8e6dbe514cc9a1c13053d87ffa3ffe8fd61c4d7b57b3ff",
+          "to": "candidate:r_20261026_d0f7e1:m2:yjkw-uj5s",
+          "from": "measure:r_20261026_d0f7e1:m2",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T21:36:14.823Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_d0f7e1",
+          "type": "run",
+          "attrs": {
+            "question": "Which Louisville census tracts had the most code violations in 2025, and what is their adult asthma rate?"
+          },
+          "source": {
+            "at": "2026-10-26T21:36:14.810Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_d0f7e1:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "mixed",
+              "reason": "The question asks for a workload ranking (tracts with the most code violations), which raw counts answer directly. Adult asthma rate is a supporting measure reported alongside each ranked tract, not a tested association, so no correlation is needed. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+              "denominator": "adults",
+              "rank_measure": "code violation count in 2025, descending",
+              "relationship": false
+            },
+            "describe": "Count of code violations in Louisville census tracts during 2025",
+            "search_terms": [
+              "code violations"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261026_d0f7e1:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "mixed",
+              "reason": "The question asks for a workload ranking (tracts with the most code violations), which raw counts answer directly. Adult asthma rate is a supporting measure reported alongside each ranked tract, not a tested association, so no correlation is needed. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+              "denominator": "adults",
+              "rank_measure": "code violation count in 2025, descending",
+              "relationship": false
+            },
+            "describe": "Adult asthma prevalence percentage by census tract from CDC PLACES",
+            "search_terms": [
+              "asthma"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_d0f7e1:m1:1fd891c3301c4c4581b86c338468fbe4",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://services1.arcgis.com/79kfd2K6fskCAkyg/arcgis/rest/services/PM_SiteVisit_Violations/FeatureServer/0",
+            "title": "Louisville Metro KY - Property Maintenance Inspection Violations",
+            "fields": [
+              {
+                "name": "SERV_PROV_CODE",
+                "type": "string",
+                "alias": "SERV_PROV_CODE"
+              },
+              {
+                "name": "B1_PER_ID1",
+                "type": "string",
+                "alias": "B1_PER_ID1"
+              },
+              {
+                "name": "B1_PER_ID2",
+                "type": "string",
+                "alias": "B1_PER_ID2"
+              },
+              {
+                "name": "B1_PER_ID3",
+                "type": "string",
+                "alias": "B1_PER_ID3"
+              },
+              {
+                "name": "B1_SPECIAL_TEXT",
+                "type": "string",
+                "alias": "B1_SPECIAL_TEXT"
+              },
+              {
+                "name": "B1_ALT_ID",
+                "type": "string",
+                "alias": "B1_ALT_ID"
+              },
+              {
+                "name": "FullAddress",
+                "type": "string",
+                "alias": "FullAddress"
+              },
+              {
+                "name": "PartialAddress",
+                "type": "string",
+                "alias": "PartialAddress"
+              },
+              {
+                "name": "Longitude",
+                "type": "double",
+                "alias": "Longitude"
+              },
+              {
+                "name": "Latitude",
+                "type": "double",
+                "alias": "Latitude"
+              },
+              {
+                "name": "EXT_ADDRESS_UID",
+                "type": "string",
+                "alias": "EXT_ADDRESS_UID"
+              },
+              {
+                "name": "PARCEL_ID",
+                "type": "string",
+                "alias": "PARCEL_ID"
+              },
+              {
+                "name": "CouncilDist",
+                "type": "string",
+                "alias": "CouncilDist"
+              },
+              {
+                "name": "G6A_G6_COMPL_T1",
+                "type": "string",
+                "alias": "G6A_G6_COMPL_T1"
+              },
+              {
+                "name": "G6A_G6_COMPL_T2",
+                "type": "timeonly",
+                "alias": "G6A_G6_COMPL_T2"
+              },
+              {
+                "name": "G6A_G6_COMPL_DD",
+                "type": "date",
+                "alias": "G6A_G6_COMPL_DD"
+              },
+              {
+                "name": "G6A_G6_STATUS",
+                "type": "string",
+                "alias": "G6A_G6_STATUS"
+              },
+              {
+                "name": "G6A_G6_STATUS_DD",
+                "type": "date",
+                "alias": "G6A_G6_STATUS_DD"
+              },
+              {
+                "name": "GA_USERID",
+                "type": "string",
+                "alias": "GA_USERID"
+              },
+              {
+                "name": "GA_FML",
+                "type": "string",
+                "alias": "GA_FML"
+              },
+              {
+                "name": "OccupancyStatus",
+                "type": "string",
+                "alias": "OccupancyStatus"
+              },
+              {
+                "name": "GUIDE_ITEM_TEXT",
+                "type": "string",
+                "alias": "GUIDE_ITEM_TEXT"
+              },
+              {
+                "name": "VIOLATION_CODE",
+                "type": "string",
+                "alias": "VIOLATION_CODE"
+              },
+              {
+                "name": "GUIDE_ITEM_STATUS",
+                "type": "string",
+                "alias": "GUIDE_ITEM_STATUS"
+              },
+              {
+                "name": "CitationAmount",
+                "type": "double",
+                "alias": "CitationAmount"
+              },
+              {
+                "name": "ColumnCounts",
+                "type": "integer",
+                "alias": "ColumnCounts"
+              },
+              {
+                "name": "ObjectId",
+                "type": "oid",
+                "alias": "ObjectId"
+              }
+            ],
+            "measure": "Count of code violations in Louisville census tracts during 2025",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_d0f7e1:m2:yjkw-uj5s",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              {
+                "name": "stateabbr",
+                "type": "text"
+              },
+              {
+                "name": "statedesc",
+                "type": "text"
+              },
+              {
+                "name": "countyname",
+                "type": "text"
+              },
+              {
+                "name": "countyfips",
+                "type": "text"
+              },
+              {
+                "name": "tractfips",
+                "type": "text"
+              },
+              {
+                "name": "totalpopulation",
+                "type": "text"
+              },
+              {
+                "name": "totalpop18plus",
+                "type": "text"
+              },
+              {
+                "name": "access2_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "access2_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "binge_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "binge_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "chd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "chd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "copd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "copd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "dental_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "dental_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "depression_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "depression_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "vision_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "vision_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crudeprev_",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "disability_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "disability_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "geolocation",
+                "type": "text"
+              }
+            ],
+            "measure": "Adult asthma prevalence percentage by census tract from CDC PLACES",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-26T21:36:14.823Z",
+            "run": "r_20261026_d0f7e1",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "[UNRESOLVED_COLUMN.WITH_SUGGESTION] A column or function parameter with name `casthma_crude95ci` cannot be resolved. Did you mean one of the following? [`stateabbr`, `tractfips`, `countyname`, `totalpop18plus`, `totalpopulation`].; line 1 pos 18; 'Project [tractfips#60400, 'casthma_crude95ci] +- Log",
+    "sources": [],
+    "memories": [],
+    "question": "Which Louisville census tracts had the most code violations in 2025, and what is their adult asthma rate?"
+  }
+}

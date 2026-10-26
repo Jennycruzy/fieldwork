@@ -1,0 +1,66 @@
+{
+  "place": {
+    "name": "Louisville, KY",
+    "county": "Jefferson County, KY (21111)",
+    "hub": "https://data.louisvilleky.gov",
+    "tracts": 216
+  },
+  "why_this_city": "Its open data is an ArcGIS Hub, the catalog type Fieldwork already searches for Montgomery, so the run needed no new connector, and its 216 tracts fit one county read. Hubs searched for code-violation or 311 data on 26 Oct 2026: Huntsville and Tuscaloosa (search API did not answer), Mobile, Durham, Little Rock, Jackson MS, Richmond (no matching datasets), Memphis, Columbus, Tempe (related datasets, not checked further), Baltimore, Detroit, Louisville (matching code-violation or 311 datasets). Detroit's Wayne County has more than 500 tracts, then above the tract read limit.",
+  "setup": "No Louisville-specific code. The place comes from evidence/portability/place.json (FW_PLACE). Tracts were loaded with scripts/load-tracts.ts into fw_pg.tracts_21111; Montgomery's tracts table was not touched. Each run used an empty, unsaved source memory (FW_FRESH_MEMORY=1), so nothing from Montgomery was recalled and nothing was written back.",
+  "runs": [
+    {
+      "id": "r_20261026_d0f7e1",
+      "question": "Which Louisville census tracts had the most code violations in 2025, and what is their adult asthma rate?",
+      "code": "18a42c5",
+      "status": "failed",
+      "seconds": 55.6,
+      "model_calls": 6,
+      "what_happened": "Found Louisville's Property Maintenance Inspection Violations and CDC PLACES. The city layer holds only the last 30 days, so 2025 had 0 records, which Fieldwork reported correctly. CDC PLACES publishes no asthma estimate for any Kentucky tract, and the run stopped on a Zetaris column error instead of saying so."
+    },
+    {
+      "id": "r_20261026_1b4db6",
+      "question": "Which Louisville census tracts had the most code violations in 2025, and what is their adult asthma rate?",
+      "code": "18a42c5",
+      "status": "failed",
+      "seconds": 33.6,
+      "model_calls": 4,
+      "what_happened": "Same sources and the same two data gaps; the empty CDC response again ended in a column error."
+    },
+    {
+      "id": "r_20261026_680dfb",
+      "question": "Which Louisville census tracts have the most property maintenance violations, and what share of adults there get too little sleep?",
+      "code": "18a42c5",
+      "status": "partial",
+      "seconds": 221.5,
+      "model_calls": 14,
+      "what_happened": "Read all 13,450 records through Zetaris in 14 pages and 215 CDC rows; placed 13,437 of 13,437 located records into tracts. The query template sorted by the supporting sleep share instead of the violation count. The Evaluator asked three times for the count order, but each revised plan compiled to the same query. The answer checks removed the false 'most violations' sentence and the run ended partial, not answered."
+    },
+    {
+      "id": "r_20261026_f7a20e",
+      "question": "Which Louisville census tracts have the most property maintenance violations, and what share of adults there get too little sleep?",
+      "code": "ae8ed86",
+      "status": "answered",
+      "seconds": 92.4,
+      "model_calls": 7,
+      "what_happened": "After the two generic fixes below: sorted by violation count, approved by the Evaluator in the first round. Census Tract 49 had the most violations (550; 43.5% short sleep), then Census Tract 27 (485; 53.2%). The result listed 200 of 216 tracts because of a 200-row limit, fixed afterwards and not yet rerun."
+    }
+  ],
+  "fixes": [
+    {
+      "commit": "51fedb5",
+      "what": "Rank by the record count when the plan asks for it, even when a health share supports the answer. No recorded Montgomery run that passed had this plan shape."
+    },
+    {
+      "commit": "ae8ed86",
+      "what": "Plan and wiring revisions pass the reviewer's instruction and the rejected query, so a template cannot repeat a query the Evaluator rejected."
+    },
+    {
+      "commit": "959bd1c",
+      "what": "Read every census tract of a county (up to 3,000) instead of stopping at 200 result rows or 500 tract shapes. Not yet confirmed by a live run."
+    }
+  ],
+  "open": [
+    "When a source returns no rows (CDC publishes only 5 measures for Kentucky tracts), Fieldwork stops with a database error instead of saying the measure is not published for this place.",
+    "The Wirer's first filter guess for a year used Montgomery's Year field; the Louisville layer has none. It recovered on the retry. The prompt example names a Year field."
+  ]
+}

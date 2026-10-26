@@ -1,0 +1,11 @@
+{
+  "name": "Louisville, KY",
+  "city": "Louisville",
+  "region": "Louisville, Kentucky",
+  "stateFips": "21",
+  "countyFips": "111",
+  "countyName": "Jefferson",
+  "stateAbbr": "KY",
+  "hub": "https://data.louisvilleky.gov",
+  "tractsTable": "tracts_21111"
+}

@@ -1,4 +1,5 @@
 import recipes from "../../../../evidence/recipes/drafts.json";
+import portability from "../../../../evidence/portability/summary.json";
 import data from "../../../../evidence/evaluation.json";
 import { Link } from "../Link";
 const seconds = (n: number) => n.toFixed(1);
@@ -170,6 +171,33 @@ export function Evaluation() {
             · {r.status}
           </p>
         ))}
+      </section>
+      <section className="card evaluation">
+        <h2>Portability: {portability.place.name}</h2>
+        <p>{portability.setup}</p>
+        {portability.runs.map((r) => (
+          <article key={r.id}>
+            <h3>
+              {r.status} · {seconds(r.seconds)} s · {r.model_calls} model calls · code {r.code}
+            </h3>
+            <p>{r.question}</p>
+            <p>{r.what_happened}</p>
+          </article>
+        ))}
+        <h3>Fixed after these runs</h3>
+        <ul>
+          {portability.fixes.map((f) => (
+            <li key={f.commit}>
+              {f.commit}: {f.what}
+            </li>
+          ))}
+        </ul>
+        <h3>Still open</h3>
+        <ul>
+          {portability.open.map((o) => (
+            <li key={o}>{o}</li>
+          ))}
+        </ul>
       </section>
       <section className="card evaluation">
         <h2>Amendments and reasons</h2>
