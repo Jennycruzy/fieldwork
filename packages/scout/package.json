@@ -1,0 +1,9 @@
+{
+  "name": "@fieldwork/scout",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "evals": "tsx evals/runner/index.ts all"
+  }
+}

@@ -340,6 +340,19 @@ export function AnswerPage({ id }: { id: string }) {
           )}
         </section>
       )}
+      {!!run.answer?.skipped_sources?.length && (
+        <section className="card">
+          <h2>Skipped sources</h2>
+          <p>These sources were excluded before their metadata reached the answer agents.</p>
+          <ul>
+            {run.answer.skipped_sources.map((s) => (
+              <li key={s.metadataHash}>
+                {s.title}: {s.reason}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {(run.answer?.sources?.length ?? 0) > 0 && (
         <section className="card">
           <h2>Sources</h2>

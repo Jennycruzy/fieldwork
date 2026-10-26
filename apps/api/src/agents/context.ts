@@ -10,6 +10,7 @@ import type { Trace } from "../trace.js";
 export type Role = "planner" | "finder" | "wirer" | "joiner" | "evaluator" | "writer";
 
 export interface Ctx {
+  scout?: import("../scoutGuard.js").ScoutGuard;
   writerChunkState?: WriterChunkState;
   world?: WorldModel;
   cfg: Config;

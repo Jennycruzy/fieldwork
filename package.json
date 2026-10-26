@@ -24,7 +24,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "recipe": "tsx scripts/recipe.ts",
-    "conformance:markovian": "MARKOVIAN_IMPL=$PWD/packages/markovian/src/index.ts tsx packages/markovian/conformance/runner.ts"
+    "conformance:markovian": "MARKOVIAN_IMPL=$PWD/packages/markovian/src/index.ts tsx packages/markovian/conformance/runner.ts",
+    "conformance:scout": "tsx scripts/scout-conformance.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",
@@ -48,6 +49,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "recharts": "3.10.1",
+    "yaml": "2.9.0",
     "zod": "3.24.1"
   }
 }

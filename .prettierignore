@@ -16,3 +16,5 @@ scripts/question-set.ts
 *.service
 
 packages/markovian/conformance/
+
+packages/scout/evals/

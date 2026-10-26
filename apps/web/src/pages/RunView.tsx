@@ -203,6 +203,19 @@ export function RunView({ id }: { id: string }) {
           ))}
         </ol>
       </section>
+      {!!run?.answer?.skipped_sources?.length && (
+        <section className="card">
+          <h2>Skipped sources</h2>
+          <p>These sources were excluded before their metadata reached the answer agents.</p>
+          <ul>
+            {run.answer.skipped_sources.map((s) => (
+              <li key={s.metadataHash}>
+                {s.title}: {s.reason}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {run?.answer?.writer_chunks && (
         <section className="card">
           <h2>Bounded Writer reasoning</h2>

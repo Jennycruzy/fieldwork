@@ -1,0 +1,38 @@
+{
+  "checked_at": "2026-10-26T18:53:57.644Z",
+  "mode": "two-case free content-safety component, no question batch",
+  "before": 807,
+  "after": 809,
+  "model": "nvidia/nemotron-3.5-content-safety:free",
+  "results": [
+    {
+      "id": "ordinary",
+      "error": "model did not return valid JSON: no schema-matching JSON object found"
+    }
+  ],
+  "calls": [
+    {
+      "provider": "openrouter",
+      "modelRequested": "nvidia/nemotron-3.5-content-safety:free",
+      "modelServed": "nvidia/nemotron-3.5-content-safety:free",
+      "tokensIn": 478,
+      "tokensOut": 5,
+      "ms": 564,
+      "attempt": 1,
+      "ok": false,
+      "error": "Invalid JSON: no schema-matching JSON object found"
+    },
+    {
+      "provider": "openrouter",
+      "modelRequested": "nvidia/nemotron-3.5-content-safety:free",
+      "modelServed": "nvidia/nemotron-3.5-content-safety:free",
+      "tokensIn": 849,
+      "tokensOut": 10,
+      "ms": 358,
+      "attempt": 2,
+      "ok": false,
+      "error": "Invalid JSON: no schema-matching JSON object found"
+    }
+  ],
+  "production_setting": "off"
+}

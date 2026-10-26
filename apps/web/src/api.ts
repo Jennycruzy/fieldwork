@@ -44,6 +44,7 @@ export interface RunRecord {
   rounds: number;
   mode: "live" | "recorded";
   answer: {
+    skipped_sources?: { id: string; title: string; reason: string; metadataHash: string }[];
     removed_sentences?: string[];
     computed_figures?: {
       id: string;

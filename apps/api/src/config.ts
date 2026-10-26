@@ -26,6 +26,7 @@ export interface Config {
   dailyCalls: number;
   answerLineage?: boolean;
   markovianWriter?: boolean;
+  scoutGuard?: boolean;
   place: {
     name: string;
     stateFips: string;
@@ -53,6 +54,7 @@ export function config(): Config {
     },
     dailyCalls: Number(process.env.FW_DAILY_CALLS ?? 45),
     answerLineage: process.env.FW_ANSWER_LINEAGE === "1",
+    scoutGuard: process.env.FW_SCOUT_GUARD === "1",
     markovianWriter: process.env.FW_MARKOVIAN_WRITER === "1",
     // The product's scope: Montgomery, Alabama (city open data hub + Montgomery County census tracts).
     place: {

@@ -105,6 +105,13 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
   );
   perMeasure.push(...discovered);
 
+  if (ctx.scout)
+    for (const m of perMeasure) {
+      const safe: Candidate[] = [];
+      for (const c of m.candidates)
+        if (await ctx.scout.metadata(c, { title: c.title, description: c.description })) safe.push(c);
+      m.candidates = safe;
+    }
   const absent = perMeasure.find((m) => m.candidates.length === 0);
   if (absent) throw new FieldworkError("NO_SOURCE", absent.describe);
 
@@ -165,6 +172,9 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
     });
   }
 
+  if (ctx.scout)
+    for (const m of perMeasure)
+      for (const c of m.candidates) ctx.scout.assertMetadata({ title: c.title, description: c.description });
   const listing = perMeasure.map((m) => ({
     measure_id: m.id,
     measure: m.describe,
@@ -242,6 +252,15 @@ Prefer current, official, record-level or tract-level data. When several release
       cand.licence =
         metadata.license?.name ?? metadata.licenseId ?? "No license statement supplied in metadata";
       cand.licenceUrl = metadataUrl;
+    }
+    if (ctx.scout) {
+      const metadata = { title: cand.title, description: cand.description, fields };
+      if (!(await ctx.scout.metadata(cand, metadata)))
+        throw new FieldworkError(
+          "NO_SOURCE",
+          "a source with safe metadata for " + m.describe + ". See skipped sources.",
+        );
+      ctx.scout.assertMetadata(metadata);
     }
     chosen.push({
       measureId: m.id,

@@ -1,0 +1,156 @@
+{
+  "captured_at": "2026-10-26T18:52:03.366Z",
+  "mode": "public catalog metadata; first 25 distinct nonempty descriptions",
+  "entries": [
+    {
+      "id": "3a030d87c47d490ca32e72a963a3d0c0",
+      "title": "Parks and Trail",
+      "description": "This dataset provides information on parks and trails within the City of Montgomery, offering residents and visitors opportunities for outdoor recreation, exercise, and relaxation. It includes details on park locations, available amenities, and trail networks that connect various parts of the city.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Park_and_Trail/FeatureServer"
+    },
+    {
+      "id": "1dce55228002411ba308638a11bdb813",
+      "title": "Downtown Parking",
+      "description": "This dataset contains information related to parking in downtown Montgomery.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Parking_Meters/FeatureServer"
+    },
+    {
+      "id": "9417d27fb9e0442793d0503f9f3e663d",
+      "title": "Community Centers",
+      "description": "This dataset provides information on the Community Centers in the City of Montgomery, including locations, hours, and amenities.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Community_Center/FeatureServer"
+    },
+    {
+      "id": "3b6888b911174bd28c746c737b4006ac",
+      "title": "Fire and Police Station",
+      "description": "This dataset shows all of the fire and police stations across the City of Montgomery.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Story_Map___Live__1__WFL1/FeatureServer"
+    },
+    {
+      "id": "869437149b0a4b93ab2dd0d1465c48d1",
+      "title": "Tornado Shelter",
+      "description": "This dataset provides the locations of designated tornado shelters within the City of Montgomery. It includes information on shelter accessibility and availability to help residents find safe locations during severe weather events.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Tornado_Shelter/FeatureServer"
+    },
+    {
+      "id": "e58056aeb8354e0d80483dab81ee2899",
+      "title": "Code Violations",
+      "description": "This layer displays the locations of code violations across the city.",
+      "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0"
+    },
+    {
+      "id": "a9557ddbe0034478ab5f46fa1ce566b1",
+      "title": "Weather Sirens",
+      "description": "This dataset shows the locations of weather sirens throughout the City of Montgomery.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Weather_Sirens/FeatureServer"
+    },
+    {
+      "id": "d8310b19bdf74ac9bb95326c2958c915",
+      "title": "Education Facility",
+      "description": "This dataset provides the locations of educational facilities within the City of Montgomery, including universities, public schools, and private schools. It offers insight into the city’s educational infrastructure, helping residents, researchers, and policymakers understand school distribution and accessibility.",
+      "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Education_Facility/FeatureServer"
+    },
+    {
+      "id": "eav7-hnsx",
+      "title": "PLACES: Local Data for Better Health, Place Data, 2025 release",
+      "description": "This dataset contains model-based place (incorporated and census-designated places) estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control an",
+      "url": "https://data.cdc.gov/resource/eav7-hnsx.json"
+    },
+    {
+      "id": "m35w-spkz",
+      "title": "PLACES and 500 Cities: Data Dictionary",
+      "description": "This dataset provides a data dictionary for PLACES and 500 Cities releases. For each measure, the data dictionary provides the measure ID, measure full and short name, measure category ID and name, year of BRFSS data used to generate the estimate by release year, and frequency BRFSS collects data about the measure.",
+      "url": "https://data.cdc.gov/resource/m35w-spkz.json"
+    },
+    {
+      "id": "uggs-hy5q",
+      "title": "Provisional COVID-19 Deaths by Place of Death and State",
+      "description": "Effective June 28, 2023, this dataset will no longer be updated. Data deaths by place of death are available in this dataset https://data.cdc.gov/NCHS/d/4va6-ph5s. Deaths involving COVID-19, pneumonia and influenza reported to NCHS by place of death and state, United States.",
+      "url": "https://data.cdc.gov/resource/uggs-hy5q.json"
+    },
+    {
+      "id": "vgc8-iyc4",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2025 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia —at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Center",
+      "url": "https://data.cdc.gov/resource/vgc8-iyc4.json"
+    },
+    {
+      "id": "krqc-563j",
+      "title": "PLACES: Local Data for Better Health, Place Data 2023 release",
+      "description": "This dataset contains model-based place (incorporated and census-designated places) estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control an",
+      "url": "https://data.cdc.gov/resource/krqc-563j.json"
+    },
+    {
+      "id": "epbn-9bv3",
+      "title": "PLACES: Local Data for Better Health, Place Data 2022 release",
+      "description": "This dataset contains model-based place (incorporated and census-designated places) level estimates for the PLACES 2022 release. PLACES covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at 4 geographic levels. Estimates were provided b",
+      "url": "https://data.cdc.gov/resource/epbn-9bv3.json"
+    },
+    {
+      "id": "sd8v-uq83",
+      "title": "PLACES: Local Data for Better Health, Place Data 2024 release",
+      "description": "This dataset contains model-based place (incorporated and census-designated places) estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control an",
+      "url": "https://data.cdc.gov/resource/sd8v-uq83.json"
+    },
+    {
+      "id": "q8ig-wwk9",
+      "title": "PLACES: Local Data for Better Health, Place Data 2021 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) level estimates for the PLACES 2021 release. PLACES is the expansion of the original 500 Cities Project and covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code Tabulation Area (ZCTA) levels. It represents a first-of-its kind effort to release info",
+      "url": "https://data.cdc.gov/resource/q8ig-wwk9.json"
+    },
+    {
+      "id": "q8xq-ygsk",
+      "title": "PLACES: Local Data for Better Health, Place Data 2020 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) level estimates for the PLACES project 2020 release. The PLACES project is the expansion of the original 500 Cities project and covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code tabulation Areas (ZCTA) levels. It represents a first-of-its kind e",
+      "url": "https://data.cdc.gov/resource/q8xq-ygsk.json"
+    },
+    {
+      "id": "xx8k-iu94",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2023 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia —at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Center",
+      "url": "https://data.cdc.gov/resource/xx8k-iu94.json"
+    },
+    {
+      "id": "swc5-untb",
+      "title": "PLACES: Local Data for Better Health, County Data, 2025 release",
+      "description": "This dataset contains model-based county estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Prevention (CDC), Division of Population ",
+      "url": "https://data.cdc.gov/resource/swc5-untb.json"
+    },
+    {
+      "id": "uuui-fh3m",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2022 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) level estimates for the PLACES 2022 release in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at 4 geographic levels. Es",
+      "url": "https://data.cdc.gov/resource/uuui-fh3m.json"
+    },
+    {
+      "id": "cwsq-ngmh",
+      "title": "PLACES: Local Data for Better Health, Census Tract Data, 2025 release",
+      "description": "This dataset contains model-based census tract estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Prevention (CDC), Division of Popul",
+      "url": "https://data.cdc.gov/resource/cwsq-ngmh.json"
+    },
+    {
+      "id": "qnzd-25i4",
+      "title": "PLACES: Local Data for Better Health, ZCTA Data, 2025 release",
+      "description": "This dataset contains model-based ZIP Code Tabulation Area (ZCTA) level estimates. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Prevention",
+      "url": "https://data.cdc.gov/resource/qnzd-25i4.json"
+    },
+    {
+      "id": "ndzg-9nmv",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2020 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) level estimates for the PLACES project 2020 release in GIS-friendly format. The PLACES project is the expansion of the original 500 Cities project and covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code tabulation Areas (ZCTA) levels. It represent",
+      "url": "https://data.cdc.gov/resource/ndzg-9nmv.json"
+    },
+    {
+      "id": "hbpe-6r8n",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2024 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia —at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Center",
+      "url": "https://data.cdc.gov/resource/hbpe-6r8n.json"
+    },
+    {
+      "id": "cj8b-94cj",
+      "title": "PLACES: Place Data (GIS Friendly Format), 2021 release",
+      "description": "This dataset contains model-based place (incorporated and census designated places) level estimates for the PLACES 2021 release in GIS-friendly format. PLACES is the expansion of the original 500 Cities Project and covers the entire United States—50 states and the District of Columbia (DC)—at county, place, census tract, and ZIP Code Tabulation Area (ZCTA) levels. It represents a first-of-its kind",
+      "url": "https://data.cdc.gov/resource/cj8b-94cj.json"
+    }
+  ]
+}

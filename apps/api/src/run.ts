@@ -1,3 +1,5 @@
+import { redact } from "../../../packages/scout/src/index.js";
+import { ScoutGuard, GuardedZetarisClient, contentSafety } from "./scoutGuard.js";
 import { answerLineage, type AnswerLineage } from "./lineage.js";
 import { runBudget, RunCallLimit } from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
@@ -94,6 +96,7 @@ export async function ask(
   question: string,
   opts: { onTrace?: (e: RunEvent) => void; runId?: string } = {},
 ): Promise<RunOutcome> {
+  if (cfg.scoutGuard) question = redact(question).sanitized;
   const lease = await db.connect();
   let held = false;
   try {
@@ -131,10 +134,12 @@ async function askWithLease(
   ]);
   const trace = new Trace(db, runId);
   if (opts.onTrace) trace.onEvent(opts.onTrace);
+  let scout: ScoutGuard | undefined;
   const timed = async <T>(agent: string, fn: () => Promise<T>): Promise<T> => {
     const started = Date.now();
     await trace.log({ agent, action: "step_start", status: "info", note: "Step started." });
     try {
+      scout?.authorize(agent);
       return await fn();
     } finally {
       await trace.log({
@@ -223,11 +228,13 @@ async function askWithLease(
     attrs: { question },
     source: { kind: "run", at: new Date().toISOString() },
   });
+  scout = cfg.scoutGuard ? new ScoutGuard(trace, contentSafety(cfg, budget, trace)) : undefined;
   const ctx: Ctx = {
+    scout,
     world,
     cfg,
     db,
-    zetaris: new ZetarisClient(cfg.zetaris),
+    zetaris: scout ? new GuardedZetarisClient(cfg.zetaris, scout) : new ZetarisClient(cfg.zetaris),
     trace,
     models,
     runId,
@@ -248,6 +255,7 @@ async function askWithLease(
   };
   try {
     await trace.log({ agent: "run", action: "start", status: "info", note: question });
+    await scout?.begin(question);
     let p = await timed("planner", () => plan(ctx, question));
     out.plan = p;
     if (!p.analysis?.relationship) {
@@ -619,6 +627,8 @@ async function askWithLease(
           sql: out.joined?.sql,
           view: out.view,
           lineage: out.lineage,
+          scout: scout?.snapshot(),
+          skipped_sources: scout?.skipped,
           writer_chunks: ctx.writerChunkState?.engine,
           chunk_facts: ctx.writerChunkState?.facts,
           headers: out.joined?.result.headers,

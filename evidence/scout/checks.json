@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-26T19:01:25.982028+00:00",
+  "typecheck": true,
+  "tests": 325,
+  "hmem": "13/13",
+  "world": "8/8",
+  "markovian": "8/8",
+  "scout_examples": 32,
+  "scout_skipped": 0,
+  "format": true,
+  "wordscan": true,
+  "build": true,
+  "privacy_problems": 0,
+  "deployment": "not performed; isolated worktree only",
+  "full_question_batch": "not performed"
+}

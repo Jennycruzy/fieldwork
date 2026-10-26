@@ -1,0 +1,5230 @@
+{
+  "batch": "run-2026-10-26T15-23-10-225Z",
+  "note": "Recorded source metadata, not a new question run. Refused or failed runs may have no sources.",
+  "questions": [
+    {
+      "question_id": "Q01",
+      "run_id": "r_20261026_a3c552",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q01:0",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "id": "Q01:1",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q02",
+      "run_id": "r_20261026_861bd4",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q02:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q03",
+      "run_id": "r_20261026_c532a9",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q03:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        },
+        {
+          "id": "Q03:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q04",
+      "run_id": "r_20261026_977b0a",
+      "status": "failed",
+      "sources": [
+        {
+          "id": "Q04:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        },
+        {
+          "id": "Q04:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q05",
+      "run_id": "r_20261026_e5f10e",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q05:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        },
+        {
+          "id": "Q05:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q06",
+      "run_id": "r_20261026_9f74a6",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q06:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q07",
+      "run_id": "r_20261026_6e9fb9",
+      "status": "failed",
+      "sources": [
+        {
+          "id": "Q07:0",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q08",
+      "run_id": "r_20261026_50c344",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q08:0",
+          "title": "Received 311 Service Requests",
+          "description": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "OBJECTID"
+            },
+            {
+              "name": "Request_ID",
+              "type": "integer",
+              "alias": "Request ID"
+            },
+            {
+              "name": "Create_Date",
+              "type": "date",
+              "alias": "Create Date"
+            },
+            {
+              "name": "Department",
+              "type": "string",
+              "alias": "Department"
+            },
+            {
+              "name": "Request_Type",
+              "type": "string",
+              "alias": "Request Type"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "District",
+              "type": "integer",
+              "alias": "District"
+            },
+            {
+              "name": "Status",
+              "type": "string",
+              "alias": "Status"
+            },
+            {
+              "name": "Close_Date",
+              "type": "date",
+              "alias": "Close Date"
+            },
+            {
+              "name": "Origin",
+              "type": "string",
+              "alias": "Origin"
+            },
+            {
+              "name": "Latitude",
+              "type": "double",
+              "alias": "Latitude"
+            },
+            {
+              "name": "Longitude",
+              "type": "double",
+              "alias": "Longitude"
+            },
+            {
+              "name": "Year",
+              "type": "integer",
+              "alias": "Year"
+            },
+            {
+              "name": "Shape",
+              "type": "geometry",
+              "alias": "Shape"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q09",
+      "run_id": "r_20261026_22a233",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q09:0",
+          "title": "Received 311 Service Requests",
+          "description": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "OBJECTID"
+            },
+            {
+              "name": "Request_ID",
+              "type": "integer",
+              "alias": "Request ID"
+            },
+            {
+              "name": "Create_Date",
+              "type": "date",
+              "alias": "Create Date"
+            },
+            {
+              "name": "Department",
+              "type": "string",
+              "alias": "Department"
+            },
+            {
+              "name": "Request_Type",
+              "type": "string",
+              "alias": "Request Type"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "District",
+              "type": "integer",
+              "alias": "District"
+            },
+            {
+              "name": "Status",
+              "type": "string",
+              "alias": "Status"
+            },
+            {
+              "name": "Close_Date",
+              "type": "date",
+              "alias": "Close Date"
+            },
+            {
+              "name": "Origin",
+              "type": "string",
+              "alias": "Origin"
+            },
+            {
+              "name": "Latitude",
+              "type": "double",
+              "alias": "Latitude"
+            },
+            {
+              "name": "Longitude",
+              "type": "double",
+              "alias": "Longitude"
+            },
+            {
+              "name": "Year",
+              "type": "integer",
+              "alias": "Year"
+            },
+            {
+              "name": "Shape",
+              "type": "geometry",
+              "alias": "Shape"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q10",
+      "run_id": "r_20261026_ea6518",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q10:0",
+          "title": "Received 311 Service Requests",
+          "description": "This feature layer dataset displays the 311 service requests that have been received by the City of Montgomery.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "OBJECTID"
+            },
+            {
+              "name": "Request_ID",
+              "type": "integer",
+              "alias": "Request ID"
+            },
+            {
+              "name": "Create_Date",
+              "type": "date",
+              "alias": "Create Date"
+            },
+            {
+              "name": "Department",
+              "type": "string",
+              "alias": "Department"
+            },
+            {
+              "name": "Request_Type",
+              "type": "string",
+              "alias": "Request Type"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "District",
+              "type": "integer",
+              "alias": "District"
+            },
+            {
+              "name": "Status",
+              "type": "string",
+              "alias": "Status"
+            },
+            {
+              "name": "Close_Date",
+              "type": "date",
+              "alias": "Close Date"
+            },
+            {
+              "name": "Origin",
+              "type": "string",
+              "alias": "Origin"
+            },
+            {
+              "name": "Latitude",
+              "type": "double",
+              "alias": "Latitude"
+            },
+            {
+              "name": "Longitude",
+              "type": "double",
+              "alias": "Longitude"
+            },
+            {
+              "name": "Year",
+              "type": "integer",
+              "alias": "Year"
+            },
+            {
+              "name": "Shape",
+              "type": "geometry",
+              "alias": "Shape"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        },
+        {
+          "id": "Q10:1",
+          "title": "Code Violations",
+          "description": "This layer displays the locations of code violations across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OffenceNum",
+              "type": "string",
+              "alias": "OffenceNum"
+            },
+            {
+              "name": "CaseDate",
+              "type": "dateonly",
+              "alias": "CaseDate"
+            },
+            {
+              "name": "CaseType",
+              "type": "string",
+              "alias": "CaseType"
+            },
+            {
+              "name": "CaseStatus",
+              "type": "string",
+              "alias": "CaseStatus"
+            },
+            {
+              "name": "LienStatus",
+              "type": "string",
+              "alias": "LienStatus"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "CouncilDistrict",
+              "type": "string",
+              "alias": "CouncilDistrict"
+            },
+            {
+              "name": "City",
+              "type": "string",
+              "alias": "City"
+            },
+            {
+              "name": "STATE",
+              "type": "string",
+              "alias": "State"
+            },
+            {
+              "name": "Zip",
+              "type": "integer",
+              "alias": "Zip"
+            },
+            {
+              "name": "ComplaintRem",
+              "type": "string",
+              "alias": "ComplaintRem"
+            },
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "ParcelNo_X",
+              "type": "double",
+              "alias": "ParcelNo_X"
+            },
+            {
+              "name": "ParcelNo_Y",
+              "type": "double",
+              "alias": "ParcelNo_Y"
+            },
+            {
+              "name": "Address1",
+              "type": "string",
+              "alias": "Address1"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            }
+          ]
+        },
+        {
+          "id": "Q10:2",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q11",
+      "run_id": "r_20261026_8ff557",
+      "status": "failed",
+      "sources": []
+    },
+    {
+      "question_id": "Q12",
+      "run_id": "r_20261026_a97bbb",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q12:0",
+          "title": "911 Calls",
+          "description": "This dataset shows the number of 911 calls per month by category, origin, and phone service provider.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+          "fields": [
+            {
+              "name": "Year",
+              "type": "integer",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "Call_Category",
+              "type": "string",
+              "alias": "Call Category"
+            },
+            {
+              "name": "Phone_Service_Provider_Type",
+              "type": "string",
+              "alias": "Phone Service Provider Type"
+            },
+            {
+              "name": "Call_Count_by_Phone_Service_Pro",
+              "type": "integer",
+              "alias": "Call Count by Phone Service Provider Type"
+            },
+            {
+              "name": "Call_Origin",
+              "type": "string",
+              "alias": "Call Origin"
+            },
+            {
+              "name": "Call_Count_By_Origin",
+              "type": "integer",
+              "alias": "Call Count by Origin"
+            },
+            {
+              "name": "FID",
+              "type": "oid",
+              "alias": "FID"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q13",
+      "run_id": "r_20261026_bb9430",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q13:0",
+          "title": "Food Scores",
+          "description": "This dataset provides food inspection scores for establishments within the City of Montgomery. It includes ratings assigned based on health and safety inspections conducted by regulatory authorities. The dataset helps monitor food safety standards and ensures compliance with public health regulations.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0",
+          "fields": [
+            {
+              "name": "ObjectID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "Status",
+              "type": "string",
+              "alias": "Status"
+            },
+            {
+              "name": "Score",
+              "type": "double",
+              "alias": "Score"
+            },
+            {
+              "name": "Match_type",
+              "type": "string",
+              "alias": "Match_type"
+            },
+            {
+              "name": "Match_addr",
+              "type": "string",
+              "alias": "Match Address"
+            },
+            {
+              "name": "Addr_type",
+              "type": "string",
+              "alias": "Address Type"
+            },
+            {
+              "name": "Establishment",
+              "type": "string",
+              "alias": "Establishment"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "Date",
+              "type": "dateonly",
+              "alias": "Date"
+            },
+            {
+              "name": "Score_1",
+              "type": "integer",
+              "alias": "Score"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q14",
+      "run_id": "r_20261026_8dd4e9",
+      "status": "failed",
+      "sources": [
+        {
+          "id": "Q14:0",
+          "title": "Food Scores",
+          "description": "This dataset provides food inspection scores for establishments within the City of Montgomery. It includes ratings assigned based on health and safety inspections conducted by regulatory authorities. The dataset helps monitor food safety standards and ensures compliance with public health regulations.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0",
+          "fields": [
+            {
+              "name": "ObjectID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "Status",
+              "type": "string",
+              "alias": "Status"
+            },
+            {
+              "name": "Score",
+              "type": "double",
+              "alias": "Score"
+            },
+            {
+              "name": "Match_type",
+              "type": "string",
+              "alias": "Match_type"
+            },
+            {
+              "name": "Match_addr",
+              "type": "string",
+              "alias": "Match Address"
+            },
+            {
+              "name": "Addr_type",
+              "type": "string",
+              "alias": "Address Type"
+            },
+            {
+              "name": "Establishment",
+              "type": "string",
+              "alias": "Establishment"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "Date",
+              "type": "dateonly",
+              "alias": "Date"
+            },
+            {
+              "name": "Score_1",
+              "type": "integer",
+              "alias": "Score"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q15",
+      "run_id": "r_20261026_c08226",
+      "status": "failed",
+      "sources": [
+        {
+          "id": "Q15:0",
+          "title": "Pharmacy Locator",
+          "description": "This dataset provides the locations of pharmacies within the City of Montgomery, helping residents access essential healthcare services, including prescription medications, over-the-counter drugs, and other medical supplies.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "custCOMPANY_NAME",
+              "type": "string",
+              "alias": "Name"
+            },
+            {
+              "name": "ADDRESS",
+              "type": "string",
+              "alias": "ADDRESS"
+            },
+            {
+              "name": "Naloxone",
+              "type": "string",
+              "alias": "Naloxone"
+            },
+            {
+              "name": "Vaccination",
+              "type": "string",
+              "alias": "Vaccination"
+            },
+            {
+              "name": "DriveThrough",
+              "type": "string",
+              "alias": "Drive Through"
+            },
+            {
+              "name": "Consultation",
+              "type": "string",
+              "alias": "Health Consultation"
+            }
+          ]
+        },
+        {
+          "id": "Q15:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q16",
+      "run_id": "r_20261026_9191ad",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q16:0",
+          "title": "Pharmacy Locator",
+          "description": "This dataset provides the locations of pharmacies within the City of Montgomery, helping residents access essential healthcare services, including prescription medications, over-the-counter drugs, and other medical supplies.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "custCOMPANY_NAME",
+              "type": "string",
+              "alias": "Name"
+            },
+            {
+              "name": "ADDRESS",
+              "type": "string",
+              "alias": "ADDRESS"
+            },
+            {
+              "name": "Naloxone",
+              "type": "string",
+              "alias": "Naloxone"
+            },
+            {
+              "name": "Vaccination",
+              "type": "string",
+              "alias": "Vaccination"
+            },
+            {
+              "name": "DriveThrough",
+              "type": "string",
+              "alias": "Drive Through"
+            },
+            {
+              "name": "Consultation",
+              "type": "string",
+              "alias": "Health Consultation"
+            }
+          ]
+        },
+        {
+          "id": "Q16:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q17",
+      "run_id": "r_20261026_35d77b",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q17:0",
+          "title": "Tornado Shelter",
+          "description": "This dataset provides the locations of designated tornado shelters within the City of Montgomery. It includes information on shelter accessibility and availability to help residents find safe locations during severe weather events.",
+          "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Tornado_Shelter/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "OBJECTID"
+            },
+            {
+              "name": "Id",
+              "type": "integer",
+              "alias": "Id"
+            },
+            {
+              "name": "SHELTER",
+              "type": "string",
+              "alias": "SHELTER"
+            },
+            {
+              "name": "ST_NUMBER",
+              "type": "string",
+              "alias": "ST_NUMBER"
+            },
+            {
+              "name": "ST_NAME",
+              "type": "string",
+              "alias": "ST_NAME"
+            },
+            {
+              "name": "TYPE",
+              "type": "string",
+              "alias": "TYPE"
+            },
+            {
+              "name": "GENERATOR",
+              "type": "string",
+              "alias": "GENERATOR"
+            },
+            {
+              "name": "MAX_CAPAC",
+              "type": "string",
+              "alias": "MAX_CAPAC"
+            },
+            {
+              "name": "ACTIVE",
+              "type": "string",
+              "alias": "ACTIVE"
+            },
+            {
+              "name": "CURR_OCCUP",
+              "type": "string",
+              "alias": "CURR_OCCUP"
+            },
+            {
+              "name": "STAFF",
+              "type": "string",
+              "alias": "STAFF"
+            },
+            {
+              "name": "FOOD_PROVI",
+              "type": "string",
+              "alias": "FOOD_PROVI"
+            },
+            {
+              "name": "LASTUPDATE",
+              "type": "date",
+              "alias": "LASTUPDATE"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            },
+            {
+              "name": "ORIG_FID",
+              "type": "integer",
+              "alias": "ORIG_FID"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q18",
+      "run_id": "r_20261026_5d9f8a",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q18:0",
+          "title": "Construction Permit Data",
+          "description": "This dataset contains construction permit records issued within the City of Montgomery. It provides insights into building activity, including the types of construction projects approved and their distribution across the city.",
+          "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Construction_Permits/FeatureServer/0",
+          "fields": [
+            {
+              "name": "OBJECTID",
+              "type": "oid",
+              "alias": "ObjectID"
+            },
+            {
+              "name": "PermitNo",
+              "type": "string",
+              "alias": "PermitNo"
+            },
+            {
+              "name": "ParcelNo",
+              "type": "string",
+              "alias": "ParcelNo"
+            },
+            {
+              "name": "IssuedDate",
+              "type": "dateonly",
+              "alias": "IssuedDate"
+            },
+            {
+              "name": "ExpiredDate",
+              "type": "dateonly",
+              "alias": "ExpiredDate"
+            },
+            {
+              "name": "PermitStatus",
+              "type": "string",
+              "alias": "PermitStatus"
+            },
+            {
+              "name": "PermitCode",
+              "type": "string",
+              "alias": "PermitCode"
+            },
+            {
+              "name": "Zoning",
+              "type": "string",
+              "alias": "Zoning"
+            },
+            {
+              "name": "FloodZone",
+              "type": "string",
+              "alias": "FloodZone"
+            },
+            {
+              "name": "PermitDescription",
+              "type": "string",
+              "alias": "PermitDescription"
+            },
+            {
+              "name": "ProjectType",
+              "type": "string",
+              "alias": "ProjectType"
+            },
+            {
+              "name": "EstimatedCost",
+              "type": "double",
+              "alias": "EstimatedCost"
+            },
+            {
+              "name": "Building_Fee",
+              "type": "double",
+              "alias": "Building_Fee"
+            },
+            {
+              "name": "Licence_Fee",
+              "type": "double",
+              "alias": "Licence_Fee"
+            },
+            {
+              "name": "Base_Permit_Fee",
+              "type": "double",
+              "alias": "Base_Permit_Fee"
+            },
+            {
+              "name": "Total_Fee",
+              "type": "double",
+              "alias": "Total_Fee"
+            },
+            {
+              "name": "OwnerName",
+              "type": "string",
+              "alias": "OwnerName"
+            },
+            {
+              "name": "OwnerAddress",
+              "type": "string",
+              "alias": "OwnerAddress"
+            },
+            {
+              "name": "UseType",
+              "type": "string",
+              "alias": "UseType"
+            },
+            {
+              "name": "FinalValue",
+              "type": "double",
+              "alias": "FinalValue"
+            },
+            {
+              "name": "JobDescription",
+              "type": "string",
+              "alias": "JobDescription"
+            },
+            {
+              "name": "CodeDetail",
+              "type": "string",
+              "alias": "CodeDetail"
+            },
+            {
+              "name": "Year",
+              "type": "string",
+              "alias": "Year"
+            },
+            {
+              "name": "Month",
+              "type": "string",
+              "alias": "Month"
+            },
+            {
+              "name": "DistrictCouncil",
+              "type": "integer",
+              "alias": "DistrictCouncil"
+            },
+            {
+              "name": "Boundary",
+              "type": "string",
+              "alias": "Boundary"
+            },
+            {
+              "name": "GlobalID",
+              "type": "globalid",
+              "alias": "GlobalID"
+            },
+            {
+              "name": "created_user",
+              "type": "string",
+              "alias": "created_user"
+            },
+            {
+              "name": "created_date",
+              "type": "date",
+              "alias": "created_date"
+            },
+            {
+              "name": "last_edited_user",
+              "type": "string",
+              "alias": "last_edited_user"
+            },
+            {
+              "name": "last_edited_date",
+              "type": "date",
+              "alias": "last_edited_date"
+            },
+            {
+              "name": "ContractorName",
+              "type": "string",
+              "alias": "ContractorName"
+            },
+            {
+              "name": "Address",
+              "type": "string",
+              "alias": "Address"
+            },
+            {
+              "name": "PhysicalAddress",
+              "type": "string",
+              "alias": "PhysicalAddress"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q19",
+      "run_id": "r_20261026_4eb2f7",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q19:0",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q20",
+      "run_id": "r_20261026_6fb9e5",
+      "status": "answered",
+      "sources": [
+        {
+          "id": "Q20:0",
+          "title": "EPA ECHO facilities in Montgomery County, AL",
+          "description": "Current regulated-facility registry; 3436 source records. Counts of listings do not measure emissions or exposure.",
+          "url": "https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=49&pageno=1&qcolumns=1,6,19,20,38,90,93",
+          "fields": [
+            {
+              "name": "FacName",
+              "type": "text"
+            },
+            {
+              "name": "RegistryID",
+              "type": "text"
+            },
+            {
+              "name": "FacLat",
+              "type": "text"
+            },
+            {
+              "name": "FacLong",
+              "type": "text"
+            },
+            {
+              "name": "FacComplianceStatus",
+              "type": "text"
+            },
+            {
+              "name": "FacAccuracyMeters",
+              "type": "text"
+            },
+            {
+              "name": "FacDerivedStctyFIPS",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "id": "Q20:1",
+          "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+          "description": "This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States\u201450 states and the District of Columbia\u2014at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven",
+          "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+          "fields": [
+            {
+              "name": "stateabbr",
+              "type": "text"
+            },
+            {
+              "name": "statedesc",
+              "type": "text"
+            },
+            {
+              "name": "countyname",
+              "type": "text"
+            },
+            {
+              "name": "countyfips",
+              "type": "text"
+            },
+            {
+              "name": "tractfips",
+              "type": "text"
+            },
+            {
+              "name": "totalpopulation",
+              "type": "text"
+            },
+            {
+              "name": "totalpop18plus",
+              "type": "text"
+            },
+            {
+              "name": "access2_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "access2_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "arthritis_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "binge_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "binge_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bphigh_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "bpmed_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cancer_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "casthma_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "chd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "chd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "checkup_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cholscreen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "colon_screen_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "copd_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "copd_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "csmoking_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "dental_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "dental_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "depression_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "depression_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "diabetes_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "ghlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "highchol_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lpa_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mammouse_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "mhlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "obesity_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "phlth_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "sleep_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "stroke_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "teethlost_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "hearing_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "vision_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "vision_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "cognition_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crudeprev_",
+              "type": "text"
+            },
+            {
+              "name": "mobility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "selfcare_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "indeplive_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "disability_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "disability_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "loneliness_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodstamp_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "foodinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "housinsecu_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "shututility_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "lacktrpt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crudeprev",
+              "type": "text"
+            },
+            {
+              "name": "emotionspt_crude95ci",
+              "type": "text"
+            },
+            {
+              "name": "geolocation",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "question_id": "Q21",
+      "run_id": "r_20261026_f29fdb",
+      "status": "refused",
+      "sources": []
+    },
+    {
+      "question_id": "Q22",
+      "run_id": "r_20261026_4a3059",
+      "status": "refused",
+      "sources": []
+    },
+    {
+      "question_id": "Q23",
+      "run_id": "r_20261026_11a812",
+      "status": "refused",
+      "sources": []
+    },
+    {
+      "question_id": "Q24",
+      "run_id": "r_20261026_e7cda1",
+      "status": "refused",
+      "sources": []
+    },
+    {
+      "question_id": "Q25",
+      "run_id": "r_20261026_3f3178",
+      "status": "refused",
+      "sources": []
+    }
+  ]
+}
