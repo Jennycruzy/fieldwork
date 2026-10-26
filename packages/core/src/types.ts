@@ -3,7 +3,7 @@ import { z } from "zod";
 // What the Planner returns.
 const OUTPUTS = ["ranking", "comparison", "trend", "list"];
 // A refusal has nothing to analyse, so its analysis, measures and output are not held to the plan shape
-// (recorded Q24 reply: analysis.basis "none", no rank_measure).
+// (a recorded refusal arrived with analysis.basis "none" and no rank_measure).
 const refusalShape = (v: unknown) => {
   if (!v || typeof v !== "object" || (v as { in_scope?: unknown }).in_scope !== false) return v;
   const o = v as Record<string, unknown>;

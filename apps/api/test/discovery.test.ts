@@ -2,7 +2,7 @@ import { expect, test, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { HMEM } from "@fieldwork/hmem";
 import { find } from "../src/agents/finder.js";
-import { searchMontgomeryHub, searchSocrata, socrataColumns, layerInfo, getJson } from "@fieldwork/sources";
+import { searchMontgomeryHub, searchSocrata, socrataColumns, layerInfo } from "@fieldwork/sources";
 import type { Ctx } from "../src/agents/context.js";
 vi.mock("@fieldwork/sources", async (importOriginal) => ({ ...await importOriginal<typeof import("@fieldwork/sources")>(), searchMontgomeryHub: vi.fn(), resolveLayerUrl: vi.fn(async (u: string) => u), getJson: vi.fn(async()=>({license:{name:"Public Domain"}})), searchSocrata: vi.fn(), socrataColumns: vi.fn(), layerInfo: vi.fn() }));
 test("empty source cache and empty memory still discover the live-captured 311 dataset", async () => {

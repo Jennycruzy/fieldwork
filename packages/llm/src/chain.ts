@@ -44,7 +44,7 @@ export interface ChainOptions {
 
 const defaultSleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-// Free Nemotron calls on 25 Oct: successful Joiner median 42.9 s, max 135.3 s. A 35 s limit failed 15 of 25
+// Measured on free Nemotron routes: successful Joiner median 42.9 s, max 135.3 s. A 35 s limit failed 15 of 25
 // questions, so one request may take up to 150 s, and a second route is only asked after 30 s.
 export const REQUEST_LIMIT_MS = 150000;
 export const HEDGE_AFTER_MS = 30000;
@@ -197,7 +197,7 @@ export function parseJson<T>(text: string, schema: z.ZodType<T, z.ZodTypeDef, un
   return {ok:false,error:error??"no schema-matching JSON object found"};
 }
 
-// Two shape slips free models make often (25-26 Oct batches): caveats as one string, one point too many.
+// Two shape slips free models make often: a list sent as one string, and one item too many.
 function coerceShape(value:unknown,issues:z.ZodIssue[]):boolean {
   let changed=false;
   for(const issue of issues){

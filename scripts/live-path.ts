@@ -1,4 +1,4 @@
-// The judge path in a real browser: open the Desk, click a sample question, follow the live run to its answer page.
+// The first-visit path in a real browser: open the Desk, click a sample question, follow the live run to its answer page.
 // Usage: tsx scripts/live-path.ts <base URL> <out dir> [phone|desktop]
 
 import { mkdirSync, writeFileSync } from "node:fs";

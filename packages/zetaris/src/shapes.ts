@@ -1,4 +1,4 @@
-// SQL for the source shapes we have seen work in Zetaris 2.4.3.1 (live checks, 24 Oct 2026).
+// SQL for the source shapes verified live against Zetaris 2.4.3.1.
 
 import { opt } from "./sql.js";
 

@@ -118,7 +118,7 @@ export function inspectionSummarySql(runId:string,question:string,p:Plan,wired:W
  if(/\b(average|mean)\b/i.test(question))return cte+"SELECT t.name, AVG(l.inspection_score) AS average_latest_inspection_score, COUNT(*) AS establishment_count, CASE WHEN COUNT(*) < 30 THEN 'small sample' ELSE 'larger sample' END AS sample_note, t.geoid FROM latest l JOIN fw_pg.tracts t ON t.geoid=l.geoid GROUP BY t.name,t.geoid ORDER BY average_latest_inspection_score ASC,t.name";
 }
 
-// The model sometimes writes this run's id in its short form (r_28edaa for r_20261025_28edaa, 25 Oct Q10),
+// The model sometimes writes this run's id in its short form (r_28edaa for r_20261025_28edaa),
 // which matches nothing. Only the short form of this run's own id is corrected.
 export function fullRunId(sql: string, runId: string): string {
   const short = `r_${runId.split("_").pop()}`;

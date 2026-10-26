@@ -1,5 +1,5 @@
 import { WiringSchema, looksLikeTestValue, notice, FieldworkError, type Plan } from "@fieldwork/core";
-import { checkSql, createSessionTable, tableName, testRequest, ZetarisError, type Shape } from "@fieldwork/zetaris";
+import { checkSql, createSessionTable, tableName, testRequest, type Shape } from "@fieldwork/zetaris";
 import { featurePageUrl, observationRoles, inspectionSourceWhere, typedWhere, withoutPostalFilters, getJson, layerCount, normaliseLayerUrl, socrataCount, soqlUrl, statsUrl } from "@fieldwork/sources";
 import { recall } from "@fieldwork/hmem";
 import { shared, provenance, SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
@@ -106,7 +106,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
     if(built)out.push(built);
   }
   // A filter that matched nothing on a source that has records gets one more try, with the source's real values
-  // (Q17 on 25 Oct guessed TYPE values the shelter layer does not have, three times).
+  // (models guess category values a layer does not have, such as shelter TYPE codes).
   const hints = await emptyFilterHints(chosen, out);
   if (hints.size) {
     await ctx.trace.log({ agent: "wirer", action: "filter_values", status: "info", note: [...hints.values()].join(" ") });

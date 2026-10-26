@@ -27,7 +27,7 @@ const MODELS: Record<Role, string[]> = {
   evaluator: ["nvidia/nemotron-3.5-super-vl:free", "nvidia/nemotron-3.5-lightning:free"],
   finder: ["nvidia/nemotron-3.5-lightning:free", "nvidia/nemotron-3.5-super-vl:free"],
   wirer: ["nvidia/nemotron-3.5-lightning:free", "nvidia/nemotron-3.5-super-vl:free"],
-  joiner: ["nvidia/nemotron-3.5-super-vl:free", "nvidia/nemotron-3.5-lightning:free"], // Lightning ran out of thinking budget on large joins (live run 24 Oct)
+  joiner: ["nvidia/nemotron-3.5-super-vl:free", "nvidia/nemotron-3.5-lightning:free"], // Lightning runs out of reasoning budget on large joins
   writer: ["nvidia/nemotron-3.5-lightning:free", "nvidia/nemotron-3.5-super-vl:free"],
 };
 

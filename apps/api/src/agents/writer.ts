@@ -25,7 +25,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
         role: "user",
         content:
           `Question: ${question}\n` +
-          dataBlock("result_summary",{row_count:joined.result.rows.length,rank_rows:rankFacts?joined.result.rows.length:0,zero_columns:joined.result.headers.filter((h,j)=>j>0&&joined.result.rows.length>0&&joined.result.rows.every(r=>r[j]!=null&&Number(r[j])===0))}) + "\n" + dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) + "\n" + dataBlock("primary_measure_ranks", rankFacts ? {measure:joined.result.headers[1],direction:rankFacts.direction,tie_groups:rankFacts.tie_groups}:[]) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : rankFacts ? [rankFacts.headers,...rankFacts.rows] : [joined.result.headers, ...joined.result.rows]) +
+          dataBlock("result_summary",{row_count:joined.result.rows.length,rank_rows:rankFacts?joined.result.rows.length:0,zero_columns:joined.result.headers.filter((_h,j)=>j>0&&joined.result.rows.length>0&&joined.result.rows.every(r=>r[j]!=null&&Number(r[j])===0))}) + "\n" + dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) + "\n" + dataBlock("primary_measure_ranks", rankFacts ? {measure:joined.result.headers[1],direction:rankFacts.direction,tie_groups:rankFacts.tie_groups}:[]) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : rankFacts ? [rankFacts.headers,...rankFacts.rows] : [joined.result.headers, ...joined.result.rows]) +
           "\n" +
           dataBlock("checks", checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`)) +
           "\n" +
@@ -72,7 +72,7 @@ export function primaryRankFacts(headers:string[],rows:(string|null)[][],rankMea
 }
 
 // Totals, extremes, differences, percent changes and group sizes for the first measure column, computed in code
-// so the Writer copies them (25 Oct: "sums to 16,388" for 16,409, "32.4% higher" for 32.6%).
+// so the Writer copies them instead of doing arithmetic ("sums to 16,388" for 16,409 is the slip this prevents).
 export function computedFigures(headers:string[],rows:(string|null)[][]) {
  const calendar=headers[0]==="year"&&headers[1]==="month";
  const nameCol=calendar?-1:Math.max(0,headers.findIndex(h=>/^(?:name|tract_name|tract|category|area_name)$/i.test(h)));
