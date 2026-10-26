@@ -185,7 +185,8 @@ export function parseJson<T>(text: string, schema: z.ZodType<T, z.ZodTypeDef, un
       if(c!=="}"||--depth!==0)continue;
       try {
         const value=JSON.parse(cleaned.slice(start,end+1));
-        const result=schema.safeParse(value);
+        let result=schema.safeParse(value);
+        if(!result.success&&coerceShape(value,result.error.issues))result=schema.safeParse(value);
         if(result.success)return {ok:true,value:result.data};
         error??=result.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ");
       } catch(e){error??=`JSON parse error: ${(e as Error).message}`;}
@@ -194,4 +195,17 @@ export function parseJson<T>(text: string, schema: z.ZodType<T, z.ZodTypeDef, un
     }
   }
   return {ok:false,error:error??"no schema-matching JSON object found"};
+}
+
+// Two shape slips free models make often (25-26 Oct batches): caveats as one string, one point too many.
+function coerceShape(value:unknown,issues:z.ZodIssue[]):boolean {
+  let changed=false;
+  for(const issue of issues){
+    const key=issue.path.at(-1),parent=issue.path.slice(0,-1).reduce<unknown>((o,k)=>o&&typeof o==="object"?(o as Record<string|number,unknown>)[k]:undefined,value);
+    if(key===undefined||!parent||typeof parent!=="object")continue;
+    const holder=parent as Record<string|number,unknown>,current=holder[key];
+    if(issue.code==="invalid_type"&&issue.expected==="array"&&typeof current==="string"&&current.trim()){holder[key]=[current];changed=true;}
+    else if(issue.code==="too_big"&&issue.type==="array"&&Array.isArray(current)){holder[key]=current.slice(0,Number(issue.maximum));changed=true;}
+  }
+  return changed;
 }

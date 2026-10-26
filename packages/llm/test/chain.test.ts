@@ -129,3 +129,15 @@ it("Writer refuses missing fields on every route instead of accepting incomplete
  await expect(new ModelChain([{provider:a,model:"first:free"},{provider:b,model:"next:free"}],{sleep:noSleep,sequentialJsonRepair:true}).json([],AnswerSchema)).rejects.toThrow("points: Required");
  expect(a.calls).toHaveLength(2);expect(b.calls).toHaveLength(1);
 });
+
+describe("parseJson shape slips", () => {
+  const shape = z.object({ points: z.array(z.string()).max(2), caveats: z.array(z.string()) });
+  it("wraps a lone string where a list is required and keeps only the allowed number of items", () => {
+    const r = parseJson('{"points":["a","b","c"],"caveats":"one caveat"}', shape);
+    expect(r).toEqual({ ok: true, value: { points: ["a", "b"], caveats: ["one caveat"] } });
+  });
+  it("still rejects missing fields and empty strings", () => {
+    expect(parseJson('{"points":["a"]}', shape).ok).toBe(false);
+    expect(parseJson('{"points":["a"],"caveats":"  "}', shape).ok).toBe(false);
+  });
+});
