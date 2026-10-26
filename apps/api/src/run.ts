@@ -1,3 +1,4 @@
+import {runBudget,RunCallLimit} from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
 import { computeFigureLedger, checkDraft, finalizeDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
@@ -88,9 +89,8 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         : `Meterless Runtime ${rt.state} at ${rt.baseUrl}: ${rt.reason} Using OpenRouter Nemotron.`,
   });
   if (!primary.length && !cfg.openrouterKey) throw new Error(`Meterless Runtime is ${rt.state} at ${rt.baseUrl} and no OPENROUTER_API_KEY is set.`);
-  let runCalls=0;
-  const dailyBudget=dbBudget(db,cfg.dailyCalls);
-  const budget: Budget = {take:async()=>{const ok=await dailyBudget.take();if(ok)runCalls++;return ok;}};
+  const allowance=runBudget(dbBudget(db,cfg.dailyCalls));
+  const budget: Budget=allowance.budget;
 
   const cloud = cfg.openrouterKey ? new OpenRouterProvider(cfg.openrouterKey, { allowPaid: process.env.FW_ALLOW_PAID_MODELS === "1" }) : undefined;
   const models = Object.fromEntries(
@@ -158,6 +158,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         out.status = ev.verdict.verdict === "APPROVE" ? "answered" : "partial";
         break;
       }
+      allowance.evaluationRound(round+1);
       const why = ev.verdict.instruction ?? ev.verdict.reasons.join("; ");
       if (ev.verdict.target !== "plan") {
         const reviewed = await plan(ctx, question, why);
@@ -195,15 +196,16 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     const facts = [...out.checks.map((c) => c.detail), ...wired.map((w)=>w.where), "Evaluator rounds: "+out.rounds];
     let dc = checkDraft([draft.headline, ...draft.points, draft.how_sure, ...draft.caveats], joined.result.headers, joined.result.rows, facts);
     let draftCount=1;
-    while(!dc.ok && draftCount<3 && runCalls<8+3*(out.rounds-1)){
+    while(!dc.ok && draftCount<3 && allowance.calls<allowance.limit){
       const problems=[...dc.missingNumbers.map(n=>"the number "+n+" is not in the result rows"),...dc.orderProblems];
       (out.drafts??=[]).push({...draft,problems});
       await trace.log({agent:"evaluator",action:"check:draft",status:"error",note:"Draft "+draftCount+" returned to Writer: "+JSON.stringify(problems)});
-      draft=await write(ctx,question,p,wired,joined,out.checks,out.rounds,JSON.stringify(problems));
+      try{draft=await write(ctx,question,p,wired,joined,out.checks,out.rounds,JSON.stringify(problems));}
+      catch(error){if(error instanceof RunCallLimit)break;throw error;}
       draftCount++;
       dc=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],joined.result.headers,joined.result.rows,facts);
     }
-    await trace.log({agent:"writer",action:"draft_count",status:"info",note:"Writer drafts: "+draftCount+"; model calls so far: "+runCalls});
+    await trace.log({agent:"writer",action:"draft_count",status:"info",note:"Writer drafts: "+draftCount+"; model calls so far: "+allowance.calls});
     if(!dc.ok){
       (out.drafts??=[]).push({...draft,problems:[...dc.missingNumbers.map(n=>"the number "+n+" is not in the result rows"),...dc.orderProblems]});
       const kept=finalizeDraft(draft,joined.result.headers,joined.result.rows,facts);
@@ -227,7 +229,9 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     out.view = await saveAnswerView(ctx, joined.sql);
     return out;
   } catch (e) {
-    if (e instanceof BudgetExceeded) {
+    if(e instanceof RunCallLimit){
+      out.status="failed";out.message=e.message;
+    } else if (e instanceof BudgetExceeded) {
       out.status = "budget";
       out.message = "Today's live model calls are used up.";
     } else {
@@ -239,6 +243,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     await trace.log({ agent: "run", action: "error", status: "error", note: out.message });
     return out;
   } finally {
+    await trace.log({agent:"run",action:"model_call_budget",status:"info",note:"Model calls used: "+allowance.calls+" / "+allowance.limit+" allowed for this run."});
     try {
       await learnFromRun(ctx, { question, status: out.status, providerFailed: out.providerFailed, chosen: out.chosen, wired: out.wired, joinSql: out.joined?.sql, repairs }, ledgerLoaded);
     } catch (e) {
