@@ -1,3 +1,4 @@
+import {tractSummarySql} from "./queryTemplates.js";
 import { SqlSchema, type Plan } from "@fieldwork/core";
 import { checkSql, ZetarisError, type QueryResult } from "@fieldwork/zetaris";
 import { recall } from "@fieldwork/hmem";
@@ -46,7 +47,8 @@ export async function join(ctx: Ctx, question: string, p: Plan, wired: Wired[], 
 async function joinOnce(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: string[], feedback: string): Promise<Joined> {
   const examples = recall(ctx.memory, `working Zetaris join for: ${question}`, { kinds: ["join", "repair"], topN: 2 });
   ctx.recalled.push(...examples);
-  const { value } = await ctx.models.joiner.json(
+  const template=monthlySummarySql(ctx.runId,question,p,wired)??categorySummarySql(ctx.runId,p,wired)??inspectionSummarySql(ctx.runId,question,p,wired)??tractSummarySql(ctx.runId,question,p,wired,bridged);
+  const { value } = template?{value:{sql:template,explain:"Compiled the plan against verified source schemas; independent checks and the Evaluator review the result."}}:await ctx.models.joiner.json(
     [
       {
         role: "system",
@@ -69,7 +71,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
       },
     ],
     SqlSchema,
-    8000,
+    p.analysis?.relationship?8000:4000,
   );
   const drafted = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? inspectionSummarySql(ctx.runId,question,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
   const sql = fullRunId(drafted, ctx.runId);

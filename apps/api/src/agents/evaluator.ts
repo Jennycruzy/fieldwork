@@ -116,11 +116,11 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
       },
     ],
     VerdictSchema,
-    8000,
+    p.analysis?.relationship?4000:2000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
   const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
-  if (empty && value.verdict === "APPROVE") {
+  if (empty) {
     value.verdict = "REVISE";
     value.target = empty.id === "analysis_basis" ? "plan" : empty.id==="latest_source_selection"||(empty.id==="has_rows"&&wired.some(w=>w.sourceCount===0)) ? "wire" : "join";
     value.instruction = `${empty.detail}. Check the join keys and filter values against the table descriptions (for tract_counts, grp = 'all' is the total per tract).`;
