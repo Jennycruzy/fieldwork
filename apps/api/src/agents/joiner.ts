@@ -2,7 +2,7 @@ import { tractSummarySql } from "./queryTemplates.js";
 import { SqlSchema, type Plan } from "@fieldwork/core";
 import { checkSql, ZetarisError, type QueryResult } from "@fieldwork/zetaris";
 import { recall } from "@fieldwork/hmem";
-import { shared, provenance, systemBase, tractsTable, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, tractsTable, MAX_TRACTS, dataBlock, type Ctx } from "./context.js";
 import type { Wired } from "./wirer.js";
 
 export interface Joined {
@@ -142,7 +142,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     });
   const chk = checkSql(sql, "reader");
   if (!chk.ok) throw new Error(`refused the Joiner's SQL: ${chk.reason}`);
-  const result = await ctx.zetaris.query(sql, p.geography === "city" ? 1000 : 200);
+  const result = await ctx.zetaris.query(sql, p.geography === "city" ? 1000 : MAX_TRACTS);
   await ctx.trace.log({
     agent: "joiner",
     action: "query",

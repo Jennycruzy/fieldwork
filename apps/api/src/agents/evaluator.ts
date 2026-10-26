@@ -7,7 +7,7 @@ import {
   type Plan,
   type Verdict,
 } from "@fieldwork/core";
-import { shared, provenance, systemBase, tractsTable, dataBlock, type Ctx } from "./context.js";
+import { shared, provenance, systemBase, tractsTable, MAX_TRACTS, dataBlock, type Ctx } from "./context.js";
 import type { Bridged } from "./bridge.js";
 import type { Joined } from "./joiner.js";
 import type { Wired } from "./wirer.js";
@@ -46,10 +46,10 @@ export async function evaluate(
     !wired.find((w) => w.label === bridged[0]!.label)?.capped
   ) {
     const source = bridged[0]!;
-    const all = await ctx.zetaris.query(`SELECT geoid,name FROM ${tractsTable(ctx)}`, 500);
+    const all = await ctx.zetaris.query(`SELECT geoid,name FROM ${tractsTable(ctx)}`, MAX_TRACTS);
     const present = await ctx.zetaris.query(
       `SELECT geoid FROM fw_pg.tract_counts WHERE run_id='${ctx.runId}' AND source='${source.label}' AND grp='all' AND n>0`,
-      500,
+      MAX_TRACTS,
     );
     const positive = new Set(present.rows.map((r) => r[0]));
     const expected = all.rows
@@ -106,7 +106,7 @@ export async function evaluate(
     const source = bridged[0]!;
     const present = await ctx.zetaris.query(
       `SELECT geoid FROM fw_pg.tract_counts WHERE run_id='${ctx.runId}' AND source='${source.label}' AND grp='all' AND n>0`,
-      500,
+      MAX_TRACTS,
     );
     checks.push(positiveMembershipCheck(present.rows, joined.result));
   }

@@ -7,7 +7,7 @@ import {
   type Observation,
 } from "@fieldwork/sources";
 import { createSessionTable, quoteIdent, tableName, checkSql } from "@fieldwork/zetaris";
-import type { Ctx } from "./context.js";
+import { MAX_TRACTS, type Ctx } from "./context.js";
 import type { Wired } from "./wirer.js";
 
 export interface Bridged {
@@ -32,7 +32,7 @@ async function tracts(ctx: Ctx): Promise<Tract[]> {
   );
   await ctx.zetaris.query(csql);
   const sql = `SELECT f.attributes.GEOID AS geoid, to_json(f.geometry.rings) AS rings FROM session.${tractsTable} LATERAL VIEW explode(features) AS f`;
-  const r = await ctx.zetaris.query(sql, 500);
+  const r = await ctx.zetaris.query(sql, MAX_TRACTS);
   await ctx.trace.log({
     agent: "bridge",
     action: "read_tracts",

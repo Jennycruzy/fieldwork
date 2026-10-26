@@ -39,6 +39,9 @@ export function systemBase(ctx: Pick<Ctx, "cfg">): string {
   ].join("\n");
 }
 
+// Every census tract of one county fits in a single read; the largest US county has about 2,500.
+export const MAX_TRACTS = 3000;
+
 // The census tracts of the configured county, as Zetaris sees them.
 export function tractsTable(ctx: Pick<Ctx, "cfg">): string {
   return "fw_pg." + (ctx.cfg.place.tractsTable ?? "tracts");
