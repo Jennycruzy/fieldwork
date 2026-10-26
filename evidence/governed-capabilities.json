@@ -1,26 +1,23 @@
 {
   "baseline": "0f561bb",
-  "status": "partial",
+  "status": "available",
   "usl": {
-    "status": "blocked",
-    "sql": "CREATE NAMESPACE IF NOT EXISTS lightning.metastore.fieldwork",
-    "http_status": 400,
-    "error": "org.apache.hive.service.cli.HiveSQLException: Error running query: com.zetaris.lightning.sql.lightningcatalog.NamespaceException: parent namespace : metastore is not existing",
-    "dependent_probes": [
+    "status": "available",
+    "model": "lightning.metastore.fieldwork.montgomery_neighborhoods",
+    "tables": [
       {
-        "command": "COMPILE USL montgomery_neighborhoods DEPLOY NAMESPACE lightning.metastore.fieldwork DDL ...",
-        "error": "namespace not found : metastore.fieldwork"
+        "name": "tract",
+        "activated": true
       },
       {
-        "command": "ACTIVATE USL TABLE lightning.metastore.fieldwork.montgomery_neighborhoods.tract AS SELECT ...",
-        "error": "metastore.fieldwork.montgomery_neighborhoods is not existing"
-      },
-      {
-        "command": "RUN DQ geoid TABLE lightning.metastore.fieldwork.montgomery_neighborhoods.tract",
-        "error": "metastore.fieldwork.montgomery_neighborhoods is not existing"
+        "name": "tract_count",
+        "activated": true
       }
     ],
-    "note": "The probe runner continued dependent statements after the namespace failure. No model was created. Further USL/DQ work stopped; parent-namespace initialization was not attempted."
+    "activation": {
+      "tract": "SELECT CAST(geoid AS varchar(11)) AS geoid, CAST(name AS varchar(100)) AS name, arealand_m2 FROM fw_pg.tracts",
+      "tract_count": "SELECT CAST(run_id AS varchar(40)) AS run_id, CAST(source AS varchar(100)) AS source_name, CAST(geoid AS varchar(11)) AS geoid, CAST(grp AS varchar(200)) AS grp, n FROM fw_pg.tract_counts"
+    }
   },
   "lineage": {
     "status": "available",
@@ -38,5 +35,63 @@
     ]
   },
   "reference": "https://github.com/zetaris/getting-started/blob/main/docs/guides/zetaris-lightning-sql-commands.md",
-  "recorded_at": "2026-10-26T17:50:11.710692+00:00"
+  "recorded_at": "2026-10-26T20:39:18.495Z",
+  "data_quality": {
+    "passed": 6,
+    "total": 6,
+    "results": [
+      {
+        "rule": "montgomery_tract_geoid",
+        "table": "tract",
+        "type": "Custom Data Quality",
+        "expression": "geoid LIKE '01101%' AND length(geoid) = 11",
+        "total": 71,
+        "valid": 71,
+        "invalid": 0
+      },
+      {
+        "rule": "positive_land_area",
+        "table": "tract",
+        "type": "Custom Data Quality",
+        "expression": "arealand_m2 > 0",
+        "total": 71,
+        "valid": 71,
+        "invalid": 0
+      },
+      {
+        "rule": "count_tract_geoid",
+        "table": "tract_count",
+        "type": "Custom Data Quality",
+        "expression": "geoid LIKE '01101%' AND length(geoid) = 11",
+        "total": 291381,
+        "valid": 291381,
+        "invalid": 0
+      },
+      {
+        "rule": "nonnegative_count",
+        "table": "tract_count",
+        "type": "Custom Data Quality",
+        "expression": "n >= 0",
+        "total": 291381,
+        "valid": 291381,
+        "invalid": 0
+      },
+      {
+        "rule": "geoid",
+        "table": "tract",
+        "type": "Primary Key Constraint",
+        "total": 71,
+        "valid": 71,
+        "invalid": 0
+      },
+      {
+        "rule": "geoid",
+        "table": "tract_count",
+        "type": "Foreign Key Constraint",
+        "total": 291381,
+        "valid": 291381,
+        "invalid": 0
+      }
+    ]
+  }
 }
