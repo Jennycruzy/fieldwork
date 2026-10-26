@@ -83,3 +83,20 @@ test("source titles beginning with numbers get valid descriptive SQL identifiers
  const p={...plan,output:"comparison"as const,analysis:{...plan.analysis!,basis:"rates"as const,denominator:"residents"as const,relationship:true}};
  expect(tractSummarySql(id,"Compare two service rates",p,[city,service,health],["m1_city","service_city"])).toContain("source_311_service_requests_count_per_1000_totalpopulation");
 });
+
+test("a revision bypasses every compiled template and executes the requested model repair",async()=>{
+ const scenarios=[
+  {question:"Which areas contain listed services?",p:{...plan,output:"list"as const},wired:[city],bridged:["m1_city"],sql:"SELECT name,1 AS count,geoid FROM fw_pg.tracts WHERE geoid='a'",instruction:"Return only positive membership"},
+  {question:"Lowest average latest inspection scores",p:plan,wired:[{...city,normalized:true,valueKind:"score"}as Wired],bridged:[],sql:"SELECT name,80 AS average_score,2 AS establishment_count,geoid FROM fw_pg.tracts",instruction:"Flag small groups"},
+  {question:"Monthly events",p:{...plan,geography:"city"as const,output:"trend"as const},wired:[{...city,normalized:true,valueKind:"count"}as Wired],bridged:[],sql:"SELECT 2025 AS year,1 AS month,2 AS record_count",instruction:"Repair monthly date grouping"},
+  {question:"Types of requests",p:{...plan,geography:"city"as const},wired:[{...city,groupField:"kind",normalized:true,valueKind:"count"}as Wired],bridged:[],sql:"SELECT 'Unknown' AS category,2 AS record_count",instruction:"Retain missing categories"}
+ ];
+ for(const scenario of scenarios){
+  const query=vi.fn(async()=>({headers:["name","count","geoid"],rows:[["A","1","a"]],total:1,ms:1,wallMs:1}));
+  const json=vi.fn(async()=>({value:{sql:scenario.sql,explain:"Repaired"}}));
+  const ctx={runId:id,runShort:"abcdef",cfg:{place:{countyName:"Example"}},memory:new HMEM(),recalled:[],models:{joiner:{json}},zetaris:{query},trace:{log:vi.fn()}}as unknown as Ctx;
+  const result=await join(ctx,scenario.question,scenario.p,scenario.wired,scenario.bridged,scenario.instruction,"SELECT 0");
+  expect(json).toHaveBeenCalledTimes(1);expect(JSON.stringify(json.mock.calls)).toContain(scenario.instruction);
+  expect(result.sql).toBe(scenario.sql);expect(query).toHaveBeenCalledWith(scenario.sql,expect.any(Number));
+ }
+});

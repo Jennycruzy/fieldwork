@@ -47,7 +47,7 @@ export async function join(ctx: Ctx, question: string, p: Plan, wired: Wired[], 
 async function joinOnce(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: string[], feedback: string): Promise<Joined> {
   const examples = recall(ctx.memory, `working Zetaris join for: ${question}`, { kinds: ["join", "repair"], topN: 2 });
   ctx.recalled.push(...examples);
-  const template=monthlySummarySql(ctx.runId,question,p,wired)??categorySummarySql(ctx.runId,p,wired)??inspectionSummarySql(ctx.runId,question,p,wired)??tractSummarySql(ctx.runId,question,p,wired,bridged);
+  const template=feedback?undefined:monthlySummarySql(ctx.runId,question,p,wired)??categorySummarySql(ctx.runId,p,wired)??inspectionSummarySql(ctx.runId,question,p,wired)??tractSummarySql(ctx.runId,question,p,wired,bridged);
   const { value } = template?{value:{sql:template,explain:"Compiled the plan against verified source schemas; independent checks and the Evaluator review the result."}}:await ctx.models.joiner.json(
     [
       {
@@ -73,7 +73,7 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     SqlSchema,
     p.analysis?.relationship?8000:4000,
   );
-  const drafted = monthlySummarySql(ctx.runId, question, p, wired) ?? categorySummarySql(ctx.runId,p,wired) ?? inspectionSummarySql(ctx.runId,question,p,wired) ?? value.sql.trim().replace(/;\s*$/, "");
+  const drafted = value.sql.trim().replace(/;\s*$/, "");
   const sql = fullRunId(drafted, ctx.runId);
   if (sql !== drafted) await ctx.trace.log({ agent: "joiner", action: "run_id", status: "info", note: `The query named this run by a shortened id; corrected to '${ctx.runId}'.` });
   const chk = checkSql(sql, "reader");
