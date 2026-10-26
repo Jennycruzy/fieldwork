@@ -1,0 +1,185 @@
+{
+  "id": "r_20261026_f0e3f3",
+  "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
+  "created_at": "2026-10-26T14:28:44.013Z",
+  "finished_at": "2026-10-26T14:29:17.115Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2026,
+        "from": 2026
+      },
+      "output": "comparison",
+      "analysis": {
+        "basis": "rates",
+        "reason": "The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.",
+        "denominator": "residents",
+        "rank_measure": "code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract",
+        "relationship": true
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "code violations recorded in Montgomery census tracts during 2026",
+          "search_terms": [
+            "code violations",
+            "code enforcement"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "estimated share of adults with high blood pressure by Montgomery census tract",
+          "search_terms": [
+            "high blood pressure",
+            "hypertension"
+          ]
+        },
+        {
+          "id": "m3",
+          "kind": "health_estimate",
+          "describe": "census tract population used as the denominator for the code-violation rate",
+          "search_terms": [
+            "population",
+            "adults"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_f0e3f3",
+          "type": "run",
+          "attrs": {
+            "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?"
+          },
+          "source": {
+            "at": "2026-10-26T14:28:44.324Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_f0e3f3:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract",
+              "relationship": true
+            },
+            "describe": "code violations recorded in Montgomery census tracts during 2026",
+            "search_terms": [
+              "code violations",
+              "code enforcement"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:28:44.325Z",
+            "run": "r_20261026_f0e3f3",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261026_f0e3f3:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract",
+              "relationship": true
+            },
+            "describe": "estimated share of adults with high blood pressure by Montgomery census tract",
+            "search_terms": [
+              "high blood pressure",
+              "hypertension"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:28:44.325Z",
+            "run": "r_20261026_f0e3f3",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261026_f0e3f3:m3",
+          "type": "measure",
+          "attrs": {
+            "id": "m3",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract",
+              "relationship": true
+            },
+            "describe": "census tract population used as the denominator for the code-violation rate",
+            "search_terms": [
+              "population",
+              "adults"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:28:44.325Z",
+            "run": "r_20261026_f0e3f3",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "fetch failed",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-971",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899\",\"catalog\":\"montgomery_hub\",\"id\":\"e58056aeb8354e0d80483dab81ee2899\",\"title\":\"Code Violations\",\"description\":\"This layer displays the locations of code violations across the city.\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"kind\":\"arcgis_layer\",\"modified\":\"2025-07-18T18:45:07.000Z\"},\"kind\":\"city_records\",\"terms\":[\"code violations\",\"code enforcement\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T07:48:06.040Z\"}}",
+        "confidence": 0.8500000000000001
+      },
+      {
+        "id": "mem-972",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"catalog\":\"socrata\",\"id\":\"yjkw-uj5s\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"description\":\"This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"kind\":\"socrata_resource\",\"modified\":\"2026-09-22T23:23:00.000Z\",\"domain\":\"data.cdc.gov\",\"licence\":\"Public Domain\",\"licenceUrl\":\"https://data.cdc.gov/api/views/yjkw-uj5s.json\"},\"kind\":\"health_estimate\",\"terms\":[\"high blood pressure\",\"hypertension\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T07:40:11.558Z\"}}",
+        "confidence": 0.8500000000000001
+      }
+    ],
+    "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
+    "memoryWrites": [
+      {
+        "id": "mem-494",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_f0e3f3\",\"type\":\"run\",\"attrs\":{\"question\":\"Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T14:28:44.324Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-495",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_f0e3f3:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"code violations recorded in Montgomery census tracts during 2026\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\",\"code enforcement\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.\",\"rank_measure\":\"code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:28:44.325Z\",\"run\":\"r_20261026_f0e3f3\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-496",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_f0e3f3:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"estimated share of adults with high blood pressure by Montgomery census tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"high blood pressure\",\"hypertension\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.\",\"rank_measure\":\"code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:28:44.325Z\",\"run\":\"r_20261026_f0e3f3\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-1025",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_f0e3f3:m3\",\"type\":\"measure\",\"attrs\":{\"id\":\"m3\",\"describe\":\"census tract population used as the denominator for the code-violation rate\",\"kind\":\"health_estimate\",\"search_terms\":[\"population\",\"adults\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks whether tracts with more code violations also have more adults with high blood pressure, which is a cross-tract association. Per guidance, cross-tract associations must use population-adjusted rates: code violations per 1,000 residents (totalpopulation) compared with the CDC adult high-blood-pressure prevalence percentage. Tract population is carried with the health estimate and included as the denominator measure.\",\"rank_measure\":\"code violations per 1,000 residents, descending, paired with high-blood-pressure prevalence by tract\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:28:44.325Z\",\"run\":\"r_20261026_f0e3f3\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}

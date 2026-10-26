@@ -1,0 +1,721 @@
+{
+  "id": "r_20261026_728737",
+  "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+  "created_at": "2026-10-26T14:24:38.781Z",
+  "finished_at": "2026-10-26T14:25:34.820Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "analysis": {
+        "basis": "mixed",
+        "reason": "The question asks for a ranking of tracts by adult asthma rate (a CDC prevalence percentage) with a supporting count of 2025 code violations per tract. Raw counts answer the violation workload question; asthma estimates are already population-adjusted prevalence figures. No association or correlation is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+        "denominator": "adults",
+        "rank_measure": "adult asthma prevalence, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "health_estimate",
+          "describe": "Adult asthma prevalence percentage by census tract",
+          "search_terms": [
+            "asthma",
+            "adult asthma",
+            "CDC PLACES"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "city_records",
+          "describe": "Code violations count in 2025 by census tract",
+          "search_terms": [
+            "code violations",
+            "violations",
+            "code enforcement"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "054b558c67d37c8c30171e8e3fcbf178d5e0d6c6f1b6b3aff1a423bfb92b7d0c",
+          "to": "candidate:r_20261026_728737:m1:yjkw-uj5s",
+          "from": "measure:r_20261026_728737:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T14:24:39.208Z"
+        },
+        {
+          "id": "dfa34f3213845e59552f4efe0de3ec09215acb495b8809266ed5c4d2e37e8507",
+          "to": "candidate:r_20261026_728737:m2:e58056aeb8354e0d80483dab81ee2899",
+          "from": "measure:r_20261026_728737:m2",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T14:24:39.208Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_728737",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?"
+          },
+          "source": {
+            "at": "2026-10-26T14:24:39.195Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_728737:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "mixed",
+              "reason": "The question asks for a ranking of tracts by adult asthma rate (a CDC prevalence percentage) with a supporting count of 2025 code violations per tract. Raw counts answer the violation workload question; asthma estimates are already population-adjusted prevalence figures. No association or correlation is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+              "denominator": "adults",
+              "rank_measure": "adult asthma prevalence, descending",
+              "relationship": false
+            },
+            "describe": "Adult asthma prevalence percentage by census tract",
+            "search_terms": [
+              "asthma",
+              "adult asthma",
+              "CDC PLACES"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261026_728737:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "mixed",
+              "reason": "The question asks for a ranking of tracts by adult asthma rate (a CDC prevalence percentage) with a supporting count of 2025 code violations per tract. Raw counts answer the violation workload question; asthma estimates are already population-adjusted prevalence figures. No association or correlation is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.",
+              "denominator": "adults",
+              "rank_measure": "adult asthma prevalence, descending",
+              "relationship": false
+            },
+            "describe": "Code violations count in 2025 by census tract",
+            "search_terms": [
+              "code violations",
+              "violations",
+              "code enforcement"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_728737:m1:yjkw-uj5s",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              {
+                "name": "stateabbr",
+                "type": "text"
+              },
+              {
+                "name": "statedesc",
+                "type": "text"
+              },
+              {
+                "name": "countyname",
+                "type": "text"
+              },
+              {
+                "name": "countyfips",
+                "type": "text"
+              },
+              {
+                "name": "tractfips",
+                "type": "text"
+              },
+              {
+                "name": "totalpopulation",
+                "type": "text"
+              },
+              {
+                "name": "totalpop18plus",
+                "type": "text"
+              },
+              {
+                "name": "access2_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "access2_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "binge_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "binge_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "chd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "chd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "copd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "copd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "dental_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "dental_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "depression_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "depression_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "vision_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "vision_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crudeprev_",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "disability_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "disability_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "geolocation",
+                "type": "text"
+              }
+            ],
+            "measure": "Adult asthma prevalence percentage by census tract",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_728737:m2:e58056aeb8354e0d80483dab81ee2899",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+            "title": "Code Violations",
+            "fields": [
+              {
+                "name": "OffenceNum",
+                "type": "string",
+                "alias": "OffenceNum"
+              },
+              {
+                "name": "CaseDate",
+                "type": "dateonly",
+                "alias": "CaseDate"
+              },
+              {
+                "name": "CaseType",
+                "type": "string",
+                "alias": "CaseType"
+              },
+              {
+                "name": "CaseStatus",
+                "type": "string",
+                "alias": "CaseStatus"
+              },
+              {
+                "name": "LienStatus",
+                "type": "string",
+                "alias": "LienStatus"
+              },
+              {
+                "name": "ParcelNo",
+                "type": "string",
+                "alias": "ParcelNo"
+              },
+              {
+                "name": "CouncilDistrict",
+                "type": "string",
+                "alias": "CouncilDistrict"
+              },
+              {
+                "name": "City",
+                "type": "string",
+                "alias": "City"
+              },
+              {
+                "name": "STATE",
+                "type": "string",
+                "alias": "State"
+              },
+              {
+                "name": "Zip",
+                "type": "integer",
+                "alias": "Zip"
+              },
+              {
+                "name": "ComplaintRem",
+                "type": "string",
+                "alias": "ComplaintRem"
+              },
+              {
+                "name": "OBJECTID",
+                "type": "oid",
+                "alias": "ObjectID"
+              },
+              {
+                "name": "ParcelNo_X",
+                "type": "double",
+                "alias": "ParcelNo_X"
+              },
+              {
+                "name": "ParcelNo_Y",
+                "type": "double",
+                "alias": "ParcelNo_Y"
+              },
+              {
+                "name": "Address1",
+                "type": "string",
+                "alias": "Address1"
+              },
+              {
+                "name": "Year",
+                "type": "string",
+                "alias": "Year"
+              },
+              {
+                "name": "Month",
+                "type": "string",
+                "alias": "Month"
+              },
+              {
+                "name": "GlobalID",
+                "type": "globalid",
+                "alias": "GlobalID"
+              },
+              {
+                "name": "created_user",
+                "type": "string",
+                "alias": "created_user"
+              },
+              {
+                "name": "created_date",
+                "type": "date",
+                "alias": "created_date"
+              },
+              {
+                "name": "last_edited_user",
+                "type": "string",
+                "alias": "last_edited_user"
+              },
+              {
+                "name": "last_edited_date",
+                "type": "date",
+                "alias": "last_edited_date"
+              }
+            ],
+            "measure": "Code violations count in 2025 by census tract",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-26T14:24:39.208Z",
+            "run": "r_20261026_728737",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "fetch failed",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-924",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899\",\"catalog\":\"montgomery_hub\",\"id\":\"e58056aeb8354e0d80483dab81ee2899\",\"title\":\"Code Violations\",\"description\":\"This layer displays the locations of code violations across the city.\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"kind\":\"arcgis_layer\",\"modified\":\"2025-07-18T18:45:07.000Z\"},\"kind\":\"city_records\",\"terms\":[\"code violations\",\"code enforcement\",\"violations\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T06:51:02.913Z\"}}",
+        "confidence": 1
+      },
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-2",
+        "kind": "choice",
+        "content": "For \"count of code violations in 2025 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): The code violations dataset is the only available candidate, offering census-tract-level violation counts updated in 2025.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-43",
+        "kind": "choice",
+        "content": "For \"count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-20, confidence 0.87).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-20",
+        "kind": "choice",
+        "content": "For \"Count of code violations reported in 2026 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 0.79).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 1
+      }
+    ],
+    "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-459",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_728737\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T14:24:39.195Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-460",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_728737:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Adult asthma prevalence percentage by census tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"asthma\",\"adult asthma\",\"CDC PLACES\"],\"analysis\":{\"basis\":\"mixed\",\"denominator\":\"adults\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by adult asthma rate (a CDC prevalence percentage) with a supporting count of 2025 code violations per tract. Raw counts answer the violation workload question; asthma estimates are already population-adjusted prevalence figures. No association or correlation is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.\",\"rank_measure\":\"adult asthma prevalence, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"}},\"relationships\":[{\"from\":\"measure:r_20261026_728737:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_728737:m1:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"},\"id\":\"054b558c67d37c8c30171e8e3fcbf178d5e0d6c6f1b6b3aff1a423bfb92b7d0c\",\"validFrom\":\"2026-10-26T14:24:39.208Z\"}]}"
+      },
+      {
+        "id": "mem-461",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_728737:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"Code violations count in 2025 by census tract\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\",\"violations\",\"code enforcement\"],\"analysis\":{\"basis\":\"mixed\",\"denominator\":\"adults\",\"relationship\":false,\"reason\":\"The question asks for a ranking of tracts by adult asthma rate (a CDC prevalence percentage) with a supporting count of 2025 code violations per tract. Raw counts answer the violation workload question; asthma estimates are already population-adjusted prevalence figures. No association or correlation is requested. CDC prevalence is an adult rate; the accompanying city count is raw workload, not a second health rate.\",\"rank_measure\":\"adult asthma prevalence, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"}},\"relationships\":[{\"from\":\"measure:r_20261026_728737:m2\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_728737:m2:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"},\"id\":\"dfa34f3213845e59552f4efe0de3ec09215acb495b8809266ed5c4d2e37e8507\",\"validFrom\":\"2026-10-26T14:24:39.208Z\"}]}"
+      },
+      {
+        "id": "mem-462",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_728737:m1:yjkw-uj5s\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Adult asthma prevalence percentage by census tract\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"fields\":[{\"name\":\"stateabbr\",\"type\":\"text\"},{\"name\":\"statedesc\",\"type\":\"text\"},{\"name\":\"countyname\",\"type\":\"text\"},{\"name\":\"countyfips\",\"type\":\"text\"},{\"name\":\"tractfips\",\"type\":\"text\"},{\"name\":\"totalpopulation\",\"type\":\"text\"},{\"name\":\"totalpop18plus\",\"type\":\"text\"},{\"name\":\"access2_crudeprev\",\"type\":\"text\"},{\"name\":\"access2_crude95ci\",\"type\":\"text\"},{\"name\":\"arthritis_crudeprev\",\"type\":\"text\"},{\"name\":\"arthritis_crude95ci\",\"type\":\"text\"},{\"name\":\"binge_crudeprev\",\"type\":\"text\"},{\"name\":\"binge_crude95ci\",\"type\":\"text\"},{\"name\":\"bphigh_crudeprev\",\"type\":\"text\"},{\"name\":\"bphigh_crude95ci\",\"type\":\"text\"},{\"name\":\"bpmed_crudeprev\",\"type\":\"text\"},{\"name\":\"bpmed_crude95ci\",\"type\":\"text\"},{\"name\":\"cancer_crudeprev\",\"type\":\"text\"},{\"name\":\"cancer_crude95ci\",\"type\":\"text\"},{\"name\":\"casthma_crudeprev\",\"type\":\"text\"},{\"name\":\"casthma_crude95ci\",\"type\":\"text\"},{\"name\":\"chd_crudeprev\",\"type\":\"text\"},{\"name\":\"chd_crude95ci\",\"type\":\"text\"},{\"name\":\"checkup_crudeprev\",\"type\":\"text\"},{\"name\":\"checkup_crude95ci\",\"type\":\"text\"},{\"name\":\"cholscreen_crudeprev\",\"type\":\"text\"},{\"name\":\"cholscreen_crude95ci\",\"type\":\"text\"},{\"name\":\"colon_screen_crudeprev\",\"type\":\"text\"},{\"name\":\"colon_screen_crude95ci\",\"type\":\"text\"},{\"name\":\"copd_crudeprev\",\"type\":\"text\"},{\"name\":\"copd_crude95ci\",\"type\":\"text\"},{\"name\":\"csmoking_crudeprev\",\"type\":\"text\"},{\"name\":\"csmoking_crude95ci\",\"type\":\"text\"},{\"name\":\"dental_crudeprev\",\"type\":\"text\"},{\"name\":\"dental_crude95ci\",\"type\":\"text\"},{\"name\":\"depression_crudeprev\",\"type\":\"text\"},{\"name\":\"depression_crude95ci\",\"type\":\"text\"},{\"name\":\"diabetes_crudeprev\",\"type\":\"text\"},{\"name\":\"diabetes_crude95ci\",\"type\":\"text\"},{\"name\":\"ghlth_crudeprev\",\"type\":\"text\"},{\"name\":\"ghlth_crude95ci\",\"type\":\"text\"},{\"name\":\"highchol_crudeprev\",\"type\":\"text\"},{\"name\":\"highchol_crude95ci\",\"type\":\"text\"},{\"name\":\"lpa_crudeprev\",\"type\":\"text\"},{\"name\":\"lpa_crude95ci\",\"type\":\"text\"},{\"name\":\"mammouse_crudeprev\",\"type\":\"text\"},{\"name\":\"mammouse_crude95ci\",\"type\":\"text\"},{\"name\":\"mhlth_crudeprev\",\"type\":\"text\"},{\"name\":\"mhlth_crude95ci\",\"type\":\"text\"},{\"name\":\"obesity_crudeprev\",\"type\":\"text\"},{\"name\":\"obesity_crude95ci\",\"type\":\"text\"},{\"name\":\"phlth_crudeprev\",\"type\":\"text\"},{\"name\":\"phlth_crude95ci\",\"type\":\"text\"},{\"name\":\"sleep_crudeprev\",\"type\":\"text\"},{\"name\":\"sleep_crude95ci\",\"type\":\"text\"},{\"name\":\"stroke_crudeprev\",\"type\":\"text\"},{\"name\":\"stroke_crude95ci\",\"type\":\"text\"},{\"name\":\"teethlost_crudeprev\",\"type\":\"text\"},{\"name\":\"teethlost_crude95ci\",\"type\":\"text\"},{\"name\":\"hearing_crudeprev\",\"type\":\"text\"},{\"name\":\"hearing_crude95ci\",\"type\":\"text\"},{\"name\":\"vision_crudeprev\",\"type\":\"text\"},{\"name\":\"vision_crude95ci\",\"type\":\"text\"},{\"name\":\"cognition_crudeprev\",\"type\":\"text\"},{\"name\":\"cognition_crude95ci\",\"type\":\"text\"},{\"name\":\"mobility_crudeprev_\",\"type\":\"text\"},{\"name\":\"mobility_crude95ci\",\"type\":\"text\"},{\"name\":\"selfcare_crudeprev\",\"type\":\"text\"},{\"name\":\"selfcare_crude95ci\",\"type\":\"text\"},{\"name\":\"indeplive_crudeprev\",\"type\":\"text\"},{\"name\":\"indeplive_crude95ci\",\"type\":\"text\"},{\"name\":\"disability_crudeprev\",\"type\":\"text\"},{\"name\":\"disability_crude95ci\",\"type\":\"text\"},{\"name\":\"loneliness_crudeprev\",\"type\":\"text\"},{\"name\":\"loneliness_crude95ci\",\"type\":\"text\"},{\"name\":\"foodstamp_crudeprev\",\"type\":\"text\"},{\"name\":\"foodstamp_crude95ci\",\"type\":\"text\"},{\"name\":\"foodinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"foodinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"housinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"housinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"shututility_crudeprev\",\"type\":\"text\"},{\"name\":\"shututility_crude95ci\",\"type\":\"text\"},{\"name\":\"lacktrpt_crudeprev\",\"type\":\"text\"},{\"name\":\"lacktrpt_crude95ci\",\"type\":\"text\"},{\"name\":\"emotionspt_crudeprev\",\"type\":\"text\"},{\"name\":\"emotionspt_crude95ci\",\"type\":\"text\"},{\"name\":\"geolocation\",\"type\":\"text\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"}},\"relationships\":[{\"from\":\"measure:r_20261026_728737:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_728737:m1:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"},\"id\":\"054b558c67d37c8c30171e8e3fcbf178d5e0d6c6f1b6b3aff1a423bfb92b7d0c\",\"validFrom\":\"2026-10-26T14:24:39.208Z\"}]}"
+      },
+      {
+        "id": "mem-463",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_728737:m2:e58056aeb8354e0d80483dab81ee2899\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Code violations count in 2025 by census tract\",\"title\":\"Code Violations\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"fields\":[{\"name\":\"OffenceNum\",\"alias\":\"OffenceNum\",\"type\":\"string\"},{\"name\":\"CaseDate\",\"alias\":\"CaseDate\",\"type\":\"dateonly\"},{\"name\":\"CaseType\",\"alias\":\"CaseType\",\"type\":\"string\"},{\"name\":\"CaseStatus\",\"alias\":\"CaseStatus\",\"type\":\"string\"},{\"name\":\"LienStatus\",\"alias\":\"LienStatus\",\"type\":\"string\"},{\"name\":\"ParcelNo\",\"alias\":\"ParcelNo\",\"type\":\"string\"},{\"name\":\"CouncilDistrict\",\"alias\":\"CouncilDistrict\",\"type\":\"string\"},{\"name\":\"City\",\"alias\":\"City\",\"type\":\"string\"},{\"name\":\"STATE\",\"alias\":\"State\",\"type\":\"string\"},{\"name\":\"Zip\",\"alias\":\"Zip\",\"type\":\"integer\"},{\"name\":\"ComplaintRem\",\"alias\":\"ComplaintRem\",\"type\":\"string\"},{\"name\":\"OBJECTID\",\"alias\":\"ObjectID\",\"type\":\"oid\"},{\"name\":\"ParcelNo_X\",\"alias\":\"ParcelNo_X\",\"type\":\"double\"},{\"name\":\"ParcelNo_Y\",\"alias\":\"ParcelNo_Y\",\"type\":\"double\"},{\"name\":\"Address1\",\"alias\":\"Address1\",\"type\":\"string\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"string\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"}},\"relationships\":[{\"from\":\"measure:r_20261026_728737:m2\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_728737:m2:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:24:39.208Z\",\"run\":\"r_20261026_728737\"},\"id\":\"dfa34f3213845e59552f4efe0de3ec09215acb495b8809266ed5c4d2e37e8507\",\"validFrom\":\"2026-10-26T14:24:39.208Z\"}]}"
+      }
+    ]
+  }
+}

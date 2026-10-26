@@ -1,0 +1,326 @@
+{
+  "id": "r_20261026_e3ad8d",
+  "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+  "created_at": "2026-10-26T14:27:01.072Z",
+  "finished_at": "2026-10-26T14:28:44.007Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "ranking",
+      "analysis": {
+        "basis": "rates",
+        "reason": "Dividing each tract's 2025 code violation count by its resident population yields violations per 1,000 residents, which directly ranks tracts by violation intensity.",
+        "denominator": "residents",
+        "rank_measure": "code violations per 1,000 residents, descending",
+        "relationship": false
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "code violations recorded in Montgomery census tracts during 2025",
+          "search_terms": [
+            "code violations",
+            "code enforcement",
+            "violations"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "total resident population by Montgomery census tract for the rate denominator",
+          "search_terms": [
+            "total population",
+            "population",
+            "demographics"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "09ecfe7fa22895701f7fb5e521ea8fc31cf2b2237266474ba423ac8e3cd597bf",
+          "to": "candidate:r_20261026_e3ad8d:m1:e58056aeb8354e0d80483dab81ee2899",
+          "from": "measure:r_20261026_e3ad8d:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-26T14:27:01.723Z",
+            "run": "r_20261026_e3ad8d",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-26T14:27:01.723Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_e3ad8d",
+          "type": "run",
+          "attrs": {
+            "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?"
+          },
+          "source": {
+            "at": "2026-10-26T14:27:01.721Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261026_e3ad8d:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "rates",
+              "reason": "Dividing each tract's 2025 code violation count by its resident population yields violations per 1,000 residents, which directly ranks tracts by violation intensity.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending",
+              "relationship": false
+            },
+            "describe": "code violations recorded in Montgomery census tracts during 2025",
+            "search_terms": [
+              "code violations",
+              "code enforcement",
+              "violations"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:27:01.723Z",
+            "run": "r_20261026_e3ad8d",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261026_e3ad8d:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "Dividing each tract's 2025 code violation count by its resident population yields violations per 1,000 residents, which directly ranks tracts by violation intensity.",
+              "denominator": "residents",
+              "rank_measure": "code violations per 1,000 residents, descending",
+              "relationship": false
+            },
+            "describe": "total resident population by Montgomery census tract for the rate denominator",
+            "search_terms": [
+              "total population",
+              "population",
+              "demographics"
+            ]
+          },
+          "source": {
+            "at": "2026-10-26T14:27:01.723Z",
+            "run": "r_20261026_e3ad8d",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261026_e3ad8d:m1:e58056aeb8354e0d80483dab81ee2899",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+            "title": "Code Violations",
+            "fields": [
+              {
+                "name": "OffenceNum",
+                "type": "string",
+                "alias": "OffenceNum"
+              },
+              {
+                "name": "CaseDate",
+                "type": "dateonly",
+                "alias": "CaseDate"
+              },
+              {
+                "name": "CaseType",
+                "type": "string",
+                "alias": "CaseType"
+              },
+              {
+                "name": "CaseStatus",
+                "type": "string",
+                "alias": "CaseStatus"
+              },
+              {
+                "name": "LienStatus",
+                "type": "string",
+                "alias": "LienStatus"
+              },
+              {
+                "name": "ParcelNo",
+                "type": "string",
+                "alias": "ParcelNo"
+              },
+              {
+                "name": "CouncilDistrict",
+                "type": "string",
+                "alias": "CouncilDistrict"
+              },
+              {
+                "name": "City",
+                "type": "string",
+                "alias": "City"
+              },
+              {
+                "name": "STATE",
+                "type": "string",
+                "alias": "State"
+              },
+              {
+                "name": "Zip",
+                "type": "integer",
+                "alias": "Zip"
+              },
+              {
+                "name": "ComplaintRem",
+                "type": "string",
+                "alias": "ComplaintRem"
+              },
+              {
+                "name": "OBJECTID",
+                "type": "oid",
+                "alias": "ObjectID"
+              },
+              {
+                "name": "ParcelNo_X",
+                "type": "double",
+                "alias": "ParcelNo_X"
+              },
+              {
+                "name": "ParcelNo_Y",
+                "type": "double",
+                "alias": "ParcelNo_Y"
+              },
+              {
+                "name": "Address1",
+                "type": "string",
+                "alias": "Address1"
+              },
+              {
+                "name": "Year",
+                "type": "string",
+                "alias": "Year"
+              },
+              {
+                "name": "Month",
+                "type": "string",
+                "alias": "Month"
+              },
+              {
+                "name": "GlobalID",
+                "type": "globalid",
+                "alias": "GlobalID"
+              },
+              {
+                "name": "created_user",
+                "type": "string",
+                "alias": "created_user"
+              },
+              {
+                "name": "created_date",
+                "type": "date",
+                "alias": "created_date"
+              },
+              {
+                "name": "last_edited_user",
+                "type": "string",
+                "alias": "last_edited_user"
+              },
+              {
+                "name": "last_edited_date",
+                "type": "date",
+                "alias": "last_edited_date"
+              }
+            ],
+            "measure": "code violations recorded in Montgomery census tracts during 2025",
+            "selected": true,
+            "geometryType": "esriGeometryPoint"
+          },
+          "source": {
+            "at": "2026-10-26T14:27:01.723Z",
+            "run": "r_20261026_e3ad8d",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "fetch failed",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-924",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899\",\"catalog\":\"montgomery_hub\",\"id\":\"e58056aeb8354e0d80483dab81ee2899\",\"title\":\"Code Violations\",\"description\":\"This layer displays the locations of code violations across the city.\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"kind\":\"arcgis_layer\",\"modified\":\"2025-07-18T18:45:07.000Z\"},\"kind\":\"city_records\",\"terms\":[\"code violations\",\"code enforcement\",\"violations\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T06:51:02.913Z\"}}",
+        "confidence": 1
+      },
+      {
+        "id": "mem-207",
+        "kind": "choice",
+        "content": "For \"code violations in Montgomery census tracts this year\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-43, confidence 0.97).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-2",
+        "kind": "choice",
+        "content": "For \"count of code violations in 2025 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): The code violations dataset is the only available candidate, offering census-tract-level violation counts updated in 2025.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-10",
+        "kind": "choice",
+        "content": "For \"number of code violations per census tract in 2025\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 0.77).",
+        "confidence": 1
+      },
+      {
+        "id": "mem-247",
+        "kind": "choice",
+        "content": "For \"Count of food establishments whose latest inspection score is below 85, grouped by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Food Scores\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer): Directly provides food inspection scores for Montgomery establishments grouped by census tract, matching the measure and marked newest in series.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 0.97
+      }
+    ],
+    "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-482",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_e3ad8d\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T14:27:01.721Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-483",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_e3ad8d:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"code violations recorded in Montgomery census tracts during 2025\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\",\"code enforcement\",\"violations\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":false,\"reason\":\"Dividing each tract's 2025 code violation count by its resident population yields violations per 1,000 residents, which directly ranks tracts by violation intensity.\",\"rank_measure\":\"code violations per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:27:01.723Z\",\"run\":\"r_20261026_e3ad8d\"}},\"relationships\":[{\"from\":\"measure:r_20261026_e3ad8d:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_e3ad8d:m1:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:27:01.723Z\",\"run\":\"r_20261026_e3ad8d\"},\"id\":\"09ecfe7fa22895701f7fb5e521ea8fc31cf2b2237266474ba423ac8e3cd597bf\",\"validFrom\":\"2026-10-26T14:27:01.723Z\"}]}"
+      },
+      {
+        "id": "mem-786",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261026_e3ad8d:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"total resident population by Montgomery census tract for the rate denominator\",\"kind\":\"health_estimate\",\"search_terms\":[\"total population\",\"population\",\"demographics\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":false,\"reason\":\"Dividing each tract's 2025 code violation count by its resident population yields violations per 1,000 residents, which directly ranks tracts by violation intensity.\",\"rank_measure\":\"code violations per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-26T14:27:01.723Z\",\"run\":\"r_20261026_e3ad8d\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-485",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261026_e3ad8d:m1:e58056aeb8354e0d80483dab81ee2899\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"code violations recorded in Montgomery census tracts during 2025\",\"title\":\"Code Violations\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"fields\":[{\"name\":\"OffenceNum\",\"alias\":\"OffenceNum\",\"type\":\"string\"},{\"name\":\"CaseDate\",\"alias\":\"CaseDate\",\"type\":\"dateonly\"},{\"name\":\"CaseType\",\"alias\":\"CaseType\",\"type\":\"string\"},{\"name\":\"CaseStatus\",\"alias\":\"CaseStatus\",\"type\":\"string\"},{\"name\":\"LienStatus\",\"alias\":\"LienStatus\",\"type\":\"string\"},{\"name\":\"ParcelNo\",\"alias\":\"ParcelNo\",\"type\":\"string\"},{\"name\":\"CouncilDistrict\",\"alias\":\"CouncilDistrict\",\"type\":\"string\"},{\"name\":\"City\",\"alias\":\"City\",\"type\":\"string\"},{\"name\":\"STATE\",\"alias\":\"State\",\"type\":\"string\"},{\"name\":\"Zip\",\"alias\":\"Zip\",\"type\":\"integer\"},{\"name\":\"ComplaintRem\",\"alias\":\"ComplaintRem\",\"type\":\"string\"},{\"name\":\"OBJECTID\",\"alias\":\"ObjectID\",\"type\":\"oid\"},{\"name\":\"ParcelNo_X\",\"alias\":\"ParcelNo_X\",\"type\":\"double\"},{\"name\":\"ParcelNo_Y\",\"alias\":\"ParcelNo_Y\",\"type\":\"double\"},{\"name\":\"Address1\",\"alias\":\"Address1\",\"type\":\"string\"},{\"name\":\"Year\",\"alias\":\"Year\",\"type\":\"string\"},{\"name\":\"Month\",\"alias\":\"Month\",\"type\":\"string\"},{\"name\":\"GlobalID\",\"alias\":\"GlobalID\",\"type\":\"globalid\"},{\"name\":\"created_user\",\"alias\":\"created_user\",\"type\":\"string\"},{\"name\":\"created_date\",\"alias\":\"created_date\",\"type\":\"date\"},{\"name\":\"last_edited_user\",\"alias\":\"last_edited_user\",\"type\":\"string\"},{\"name\":\"last_edited_date\",\"alias\":\"last_edited_date\",\"type\":\"date\"}],\"geometryType\":\"esriGeometryPoint\",\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:27:01.723Z\",\"run\":\"r_20261026_e3ad8d\"}},\"relationships\":[{\"from\":\"measure:r_20261026_e3ad8d:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261026_e3ad8d:m1:e58056aeb8354e0d80483dab81ee2899\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-26T14:27:01.723Z\",\"run\":\"r_20261026_e3ad8d\"},\"id\":\"09ecfe7fa22895701f7fb5e521ea8fc31cf2b2237266474ba423ac8e3cd597bf\",\"validFrom\":\"2026-10-26T14:27:01.723Z\"}]}"
+      }
+    ]
+  }
+}

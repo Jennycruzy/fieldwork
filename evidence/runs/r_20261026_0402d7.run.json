@@ -1,0 +1,47 @@
+{
+  "id": "r_20261026_0402d7",
+  "question": "Which named Montgomery residents have high blood pressure?",
+  "created_at": "2026-10-26T15:02:07.711Z",
+  "finished_at": "2026-10-26T15:02:16.198Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "list",
+      "in_scope": false,
+      "measures": [],
+      "geography": "city",
+      "scope_limit": "personal",
+      "out_of_scope_reason": "The question asks for named individual residents with a specific health condition (high blood pressure). Public data sources provide only aggregate CDC PLACES estimates by census tract, not identifiable personal health records or named residents, so this cannot be answered from public data."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261026_0402d7",
+          "type": "run",
+          "attrs": {
+            "question": "Which named Montgomery residents have high blood pressure?"
+          },
+          "source": {
+            "at": "2026-10-26T15:02:08.310Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The question asks for named individual residents with a specific health condition (high blood pressure). Public data sources provide only aggregate CDC PLACES estimates by census tract, not identifiable personal health records or named residents, so this cannot be answered from public data.",
+    "sources": [],
+    "memories": [],
+    "question": "Which named Montgomery residents have high blood pressure?",
+    "memoryWrites": [
+      {
+        "id": "mem-647",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261026_0402d7\",\"type\":\"run\",\"attrs\":{\"question\":\"Which named Montgomery residents have high blood pressure?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-26T15:02:08.310Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
