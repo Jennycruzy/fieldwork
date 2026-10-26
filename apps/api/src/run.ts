@@ -96,7 +96,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
   const models = Object.fromEntries(
     (Object.keys(MODELS) as Role[]).map((role) => {
       const routes: Route[] = [...primary, ...(cloud ? MODELS[role].map((model) => ({ provider: cloud, model })) : [])];
-      return [role, new ModelChain(routes, { budget, reasoning: REASONING[role], onSlow: (seconds) => { void trace.log({ agent: role, action: "MODEL_SLOW", status: "info", note: notice("MODEL_SLOW", `${seconds} s elapsed.`).message }); }, onCall: trace.modelCall(role) })];
+      return [role, new ModelChain(routes, { budget, sequentialJsonRepair:role==="writer", reasoning: REASONING[role], onSlow: (seconds) => { void trace.log({ agent: role, action: "MODEL_SLOW", status: "info", note: notice("MODEL_SLOW", `${seconds} s elapsed.`).message }); }, onCall: trace.modelCall(role) })];
     }),
   ) as Record<Role, ModelChain>;
 

@@ -112,3 +112,20 @@ describe("model time limits", () => {
     expect(HEDGE_AFTER_MS).toBe(30000);
   });
 });
+
+import {AnswerSchema} from "@fieldwork/core";
+it("Writer missing fields get one schema-error repair then a single next-free-model attempt",async()=>{
+ const a=new ScriptedProvider("a",['{"headline":"Only headline"}','{"headline":"Still missing"}']);
+ const b=new ScriptedProvider("b",['{"headline":"Checked","points":["Evidence"],"how_sure":"Checked rows","caveats":[]}']);
+ const result=await new ModelChain([{provider:a,model:"first:free"},{provider:b,model:"next:free"}],{sleep:noSleep,sequentialJsonRepair:true}).json([],AnswerSchema);
+ expect(a.calls).toHaveLength(2);expect(b.calls).toHaveLength(1);
+ expect(a.calls[1]!.messages.at(-1)!.content).toContain("points: Required");
+ expect(a.calls[1]!.messages.at(-1)!.content).toContain("how_sure: Required");
+ expect(a.calls[1]!.messages.at(-1)!.content).toContain("caveats: Required");
+ expect(result.value.points).toEqual(["Evidence"]);
+});
+it("Writer refuses missing fields on every route instead of accepting incomplete answers",async()=>{
+ const a=new ScriptedProvider("a",['{"headline":"x"}','{"headline":"y"}']),b=new ScriptedProvider("b",['{"headline":"z"}']);
+ await expect(new ModelChain([{provider:a,model:"first:free"},{provider:b,model:"next:free"}],{sleep:noSleep,sequentialJsonRepair:true}).json([],AnswerSchema)).rejects.toThrow("points: Required");
+ expect(a.calls).toHaveLength(2);expect(b.calls).toHaveLength(1);
+});

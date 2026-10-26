@@ -32,6 +32,7 @@ export class BudgetExceeded extends Error {
 
 export interface ChainOptions {
   budget?: Budget;
+  sequentialJsonRepair?: boolean;
   reasoning?: "on" | "off";
   backoffMs?: number[];
   onSlow?: (seconds: number) => void;
@@ -63,8 +64,17 @@ export class ModelChain {
  }
  async json<T>(messages:ChatMessage[],schema:z.ZodType<T, z.ZodTypeDef, unknown>,maxTokens=2000):Promise<{value:T;calls:ChatResult[]}> {
   const calls:ChatResult[]=[],counter={value:0};
-  const value=await this.race((index,signal,repair)=>this.strategy(index,messages,maxTokens,r=>parseJson(r.text,schema),repair,signal,calls,counter));
-  return {value,calls};
+  let value:T;
+  if(this.opts.sequentialJsonRepair){
+   let found=false,last:unknown;
+   for(let index=0;index<this.routes.length;index++){
+    try{value=await this.strategy(index,messages,maxTokens,r=>parseJson(r.text,schema),index===0,new AbortController().signal,calls,counter);found=true;break;}
+    catch(e){if(this.fatal(e))throw e;last=e;}
+   }
+   if(!found)throw last instanceof Error?last:new Error("all schema-valid routes failed");
+  }else value=await this.race((index,signal,repair)=>this.strategy(index,messages,maxTokens,r=>parseJson(r.text,schema),repair,signal,calls,counter));
+
+  return {value:value!,calls};
  }
  private async strategy<T>(index:number,messages:ChatMessage[],maxTokens:number,parse:(r:ChatResult)=>Parsed<T>,repair:boolean,signal:AbortSignal,calls:ChatResult[],counter:{value:number}):Promise<T> {
   let input=messages;
