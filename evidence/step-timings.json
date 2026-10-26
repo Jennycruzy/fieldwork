@@ -758,6 +758,91 @@
           "wall_p90_seconds": 0.674
         }
       ]
+    },
+    {
+      "started_at": "2026-10-26T14:24:38.750Z",
+      "code_commit": "6af18965e6e9a16bbde4b87930e0debf91851266",
+      "complete": true,
+      "steps": [
+        {
+          "step": "planner",
+          "median_seconds": 11.384,
+          "p90_seconds": 83.714,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free",
+            "nvidia/nemotron-3.5-super-vl:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 11.401,
+          "wall_p90_seconds": 83.733
+        },
+        {
+          "step": "finder",
+          "median_seconds": 0,
+          "p90_seconds": 15.563,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 10.466,
+          "wall_p90_seconds": 21.781
+        },
+        {
+          "step": "wirer",
+          "median_seconds": 0.993,
+          "p90_seconds": 4.723,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 14.859,
+          "wall_p90_seconds": 42.174
+        },
+        {
+          "step": "joiner",
+          "median_seconds": 0,
+          "p90_seconds": 0,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 0.818,
+          "wall_p90_seconds": 2.912
+        },
+        {
+          "step": "writer",
+          "median_seconds": 7.701,
+          "p90_seconds": 28.623,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free",
+            "nvidia/nemotron-3.5-super-vl:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 19.057,
+          "wall_p90_seconds": 37.872
+        },
+        {
+          "step": "evaluator",
+          "median_seconds": 18.557,
+          "p90_seconds": 50.041,
+          "models": [
+            "nvidia/nemotron-3.5-lightning:free",
+            "nvidia/nemotron-3.5-super-vl:free"
+          ],
+          "runs": 25,
+          "wall_median_seconds": 22.938,
+          "wall_p90_seconds": 54.236
+        },
+        {
+          "step": "checks",
+          "median_seconds": 0.019,
+          "p90_seconds": 0.379,
+          "models": [],
+          "runs": 25,
+          "wall_median_seconds": 0.072,
+          "wall_p90_seconds": 0.437
+        }
+      ]
     }
   ]
 }
