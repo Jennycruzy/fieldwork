@@ -56,3 +56,22 @@ test("a small-sample warning is always disclosed even if the model omits caveats
  expect(answer.caveats.some(c=>c.includes("Small establishment samples"))).toBe(true);
  expect(checkDraft(answer.caveats,a.headers,a.rows,a.checks.map((c:{detail:string})=>c.detail)).ok).toBe(true);
 });
+
+import {computedFigures} from "../src/agents/writer.js";
+import {computeFigureLedger} from "@fieldwork/core";
+test("Writer prompts retain totals, cohort sizes and extreme comparisons without every adjacent ranked pair",()=>{
+ const headers=["tract_name","facility_rate","facility_count","totalpopulation","geoid"];
+ const rows=Array.from({length:71},(_,i)=>["Area "+i,String(i/10),String(i),String(100+i),"geo"+i]);
+ const full=computeFigureLedger(headers,rows),compact=computedFigures(headers,rows).ledger!;
+ expect(compact.length).toBeLessThan(full.length*.6);
+ for(const f of full.filter(f=>f.kind!=="difference"&&f.kind!=="percent_change"))expect(compact.some(c=>c.id===f.id)).toBe(true);
+ expect(compact.some(f=>f.kind==="difference"&&f.rows.includes(0)&&f.rows.includes(70))).toBe(true);
+ expect(compact.some(f=>f.kind==="difference"&&f.rows.includes(0)&&f.rows.includes(1))).toBe(true);
+ expect(compact.some(f=>f.kind==="difference"&&f.rows.includes(30)&&f.rows.includes(31))).toBe(false);
+ expect(full.some(f=>f.kind==="difference"&&f.rows.includes(30)&&f.rows.includes(31))).toBe(true);
+});
+test("monthly prompts retain every adjacent period comparison with formula and source rows",()=>{
+ const headers=["year","month","record_count"],rows=Array.from({length:12},(_,i)=>["2025",String(i+1),String(20+i)]);
+ const full=computeFigureLedger(headers,rows),compact=computedFigures(headers,rows).ledger!;
+ expect(compact).toEqual(full.map(({labels,...f})=>f));
+});

@@ -85,7 +85,7 @@ export function computedFigures(headers:string[],rows:(string|null)[][]) {
  const pct=(a:number,b:number)=>a===0?null:round((b-a)/a*100,1);
  const max=cells.reduce((a,b)=>b.v>a.v?b:a),min=cells.reduce((a,b)=>b.v<a.v?b:a),first=cells[0]!,last=cells[cells.length-1]!;
  const counts=new Map<number,number>();for(const c of cells)counts.set(c.v,(counts.get(c.v)??0)+1);
- return {ledger:computeFigureLedger(headers,rows).map(({labels,...f})=>f),measure:headers[j],...(!/rate|per_|prevalence|percent|pct|corr|score|avg|average|mean/i.test(headers[j]!)?{total:round(cells.reduce((a,b)=>a+b.v,0))}:{}),rows_with_values:cells.length,
+ return {ledger:computeFigureLedger(headers,rows).filter(f=>calendar||!["difference","percent_change"].includes(f.kind)||f.rows.every(i=>i<5)||f.rows.every(i=>i===rows.indexOf(min.row)||i===rows.indexOf(max.row))).map(({labels,...f})=>f),measure:headers[j],...(!/rate|per_|prevalence|percent|pct|corr|score|avg|average|mean/i.test(headers[j]!)?{total:round(cells.reduce((a,b)=>a+b.v,0))}:{}),rows_with_values:cells.length,
   highest:{row:label(max.row),value:max.v},lowest:{row:label(min.row),value:min.v},
   highest_minus_lowest:round(max.v-min.v),highest_vs_lowest_percent:pct(min.v,max.v),
   ...(calendar?{first:{row:label(first.row),value:first.v},last:{row:label(last.row),value:last.v},last_minus_first:round(last.v-first.v),last_vs_first_percent:pct(first.v,last.v)}:{}),
