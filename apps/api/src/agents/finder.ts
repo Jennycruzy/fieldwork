@@ -157,7 +157,7 @@ export function isNewestInSeries(c: Candidate, all: Candidate[]): boolean {
 }
 
 export function rememberedCandidate(ctx:Ctx,m:Plan["measures"][number]):Candidate|undefined{
- const key=(s:string)=>s.toLowerCase().replace(/\\s+/g," ").trim();
+ const key=(s:string)=>s.toLowerCase().replace(/\s+/g," ").trim();
  for(const record of ctx.memory.store.all()){
   if(record.confidence<.75||record.supersededBy||!record.tags.includes("fw:choice"))continue;
   try{

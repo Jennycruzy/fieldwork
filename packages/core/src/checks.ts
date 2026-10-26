@@ -194,8 +194,10 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       const partial=f.match(/^Partial month: ([A-Za-z]+) (\d{4})/);
       if(partial&&new RegExp("\\b"+partial[1]+"\\b","i").test(t)&&/\b(highest|lowest|most|fewest|ranked|leads|led)\b/i.test(t))order.push("A partial month cannot be ranked against complete months.");
     }
+    if (/\\baccount\\w*\\b.*%.*\\bgap\\b/i.test(t)) order.push("A claimed share of an extreme gap has no supplied formula for that cohort.");
+    if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     const cohortTie=spellNumbers(t).match(/\b(?:all\s+)?(\d+)\s+(?:zero-[a-z]+\s+)?(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
-    if(cohortTie && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
+    if(cohortTie && !names.some(n=>mentions(t,n)) && !/[;!?]|\\.(?=\\s+[A-Z])/.test(t) && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
       const j=valueColumns(headers)[0], count=Number(cohortTie[1]);
       const zeros=j===undefined?[]:rows.filter(r=>r[j]!=null&&Number(r[j])===0);
       const claim=claimedRank(t)??1;
@@ -204,7 +206,6 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       if(count!==zeros.length||claim!==rank)order.push("The stated zero-valued tie group size or rank does not match the rows.");
       continue;
     }
-    if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
       for(let i=0;i<names.length;i++) if(mentions(t,names[i]!)) {
         const errors=columnRankProblems(t,i,names,headers,rows);

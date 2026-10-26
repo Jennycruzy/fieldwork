@@ -48,3 +48,8 @@ test("sentence filtering keeps verified points and rebuilds an invalid headline 
  expect(result.draft.points).toEqual(["Tract 22.01 has 1 shelter."]);
  expect(checkDraft([result.draft.headline,...result.draft.points,result.draft.how_sure],h,rows).ok).toBe(true);
 });
+test("an unproven share of an extreme gap is rejected without inventing a row ranking",()=>{
+ const result=checkDraft(["The top five tracts by asthma rate account for 68.7% of the gap between the highest and lowest rates."],["tract_name","asthma_rate","violation_count"],[["Census Tract 1","14","818"],["Census Tract 2","8.3","22"]]);
+ expect(result.ok).toBe(false);expect(result.orderProblems.some(s=>s.includes("no supplied formula"))).toBe(true);
+ expect(result.orderProblems.some(s=>s.includes("violation_count"))).toBe(false);
+});
