@@ -777,3 +777,45 @@ code,
 .history p {
   margin: 2px 0 10px;
 }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.tile.missed {
+  border-top-color: var(--warn);
+}
+.tile-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.evaluation-question summary {
+  cursor: pointer;
+  padding: 6px 0;
+}
+.pass,
+.fail {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+.pass {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.fail {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
