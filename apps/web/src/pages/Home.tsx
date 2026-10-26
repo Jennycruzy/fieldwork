@@ -29,7 +29,10 @@ export function Home({ sample }: { sample: boolean }) {
 
   const featured = runs?.find((r) => r.status === "answered" && r.headline);
   // The same question asked again shows once, newest first.
-  const earlier = runs?.filter((r, i) => r.headline && runs.findIndex((x) => x.question.toLowerCase() === r.question.toLowerCase()) === i);
+  const earlier = runs?.filter(
+    (r, i) =>
+      r.headline && runs.findIndex((x) => x.question.toLowerCase() === r.question.toLowerCase()) === i,
+  );
 
   async function ask(q: string) {
     setError(undefined);
@@ -62,7 +65,8 @@ export function Home({ sample }: { sample: boolean }) {
       <section className="hero">
         <h1>Ask about a Montgomery neighborhood. See the record behind every number.</h1>
         <p className="lede">
-          Agents find the public datasets that answer your question, wire them into Zetaris, place city records into census tracts, join them, check the result and write the answer, with every step shown.
+          Agents find the public datasets that answer your question, wire them into Zetaris, place city
+          records into census tracts, join them, check the result and write the answer, with every step shown.
         </p>
       </section>
 
@@ -96,7 +100,14 @@ export function Home({ sample }: { sample: boolean }) {
           <label htmlFor="q" className="sr">
             Your question about Montgomery, AL
           </label>
-          <textarea id="q" value={question} onChange={(e) => setQuestion(e.target.value)} maxLength={300} rows={3} placeholder="e.g. Which census tracts had the most code violations in 2025, and what share of adults there smoke?" />
+          <textarea
+            id="q"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            maxLength={300}
+            rows={3}
+            placeholder="e.g. Which census tracts had the most code violations in 2025, and what share of adults there smoke?"
+          />
           <div className="row">
             <button type="submit" disabled={sending || question.trim().length < 8}>
               {sending ? "Starting…" : "Ask"}
@@ -122,10 +133,13 @@ export function Home({ sample }: { sample: boolean }) {
         <details>
           <summary>What it can and can't answer</summary>
           <p>
-            <strong>Can:</strong> questions about Montgomery, AL census tracts that combine city records (code violations, and more datasets on the city's open data hub) with CDC health estimates, for a year or this year so far.
+            <strong>Can:</strong> questions about Montgomery, AL census tracts that combine city records (code
+            violations, and more datasets on the city's open data hub) with CDC health estimates, for a year
+            or this year so far.
           </p>
           <p>
-            <strong>Can't:</strong> other cities, individual people or addresses, predictions, or anything the public sources don't hold. It says so rather than guess.
+            <strong>Can't:</strong> other cities, individual people or addresses, predictions, or anything the
+            public sources don't hold. It says so rather than guess.
           </p>
         </details>
       </section>

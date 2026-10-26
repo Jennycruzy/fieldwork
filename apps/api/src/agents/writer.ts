@@ -3,10 +3,22 @@ import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Joined } from "./joiner.js";
 import type { Wired } from "./wirer.js";
 
-export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[], joined: Joined, checks: CheckResult[], rounds: number, fix?: string): Promise<Answer> {
-  const rankFacts=p.output==="ranking"?primaryRankFacts(joined.result.headers,joined.result.rows,p.analysis?.rank_measure??""):undefined;
-  const callSources=wired.filter(w=>/^Call_Count_By_Origin$/i.test(w.valueField??""));
-  const callActivity=callSources.length>0||checks.some(c=>c.ok&&c.id.startsWith("call_units_"));
+export async function write(
+  ctx: Ctx,
+  question: string,
+  p: Plan,
+  wired: Wired[],
+  joined: Joined,
+  checks: CheckResult[],
+  rounds: number,
+  fix?: string,
+): Promise<Answer> {
+  const rankFacts =
+    p.output === "ranking"
+      ? primaryRankFacts(joined.result.headers, joined.result.rows, p.analysis?.rank_measure ?? "")
+      : undefined;
+  const callSources = wired.filter((w) => /^Call_Count_By_Origin$/i.test(w.valueField ?? ""));
+  const callActivity = callSources.length > 0 || checks.some((c) => c.ok && c.id.startsWith("call_units_"));
   const { value } = await ctx.models.writer.json(
     [
       {
@@ -25,11 +37,64 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
         role: "user",
         content:
           `Question: ${question}\n` +
-          dataBlock("result_summary",{row_count:joined.result.rows.length,rank_rows:rankFacts?joined.result.rows.length:0,zero_columns:joined.result.headers.filter((_h,j)=>j>0&&joined.result.rows.length>0&&joined.result.rows.every(r=>r[j]!=null&&Number(r[j])===0))}) + "\n" + dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) + "\n" + dataBlock("primary_measure_ranks", rankFacts ? {measure:joined.result.headers[1],direction:rankFacts.direction,tie_groups:rankFacts.tie_groups}:[]) + "\n" + dataBlock("analysis_choice", p.analysis) + "\n" + dataBlock("result", p.analysis?.relationship ? [joined.result.headers.filter(h=>/corr|paired/i.test(h)),joined.result.rows[0]?.filter((_,i)=>/corr|paired/i.test(joined.result.headers[i]!))??[]] : rankFacts ? [rankFacts.headers,...rankFacts.rows] : [joined.result.headers, ...joined.result.rows]) +
+          dataBlock("result_summary", {
+            row_count: joined.result.rows.length,
+            rank_rows: rankFacts ? joined.result.rows.length : 0,
+            zero_columns: joined.result.headers.filter(
+              (_h, j) =>
+                j > 0 &&
+                joined.result.rows.length > 0 &&
+                joined.result.rows.every((r) => r[j] != null && Number(r[j]) === 0),
+            ),
+          }) +
           "\n" +
-          dataBlock("checks", checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`)) +
+          dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) +
           "\n" +
-          dataBlock("source_units",callSources.map(w=>({source:w.title,value_field:w.valueField,unit:"weighted call-center activity",aggregation:"SUM of the published count, not COUNT of source rows"})))+"\n"+dataBlock("sources", wired.map((w) => `${w.title} (${w.zetarisCount} records used; filter ${w.where})`)) +
+          dataBlock(
+            "primary_measure_ranks",
+            rankFacts
+              ? {
+                  measure: joined.result.headers[1],
+                  direction: rankFacts.direction,
+                  tie_groups: rankFacts.tie_groups,
+                }
+              : [],
+          ) +
+          "\n" +
+          dataBlock("analysis_choice", p.analysis) +
+          "\n" +
+          dataBlock(
+            "result",
+            p.analysis?.relationship
+              ? [
+                  joined.result.headers.filter((h) => /corr|paired/i.test(h)),
+                  joined.result.rows[0]?.filter((_, i) => /corr|paired/i.test(joined.result.headers[i]!)) ??
+                    [],
+                ]
+              : rankFacts
+                ? [rankFacts.headers, ...rankFacts.rows]
+                : [joined.result.headers, ...joined.result.rows],
+          ) +
+          "\n" +
+          dataBlock(
+            "checks",
+            checks.map((c) => `${c.ok ? "PASS" : "FLAG"} ${c.detail}`),
+          ) +
+          "\n" +
+          dataBlock(
+            "source_units",
+            callSources.map((w) => ({
+              source: w.title,
+              value_field: w.valueField,
+              unit: "weighted call-center activity",
+              aggregation: "SUM of the published count, not COUNT of source rows",
+            })),
+          ) +
+          "\n" +
+          dataBlock(
+            "sources",
+            wired.map((w) => `${w.title} (${w.zetarisCount} records used; filter ${w.where})`),
+          ) +
           `\nEvaluator rounds: ${rounds}. Plan years: ${JSON.stringify(p.years)}` +
           (fix ? `\nYour previous draft had these problems; fix them: ${fix}` : ""),
       },
@@ -37,58 +102,117 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     AnswerSchema,
     1500,
   );
-  if(callActivity) {
-    const caveat="These are weighted call-center activity totals, not confirmed incidents or crime statistics.";
-    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  if (callActivity) {
+    const caveat =
+      "These are weighted call-center activity totals, not confirmed incidents or crime statistics.";
+    if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
   }
-  if(wired.some(w=>w.shape==="epa_facilities")){
-    const caveat="Facility registry listings are not measurements of emissions or personal exposure.";
-    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  if (wired.some((w) => w.shape === "epa_facilities")) {
+    const caveat = "Facility registry listings are not measurements of emissions or personal exposure.";
+    if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
   }
-  if(checks.some(c=>c.id==="sample_size"&&!c.ok)){
-    const caveat="Small establishment samples or population denominators are flagged in the checks; comparisons describe the listed records and should be interpreted cautiously.";
-    if(!value.caveats.includes(caveat))value.caveats.push(caveat);
+  if (checks.some((c) => c.id === "sample_size" && !c.ok)) {
+    const caveat =
+      "Small establishment samples or population denominators are flagged in the checks; comparisons describe the listed records and should be interpreted cautiously.";
+    if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
   }
-  for(const c of checks.filter(c=>c.ok&&c.id==="partial_month"))if(!value.caveats.includes(c.detail))value.caveats.push(c.detail);
+  for (const c of checks.filter((c) => c.ok && c.id === "partial_month"))
+    if (!value.caveats.includes(c.detail)) value.caveats.push(c.detail);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });
   return value;
 }
 
-export function primaryRankFacts(headers:string[],rows:(string|null)[][],rankMeasure:string) {
- const ascending=/lowest|fewest|smallest|ascending/i.test(rankMeasure);
- const numbers=rows.map(r=>r[1]!=null&&r[1]!==""&&Number.isFinite(Number(r[1]))?Number(r[1]):null);
- const ordinal=(n:number)=>`${n}${n%100>=11&&n%100<=13?"th":({1:"st",2:"nd",3:"rd"} as Record<number,string>)[n%10]??"th"}`;
- const groups=new Map<number,{rank:number;value:string;tie_size:number;names:(string|null)[]}>();
- const ranked=rows.map((row,i)=>{
-  const n=numbers[i];if(n==null)return [...row,null,null,null];
-  const rank=1+numbers.filter(v=>v!=null&&(ascending?v<n:v>n)).length;
-  const names=rows.filter((_,j)=>numbers[j]===n).map(r=>r[0]??null);
-  if(names.length>1)groups.set(n,{rank,value:row[1]!,tie_size:names.length,names});
-  return [...row,String(rank),ordinal(rank),String(names.length)];
- });
- return {direction:ascending?"ascending":"descending",headers:[...headers,"primary_rank","rank_text","tie_size"],rows:ranked,tie_groups:[...groups.values()]};
+export function primaryRankFacts(headers: string[], rows: (string | null)[][], rankMeasure: string) {
+  const ascending = /lowest|fewest|smallest|ascending/i.test(rankMeasure);
+  const numbers = rows.map((r) =>
+    r[1] != null && r[1] !== "" && Number.isFinite(Number(r[1])) ? Number(r[1]) : null,
+  );
+  const ordinal = (n: number) =>
+    `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : (({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th")}`;
+  const groups = new Map<
+    number,
+    { rank: number; value: string; tie_size: number; names: (string | null)[] }
+  >();
+  const ranked = rows.map((row, i) => {
+    const n = numbers[i];
+    if (n == null) return [...row, null, null, null];
+    const rank = 1 + numbers.filter((v) => v != null && (ascending ? v < n : v > n)).length;
+    const names = rows.filter((_, j) => numbers[j] === n).map((r) => r[0] ?? null);
+    if (names.length > 1) groups.set(n, { rank, value: row[1]!, tie_size: names.length, names });
+    return [...row, String(rank), ordinal(rank), String(names.length)];
+  });
+  return {
+    direction: ascending ? "ascending" : "descending",
+    headers: [...headers, "primary_rank", "rank_text", "tie_size"],
+    rows: ranked,
+    tie_groups: [...groups.values()],
+  };
 }
 
 // Totals, extremes, differences, percent changes and group sizes for the first measure column, computed in code
 // so the Writer copies them instead of doing arithmetic ("sums to 16,388" for 16,409 is the slip this prevents).
-export function computedFigures(headers:string[],rows:(string|null)[][]) {
- const calendar=headers[0]==="year"&&headers[1]==="month";
- const nameCol=calendar?-1:Math.max(0,headers.findIndex(h=>/^(?:name|tract_name|tract|category|area_name)$/i.test(h)));
- const label=(r:(string|null)[])=>calendar?`${["January","February","March","April","May","June","July","August","September","October","November","December"][Number(r[1])-1]} ${r[0]}`:String(r[nameCol]??"");
- const j=headers.findIndex((h,k)=>k!==nameCol&&!/^(?:year|month|geoid|tractfips|name)$/i.test(h)&&rows.some(r=>r[k]!=null&&Number.isFinite(Number(r[k]))));
- if(j<0||!rows.length)return {};
- const cells=rows.map(r=>({row:r,v:r[j]==null?NaN:Number(r[j])})).filter(x=>Number.isFinite(x.v));
- if(!cells.length)return {};
- const round=(x:number,d=2)=>Number(x.toFixed(d));
- const pct=(a:number,b:number)=>a===0?null:round((b-a)/a*100,1);
- const max=cells.reduce((a,b)=>b.v>a.v?b:a),min=cells.reduce((a,b)=>b.v<a.v?b:a),first=cells[0]!,last=cells[cells.length-1]!;
- const counts=new Map<number,number>();for(const c of cells)counts.set(c.v,(counts.get(c.v)??0)+1);
- return {ledger:computeFigureLedger(headers,rows).filter(f=>calendar||!["difference","percent_change"].includes(f.kind)||f.rows.every(i=>i<5)||f.rows.every(i=>i===rows.indexOf(min.row)||i===rows.indexOf(max.row))).map(({labels,...f})=>f),measure:headers[j],...(!/rate|per_|prevalence|percent|pct|corr|score|avg|average|mean/i.test(headers[j]!)?{total:round(cells.reduce((a,b)=>a+b.v,0))}:{}),rows_with_values:cells.length,
-  highest:{row:label(max.row),value:max.v},lowest:{row:label(min.row),value:min.v},
-  highest_minus_lowest:round(max.v-min.v),highest_vs_lowest_percent:pct(min.v,max.v),
-  ...(calendar?{first:{row:label(first.row),value:first.v},last:{row:label(last.row),value:last.v},last_minus_first:round(last.v-first.v),last_vs_first_percent:pct(first.v,last.v)}:{}),
-  rows_at_zero:cells.filter(c=>c.v===0).length,rows_above_zero:cells.filter(c=>c.v>0).length,
-  ...(counts.size<=12?{rows_per_value:[...counts].map(([value,rows])=>({value,rows}))}:{})};
+export function computedFigures(headers: string[], rows: (string | null)[][]) {
+  const calendar = headers[0] === "year" && headers[1] === "month";
+  const nameCol = calendar
+    ? -1
+    : Math.max(
+        0,
+        headers.findIndex((h) => /^(?:name|tract_name|tract|category|area_name)$/i.test(h)),
+      );
+  const label = (r: (string | null)[]) =>
+    calendar
+      ? `${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][Number(r[1]) - 1]} ${r[0]}`
+      : String(r[nameCol] ?? "");
+  const j = headers.findIndex(
+    (h, k) =>
+      k !== nameCol &&
+      !/^(?:year|month|geoid|tractfips|name)$/i.test(h) &&
+      rows.some((r) => r[k] != null && Number.isFinite(Number(r[k]))),
+  );
+  if (j < 0 || !rows.length) return {};
+  const cells = rows
+    .map((r) => ({ row: r, v: r[j] == null ? NaN : Number(r[j]) }))
+    .filter((x) => Number.isFinite(x.v));
+  if (!cells.length) return {};
+  const round = (x: number, d = 2) => Number(x.toFixed(d));
+  const pct = (a: number, b: number) => (a === 0 ? null : round(((b - a) / a) * 100, 1));
+  const max = cells.reduce((a, b) => (b.v > a.v ? b : a)),
+    min = cells.reduce((a, b) => (b.v < a.v ? b : a)),
+    first = cells[0]!,
+    last = cells[cells.length - 1]!;
+  const counts = new Map<number, number>();
+  for (const c of cells) counts.set(c.v, (counts.get(c.v) ?? 0) + 1);
+  return {
+    ledger: computeFigureLedger(headers, rows)
+      .filter(
+        (f) =>
+          calendar ||
+          !["difference", "percent_change"].includes(f.kind) ||
+          f.rows.every((i) => i < 5) ||
+          f.rows.every((i) => i === rows.indexOf(min.row) || i === rows.indexOf(max.row)),
+      )
+      .map(({ labels, ...f }) => f),
+    measure: headers[j],
+    ...(!/rate|per_|prevalence|percent|pct|corr|score|avg|average|mean/i.test(headers[j]!)
+      ? { total: round(cells.reduce((a, b) => a + b.v, 0)) }
+      : {}),
+    rows_with_values: cells.length,
+    highest: { row: label(max.row), value: max.v },
+    lowest: { row: label(min.row), value: min.v },
+    highest_minus_lowest: round(max.v - min.v),
+    highest_vs_lowest_percent: pct(min.v, max.v),
+    ...(calendar
+      ? {
+          first: { row: label(first.row), value: first.v },
+          last: { row: label(last.row), value: last.v },
+          last_minus_first: round(last.v - first.v),
+          last_vs_first_percent: pct(first.v, last.v),
+        }
+      : {}),
+    rows_at_zero: cells.filter((c) => c.v === 0).length,
+    rows_above_zero: cells.filter((c) => c.v > 0).length,
+    ...(counts.size <= 12 ? { rows_per_value: [...counts].map(([value, rows]) => ({ value, rows })) } : {}),
+  };
 }

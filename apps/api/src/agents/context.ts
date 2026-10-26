@@ -19,8 +19,8 @@ export interface Ctx {
   runShort: string;
   today: Date;
   memory: HMEM;
-  writtenMemories?: {id:string;content:string}[];
-  intervals?: {source: string; headers: string[]; rows: (string | null)[][]}[];
+  writtenMemories?: { id: string; content: string }[];
+  intervals?: { source: string; headers: string[]; rows: (string | null)[][] }[];
   tractShapes?: { geoid: string; rings: number[][][] }[];
   recalled: Recalled[]; // every memory an agent used in this run, for feedback at the end
 }
@@ -37,8 +37,23 @@ export function dataBlock(label: string, value: unknown): string {
 }
 
 export function shared(ctx: Ctx): string {
-  if(!ctx.world) return "";
-  const state=ctx.world.context();
-  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>!["tract","wiring","candidate"].includes(e.type)).map(e=>({...e,attrs:Object.fromEntries(Object.entries(e.attrs).filter(([k])=>!["fields","description","catalogDescription","analysis"].includes(k)))})),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
+  if (!ctx.world) return "";
+  const state = ctx.world.context();
+  return dataBlock("shared_world_state", {
+    entities: state.entities
+      .filter((e) => !["tract", "wiring", "candidate"].includes(e.type))
+      .map((e) => ({
+        ...e,
+        attrs: Object.fromEntries(
+          Object.entries(e.attrs).filter(
+            ([k]) => !["fields", "description", "catalogDescription", "analysis"].includes(k),
+          ),
+        ),
+      })),
+    tract_count: state.entities.filter((e) => e.type === "tract").length,
+    edges: state.edges,
+  });
 }
-export function provenance(ctx: Ctx, role: string) { return {kind: role, at: ctx.today.toISOString(), run:ctx.runId}; }
+export function provenance(ctx: Ctx, role: string) {
+  return { kind: role, at: ctx.today.toISOString(), run: ctx.runId };
+}

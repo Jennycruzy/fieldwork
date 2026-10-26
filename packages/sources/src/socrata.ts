@@ -2,7 +2,10 @@
 
 import { getJson } from "./catalogs.js";
 
-export function soqlUrl(resourceUrl: string, params: { where?: string; select?: string; limit?: number }): string {
+export function soqlUrl(
+  resourceUrl: string,
+  params: { where?: string; select?: string; limit?: number },
+): string {
   const p = new URLSearchParams();
   if (params.select) p.set("$select", params.select);
   if (params.where) p.set("$where", params.where);
@@ -12,7 +15,9 @@ export function soqlUrl(resourceUrl: string, params: { where?: string; select?: 
 }
 
 export async function socrataCount(resourceUrl: string, where?: string): Promise<number> {
-  const rows = (await getJson(soqlUrl(resourceUrl, { select: "count(*) AS n", where, limit: 1 }))) as { n?: string }[];
+  const rows = (await getJson(soqlUrl(resourceUrl, { select: "count(*) AS n", where, limit: 1 }))) as {
+    n?: string;
+  }[];
   const n = Number(rows[0]?.n);
   if (!Number.isFinite(n)) throw new Error("Socrata did not return a count");
   return n;

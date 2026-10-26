@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { api, type RuntimeStatus } from "../api";
 import { when } from "../format";
 
-const LIGHT: Record<RuntimeStatus["state"], string> = { online: "Online", unauthorized: "Token refused", offline: "Not reachable" };
+const LIGHT: Record<RuntimeStatus["state"], string> = {
+  online: "Online",
+  unauthorized: "Token refused",
+  offline: "Not reachable",
+};
 
 export function Settings() {
   const [s, setS] = useState<RuntimeStatus>();
@@ -22,7 +26,10 @@ export function Settings() {
   return (
     <section className="card">
       <h1>Model providers</h1>
-      <p className="muted">Meterless Runtime is the primary provider when it is online at run start. Nightshift is not hosted here. If it isn't reachable when a run starts, the run says so in its trace and uses the fallback.</p>
+      <p className="muted">
+        Meterless Runtime is the primary provider when it is online at run start. Nightshift is not hosted
+        here. If it isn't reachable when a run starts, the run says so in its trace and uses the fallback.
+      </p>
 
       <div className="provider">
         <div className="provider-head">
@@ -75,11 +82,15 @@ export function Settings() {
       <div className="provider">
         <div className="provider-head">
           <span className="light offline" aria-hidden="true" />
-          <strong>Fallback</strong><span className="muted">Configured status; availability is checked by live calls</span>
+          <strong>Fallback</strong>
+          <span className="muted">Configured status; availability is checked by live calls</span>
         </div>
         <p>{s?.fallback && s.fallback !== "none" ? s.fallback : "None configured"}</p>
       </div>
-      <p className="muted">The runtime address and token are set on the server (METERLESS_BASE_URL, METERLESS_RUNTIME_TOKEN). The token never reaches the browser.</p>
+      <p className="muted">
+        The runtime address and token are set on the server (METERLESS_BASE_URL, METERLESS_RUNTIME_TOKEN). The
+        token never reaches the browser.
+      </p>
     </section>
   );
 }

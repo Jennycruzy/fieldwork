@@ -15,7 +15,8 @@ const ALLOWED: Record<SqlRole, RegExp[]> = {
   reader: [/^SELECT\b/i, /^WITH\b/i],
 };
 
-const FORBIDDEN = /\b(DROP|DELETE|INSERT|UPDATE|ALTER|TRUNCATE|GRANT|REVOKE|UPSERT\s+AUTH|CREATE\s+DATASOURCE|CREATE\s+LIGHTNING\s+DATABASE)\b/i;
+const FORBIDDEN =
+  /\b(DROP|DELETE|INSERT|UPDATE|ALTER|TRUNCATE|GRANT|REVOKE|UPSERT\s+AUTH|CREATE\s+DATASOURCE|CREATE\s+LIGHTNING\s+DATABASE)\b/i;
 
 export interface SqlCheck {
   ok: boolean;
@@ -48,7 +49,11 @@ function hasTopLevelSemicolon(sql: string): boolean {
 
 // Zetaris table names: our own prefix, lowercase, safe characters only.
 export function tableName(runShort: string, label: string): string {
-  const clean = (x: string) => x.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  const clean = (x: string) =>
+    x
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_|_$/g, "");
   return `fw_${clean(runShort)}_${clean(label)}`.slice(0, 60);
 }
 

@@ -24,12 +24,23 @@ export interface Config {
   nvidiaKey?: string;
   meterless: { baseUrl: string; token?: string; model: string };
   dailyCalls: number;
-  place: { name: string; stateFips: string; countyFips: string; countyName: string; stateAbbr: string; hub: string };
+  place: {
+    name: string;
+    stateFips: string;
+    countyFips: string;
+    countyName: string;
+    stateAbbr: string;
+    hub: string;
+  };
 }
 
 export function config(): Config {
   return {
-    zetaris: { url: process.env.ZETARIS_URL ?? "http://127.0.0.1:3000", email: need("ZETARIS_EMAIL"), password: need("ZETARIS_PASSWORD") },
+    zetaris: {
+      url: process.env.ZETARIS_URL ?? "http://127.0.0.1:3000",
+      email: need("ZETARIS_EMAIL"),
+      password: need("ZETARIS_PASSWORD"),
+    },
     pgUrl: need("FW_PG_URL"),
     openrouterKey: process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_KEY || undefined,
     nvidiaKey: process.env.NVIDIA_API_KEY || undefined,

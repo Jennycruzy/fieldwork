@@ -23,7 +23,11 @@ export function rowsFrom(table: string, shape: Shape): { from: string; field: (n
   if (shape === "socrata_list") {
     return { from: `session.${table}`, field: (n) => quoteIdent(n) };
   }
-  if(shape === "epa_facilities") return {from:`session.${table} LATERAL VIEW explode(Results.Facilities) AS f`,field:(n)=>`f.${quoteIdent(n)}`};
+  if (shape === "epa_facilities")
+    return {
+      from: `session.${table} LATERAL VIEW explode(Results.Facilities) AS f`,
+      field: (n) => `f.${quoteIdent(n)}`,
+    };
   return {
     from: `session.${table} LATERAL VIEW explode(features) AS f`,
     field: (n) => `f.attributes.${quoteIdent(n)}`,

@@ -11,7 +11,12 @@ export class OpenRouterProvider implements Provider {
   async chat(req: ChatRequest): Promise<ChatResult> {
     // Credit on the account only raises the free-model allowance; paid models need an explicit opt-in.
     if (!this.opts.allowPaid && !req.model.endsWith(":free")) {
-      throw new ProviderError(`Refused paid model ${req.model} (set FW_ALLOW_PAID_MODELS=1 to allow)`, this.id, 402, false);
+      throw new ProviderError(
+        `Refused paid model ${req.model} (set FW_ALLOW_PAID_MODELS=1 to allow)`,
+        this.id,
+        402,
+        false,
+      );
     }
     const started = Date.now();
     let res: Response;
@@ -30,9 +35,15 @@ export class OpenRouterProvider implements Provider {
           max_tokens: req.maxTokens ?? 2000,
           temperature: req.temperature ?? 0,
           // Thinking gets at most 60% of the budget, so the answer itself always has room.
-          reasoning: req.reasoning === "off" ? { enabled: false } : { max_tokens: Math.floor((req.maxTokens ?? 2000) * 0.6) },
+          reasoning:
+            req.reasoning === "off"
+              ? { enabled: false }
+              : { max_tokens: Math.floor((req.maxTokens ?? 2000) * 0.6) },
         }),
-        signal: AbortSignal.any([AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),...(req.signal?[req.signal]:[])]),
+        signal: AbortSignal.any([
+          AbortSignal.timeout(this.opts.timeoutMs ?? 180_000),
+          ...(req.signal ? [req.signal] : []),
+        ]),
       });
     } catch (e) {
       throw new ProviderError(`OpenRouter did not answer: ${(e as Error).message}`, this.id, 0, true);
@@ -40,7 +51,12 @@ export class OpenRouterProvider implements Provider {
     const text = await res.text();
     if (!res.ok) {
       const retryable = res.status === 429 || res.status >= 500;
-      throw new ProviderError(`OpenRouter HTTP ${res.status}: ${text.slice(0, 200)}`, this.id, res.status, retryable);
+      throw new ProviderError(
+        `OpenRouter HTTP ${res.status}: ${text.slice(0, 200)}`,
+        this.id,
+        res.status,
+        retryable,
+      );
     }
     const body = JSON.parse(text) as {
       model?: string;
@@ -49,7 +65,12 @@ export class OpenRouterProvider implements Provider {
       error?: { message?: string; code?: number };
     };
     if (body.error) {
-      throw new ProviderError(`OpenRouter error: ${body.error.message ?? "unknown"}`, this.id, body.error.code ?? 0, true);
+      throw new ProviderError(
+        `OpenRouter error: ${body.error.message ?? "unknown"}`,
+        this.id,
+        body.error.code ?? 0,
+        true,
+      );
     }
     const content = body.choices?.[0]?.message?.content ?? "";
     if (!content.trim()) {

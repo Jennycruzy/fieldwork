@@ -23,7 +23,9 @@ async function main(): Promise<void> {
   const port = Number(process.env.FW_PORT ?? 8795);
   const host = process.env.FW_HOST ?? "127.0.0.1";
   await app.listen({ port, host });
-  console.log(`Fieldwork ${deps.live ? "live" : "sample mode (recorded runs only)"} on http://${host}:${port}`);
+  console.log(
+    `Fieldwork ${deps.live ? "live" : "sample mode (recorded runs only)"} on http://${host}:${port}`,
+  );
 }
 
 main().catch((e) => {

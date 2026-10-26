@@ -7,36 +7,57 @@ const OUTPUTS = ["ranking", "comparison", "trend", "list"];
 const refusalShape = (v: unknown) => {
   if (!v || typeof v !== "object" || (v as { in_scope?: unknown }).in_scope !== false) return v;
   const o = v as Record<string, unknown>;
-  return { ...o, analysis: undefined, measures: [], years: null, output: OUTPUTS.includes(o.output as string) ? o.output : "list" };
+  return {
+    ...o,
+    analysis: undefined,
+    measures: [],
+    years: null,
+    output: OUTPUTS.includes(o.output as string) ? o.output : "list",
+  };
 };
-export const PlanSchema = z.preprocess(refusalShape, z.object({
-  in_scope: z.boolean(),
-  scope_limit: z.enum(["place", "personal", "non_public"]).optional().nullable(),
-  out_of_scope_reason: z.string().optional().nullable(),
-  geography: z.enum(["tract", "council_district", "city"]).nullable(),
-  years: z.object({ from: z.number().int().optional().nullable(), to: z.number().int().optional().nullable() }).optional().nullable(),
-  measures: z
-    .array(
-      z.object({
-        id: z.string(),
-        describe: z.string(),
-        kind: z.enum(["health_estimate", "city_records", "environmental_records"]),
-        search_terms: z.array(z.string()).min(1).max(4),
-      }),
-    )
-    .max(4),
-  analysis: z.object({
-    basis: z.enum(["counts", "rates", "mixed", "scores"]),
-    denominator: z.enum(["none", "residents", "adults"]),
-    relationship: z.boolean(),
-    reason: z.string(),
-    rank_measure: z.string().nullable().transform((v) => v ?? ""),
-  }).optional(),
-  output: z.enum(["ranking", "comparison", "trend", "list"]),
-})
-  // A refusal has nothing to map, so the model may leave geography empty; an in-scope plan may not.
-  .superRefine((v, ctx) => { if (v.in_scope && !v.geography) ctx.addIssue({ code: "custom", path: ["geography"], message: "Required for an in-scope plan" }); })
-  .transform((v) => ({ ...v, geography: v.geography ?? "city" })));
+export const PlanSchema = z.preprocess(
+  refusalShape,
+  z
+    .object({
+      in_scope: z.boolean(),
+      scope_limit: z.enum(["place", "personal", "non_public"]).optional().nullable(),
+      out_of_scope_reason: z.string().optional().nullable(),
+      geography: z.enum(["tract", "council_district", "city"]).nullable(),
+      years: z
+        .object({ from: z.number().int().optional().nullable(), to: z.number().int().optional().nullable() })
+        .optional()
+        .nullable(),
+      measures: z
+        .array(
+          z.object({
+            id: z.string(),
+            describe: z.string(),
+            kind: z.enum(["health_estimate", "city_records", "environmental_records"]),
+            search_terms: z.array(z.string()).min(1).max(4),
+          }),
+        )
+        .max(4),
+      analysis: z
+        .object({
+          basis: z.enum(["counts", "rates", "mixed", "scores"]),
+          denominator: z.enum(["none", "residents", "adults"]),
+          relationship: z.boolean(),
+          reason: z.string(),
+          rank_measure: z
+            .string()
+            .nullable()
+            .transform((v) => v ?? ""),
+        })
+        .optional(),
+      output: z.enum(["ranking", "comparison", "trend", "list"]),
+    })
+    // A refusal has nothing to map, so the model may leave geography empty; an in-scope plan may not.
+    .superRefine((v, ctx) => {
+      if (v.in_scope && !v.geography)
+        ctx.addIssue({ code: "custom", path: ["geography"], message: "Required for an in-scope plan" });
+    })
+    .transform((v) => ({ ...v, geography: v.geography ?? "city" })),
+);
 export type Plan = z.infer<typeof PlanSchema>;
 
 // What the Finder picks for each measure.
@@ -82,7 +103,18 @@ export const AnswerSchema = z.object({
 });
 export type Answer = z.infer<typeof AnswerSchema>;
 
-export type Step = "PLAN" | "FIND" | "WIRE" | "BRIDGE" | "JOIN" | "EVALUATE" | "WRITE" | "DONE" | "REFUSED" | "PARTIAL" | "FAILED";
+export type Step =
+  | "PLAN"
+  | "FIND"
+  | "WIRE"
+  | "BRIDGE"
+  | "JOIN"
+  | "EVALUATE"
+  | "WRITE"
+  | "DONE"
+  | "REFUSED"
+  | "PARTIAL"
+  | "FAILED";
 
 export interface RunEvent {
   runId: string;

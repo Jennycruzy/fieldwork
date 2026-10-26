@@ -47,28 +47,74 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
   if (deps.live) {
     await migrate(deps.live.db);
     // A run that was going when the service stopped can't finish; say so rather than leave it "running".
-    await deps.live.db.query(`UPDATE runs SET status = 'failed', finished_at = now(), answer = jsonb_build_object('message', 'The service restarted during this run.') WHERE status = 'running'`);
+    await deps.live.db.query(
+      `UPDATE runs SET status = 'failed', finished_at = now(), answer = jsonb_build_object('message', 'The service restarted during this run.') WHERE status = 'running'`,
+    );
   }
 
   const sample = loadSamples(deps.sampleDir);
 
-  app.get("/api/health", async () => ({ ok: true, mode: deps.live ? "live" : "sample", recorded: sample.size, evaluation: existsSync(resolve(deps.sampleDir,"../question-set/latest.json")) ? JSON.parse(readFileSync(resolve(deps.sampleDir,"../question-set/latest.json"),"utf8")) : null, questionManifest: existsSync(resolve(deps.sampleDir, "../questions.json")) ? createHash("sha256").update(readFileSync(resolve(deps.sampleDir, "../questions.json"))).digest("hex") : null }));
+  app.get("/api/health", async () => ({
+    ok: true,
+    mode: deps.live ? "live" : "sample",
+    recorded: sample.size,
+    evaluation: existsSync(resolve(deps.sampleDir, "../question-set/latest.json"))
+      ? JSON.parse(readFileSync(resolve(deps.sampleDir, "../question-set/latest.json"), "utf8"))
+      : null,
+    questionManifest: existsSync(resolve(deps.sampleDir, "../questions.json"))
+      ? createHash("sha256")
+          .update(readFileSync(resolve(deps.sampleDir, "../questions.json")))
+          .digest("hex")
+      : null,
+  }));
 
   app.get("/api/runtime", async () => {
-    if (!deps.live) return { state: "offline", reason: "Sample mode: no model provider is used.", baseUrl: "", modes: [], fallback: "none" };
+    if (!deps.live)
+      return {
+        state: "offline",
+        reason: "Sample mode: no model provider is used.",
+        baseUrl: "",
+        modes: [],
+        fallback: "none",
+      };
     const { meterless, openrouterKey } = deps.live.cfg;
     const s = await new MeterlessProvider(meterless.baseUrl, meterless.token).status();
-    return { ...s, model: meterless.model, fallback: openrouterKey ? "OpenRouter (NVIDIA Nemotron)" : "none" };
+    return {
+      ...s,
+      model: meterless.model,
+      fallback: openrouterKey ? "OpenRouter (NVIDIA Nemotron)" : "none",
+    };
   });
 
   app.post<{ Body: { question?: unknown } }>("/api/ask", async (req, reply) => {
-    if (!deps.live) return reply.code(503).send({ code: "SAMPLE_MODE", message: "This copy of Fieldwork is in sample mode: it replays recorded runs and can't run new questions." });
-    const question = typeof req.body?.question === "string" ? req.body.question.trim().replace(/\s+/g, " ") : "";
-    if (question.length < 8) return reply.code(400).send({ code: "TOO_SHORT", message: "Ask a full question about Montgomery, AL." });
-    if (question.length > limits.maxChars) return reply.code(400).send({ code: "TOO_LONG", message: `Keep the question under ${limits.maxChars} characters.` });
-    if (active) return reply.code(409).send({ code: "BUSY", message: "Another question is running right now. You can watch it, then ask yours.", runId: active });
+    if (!deps.live)
+      return reply.code(503).send({
+        code: "SAMPLE_MODE",
+        message:
+          "This copy of Fieldwork is in sample mode: it replays recorded runs and can't run new questions.",
+      });
+    const question =
+      typeof req.body?.question === "string" ? req.body.question.trim().replace(/\s+/g, " ") : "";
+    if (question.length < 8)
+      return reply
+        .code(400)
+        .send({ code: "TOO_SHORT", message: "Ask a full question about Montgomery, AL." });
+    if (question.length > limits.maxChars)
+      return reply
+        .code(400)
+        .send({ code: "TOO_LONG", message: `Keep the question under ${limits.maxChars} characters.` });
+    if (active)
+      return reply.code(409).send({
+        code: "BUSY",
+        message: "Another question is running right now. You can watch it, then ask yours.",
+        runId: active,
+      });
     const recent = (askedBy.get(req.ip) ?? []).filter((t) => now() - t < HOUR);
-    if (recent.length >= limits.runsPerHour) return reply.code(429).send({ code: "RATE_LIMITED", message: `Each visitor can run ${limits.runsPerHour} live questions an hour. Recorded runs are always available.` });
+    if (recent.length >= limits.runsPerHour)
+      return reply.code(429).send({
+        code: "RATE_LIMITED",
+        message: `Each visitor can run ${limits.runsPerHour} live questions an hour. Recorded runs are always available.`,
+      });
     askedBy.set(req.ip, [...recent, now()]);
 
     const runId = newRunId();
@@ -90,8 +136,16 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
   app.get("/api/runs", async () => {
     const recorded = [...sample.values()].map(({ run }) => summary(run));
     if (!deps.live) return { runs: recorded };
-    const r = await deps.live.db.query(`SELECT * FROM runs WHERE status IN ('answered', 'partial') ORDER BY created_at DESC LIMIT 20`);
-    return { runs: [...r.rows.map((x) => summary(reviewRun(x as RunRecord))), ...recorded.filter((s) => !r.rows.some((x) => x.id === s.id))], active };
+    const r = await deps.live.db.query(
+      `SELECT * FROM runs WHERE status IN ('answered', 'partial') ORDER BY created_at DESC LIMIT 20`,
+    );
+    return {
+      runs: [
+        ...r.rows.map((x) => summary(reviewRun(x as RunRecord))),
+        ...recorded.filter((s) => !r.rows.some((x) => x.id === s.id)),
+      ],
+      active,
+    };
   });
 
   app.get<{ Params: { id: string } }>("/api/runs/:id", async (req, reply) => {
@@ -108,60 +162,75 @@ export async function buildServer(deps: ServerDeps): Promise<FastifyInstance> {
 
   // Live progress. Events already written are replayed first, then new ones stream as they happen.
   // Recorded runs replay with their real timing, sped up (?speed=4) and with long waits capped.
-  app.get<{ Params: { id: string }; Querystring: { speed?: string } }>("/api/runs/:id/events", async (req, reply) => {
-    const id = req.params.id;
-    const queued: RunEvent[] = [];
-    let ended = false;
-    let replaying = true;
-    const send = (e: RunEvent) => sse(reply, "step", e);
-    const fn = (e: RunEvent | "end") => {
-      if (e === "end") ended = true;
-      else if (replaying) queued.push(e);
-      else send(e);
-      if (e === "end" && !replaying) finish();
-    };
-    const finish = async () => {
+  app.get<{ Params: { id: string }; Querystring: { speed?: string } }>(
+    "/api/runs/:id/events",
+    async (req, reply) => {
+      const id = req.params.id;
+      const queued: RunEvent[] = [];
+      let ended = false;
+      let replaying = true;
+      const send = (e: RunEvent) => sse(reply, "step", e);
+      const fn = (e: RunEvent | "end") => {
+        if (e === "end") ended = true;
+        else if (replaying) queued.push(e);
+        else send(e);
+        if (e === "end" && !replaying) finish();
+      };
+      const finish = async () => {
+        const got = await getRun(id);
+        sse(reply, "end", { status: got?.run.status ?? "unknown" });
+        reply.raw.end();
+      };
+      if (active === id) {
+        if (!listeners.has(id)) listeners.set(id, new Set());
+        listeners.get(id)!.add(fn);
+        // The response closes when the viewer leaves; the request "closes" as soon as it has been read.
+        reply.raw.on("close", () => listeners.get(id)?.delete(fn));
+      }
       const got = await getRun(id);
-      sse(reply, "end", { status: got?.run.status ?? "unknown" });
-      reply.raw.end();
-    };
-    if (active === id) {
-      if (!listeners.has(id)) listeners.set(id, new Set());
-      listeners.get(id)!.add(fn);
-      // The response closes when the viewer leaves; the request "closes" as soon as it has been read.
-      reply.raw.on("close", () => listeners.get(id)?.delete(fn));
-    }
-    const got = await getRun(id);
-    if (!got) return reply.code(404).send({ code: "NOT_FOUND", message: "No run with that id." });
+      if (!got) return reply.code(404).send({ code: "NOT_FOUND", message: "No run with that id." });
 
-    reply.hijack();
-    reply.raw.writeHead(200, { "content-type": "text/event-stream", "cache-control": "no-cache", connection: "keep-alive", "x-accel-buffering": "no" });
-    // Headers and a first line go out at once, so the viewer is connected even before the next step happens.
-    reply.raw.write(": connected\n\n");
-    // A comment every 20 s keeps proxies from closing a quiet stream during long model calls.
-    const keepAlive = setInterval(() => reply.raw.write(": still working\n\n"), 20_000);
-    reply.raw.on("close", () => clearInterval(keepAlive));
-    const speed = got.run.mode === "recorded" ? Math.min(Math.max(Number(req.query.speed ?? 0) || 0, 0), 16) : 0;
-    let last: number | undefined;
-    let maxSeq = 0;
-    for (const e of got.events) {
-      if (speed > 0 && last !== undefined) await sleep(speed === 1 ? Math.max(0,Date.parse(e.ts)-last) : Math.min(Math.max(0,Date.parse(e.ts) - last) / speed, 1500));
-      last = Date.parse(e.ts);
-      maxSeq = Math.max(maxSeq, e.seq);
-      if (req.raw.destroyed) return;
-      send(e);
-    }
-    replaying = false;
-    for (const e of queued) if (e.seq > maxSeq) send(e);
-    const stillRunning = active === id && !ended;
-    if (!stillRunning) await finish();
-  });
+      reply.hijack();
+      reply.raw.writeHead(200, {
+        "content-type": "text/event-stream",
+        "cache-control": "no-cache",
+        connection: "keep-alive",
+        "x-accel-buffering": "no",
+      });
+      // Headers and a first line go out at once, so the viewer is connected even before the next step happens.
+      reply.raw.write(": connected\n\n");
+      // A comment every 20 s keeps proxies from closing a quiet stream during long model calls.
+      const keepAlive = setInterval(() => reply.raw.write(": still working\n\n"), 20_000);
+      reply.raw.on("close", () => clearInterval(keepAlive));
+      const speed =
+        got.run.mode === "recorded" ? Math.min(Math.max(Number(req.query.speed ?? 0) || 0, 0), 16) : 0;
+      let last: number | undefined;
+      let maxSeq = 0;
+      for (const e of got.events) {
+        if (speed > 0 && last !== undefined)
+          await sleep(
+            speed === 1
+              ? Math.max(0, Date.parse(e.ts) - last)
+              : Math.min(Math.max(0, Date.parse(e.ts) - last) / speed, 1500),
+          );
+        last = Date.parse(e.ts);
+        maxSeq = Math.max(maxSeq, e.seq);
+        if (req.raw.destroyed) return;
+        send(e);
+      }
+      replaying = false;
+      for (const e of queued) if (e.seq > maxSeq) send(e);
+      const stillRunning = active === id && !ended;
+      if (!stillRunning) await finish();
+    },
+  );
 
   if (deps.webDir && existsSync(deps.webDir)) {
     await app.register(fastifyStatic, { root: resolve(deps.webDir), wildcard: false });
     // The Desk routes (/, /run/<id>, /a/<id>, /settings) are client-side; every other path gets index.html.
     app.setNotFoundHandler((req, reply) => {
-      if (req.url.startsWith("/api/")) return reply.code(404).send({ code: "NOT_FOUND", message: "No such API route." });
+      if (req.url.startsWith("/api/"))
+        return reply.code(404).send({ code: "NOT_FOUND", message: "No such API route." });
       return reply.type("text/html").sendFile("index.html");
     });
   }
@@ -186,7 +255,15 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 function summary(run: RunRecord) {
   const answer = (run.answer?.answer ?? null) as { headline?: string } | null;
-  return { id: run.id, question: run.question, created_at: run.created_at, status: run.status, rounds: run.rounds, mode: run.mode, headline: answer?.headline ?? null };
+  return {
+    id: run.id,
+    question: run.question,
+    created_at: run.created_at,
+    status: run.status,
+    rounds: run.rounds,
+    mode: run.mode,
+    headline: answer?.headline ?? null,
+  };
 }
 
 // evidence/runs/<id>.run.json + <id>.events.jsonl, as written by `fieldwork export`.
@@ -197,8 +274,14 @@ export function loadSamples(dir: string): Map<string, { run: RunRecord; events: 
     const id = f.replace(/\.run\.json$/, "");
     const evFile = join(dir, `${id}.events.jsonl`);
     if (!existsSync(evFile)) continue;
-    const run = { ...(JSON.parse(readFileSync(join(dir, f), "utf8")) as RunRecord), mode: "recorded" as const };
-    const events = readFileSync(evFile, "utf8").split("\n").filter(Boolean).map((l) => fromRow({ run_id: id, ...JSON.parse(l) }));
+    const run = {
+      ...(JSON.parse(readFileSync(join(dir, f), "utf8")) as RunRecord),
+      mode: "recorded" as const,
+    };
+    const events = readFileSync(evFile, "utf8")
+      .split("\n")
+      .filter(Boolean)
+      .map((l) => fromRow({ run_id: id, ...JSON.parse(l) }));
     out.set(id, { run: reviewRun(run), events });
   }
   return out;
@@ -229,12 +312,48 @@ function fromRow(r: Record<string, unknown>): RunEvent {
 
 // Preserve original recordings on disk; withhold prose that fails the current checks when serving it.
 function reviewRun(run: RunRecord): RunRecord {
-  const a=run.answer;
-  const draft=a?.answer as {headline:string;points:string[];how_sure:string;caveats:string[]} | undefined;
-  if(!draft || !Array.isArray(a?.headers) || !Array.isArray(a?.rows)) return run;
-  const facts=((a.checks ?? []) as {detail:string}[]).map((c)=>c.detail).concat(`Evaluator rounds: ${run.rounds}`, ...((a.sources ?? []) as {filter:string}[]).map((s)=>s.filter));
-  const check=checkDraft([draft.headline,...draft.points,draft.how_sure,...draft.caveats],a.headers as string[],a.rows as (string|null)[][],facts);
-  const oldLocation=((a.checks ?? []) as {id?:string;detail:string}[]).some((c)=>c.id === "bridge_match" && /[1-9]\d* outside, 0 without a location/.test(c.detail));
-  if(check.ok && !oldLocation) return run;
-  return {...run,status:"partial",answer:{...a,answer:undefined,message:"This earlier draft failed the current answer checks. Its prose is withheld; inspect the source rows and query below, or re-run live.",checks:[...((a.checks??[]) as {id?:string;ok:boolean;detail:string}[]).map((c)=>oldLocation && c.id === "bridge_match" ? {...c,ok:false,detail:"This older location check did not distinguish missing coordinates from outside points. See the dated location verification; re-run for the corrected classification."}:c),{ok:false,detail:"Unsupported or outdated claims were found in the recorded draft."}]}};
+  const a = run.answer;
+  const draft = a?.answer as
+    | { headline: string; points: string[]; how_sure: string; caveats: string[] }
+    | undefined;
+  if (!draft || !Array.isArray(a?.headers) || !Array.isArray(a?.rows)) return run;
+  const facts = ((a.checks ?? []) as { detail: string }[])
+    .map((c) => c.detail)
+    .concat(
+      `Evaluator rounds: ${run.rounds}`,
+      ...((a.sources ?? []) as { filter: string }[]).map((s) => s.filter),
+    );
+  const check = checkDraft(
+    [draft.headline, ...draft.points, draft.how_sure, ...draft.caveats],
+    a.headers as string[],
+    a.rows as (string | null)[][],
+    facts,
+  );
+  const oldLocation = ((a.checks ?? []) as { id?: string; detail: string }[]).some(
+    (c) => c.id === "bridge_match" && /[1-9]\d* outside, 0 without a location/.test(c.detail),
+  );
+  if (check.ok && !oldLocation) return run;
+  return {
+    ...run,
+    status: "partial",
+    answer: {
+      ...a,
+      answer: undefined,
+      message:
+        "This earlier draft failed the current answer checks. Its prose is withheld; inspect the source rows and query below, or re-run live.",
+      checks: [
+        ...((a.checks ?? []) as { id?: string; ok: boolean; detail: string }[]).map((c) =>
+          oldLocation && c.id === "bridge_match"
+            ? {
+                ...c,
+                ok: false,
+                detail:
+                  "This older location check did not distinguish missing coordinates from outside points. See the dated location verification; re-run for the corrected classification.",
+              }
+            : c,
+        ),
+        { ok: false, detail: "Unsupported or outdated claims were found in the recorded draft." },
+      ],
+    },
+  };
 }

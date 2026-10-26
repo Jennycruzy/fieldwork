@@ -75,11 +75,16 @@ export class ZetarisClient {
         const msg = parseErrorMessage(text);
         throw new ZetarisError(msg.summary, res.status, sql, msg.source);
       }
-      const body = JSON.parse(text) as { headers?: string[]; data?: string[][]; total?: number; timeUsed?: number };
+      const body = JSON.parse(text) as {
+        headers?: string[];
+        data?: string[][];
+        total?: number;
+        timeUsed?: number;
+      };
       return {
         headers: body.headers ?? [],
         rows: body.data ?? [],
-        total: body.total ?? (body.data?.length ?? 0),
+        total: body.total ?? body.data?.length ?? 0,
         ms: body.timeUsed ?? 0,
         wallMs: Date.now() - started,
       };
@@ -98,7 +103,13 @@ export function parseErrorMessage(text: string): { summary: string; source?: str
     // plain text error
   }
   // Parser errors put the useful part on the following lines, so keep the first three non-empty lines.
-  const firstLine = msg.split("\n").map((l) => l.trim()).filter(Boolean).slice(0, 3).join(" ") || "Zetaris returned an error";
+  const firstLine =
+    msg
+      .split("\n")
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(" ") || "Zetaris returned an error";
   const m = msg.match(/Response body:\s*([\s\S]*?)(?:\n\s*Equivalent curl|$)/);
   let source: string | undefined;
   if (m?.[1]) {

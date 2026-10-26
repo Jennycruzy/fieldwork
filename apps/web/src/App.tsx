@@ -5,7 +5,7 @@ import { useRoute } from "./router";
 import { Home } from "./pages/Home";
 import { RunView } from "./pages/RunView";
 import { AnswerPage } from "./pages/AnswerPage";
-import {Evaluation} from "./pages/Evaluation";
+import { Evaluation } from "./pages/Evaluation";
 import { Settings } from "./pages/Settings";
 
 import { History, How, Check } from "./pages/Records";
@@ -35,7 +35,9 @@ export function App() {
       </header>
       {sample && (
         <div className="banner" role="status">
-          {health === "offline" ? "The live service isn't answering, so you're seeing recorded runs." : "Sample mode: recorded runs only. No keys, no Zetaris, no network."}
+          {health === "offline"
+            ? "The live service isn't answering, so you're seeing recorded runs."
+            : "Sample mode: recorded runs only. No keys, no Zetaris, no network."}
         </div>
       )}
       <main>
@@ -57,7 +59,8 @@ export function App() {
         )}
       </main>
       <footer className="foot">
-        Montgomery, AL public data: city open data hub, CDC PLACES, US Census TIGERweb. Joined in Zetaris; memory by Meterless H-MEM.
+        Montgomery, AL public data: city open data hub, CDC PLACES, US Census TIGERweb. Joined in Zetaris;
+        memory by Meterless H-MEM.
       </footer>
     </>
   );

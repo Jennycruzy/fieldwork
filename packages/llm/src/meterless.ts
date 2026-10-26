@@ -75,7 +75,8 @@ export class MeterlessProvider implements Provider {
     private readonly opts: { sleep?: (ms: number) => Promise<void>; timeoutMs?: number } = {},
   ) {
     this.baseUrl = normaliseBaseUrl(baseUrl);
-    if (token === "rt-local") throw new Error("rt-local is a placeholder; paste the runtime's real access token");
+    if (token === "rt-local")
+      throw new Error("rt-local is a placeholder; paste the runtime's real access token");
   }
 
   private headers(chat = false): Record<string, string> {
@@ -91,32 +92,75 @@ export class MeterlessProvider implements Provider {
   async status(): Promise<RuntimeStatus> {
     const checkedAt = new Date().toISOString();
     try {
-      const res = await fetch(`${this.baseUrl}/models`, { headers: this.headers(), signal: AbortSignal.timeout(5000) });
+      const res = await fetch(`${this.baseUrl}/models`, {
+        headers: this.headers(),
+        signal: AbortSignal.timeout(5000),
+      });
       if (res.status === 401 || res.status === 403) {
-        return { state: "unauthorized", baseUrl: this.baseUrl, checkedAt, reason: "The runtime refused the access token. Paste the runtime's access token in Settings.", modes: [] };
+        return {
+          state: "unauthorized",
+          baseUrl: this.baseUrl,
+          checkedAt,
+          reason: "The runtime refused the access token. Paste the runtime's access token in Settings.",
+          modes: [],
+        };
       }
-      if (res.status !== 200) return { state: "offline", baseUrl: this.baseUrl, checkedAt, reason: `The runtime answered HTTP ${res.status}`, modes: [] };
+      if (res.status !== 200)
+        return {
+          state: "offline",
+          baseUrl: this.baseUrl,
+          checkedAt,
+          reason: `The runtime answered HTTP ${res.status}`,
+          modes: [],
+        };
       const body = (await res.json()) as { data?: { id?: string }[] };
       const modes = (body.data ?? []).map((m) => m.id ?? "").filter((id) => id.startsWith("meterless/"));
-      if (modes.length === 0) return { state: "offline", baseUrl: this.baseUrl, checkedAt, reason: "No meterless/* routing modes listed", modes };
-      return { state: "online", baseUrl: this.baseUrl, checkedAt, reason: `${modes.length} routing modes`, modes };
+      if (modes.length === 0)
+        return {
+          state: "offline",
+          baseUrl: this.baseUrl,
+          checkedAt,
+          reason: "No meterless/* routing modes listed",
+          modes,
+        };
+      return {
+        state: "online",
+        baseUrl: this.baseUrl,
+        checkedAt,
+        reason: `${modes.length} routing modes`,
+        modes,
+      };
     } catch {
-      return { state: "offline", baseUrl: this.baseUrl, checkedAt, reason: `Meterless Runtime isn't reachable at ${this.baseUrl}. Start the runtime and run Auto Detect.`, modes: [] };
+      return {
+        state: "offline",
+        baseUrl: this.baseUrl,
+        checkedAt,
+        reason: `Meterless Runtime isn't reachable at ${this.baseUrl}. Start the runtime and run Auto Detect.`,
+        modes: [],
+      };
     }
   }
 
   // GET /v1/meterless/classes, in either shape; a runtime without the route still gets a working picker.
   async classes(): Promise<RuntimeClass[]> {
-    const res = await fetch(`${this.baseUrl}/meterless/classes`, { headers: this.headers(), signal: AbortSignal.timeout(5000) });
+    const res = await fetch(`${this.baseUrl}/meterless/classes`, {
+      headers: this.headers(),
+      signal: AbortSignal.timeout(5000),
+    });
     if (!res.ok) return [];
     const body = (await res.json()) as { classes?: Record<string, unknown>; data?: unknown[] };
     const rows: { id: string; raw: unknown }[] = body.classes
       ? Object.entries(body.classes).map(([id, raw]) => ({ id, raw }))
       : (body.data ?? []).map((raw) => ({ id: String((raw as { class?: string }).class ?? ""), raw }));
-    return rows.filter((r) => r.id).map(({ id, raw }) => {
-      const o = typeof raw === "string" ? { state: raw } : (raw as { state?: string; why?: string; reason?: string; chat_carrier?: boolean });
-      return { id, state: mapState(o.state), why: o.why ?? o.reason, chatCarrier: o.chat_carrier };
-    });
+    return rows
+      .filter((r) => r.id)
+      .map(({ id, raw }) => {
+        const o =
+          typeof raw === "string"
+            ? { state: raw }
+            : (raw as { state?: string; why?: string; reason?: string; chat_carrier?: boolean });
+        return { id, state: mapState(o.state), why: o.why ?? o.reason, chatCarrier: o.chat_carrier };
+      });
   }
 
   async chat(req: ChatRequest): Promise<ChatResult> {
@@ -129,11 +173,24 @@ export class MeterlessProvider implements Provider {
         res = await fetch(`${this.baseUrl}/chat/completions`, {
           method: "POST",
           headers: this.headers(true),
-          body: JSON.stringify({ model: req.model, messages: req.messages, max_tokens: req.maxTokens ?? 2000, temperature: req.temperature ?? 0, stream: false }),
-          signal: AbortSignal.any([AbortSignal.timeout(this.opts.timeoutMs ?? TIMEOUT_MS),...(req.signal?[req.signal]:[])]),
+          body: JSON.stringify({
+            model: req.model,
+            messages: req.messages,
+            max_tokens: req.maxTokens ?? 2000,
+            temperature: req.temperature ?? 0,
+            stream: false,
+          }),
+          signal: AbortSignal.any([
+            AbortSignal.timeout(this.opts.timeoutMs ?? TIMEOUT_MS),
+            ...(req.signal ? [req.signal] : []),
+          ]),
         });
       } catch {
-        throw new MeterlessError(`Meterless Runtime isn't reachable at ${this.baseUrl}. Start the runtime and run Auto Detect.`, 0, true);
+        throw new MeterlessError(
+          `Meterless Runtime isn't reachable at ${this.baseUrl}. Start the runtime and run Auto Detect.`,
+          0,
+          true,
+        );
       }
       if (res.status === 429) {
         const err = await errorFrom(res, this.baseUrl);
@@ -145,9 +202,19 @@ export class MeterlessProvider implements Provider {
       }
       if (!res.ok) throw await errorFrom(res, this.baseUrl);
       const type = res.headers.get("content-type") ?? "";
-      const { text, served } = type.includes("text/event-stream") ? await readSse(res) : readJson(await res.json());
+      const { text, served } = type.includes("text/event-stream")
+        ? await readSse(res)
+        : readJson(await res.json());
       if (!text.trim()) throw new MeterlessError("Meterless Runtime returned an empty answer", 204, true);
-      return { text, provider: this.id, modelRequested: req.model, modelServed: served ?? req.model, tokensIn: 0, tokensOut: 0, ms: Date.now() - started };
+      return {
+        text,
+        provider: this.id,
+        modelRequested: req.model,
+        modelServed: served ?? req.model,
+        tokensIn: 0,
+        tokensOut: 0,
+        ms: Date.now() - started,
+      };
     }
   }
 }
@@ -168,7 +235,10 @@ interface Answer {
 // content as a string, or as an array of parts (text parts joined; other parts named on their own lines).
 export function readJson(body: Answer): { text: string; served?: string } {
   const content = body.choices?.[0]?.message?.content;
-  return { text: flatten(content), served: body.meterless?.receipt?.routed_model ?? body.meterless?.routed_model ?? body.model };
+  return {
+    text: flatten(content),
+    served: body.meterless?.receipt?.routed_model ?? body.meterless?.routed_model ?? body.model,
+  };
 }
 
 function flatten(content: unknown): string {
@@ -176,7 +246,13 @@ function flatten(content: unknown): string {
   if (!Array.isArray(content)) return "";
   return content
     .map((p: { type?: string; text?: string; image_url?: { url?: string }; audio_url?: { url?: string } }) =>
-      p.type === "text" ? (p.text ?? "") : p.image_url?.url ? `Image: ${p.image_url.url}` : p.audio_url?.url ? `Audio: ${p.audio_url.url}` : "",
+      p.type === "text"
+        ? (p.text ?? "")
+        : p.image_url?.url
+          ? `Image: ${p.image_url.url}`
+          : p.audio_url?.url
+            ? `Audio: ${p.audio_url.url}`
+            : "",
     )
     .filter(Boolean)
     .join("\n");
@@ -192,7 +268,8 @@ async function readSse(res: Response): Promise<{ text: string; served?: string }
     try {
       const frame = JSON.parse(m[1]!) as Answer;
       text += flatten(frame.choices?.[0]?.delta?.content);
-      served = frame.meterless?.receipt?.routed_model ?? frame.meterless?.routed_model ?? frame.model ?? served;
+      served =
+        frame.meterless?.receipt?.routed_model ?? frame.meterless?.routed_model ?? frame.model ?? served;
     } catch {
       // progress frames and comments carry no text
     }
@@ -212,7 +289,10 @@ async function errorFrom(res: Response, _base: string): Promise<MeterlessError> 
   let fix: string[] | undefined;
   let carrier: boolean | undefined;
   try {
-    const b = (await res.json()) as { error?: { message?: string; code?: string; type?: string }; meterless?: { fix?: string[]; chat_carrier?: boolean } };
+    const b = (await res.json()) as {
+      error?: { message?: string; code?: string; type?: string };
+      meterless?: { fix?: string[]; chat_carrier?: boolean };
+    };
     msg = b.error?.message ?? msg;
     code = b.error?.code;
     fix = b.meterless?.fix;
@@ -227,7 +307,15 @@ async function errorFrom(res: Response, _base: string): Promise<MeterlessError> 
   else if (hint && !carrierRefusal) parts.push(hint);
   if (res.status === 401 || res.status === 403) parts.push("Paste the runtime's access token in Settings.");
   // A typed refusal (any error with a code) is the runtime's answer: don't hide it behind a cloud fallback.
-  return new MeterlessError(parts.join(" "), res.status, false, code, fix, carrier, !code && res.status >= 500);
+  return new MeterlessError(
+    parts.join(" "),
+    res.status,
+    false,
+    code,
+    fix,
+    carrier,
+    !code && res.status >= 500,
+  );
 }
 
 // Tries the runtime's usual ports on the loopback names; the first online or unauthorized hit wins.

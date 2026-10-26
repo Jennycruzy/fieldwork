@@ -45,10 +45,20 @@ export interface RunRecord {
   mode: "live" | "recorded";
   answer: {
     removed_sentences?: string[];
-    computed_figures?: {id:string;value:number;formula:string;rows:number[];labels:string[];column?:string}[];
-    memoryWrites?: {id:string;content:string}[];
-    world?: {entities:{id:string;type:string;attrs:Record<string,unknown>}[];edges:{from:string;to:string;type:string}[]};
-    intervals?: {source: string; headers: string[]; rows: (string | null)[][]}[];
+    computed_figures?: {
+      id: string;
+      value: number;
+      formula: string;
+      rows: number[];
+      labels: string[];
+      column?: string;
+    }[];
+    memoryWrites?: { id: string; content: string }[];
+    world?: {
+      entities: { id: string; type: string; attrs: Record<string, unknown> }[];
+      edges: { from: string; to: string; type: string }[];
+    };
+    intervals?: { source: string; headers: string[]; rows: (string | null)[][] }[];
     tracts?: { geoid: string; rings: number[][][] }[];
     memories?: { id: string; kind: string; content: string; confidence: number }[];
     answer?: Answer;
@@ -106,7 +116,12 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError("Fieldwork's service isn't answering. Recorded runs still work.", "OFFLINE");
   }
   const body = (await res.json().catch(() => ({}))) as { message?: string; code?: string; runId?: string };
-  if (!res.ok) throw new ApiError(body.message ?? `Request failed (${res.status})`, body.code ?? String(res.status), body.runId);
+  if (!res.ok)
+    throw new ApiError(
+      body.message ?? `Request failed (${res.status})`,
+      body.code ?? String(res.status),
+      body.runId,
+    );
   return body as T;
 }
 
@@ -115,10 +130,16 @@ export const api = {
   runtime: () => call<RuntimeStatus>("/api/runtime"),
   runs: () => call<{ runs: RunSummary[]; active?: string }>("/api/runs"),
   run: (id: string) => call<{ run: RunRecord; events: RunEvent[] }>(`/api/runs/${id}`),
-  ask: (question: string) => call<{ runId: string }>("/api/ask", { method: "POST", body: JSON.stringify({ question }) }),
+  ask: (question: string) =>
+    call<{ runId: string }>("/api/ask", { method: "POST", body: JSON.stringify({ question }) }),
 };
 
-export function watch(id: string, speed: number, onStep: (e: RunEvent) => void, onEnd: (status: string) => void): () => void {
+export function watch(
+  id: string,
+  speed: number,
+  onStep: (e: RunEvent) => void,
+  onEnd: (status: string) => void,
+): () => void {
   const es = new EventSource(`/api/runs/${id}/events${speed ? `?speed=${speed}` : ""}`);
   es.addEventListener("step", (m) => onStep(JSON.parse((m as MessageEvent).data) as RunEvent));
   es.addEventListener("end", (m) => {

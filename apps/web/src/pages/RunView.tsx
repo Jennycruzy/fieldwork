@@ -74,7 +74,10 @@ export function RunView({ id }: { id: string }) {
           (e) => setEvents((xs) => (xs.some((x) => x.seq === e.seq) ? xs : [...xs, e])),
           (status) => {
             setEnded(status);
-            api.run(id).then(({ run }) => setRun(run), () => {});
+            api.run(id).then(
+              ({ run }) => setRun(run),
+              () => {},
+            );
           },
         );
       },
@@ -96,8 +99,8 @@ export function RunView({ id }: { id: string }) {
   const last = events[events.length - 1];
   const waited = last ? Math.max(0, (tick - Date.parse(last.ts)) / 1000) : 0;
   const isRecorded = run?.mode === "recorded";
-  const pageEvents = events.filter((e)=>e.agent === "wirer" && /page \d+ of \d+/.test(e.note));
-  const visibleEvents=events.filter((e)=>!pageEvents.includes(e));
+  const pageEvents = events.filter((e) => e.agent === "wirer" && /page \d+ of \d+/.test(e.note));
+  const visibleEvents = events.filter((e) => !pageEvents.includes(e));
 
   if (missing)
     return (
@@ -113,13 +116,29 @@ export function RunView({ id }: { id: string }) {
     <>
       <section className="card">
         <div className="eyebrow">
-          {isRecorded ? `Recorded run, ${replaySpeed}× replay${replaySpeed === 4 ? "; long waits shortened" : ""}` : ended ? "Live run, finished" : "Live run"} · {id}
+          {isRecorded
+            ? `Recorded run, ${replaySpeed}× replay${replaySpeed === 4 ? "; long waits shortened" : ""}`
+            : ended
+              ? "Live run, finished"
+              : "Live run"}{" "}
+          · {id}
         </div>
-        {isRecorded && <label>Replay speed <select value={replaySpeed} onChange={(e)=>setReplaySpeed(Number(e.target.value))}><option value={4}>4× with shorter waits</option><option value={1}>Original timing</option></select></label>}
+        {isRecorded && (
+          <label>
+            Replay speed{" "}
+            <select value={replaySpeed} onChange={(e) => setReplaySpeed(Number(e.target.value))}>
+              <option value={4}>4× with shorter waits</option>
+              <option value={1}>Original timing</option>
+            </select>
+          </label>
+        )}
         <h1 className="q">{run?.question ?? "…"}</h1>
         <ol className="graph" aria-label="Steps">
           {STEPS.map((s) => (
-            <li key={s.key} className={current === s.key && !ended ? "now" : reached.has(s.key) ? "done" : ""}>
+            <li
+              key={s.key}
+              className={current === s.key && !ended ? "now" : reached.has(s.key) ? "done" : ""}
+            >
               {s.label}
             </li>
           ))}
@@ -135,7 +154,25 @@ export function RunView({ id }: { id: string }) {
       </section>
 
       <section className="card">
-        <h2>Every step</h2>{pageEvents.length>0 && <details><summary>Wiring pages: {pageEvents.length} recorded steps</summary><ul>{pageEvents.map((e)=><li key={e.seq}>{e.note}{e.sql && <details><summary>Zetaris SQL</summary><pre>{e.sql}</pre></details>}</li>)}</ul></details>}
+        <h2>Every step</h2>
+        {pageEvents.length > 0 && (
+          <details>
+            <summary>Wiring pages: {pageEvents.length} recorded steps</summary>
+            <ul>
+              {pageEvents.map((e) => (
+                <li key={e.seq}>
+                  {e.note}
+                  {e.sql && (
+                    <details>
+                      <summary>Zetaris SQL</summary>
+                      <pre>{e.sql}</pre>
+                    </details>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
         <ol className="steps">
           {visibleEvents.map((e) => (
             <li key={e.seq} className={`step ${e.status}`}>
@@ -147,7 +184,12 @@ export function RunView({ id }: { id: string }) {
                     {modelName(e.modelServed)} · {e.modelProvider} · {secs(e.latencyMs)}
                   </span>
                 )}
-                {!e.modelServed && e.modelRequested && <span className="badge">{modelName(e.modelRequested)} requested · no response{e.latencyMs ? ` · ${secs(e.latencyMs)}` : ""}</span>}
+                {!e.modelServed && e.modelRequested && (
+                  <span className="badge">
+                    {modelName(e.modelRequested)} requested · no response
+                    {e.latencyMs ? ` · ${secs(e.latencyMs)}` : ""}
+                  </span>
+                )}
                 {e.zetarisMs !== undefined && <span className="badge z">Zetaris · {e.zetarisMs} ms</span>}
               </div>
               <p className="note">{e.note}</p>
@@ -165,7 +207,17 @@ export function RunView({ id }: { id: string }) {
   );
 }
 
-function Outcome({ id, status, message, watchedLive }: { id: string; status: string; message?: string; watchedLive: boolean }) {
+function Outcome({
+  id,
+  status,
+  message,
+  watchedLive,
+}: {
+  id: string;
+  status: string;
+  message?: string;
+  watchedLive: boolean;
+}) {
   useEffect(() => {
     if (watchedLive && (status === "answered" || status === "partial")) {
       const t = setTimeout(() => go(`/a/${id}`), 2500);
@@ -175,7 +227,8 @@ function Outcome({ id, status, message, watchedLive }: { id: string; status: str
   if (status === "answered" || status === "partial")
     return (
       <p className="outcome ok">
-        {status === "answered" ? "Answered." : "Partly answered."} <Link href={`/a/${id}`}>Open the answer</Link>
+        {status === "answered" ? "Answered." : "Partly answered."}{" "}
+        <Link href={`/a/${id}`}>Open the answer</Link>
       </p>
     );
   return (

@@ -14,7 +14,9 @@ async function main(): Promise<number> {
   if (cmd === "runtime") return runtimeStatus(rest[0] === "--detect");
   if (cmd === "export" && rest[0]) return exportRun(rest[0]);
   if (cmd !== "ask" || rest.length === 0) {
-    console.error('Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect] | fieldwork export <run id>');
+    console.error(
+      'Usage: fieldwork ask "<question about Montgomery, AL>" | fieldwork runtime [--detect] | fieldwork export <run id>',
+    );
     return 2;
   }
   const question = rest.join(" ");
@@ -26,11 +28,15 @@ async function main(): Promise<number> {
       const s = ((Date.now() - t0) / 1000).toFixed(1).padStart(6);
       const model = e.modelServed ? `  [${e.modelServed}, ${(e.latencyMs ?? 0) / 1000}s]` : "";
       const z = e.zetarisMs !== undefined ? `  [Zetaris ${e.zetarisMs} ms]` : "";
-      console.log(`${s}s  ${e.agent.padEnd(9)} ${e.action.padEnd(16)} ${e.status === "error" ? "✗" : e.status === "ok" ? "✓" : "·"} ${e.note}${model}${z}`);
+      console.log(
+        `${s}s  ${e.agent.padEnd(9)} ${e.action.padEnd(16)} ${e.status === "error" ? "✗" : e.status === "ok" ? "✓" : "·"} ${e.note}${model}${z}`,
+      );
     },
   });
   console.log("\n" + "=".repeat(78));
-  console.log(`Run ${outcome.runId}: ${outcome.status} after ${outcome.rounds} round(s), ${((Date.now() - t0) / 1000).toFixed(0)} s`);
+  console.log(
+    `Run ${outcome.runId}: ${outcome.status} after ${outcome.rounds} round(s), ${((Date.now() - t0) / 1000).toFixed(0)} s`,
+  );
   if (outcome.answer) {
     console.log(`\n${outcome.answer.headline}\n`);
     for (const pt of outcome.answer.points) console.log(`  • ${pt}`);
@@ -45,7 +51,9 @@ async function main(): Promise<number> {
     for (const r of outcome.joined.result.rows.slice(0, 12)) console.log(r.join(" | "));
   }
   await db.end();
-  return outcome.status === "answered" || outcome.status === "partial" || outcome.status === "refused" ? 0 : 1;
+  return outcome.status === "answered" || outcome.status === "partial" || outcome.status === "refused"
+    ? 0
+    : 1;
 }
 
 // fieldwork export <run id>: writes the run and its full trace to evidence/runs/ (no secrets are ever stored in a trace).
@@ -57,10 +65,16 @@ async function exportRun(runId: string): Promise<number> {
     await db.end();
     return 1;
   }
-  const events = await db.query(`SELECT seq, ts, agent, action, status, note, model_provider, model_requested, model_served, tokens_in, tokens_out, latency_ms, sql, zetaris_ms, rows FROM events WHERE run_id = $1 ORDER BY seq`, [runId]);
+  const events = await db.query(
+    `SELECT seq, ts, agent, action, status, note, model_provider, model_requested, model_served, tokens_in, tokens_out, latency_ms, sql, zetaris_ms, rows FROM events WHERE run_id = $1 ORDER BY seq`,
+    [runId],
+  );
   mkdirSync("evidence/runs", { recursive: true });
   writeFileSync(`evidence/runs/${runId}.run.json`, serializeRun(run.rows[0]));
-  writeFileSync(`evidence/runs/${runId}.events.jsonl`, events.rows.map((e) => JSON.stringify(e)).join("\n") + "\n");
+  writeFileSync(
+    `evidence/runs/${runId}.events.jsonl`,
+    events.rows.map((e) => JSON.stringify(e)).join("\n") + "\n",
+  );
   console.log(`evidence/runs/${runId}: ${events.rows.length} events`);
   await db.end();
   return 0;
@@ -70,12 +84,15 @@ async function exportRun(runId: string): Promise<number> {
 async function runtimeStatus(detect: boolean): Promise<number> {
   const token = process.env.METERLESS_RUNTIME_TOKEN || undefined;
   const base = process.env.METERLESS_BASE_URL ?? "http://127.0.0.1:8088/v1";
-  const s = detect ? ((await autoDetect(token)) ?? (await new MeterlessProvider(base, token).status())) : await new MeterlessProvider(base, token).status();
+  const s = detect
+    ? ((await autoDetect(token)) ?? (await new MeterlessProvider(base, token).status()))
+    : await new MeterlessProvider(base, token).status();
   console.log(`Meterless Runtime: ${s.state} at ${s.baseUrl} (checked ${s.checkedAt})`);
   console.log(`  ${s.reason}`);
   if (s.state !== "online") return 1;
   console.log(`  Routing modes: ${s.modes.join(", ")}`);
-  for (const c of await new MeterlessProvider(s.baseUrl, token).classes()) console.log(`  ${c.id.padEnd(10)} ${c.state}${c.why ? ` (${c.why})` : ""}`);
+  for (const c of await new MeterlessProvider(s.baseUrl, token).classes())
+    console.log(`  ${c.id.padEnd(10)} ${c.state}${c.why ? ` (${c.why})` : ""}`);
   return 0;
 }
 

@@ -20,13 +20,27 @@ export async function layerInfo(url: string): Promise<LayerInfo> {
     geometryType?: string;
     error?: { message?: string; details?: string[] };
   };
-  if (b.error) throw new Error(`ArcGIS: ${[b.error.message, ...(b.error.details ?? [])].filter(Boolean).join("; ") || "layer error"}`);
-  return { url: base, name: b.name ?? base, fields: b.fields ?? [], maxRecordCount: b.maxRecordCount ?? 1000, geometryType: b.geometryType };
+  if (b.error)
+    throw new Error(
+      `ArcGIS: ${[b.error.message, ...(b.error.details ?? [])].filter(Boolean).join("; ") || "layer error"}`,
+    );
+  return {
+    url: base,
+    name: b.name ?? base,
+    fields: b.fields ?? [],
+    maxRecordCount: b.maxRecordCount ?? 1000,
+    geometryType: b.geometryType,
+  };
 }
 
 export async function layerCount(url: string, where = "1=1"): Promise<number> {
-  const b = (await getJson(`${normaliseLayerUrl(url)}/query?where=${encodeURIComponent(where)}&returnCountOnly=true&f=json`)) as { count?: number; error?:{code?:number;message?:string;details?:string[]} };
-  if (typeof b.count !== "number") throw new Error(`ArcGIS did not return a count${b.error?`: ${b.error.code??""} ${b.error.message??""} ${b.error.details?.join("; ")??""}`:""}`);
+  const b = (await getJson(
+    `${normaliseLayerUrl(url)}/query?where=${encodeURIComponent(where)}&returnCountOnly=true&f=json`,
+  )) as { count?: number; error?: { code?: number; message?: string; details?: string[] } };
+  if (typeof b.count !== "number")
+    throw new Error(
+      `ArcGIS did not return a count${b.error ? `: ${b.error.code ?? ""} ${b.error.message ?? ""} ${b.error.details?.join("; ") ?? ""}` : ""}`,
+    );
   return b.count;
 }
 
@@ -71,12 +85,20 @@ export function featurePageUrl(layerUrl: string, q: FeatureQuery): string {
 
 // Counts grouped by a field, computed by the city's server: one small response instead of thousands of rows.
 export function statsUrl(layerUrl: string, where: string, groupBy: string): string {
-  const stats = JSON.stringify([{ statisticType: "count", onStatisticField: "OBJECTID", outStatisticFieldName: "n" }]);
-  const p = new URLSearchParams({ where, outStatistics: stats, groupByFieldsForStatistics: groupBy, f: "json" });
+  const stats = JSON.stringify([
+    { statisticType: "count", onStatisticField: "OBJECTID", outStatisticFieldName: "n" },
+  ]);
+  const p = new URLSearchParams({
+    where,
+    outStatistics: stats,
+    groupByFieldsForStatistics: groupBy,
+    f: "json",
+  });
   return `${normaliseLayerUrl(layerUrl)}/query?${p.toString()}`;
 }
 
-export const TIGER_TRACTS = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/0";
+export const TIGER_TRACTS =
+  "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Tracts_Blocks/MapServer/0";
 
 export function tractPolygonsUrl(stateFips: string, countyFips: string): string {
   const p = new URLSearchParams({

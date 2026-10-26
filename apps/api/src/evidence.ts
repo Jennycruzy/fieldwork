@@ -6,5 +6,7 @@ export function serializeRun(run: Record<string, unknown>): string {
   if (!Array.isArray(answer?.tracts)) return JSON.stringify(run, null, 2) + "\n";
   const marker = randomUUID();
   const printable = { ...run, answer: { ...answer, tracts: marker } };
-  return JSON.stringify(printable, null, 2).replace(JSON.stringify(marker), JSON.stringify(answer.tracts)) + "\n";
+  return (
+    JSON.stringify(printable, null, 2).replace(JSON.stringify(marker), JSON.stringify(answer.tracts)) + "\n"
+  );
 }

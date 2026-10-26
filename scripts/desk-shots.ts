@@ -23,11 +23,17 @@ const pages = [
 
 const browser = await chromium.launch();
 const errors: string[] = [];
-for (const [w, h, label] of [[360, 780, "phone"], [1280, 900, "desktop"]] as const) {
+for (const [w, h, label] of [
+  [360, 780, "phone"],
+  [1280, 900, "desktop"],
+] as const) {
   for (const scheme of ["light", "dark"] as const) {
     const ctx = await browser.newContext({ viewport: { width: w, height: h }, colorScheme: scheme });
     const page = await ctx.newPage();
-    page.on("console", (m) => m.type() === "error" && errors.push(`${label}/${scheme} ${page.url()}: ${m.text()}`));
+    page.on(
+      "console",
+      (m) => m.type() === "error" && errors.push(`${label}/${scheme} ${page.url()}: ${m.text()}`),
+    );
     page.on("pageerror", (e) => errors.push(`${label}/${scheme} ${page.url()}: ${e.message}`));
     for (const [name, path] of pages) {
       await page.goto(`${base}${path}`, { waitUntil: "networkidle" });
@@ -42,4 +48,4 @@ for (const [w, h, label] of [[360, 780, "phone"], [1280, 900, "desktop"]] as con
 await browser.close();
 console.log(errors.length ? errors.join("\n") : "no console errors, no sideways scroll");
 
-if(errors.length) process.exitCode=1;
+if (errors.length) process.exitCode = 1;

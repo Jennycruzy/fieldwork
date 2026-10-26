@@ -77,8 +77,24 @@ export async function writeEvent(db: Db, e: RunEvent): Promise<void> {
     `INSERT INTO events (run_id, seq, ts, agent, action, status, note, model_provider, model_requested, model_served,
        tokens_in, tokens_out, latency_ms, sql, zetaris_ms, rows)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
-    [e.runId, e.seq, e.ts, e.agent, e.action, e.status, e.note, e.modelProvider ?? null, e.modelRequested ?? null, e.modelServed ?? null,
-      e.tokensIn ?? null, e.tokensOut ?? null, e.latencyMs ?? null, e.sql ?? null, e.zetarisMs ?? null, e.rows ?? null],
+    [
+      e.runId,
+      e.seq,
+      e.ts,
+      e.agent,
+      e.action,
+      e.status,
+      e.note,
+      e.modelProvider ?? null,
+      e.modelRequested ?? null,
+      e.modelServed ?? null,
+      e.tokensIn ?? null,
+      e.tokensOut ?? null,
+      e.latencyMs ?? null,
+      e.sql ?? null,
+      e.zetarisMs ?? null,
+      e.rows ?? null,
+    ],
   );
 }
 
