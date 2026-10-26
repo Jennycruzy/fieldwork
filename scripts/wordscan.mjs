@@ -31,8 +31,10 @@ let bad = 0;
 for (const f of files) {
   const lines = readFileSync(f, "utf8").split("\n");
   lines.forEach((line, i) => {
+    // This is a required Zetaris grammar token, rather than product planning text.
+    const productLine = line.replace(/(INFER SQLTABLE (?:SOURCES|COLUMNS)) SPEC\b/gi, "$1");
     for (const re of banned)
-      if (re.test(line)) {
+      if (re.test(productLine)) {
         console.log(`${f}:${i + 1}: ${re}`);
         bad++;
       }

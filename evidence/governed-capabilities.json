@@ -1,0 +1,42 @@
+{
+  "baseline": "0f561bb",
+  "status": "partial",
+  "usl": {
+    "status": "blocked",
+    "sql": "CREATE NAMESPACE IF NOT EXISTS lightning.metastore.fieldwork",
+    "http_status": 400,
+    "error": "org.apache.hive.service.cli.HiveSQLException: Error running query: com.zetaris.lightning.sql.lightningcatalog.NamespaceException: parent namespace : metastore is not existing",
+    "dependent_probes": [
+      {
+        "command": "COMPILE USL montgomery_neighborhoods DEPLOY NAMESPACE lightning.metastore.fieldwork DDL ...",
+        "error": "namespace not found : metastore.fieldwork"
+      },
+      {
+        "command": "ACTIVATE USL TABLE lightning.metastore.fieldwork.montgomery_neighborhoods.tract AS SELECT ...",
+        "error": "metastore.fieldwork.montgomery_neighborhoods is not existing"
+      },
+      {
+        "command": "RUN DQ geoid TABLE lightning.metastore.fieldwork.montgomery_neighborhoods.tract",
+        "error": "metastore.fieldwork.montgomery_neighborhoods is not existing"
+      }
+    ],
+    "note": "The probe runner continued dependent statements after the namespace failure. No model was created. Further USL/DQ work stopped; parent-namespace initialization was not attempted."
+  },
+  "lineage": {
+    "status": "available",
+    "sql": "INFER SQLTABLE SOURCES SPEC SELECT geoid,name FROM fw_pg.tracts",
+    "http_status": 200,
+    "headers": [
+      "datasource",
+      "alias"
+    ],
+    "rows": [
+      [
+        "FW_PG.tracts",
+        "tracts"
+      ]
+    ]
+  },
+  "reference": "https://github.com/zetaris/getting-started/blob/main/docs/guides/zetaris-lightning-sql-commands.md",
+  "recorded_at": "2026-10-26T17:50:11.710692+00:00"
+}

@@ -250,6 +250,17 @@ export function AnswerPage({ id }: { id: string }) {
               <code>SELECT * FROM {run.answer.view}</code>
             </p>
           )}
+          {run.answer?.lineage && (
+            <p className="muted">
+              Lineage:{" "}
+              {run.answer.lineage.status === "verified"
+                ? run.answer.lineage.query_sources
+                    .map((s) => s.datasource + (s.alias ? " (" + s.alias + ")" : ""))
+                    .join(", ")
+                : "unavailable — " + run.answer.lineage.message}
+              . Checked {when(run.answer.lineage.checked_at)}.
+            </p>
+          )}
           {run.answer?.sql && (
             <details open={!!selected}>
               <summary>The Zetaris query</summary>

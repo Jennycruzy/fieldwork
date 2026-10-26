@@ -1,0 +1,30 @@
+{
+  "mode": "verification of a recorded query",
+  "run_id": "r_20261026_a3c552",
+  "model_calls": 0,
+  "lineage": {
+    "status": "verified",
+    "checked_at": "2026-10-26T17:51:09.634Z",
+    "view": "fieldwork_answers.answer_a3c552",
+    "view_sources": [
+      {
+        "datasource": "FW_PG.tracts",
+        "alias": "t"
+      },
+      {
+        "datasource": "FW_PG.tract_counts",
+        "alias": "n"
+      }
+    ],
+    "query_sources": [
+      {
+        "datasource": "FW_PG.tracts",
+        "alias": "t"
+      },
+      {
+        "datasource": "FW_PG.tract_counts",
+        "alias": "n"
+      }
+    ]
+  }
+}

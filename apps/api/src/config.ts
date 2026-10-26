@@ -24,6 +24,7 @@ export interface Config {
   nvidiaKey?: string;
   meterless: { baseUrl: string; token?: string; model: string };
   dailyCalls: number;
+  answerLineage?: boolean;
   place: {
     name: string;
     stateFips: string;
@@ -50,6 +51,7 @@ export function config(): Config {
       model: process.env.METERLESS_MODEL ?? "meterless/auto",
     },
     dailyCalls: Number(process.env.FW_DAILY_CALLS ?? 45),
+    answerLineage: process.env.FW_ANSWER_LINEAGE === "1",
     // The product's scope: Montgomery, Alabama (city open data hub + Montgomery County census tracts).
     place: {
       name: "Montgomery, AL",

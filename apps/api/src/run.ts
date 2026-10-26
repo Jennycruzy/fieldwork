@@ -1,3 +1,4 @@
+import { answerLineage, type AnswerLineage } from "./lineage.js";
 import { runBudget, RunCallLimit } from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
@@ -64,6 +65,7 @@ const MODELS: Record<Role, string[]> = {
 };
 
 export interface RunOutcome {
+  lineage?: AnswerLineage;
   runId: string;
   status: "answered" | "partial" | "refused" | "failed" | "budget";
   rounds: number;
@@ -512,6 +514,18 @@ async function askWithLease(
     ]);
     out.answer = draft;
     out.view = await saveAnswerView(ctx, joined.sql);
+    if (cfg.answerLineage && out.view) {
+      out.lineage = await answerLineage(ctx.zetaris, out.view, joined.sql);
+      await trace.log({
+        agent: "run",
+        action: "lineage",
+        status: out.lineage.status === "verified" ? "ok" : "error",
+        note:
+          out.lineage.status === "verified"
+            ? "Zetaris query sources: " + out.lineage.query_sources.map((s) => s.datasource).join(", ")
+            : (out.lineage.message ?? "Lineage unavailable"),
+      });
+    }
     return out;
   } catch (e) {
     if (e instanceof RunCallLimit) {
@@ -604,6 +618,7 @@ async function askWithLease(
           plan: out.plan,
           sql: out.joined?.sql,
           view: out.view,
+          lineage: out.lineage,
           headers: out.joined?.result.headers,
           rows: out.joined?.result.rows,
           checks: out.checks,

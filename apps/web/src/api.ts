@@ -65,6 +65,14 @@ export interface RunRecord {
     sources?: Source[];
     sql?: string;
     view?: string;
+    lineage?: {
+      status: "verified" | "unavailable";
+      view: string;
+      checked_at: string;
+      view_sources: { datasource: string; alias: string }[];
+      query_sources: { datasource: string; alias: string }[];
+      message?: string;
+    };
     headers?: string[];
     rows?: (string | null)[][];
     checks?: { ok: boolean; detail: string }[];
