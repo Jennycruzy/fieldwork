@@ -65,6 +65,16 @@ export interface RunRecord {
     sources?: Source[];
     sql?: string;
     view?: string;
+    writer_chunks?: {
+      status: string;
+      tokenLabel: string;
+      efficiencyLabel: string;
+      totalTokensUsed: number;
+      efficiencyPercent: number;
+      chunkConfig: { carryoverTokens: number };
+      chunks: { id: number; tokens: number; carryover: string; content: string; nextCarryover?: string }[];
+    };
+
     lineage?: {
       status: "verified" | "unavailable";
       view: string;

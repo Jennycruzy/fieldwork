@@ -15,6 +15,7 @@ const banned = [
   /\bhandover\b/i,
 ];
 const allow = [
+  /^packages\/markovian\/conformance\//,
   /^packages\/world\/conformance\//,
   /^package-lock\.json$/,
   /^scripts\/wordscan\.mjs$/,

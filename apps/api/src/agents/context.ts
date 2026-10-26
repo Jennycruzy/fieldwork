@@ -1,3 +1,4 @@
+import type { WriterChunkState } from "../writerChunks.js";
 import type { WorldModel } from "../../../../packages/world/src/index.js";
 import type { ZetarisClient } from "@fieldwork/zetaris";
 import type { ModelChain } from "@fieldwork/llm";
@@ -9,6 +10,7 @@ import type { Trace } from "../trace.js";
 export type Role = "planner" | "finder" | "wirer" | "joiner" | "evaluator" | "writer";
 
 export interface Ctx {
+  writerChunkState?: WriterChunkState;
   world?: WorldModel;
   cfg: Config;
   db: Db;

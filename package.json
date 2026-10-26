@@ -23,7 +23,8 @@
     "questions": "tsx scripts/question-set.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "recipe": "tsx scripts/recipe.ts"
+    "recipe": "tsx scripts/recipe.ts",
+    "conformance:markovian": "MARKOVIAN_IMPL=$PWD/packages/markovian/src/index.ts tsx packages/markovian/conformance/runner.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",

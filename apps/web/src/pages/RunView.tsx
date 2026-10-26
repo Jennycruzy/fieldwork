@@ -203,6 +203,30 @@ export function RunView({ id }: { id: string }) {
           ))}
         </ol>
       </section>
+      {run?.answer?.writer_chunks && (
+        <section className="card">
+          <h2>Bounded Writer reasoning</h2>
+          <p>
+            Markovian · {run.answer.writer_chunks.status} · {run.answer.writer_chunks.chunks.length} chunks.
+          </p>
+          <p>
+            Generated output tokens: {run.answer.writer_chunks.totalTokensUsed} (
+            {run.answer.writer_chunks.tokenLabel}). Context-comparison figures are modeled from this run's
+            saved configuration.
+          </p>
+          {run.answer.writer_chunks.chunks.map((c) => (
+            <details key={c.id}>
+              <summary>Chunk {c.id}</summary>
+              <h3>Incoming state</h3>
+              <pre>{c.carryover || "First chunk"}</pre>
+              <h3>Checked output</h3>
+              <pre>{c.content}</pre>
+              <h3>Carried state</h3>
+              <pre>{c.nextCarryover}</pre>
+            </details>
+          ))}
+        </section>
+      )}
     </>
   );
 }

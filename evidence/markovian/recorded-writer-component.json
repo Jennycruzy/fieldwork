@@ -1,0 +1,145 @@
+{
+  "mode": "Writer component over previously recorded rows",
+  "source_run": "r_20261026_78c425",
+  "production_setting": "off",
+  "full_question_batch_measured": false,
+  "elapsed_ms": 8949,
+  "checked": {
+    "ok": true,
+    "missingNumbers": [],
+    "orderProblems": []
+  },
+  "engine": {
+    "id": "1de7d0d8-bbec-4354-8655-706a1dd67c51",
+    "timestamp": 1793039070391,
+    "prompt": "Choose checked row facts for this question: Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+    "mode": "ARCHITECT",
+    "chunkConfig": {
+      "chunkSize": 6000,
+      "maxChunks": 2,
+      "carryoverTokens": 512,
+      "overlapTokens": 0
+    },
+    "chunks": [
+      {
+        "id": 1,
+        "tokens": 129,
+        "carryover": "",
+        "content": "[{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"}]",
+        "tokenLabel": "measured",
+        "nextCarryover": "COMPLETED: reviewed rows through 40\nREMAINING: 31 rows\nDECISIONS: keep only row-checked facts\nCONTEXT: [{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"}]",
+        "cascadeLevelUsed": 1
+      },
+      {
+        "id": 2,
+        "tokens": 133,
+        "carryover": "COMPLETED: reviewed rows through 40\nREMAINING: 31 rows\nDECISIONS: keep only row-checked facts\nCONTEXT: [{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"}]",
+        "content": "[{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"},{\"row_index\":40,\"text\":\"Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0\"},{\"row_index\":41,\"text\":\"Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0\"}]",
+        "tokenLabel": "measured",
+        "nextCarryover": "COMPLETED: recent output retained\nREMAINING: continue\nDECISIONS: see context\nCONTEXT: COMPLETED: reviewed rows through 40\nREMAINING: 31 rows\nDECISIONS: keep only row-checked facts\nCONTEXT: [{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"}]\n[{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"},{\"row_index\":40,\"text\":\"Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0\"},{\"row_index\":41,\"text\":\"Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0\"}]",
+        "cascadeLevelUsed": 4
+      }
+    ],
+    "status": "completed",
+    "output": "[{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"}]\n\n[{\"row_index\":0,\"text\":\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\"},{\"row_index\":1,\"text\":\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\"},{\"row_index\":40,\"text\":\"Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0\"},{\"row_index\":41,\"text\":\"Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0\"}]",
+    "tokenLabel": "measured",
+    "efficiencyLabel": "modeled",
+    "totalTokensUsed": 262,
+    "totalTokensSaved": 0,
+    "efficiencyPercent": 0,
+    "durationMs": 5328
+  },
+  "checked_facts": [
+    {
+      "row_index": 0,
+      "text": "Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0"
+    },
+    {
+      "row_index": 1,
+      "text": "Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0"
+    },
+    {
+      "row_index": 40,
+      "text": "Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0"
+    },
+    {
+      "row_index": 41,
+      "text": "Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0"
+    }
+  ],
+  "checked_draft": {
+    "headline": "48 Montgomery census tracts have zero listed pharmacies per 10,000 residents, tied for the fewest availability",
+    "points": [
+      "All 48 zero-rate tracts are in the 1st rank group, with no pharmacies listed per 10,000 residents",
+      "These tracts contain a combined population of 135,501 residents with zero pharmacies listed",
+      "The remaining 23 tracts have between 1 and 11.34 pharmacies per 10,000 residents",
+      "Census Tract 6 has the highest rate at 11.34 pharmacies per 10,000 residents"
+    ],
+    "how_sure": "The ranking is based on pharmacy_locator_count_per_10000_totalpopulation rates across 71 census tracts; 48 tracts have 0.0 rate with pharmacy_locator_count=0; 23 tracts have positive rates; data retrieved 2026-10-26 from Pharmacy Locator and PLACES 2025 releases",
+    "caveats": [
+      "Zero rate means no listed pharmacies; does not account for unlisted or independent pharmacies",
+      "Rates are model-based estimates from survey data (PLACES) and pharmacy locator counts",
+      "Tie group of 48 tracts all share rank 1 with exact same rate of 0.0 per 10,000 residents"
+    ]
+  },
+  "calls": [
+    {
+      "provider": "openrouter",
+      "modelRequested": "nvidia/nemotron-3.5-lightning:free",
+      "modelServed": "nvidia/nemotron-3.5-lightning:free",
+      "tokensIn": 2129,
+      "tokensOut": 129,
+      "ms": 3362,
+      "attempt": 1,
+      "ok": true
+    },
+    {
+      "provider": "openrouter",
+      "modelRequested": "nvidia/nemotron-3.5-lightning:free",
+      "modelServed": "nvidia/nemotron-3.5-lightning:free",
+      "tokensIn": 2188,
+      "tokensOut": 133,
+      "ms": 1886,
+      "attempt": 1,
+      "ok": true
+    },
+    {
+      "provider": "openrouter",
+      "modelRequested": "nvidia/nemotron-3.5-lightning:free",
+      "modelServed": "nvidia/nemotron-3.5-lightning:free",
+      "tokensIn": 8185,
+      "tokensOut": 319,
+      "ms": 3517,
+      "attempt": 1,
+      "ok": true
+    }
+  ],
+  "events": [
+    {
+      "agent": "writer",
+      "action": "markovian_chunk",
+      "status": "info",
+      "note": "{\"engine\":\"Markovian\",\"chunk\":{\"id\":1,\"tokens\":129,\"carryover\":\"\",\"content\":\"[{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"}]\",\"tokenLabel\":\"measured\",\"nextCarryover\":\"COMPLETED: reviewed rows through 40\\nREMAINING: 31 rows\\nDECISIONS: keep only row-checked facts\\nCONTEXT: [{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"}]\",\"cascadeLevelUsed\":1},\"carryover_limit\":512,\"efficiency\":\"modeled\"}"
+    },
+    {
+      "agent": "writer",
+      "action": "markovian_chunk",
+      "status": "info",
+      "note": "{\"engine\":\"Markovian\",\"chunk\":{\"id\":2,\"tokens\":133,\"carryover\":\"COMPLETED: reviewed rows through 40\\nREMAINING: 31 rows\\nDECISIONS: keep only row-checked facts\\nCONTEXT: [{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"}]\",\"content\":\"[{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"},{\\\"row_index\\\":40,\\\"text\\\":\\\"Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0\\\"},{\\\"row_index\\\":41,\\\"text\\\":\\\"Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0\\\"}]\",\"tokenLabel\":\"measured\",\"nextCarryover\":\"COMPLETED: recent output retained\\nREMAINING: continue\\nDECISIONS: see context\\nCONTEXT: COMPLETED: reviewed rows through 40\\nREMAINING: 31 rows\\nDECISIONS: keep only row-checked facts\\nCONTEXT: [{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"}]\\n[{\\\"row_index\\\":0,\\\"text\\\":\\\"Census Tract 1: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=982.0\\\"},{\\\"row_index\\\":1,\\\"text\\\":\\\"Census Tract 10: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1200.0\\\"},{\\\"row_index\\\":40,\\\"text\\\":\\\"Census Tract 57: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1417.0\\\"},{\\\"row_index\\\":41,\\\"text\\\":\\\"Census Tract 58: pharmacy_locator_count_per_10000_totalpopulation=0.0, pharmacy_locator_count=0, totalpopulation=1918.0\\\"}]\",\"cascadeLevelUsed\":4},\"carryover_limit\":512,\"efficiency\":\"modeled\"}"
+    },
+    {
+      "agent": "writer",
+      "action": "markovian_summary",
+      "status": "ok",
+      "note": "{\"status\":\"completed\",\"chunks\":2,\"facts\":4,\"tokens\":262,\"token_label\":\"measured\",\"efficiency_label\":\"modeled\"}"
+    },
+    {
+      "agent": "writer",
+      "action": "answer",
+      "status": "ok",
+      "note": "48 Montgomery census tracts have zero listed pharmacies per 10,000 residents, tied for the fewest availability"
+    }
+  ],
+  "budget_before": 804,
+  "budget_after": 807
+}

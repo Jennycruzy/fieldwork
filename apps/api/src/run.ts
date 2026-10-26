@@ -619,6 +619,8 @@ async function askWithLease(
           sql: out.joined?.sql,
           view: out.view,
           lineage: out.lineage,
+          writer_chunks: ctx.writerChunkState?.engine,
+          chunk_facts: ctx.writerChunkState?.facts,
           headers: out.joined?.result.headers,
           rows: out.joined?.result.rows,
           checks: out.checks,

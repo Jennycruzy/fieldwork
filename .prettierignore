@@ -14,3 +14,5 @@ scripts/question-set.ts
 *.py
 *.yml
 *.service
+
+packages/markovian/conformance/

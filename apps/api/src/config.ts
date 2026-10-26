@@ -25,6 +25,7 @@ export interface Config {
   meterless: { baseUrl: string; token?: string; model: string };
   dailyCalls: number;
   answerLineage?: boolean;
+  markovianWriter?: boolean;
   place: {
     name: string;
     stateFips: string;
@@ -52,6 +53,7 @@ export function config(): Config {
     },
     dailyCalls: Number(process.env.FW_DAILY_CALLS ?? 45),
     answerLineage: process.env.FW_ANSWER_LINEAGE === "1",
+    markovianWriter: process.env.FW_MARKOVIAN_WRITER === "1",
     // The product's scope: Montgomery, Alabama (city open data hub + Montgomery County census tracts).
     place: {
       name: "Montgomery, AL",

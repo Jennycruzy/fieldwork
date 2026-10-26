@@ -1,3 +1,4 @@
+import { writerChunks } from "../writerChunks.js";
 import { computeFigureLedger, AnswerSchema, type Answer, type CheckResult, type Plan } from "@fieldwork/core";
 import { SYSTEM_BASE, dataBlock, type Ctx } from "./context.js";
 import type { Joined } from "./joiner.js";
@@ -13,6 +14,7 @@ export async function write(
   rounds: number,
   fix?: string,
 ): Promise<Answer> {
+  const chunked = await writerChunks(ctx, question, p, joined, checks);
   const rankFacts =
     p.output === "ranking"
       ? primaryRankFacts(joined.result.headers, joined.result.rows, p.analysis?.rank_measure ?? "")
@@ -65,15 +67,21 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
           "\n" +
           dataBlock(
             "result",
-            p.analysis?.relationship
-              ? [
-                  joined.result.headers.filter((h) => /corr|paired/i.test(h)),
-                  joined.result.rows[0]?.filter((_, i) => /corr|paired/i.test(joined.result.headers[i]!)) ??
-                    [],
-                ]
-              : rankFacts
-                ? [rankFacts.headers, ...rankFacts.rows]
-                : [joined.result.headers, ...joined.result.rows],
+            chunked?.facts.length
+              ? {
+                  checked_chunk_facts: chunked.facts,
+                  headers: rankFacts?.headers ?? joined.result.headers,
+                  first_rows: (rankFacts?.rows ?? joined.result.rows).slice(0, 5),
+                }
+              : p.analysis?.relationship
+                ? [
+                    joined.result.headers.filter((h) => /corr|paired/i.test(h)),
+                    joined.result.rows[0]?.filter((_, i) => /corr|paired/i.test(joined.result.headers[i]!)) ??
+                      [],
+                  ]
+                : rankFacts
+                  ? [rankFacts.headers, ...rankFacts.rows]
+                  : [joined.result.headers, ...joined.result.rows],
           ) +
           "\n" +
           dataBlock(
