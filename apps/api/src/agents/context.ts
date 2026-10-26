@@ -1,5 +1,6 @@
 import type { WriterChunkState } from "../writerChunks.js";
 import type { WorldModel } from "../../../../packages/world/src/index.js";
+import type { EmbeddingFinder } from "../../../../packages/embeddings/src/index.js";
 import type { ZetarisClient } from "@fieldwork/zetaris";
 import type { ModelChain } from "@fieldwork/llm";
 import type { HMEM, Recalled } from "@fieldwork/hmem";
@@ -10,6 +11,7 @@ import type { Trace } from "../trace.js";
 export type Role = "planner" | "finder" | "wirer" | "joiner" | "evaluator" | "writer";
 
 export interface Ctx {
+  finderEmbeddings?: EmbeddingFinder;
   scout?: import("../scoutGuard.js").ScoutGuard;
   writerChunkState?: WriterChunkState;
   world?: WorldModel;

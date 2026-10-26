@@ -9,6 +9,7 @@ import {
   socrataColumns,
   type Candidate,
 } from "@fieldwork/sources";
+import { rankFinderCandidates } from "../finderEmbeddings.js";
 import { recall, type Recalled } from "@fieldwork/hmem";
 import { SYSTEM_BASE, provenance, dataBlock, type Ctx } from "./context.js";
 
@@ -112,6 +113,8 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
         if (await ctx.scout.metadata(c, { title: c.title, description: c.description })) safe.push(c);
       m.candidates = safe;
     }
+  if (ctx.cfg.finderEmbeddings)
+    for (const m of perMeasure) m.candidates = await rankFinderCandidates(ctx, m.describe, m.candidates);
   const absent = perMeasure.find((m) => m.candidates.length === 0);
   if (absent) throw new FieldworkError("NO_SOURCE", absent.describe);
 

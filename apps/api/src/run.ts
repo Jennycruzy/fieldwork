@@ -1,6 +1,7 @@
 import { redact } from "../../../packages/scout/src/index.js";
 import { ScoutGuard, GuardedZetarisClient, contentSafety } from "./scoutGuard.js";
 import { answerLineage, type AnswerLineage } from "./lineage.js";
+import { makeFinderEmbeddings } from "./finderEmbeddings.js";
 import { runBudget, RunCallLimit } from "./runBudget.js";
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
@@ -244,6 +245,7 @@ async function askWithLease(
     recalled: [],
   };
 
+  ctx.finderEmbeddings = makeFinderEmbeddings(ctx, budget);
   const out: RunOutcome = {
     runId,
     status: "failed",

@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-26T19:05:42.805Z",
+  "mode": "isolated connection, temporary table, transaction rolled back",
+  "checks": {
+    "miss": true,
+    "roundtrip": true,
+    "upsert": true,
+    "metadata_isolation": true,
+    "model_isolation": true,
+    "one_row": true,
+    "temporary_table_removed": true
+  },
+  "model_calls": 0,
+  "question_runs": 0
+}
