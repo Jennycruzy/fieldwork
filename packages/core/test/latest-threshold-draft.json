@@ -1,0 +1,477 @@
+{
+ "headers": [
+  "name",
+  "below_threshold_count",
+  "total_inspected_establishments",
+  "geoid"
+ ],
+ "rows": [
+  [
+   "Census Tract 28",
+   "2",
+   "31",
+   "01101002800"
+  ],
+  [
+   "Census Tract 56.09",
+   "2",
+   "33",
+   "01101005609"
+  ],
+  [
+   "Census Tract 1",
+   "1",
+   "98",
+   "01101000100"
+  ],
+  [
+   "Census Tract 10",
+   "1",
+   "18",
+   "01101001000"
+  ],
+  [
+   "Census Tract 13",
+   "1",
+   "20",
+   "01101001300"
+  ],
+  [
+   "Census Tract 16",
+   "1",
+   "42",
+   "01101001600"
+  ],
+  [
+   "Census Tract 20",
+   "1",
+   "21",
+   "01101002000"
+  ],
+  [
+   "Census Tract 27",
+   "1",
+   "43",
+   "01101002700"
+  ],
+  [
+   "Census Tract 29.01",
+   "1",
+   "2",
+   "01101002901"
+  ],
+  [
+   "Census Tract 29.02",
+   "1",
+   "15",
+   "01101002902"
+  ],
+  [
+   "Census Tract 33.04",
+   "1",
+   "41",
+   "01101003304"
+  ],
+  [
+   "Census Tract 5",
+   "1",
+   "13",
+   "01101000500"
+  ],
+  [
+   "Census Tract 54.10",
+   "1",
+   "26",
+   "01101005410"
+  ],
+  [
+   "Census Tract 56.04",
+   "1",
+   "10",
+   "01101005604"
+  ],
+  [
+   "Census Tract 56.06",
+   "1",
+   "20",
+   "01101005606"
+  ],
+  [
+   "Census Tract 56.13",
+   "1",
+   "20",
+   "01101005613"
+  ],
+  [
+   "Census Tract 11",
+   "0",
+   "10",
+   "01101001100"
+  ],
+  [
+   "Census Tract 12",
+   "0",
+   "13",
+   "01101001200"
+  ],
+  [
+   "Census Tract 14",
+   "0",
+   "30",
+   "01101001400"
+  ],
+  [
+   "Census Tract 15",
+   "0",
+   "38",
+   "01101001500"
+  ],
+  [
+   "Census Tract 17",
+   "0",
+   "18",
+   "01101001700"
+  ],
+  [
+   "Census Tract 18",
+   "0",
+   "28",
+   "01101001800"
+  ],
+  [
+   "Census Tract 19",
+   "0",
+   "4",
+   "01101001900"
+  ],
+  [
+   "Census Tract 2",
+   "0",
+   "8",
+   "01101000200"
+  ],
+  [
+   "Census Tract 21",
+   "0",
+   "7",
+   "01101002100"
+  ],
+  [
+   "Census Tract 22.01",
+   "0",
+   "13",
+   "01101002201"
+  ],
+  [
+   "Census Tract 22.02",
+   "0",
+   "5",
+   "01101002202"
+  ],
+  [
+   "Census Tract 23",
+   "0",
+   "8",
+   "01101002300"
+  ],
+  [
+   "Census Tract 24",
+   "0",
+   "13",
+   "01101002400"
+  ],
+  [
+   "Census Tract 25",
+   "0",
+   "12",
+   "01101002500"
+  ],
+  [
+   "Census Tract 26",
+   "0",
+   "32",
+   "01101002600"
+  ],
+  [
+   "Census Tract 3",
+   "0",
+   "10",
+   "01101000300"
+  ],
+  [
+   "Census Tract 30",
+   "0",
+   "7",
+   "01101003000"
+  ],
+  [
+   "Census Tract 31",
+   "0",
+   "8",
+   "01101003100"
+  ],
+  [
+   "Census Tract 32",
+   "0",
+   "21",
+   "01101003200"
+  ],
+  [
+   "Census Tract 33.01",
+   "0",
+   "40",
+   "01101003301"
+  ],
+  [
+   "Census Tract 33.03",
+   "0",
+   "0",
+   "01101003303"
+  ],
+  [
+   "Census Tract 4",
+   "0",
+   "11",
+   "01101000400"
+  ],
+  [
+   "Census Tract 51.01",
+   "0",
+   "14",
+   "01101005101"
+  ],
+  [
+   "Census Tract 51.02",
+   "0",
+   "4",
+   "01101005102"
+  ],
+  [
+   "Census Tract 53.01",
+   "0",
+   "1",
+   "01101005301"
+  ],
+  [
+   "Census Tract 53.02",
+   "0",
+   "19",
+   "01101005302"
+  ],
+  [
+   "Census Tract 54.02",
+   "0",
+   "35",
+   "01101005402"
+  ],
+  [
+   "Census Tract 54.03",
+   "0",
+   "26",
+   "01101005403"
+  ],
+  [
+   "Census Tract 54.07",
+   "0",
+   "41",
+   "01101005407"
+  ],
+  [
+   "Census Tract 54.09",
+   "0",
+   "5",
+   "01101005409"
+  ],
+  [
+   "Census Tract 54.11",
+   "0",
+   "18",
+   "01101005411"
+  ],
+  [
+   "Census Tract 54.12",
+   "0",
+   "125",
+   "01101005412"
+  ],
+  [
+   "Census Tract 54.13",
+   "0",
+   "2",
+   "01101005413"
+  ],
+  [
+   "Census Tract 54.14",
+   "0",
+   "22",
+   "01101005414"
+  ],
+  [
+   "Census Tract 55.01",
+   "0",
+   "2",
+   "01101005501"
+  ],
+  [
+   "Census Tract 55.02",
+   "0",
+   "2",
+   "01101005502"
+  ],
+  [
+   "Census Tract 55.03",
+   "0",
+   "40",
+   "01101005503"
+  ],
+  [
+   "Census Tract 55.04",
+   "0",
+   "5",
+   "01101005504"
+  ],
+  [
+   "Census Tract 56.05",
+   "0",
+   "10",
+   "01101005605"
+  ],
+  [
+   "Census Tract 56.07",
+   "0",
+   "1",
+   "01101005607"
+  ],
+  [
+   "Census Tract 56.08",
+   "0",
+   "1",
+   "01101005608"
+  ],
+  [
+   "Census Tract 56.10",
+   "0",
+   "4",
+   "01101005610"
+  ],
+  [
+   "Census Tract 56.11",
+   "0",
+   "20",
+   "01101005611"
+  ],
+  [
+   "Census Tract 56.12",
+   "0",
+   "3",
+   "01101005612"
+  ],
+  [
+   "Census Tract 56.14",
+   "0",
+   "14",
+   "01101005614"
+  ],
+  [
+   "Census Tract 57",
+   "0",
+   "5",
+   "01101005700"
+  ],
+  [
+   "Census Tract 58",
+   "0",
+   "6",
+   "01101005800"
+  ],
+  [
+   "Census Tract 59.02",
+   "0",
+   "10",
+   "01101005902"
+  ],
+  [
+   "Census Tract 59.03",
+   "0",
+   "5",
+   "01101005903"
+  ],
+  [
+   "Census Tract 59.04",
+   "0",
+   "53",
+   "01101005904"
+  ],
+  [
+   "Census Tract 6",
+   "0",
+   "17",
+   "01101000600"
+  ],
+  [
+   "Census Tract 60",
+   "0",
+   "17",
+   "01101006000"
+  ],
+  [
+   "Census Tract 61",
+   "0",
+   "5",
+   "01101006100"
+  ],
+  [
+   "Census Tract 7",
+   "0",
+   "13",
+   "01101000700"
+  ],
+  [
+   "Census Tract 9",
+   "0",
+   "0",
+   "01101000900"
+  ]
+ ],
+ "draft": {
+  "points": [
+   "The top two tracts share the highest count of 2 establishments below the 85 threshold.",
+   "16 tracts have at least 1 establishment below the threshold, with Census Tract 1 leading a 14-way tie at 1 establishment.",
+   "55 tracts have zero establishments below the threshold, meaning all their inspected establishments scored 85 or higher.",
+   "Total inspected establishments across all tracts: 1,334; total below-threshold establishments: 18.",
+   "Census Tract 54.12 has the most inspected establishments (125) but 0 below the threshold."
+  ],
+  "caveats": [
+   "Inspection scores are model-based estimates from health authority data; actual scores may vary.",
+   "Tracts with zero below-threshold establishments may still have establishments with scores below 85 if the threshold definition differs.",
+   "The count reflects only the latest inspection per establishment; multiple inspections per establishment are collapsed.",
+   "No data is available for establishments outside the City of Montgomery or not captured in the Food Scores dataset."
+  ],
+  "headline": "Census Tract 28 and Census Tract 56.09 each have 2 food establishments with latest inspection scores below 85, the highest count among all 71 Montgomery tracts.",
+  "how_sure": "The ranking is based on raw counts of food establishments with latest inspection scores below 85 per tract, sorted descending. The top rank (1st) is shared by 2 tracts. Sample: 71 census tracts, 1,334 inspected establishments, 18 below threshold. Data retrieved 2026-10-26 from the Food Scores dataset covering 2025-06 through 2026-06.",
+  "problems": [
+   "the number 14 is not in the result rows",
+   "the number 334 is not in the result rows",
+   "The tract identifier 334 names no result row.",
+   "\" The top rank (1st) is shared by 2 tracts\" makes a ranking claim that names no row"
+  ]
+ },
+ "facts": [
+  "1,334 of 1,336 located records fell inside a tract (99.9%); 2 outside, 0 without a location",
+  "m1_city: Zetaris rows 1,336 vs source's own count 1,336",
+  "71 result rows",
+  "every measure column has real values",
+  "0 duplicate case IDs removed before tract counting.",
+  "Retrieve full inspection histories before latest-per-establishment selection; apply score thresholds in the analysis only.",
+  "Food Scores: retrieved 2026-10-26. Catalog updated 2026-06-18; retrieval is not an event or inspection date.",
+  "Published description for Food Scores: This dataset provides food inspection scores for establishments within the City of Montgomery. It includes ratings assigned based on health and safety inspections conducted by regulatory authorities. The dataset helps monitor food safety standards and ensures compliance with public health regulations.",
+  "Food Scores: event dates 2025-06-17T00:00:00.000Z to 2026-06-15T00:00:00.000Z; monthly coverage 2025-06 through 2026-06 (13 distinct months).",
+  "counts; denominator: none. The question asks which tracts have the most establishments meeting an inspection-score condition, which is a workload-style ranking by raw count per tract, not an association between two variables.",
+  "Sort by the requested measure: Count of food establishments with latest inspection score below 85 per tract, descending; retain its value before supporting columns.",
+  "Latest-per-establishment scores, sample sizes and thresholds independently recompute from normalized inspection histories.",
+  "Quotable numbers: 85, 71 (from the question; 71 census tracts compared)",
+  "Some draft statements could not be verified.",
+  "",
+  "Evaluator rounds: 1"
+ ]
+}

@@ -187,3 +187,17 @@ test("tie-group size is checked independently of ordinal rank with many distinct
   expect(checkDraft([sentence.replace("Two", "Four")], a.headers, a.rows).ok).toBe(false);
   expect(checkDraft([sentence.replace("4th", "5th")], a.headers, a.rows).ok).toBe(false);
 });
+
+test("a sentence that fails only beside the rest of the answer is removed instead of failing the answer", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { headers, rows, draft, facts } = JSON.parse(
+    readFileSync(new URL("./latest-threshold-draft.json", import.meta.url), "utf8"),
+  );
+  const result = finalizeDraft(draft, headers, rows, facts);
+  const final = result.draft;
+  expect(
+    checkDraft([final.headline, ...final.points, final.how_sure, ...final.caveats], headers, rows, facts).ok,
+  ).toBe(true);
+  expect(result.removed.some((s) => s.includes("The top rank (1st) is shared by 2 tracts"))).toBe(true);
+  expect(final.headline).toBe(draft.headline);
+});

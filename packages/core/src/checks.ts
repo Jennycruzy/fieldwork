@@ -944,13 +944,43 @@ export function finalizeDraft<
     const template = "The result contains " + count + " rows." + top;
     headline = pass(template) ? template : "The result contains " + count + " rows.";
   }
-  const answer = {
+  let answer = {
     ...draft,
     headline,
     points: draft.points.map(filter).filter(Boolean),
     how_sure: filter(draft.how_sure),
     caveats: draft.caveats.map(filter).filter(Boolean),
   };
+  // Some claims pass alone and fail beside the rest of the answer, such as a shared rank stated
+  // without the rows it refers to. Drop each sentence the whole-answer check quotes.
+  for (let round = 0; round < 3; round++) {
+    const whole = checkDraft(
+      [answer.headline, ...answer.points, answer.how_sure, ...answer.caveats],
+      headers,
+      rows,
+      facts,
+    );
+    if (whole.ok) break;
+    const quoted = whole.orderProblems.join(" ");
+    const strip = (text: string) =>
+      text
+        .split(/(?<=[.!?])\s+(?=[A-Z])/)
+        .filter((s) => {
+          const claim = s.trim().replace(/[.!?]$/, "");
+          if (!claim || !quoted.includes(claim)) return true;
+          removed.push(s);
+          return false;
+        })
+        .join(" ");
+    const next = {
+      ...answer,
+      points: answer.points.map(strip).filter(Boolean),
+      how_sure: strip(answer.how_sure),
+      caveats: answer.caveats.map(strip).filter(Boolean),
+    };
+    if (JSON.stringify(next) === JSON.stringify(answer)) break;
+    answer = next;
+  }
   return { draft: answer, removed };
 }
 
