@@ -17,3 +17,17 @@ Fieldwork's Postgres store (`packages/hmem/src/pgStore.ts`). Fieldwork's source 
 [Meterless/Meterless](https://github.com/Meterless/Meterless) (`engines/world-model/conformance`), unmodified.
 Fieldwork's own World Model implementation in `packages/world/src/` is tested against it
 (`npm run conformance:world`). The Apache License 2.0 text is in `packages/world/LICENSE-meterless-world`.
+
+## Meterless Markovian conformance suite (Apache License 2.0)
+
+`packages/markovian/conformance/` is Meterless's Markovian engine conformance runner from
+[Meterless/Meterless](https://github.com/Meterless/Meterless) (`engines/markovian`, commit `1742dec`), unmodified.
+Fieldwork's own Markovian implementation in `packages/markovian/src/` is tested against it
+(`npm run conformance:markovian`). The Apache License 2.0 text is in `packages/markovian/LICENSE-meterless-markovian`.
+
+## Meterless Scout Intent evaluation harness (Apache License 2.0)
+
+The runner, thresholds, fixtures and regression set under `packages/scout/evals/` come from
+[Meterless/Meterless](https://github.com/Meterless/Meterless) (`engines/scout-intent`, commit `1742dec`), unmodified.
+Fieldwork's own Scout implementation in `packages/scout/src/` is tested against them (`npm run conformance:scout`).
+The Apache License 2.0 text is in `packages/scout/LICENSE-meterless-scout`.
