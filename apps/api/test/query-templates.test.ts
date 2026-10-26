@@ -1,6 +1,6 @@
 import{test,expect,vi}from"vitest";
 import{tractSummarySql}from"../src/agents/queryTemplates.js";
-import{join}from"../src/agents/joiner.js";
+import{compiledSql,join}from"../src/agents/joiner.js";
 import{analysisChecks}from"@fieldwork/core";
 import type{Plan}from"@fieldwork/core";
 import type{Wired}from"../src/agents/wirer.js";
@@ -84,7 +84,7 @@ test("source titles beginning with numbers get valid descriptive SQL identifiers
  expect(tractSummarySql(id,"Compare two service rates",p,[city,service,health],["m1_city","service_city"])).toContain("source_311_service_requests_count_per_1000_totalpopulation");
 });
 
-test("a revision bypasses every compiled template and executes the requested model repair",async()=>{
+test("a revision that the compiled template would repeat goes to the model with the requested repair",async()=>{
  const scenarios=[
   {question:"Which areas contain listed services?",p:{...plan,output:"list"as const},wired:[city],bridged:["m1_city"],sql:"SELECT name,1 AS count,geoid FROM fw_pg.tracts WHERE geoid='a'",instruction:"Return only positive membership"},
   {question:"Lowest average latest inspection scores",p:plan,wired:[{...city,normalized:true,valueKind:"score"}as Wired],bridged:[],sql:"SELECT name,80 AS average_score,2 AS establishment_count,geoid FROM fw_pg.tracts",instruction:"Flag small groups"},
@@ -95,7 +95,9 @@ test("a revision bypasses every compiled template and executes the requested mod
   const query=vi.fn(async()=>({headers:["name","count","geoid"],rows:[["A","1","a"]],total:1,ms:1,wallMs:1}));
   const json=vi.fn(async()=>({value:{sql:scenario.sql,explain:"Repaired"}}));
   const ctx={runId:id,runShort:"abcdef",cfg:{place:{countyName:"Example"}},memory:new HMEM(),recalled:[],models:{joiner:{json}},zetaris:{query},trace:{log:vi.fn()}}as unknown as Ctx;
-  const result=await join(ctx,scenario.question,scenario.p,scenario.wired,scenario.bridged,scenario.instruction,"SELECT 0");
+  const repeated=compiledSql(id,scenario.question,scenario.p,scenario.wired,scenario.bridged);
+  expect(repeated).toBeTruthy();
+  const result=await join(ctx,scenario.question,scenario.p,scenario.wired,scenario.bridged,scenario.instruction,repeated);
   expect(json).toHaveBeenCalledTimes(1);expect(JSON.stringify(json.mock.calls)).toContain(scenario.instruction);
   expect(result.sql).toBe(scenario.sql);expect(query).toHaveBeenCalledWith(scenario.sql,expect.any(Number));
  }
@@ -106,4 +108,14 @@ test("positive facility membership lists exclude empty tracts while workload ran
  expect(list).toContain("WHERE COALESCE(n.n,0)>0");
  expect(tractSummarySql(id,"Which areas have no listed services?",{...plan,output:"list"},[city],["m1_city"])).toContain("WHERE COALESCE(n.n,0)=0");
  expect(tractSummarySql(id,"Most listed services",plan,[city],["m1_city"])).not.toContain("WHERE COALESCE(n.n,0)>0");
+});
+
+test("a revision after a plan change uses the new compiled template without a model call",async()=>{
+ const query=vi.fn(async()=>({headers:["tract_name","count","geoid"],rows:[["A","1","a"]],total:1,ms:1,wallMs:1}));
+ const json=vi.fn();
+ const ctx={runId:id,runShort:"abcdef",cfg:{place:{countyName:"Example"}},memory:new HMEM(),recalled:[],models:{joiner:{json}},zetaris:{query},trace:{log:vi.fn()}}as unknown as Ctx;
+ const listPlan={...plan,output:"list"as const};
+ const compiled=compiledSql(id,"Which areas contain listed services?",listPlan,[city],["m1_city"])!;
+ const result=await join(ctx,"Which areas contain listed services?",listPlan,[city],["m1_city"],"Return only positive membership","SELECT 0");
+ expect(json).not.toHaveBeenCalled();expect(result.sql).toBe(compiled);
 });

@@ -32,6 +32,9 @@ export function tableCatalog(ctx: Ctx, wired: Wired[], bridged: string[]): strin
 
 export async function join(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: string[], revision?: string, previousSql?: string): Promise<Joined> {
   let feedback = revision ? `\nThe Evaluator sent this back: ${revision}\nPrevious SQL:\n${previousSql ?? ""}` : "";
+  // A revision only reaches the model when the compiled template would repeat the previous SQL.
+  const compiled=revision?compiledSql(ctx.runId,question,p,wired,bridged):undefined;
+  if(compiled&&compiled!==previousSql)feedback="";
   // Zetaris checks the SQL; if it refuses, its exact error goes back to the Joiner (up to 2 repairs).
   for (let attempt = 0; ; attempt++) {
     try {
@@ -47,7 +50,7 @@ export async function join(ctx: Ctx, question: string, p: Plan, wired: Wired[], 
 async function joinOnce(ctx: Ctx, question: string, p: Plan, wired: Wired[], bridged: string[], feedback: string): Promise<Joined> {
   const examples = recall(ctx.memory, `working Zetaris join for: ${question}`, { kinds: ["join", "repair"], topN: 2 });
   ctx.recalled.push(...examples);
-  const template=feedback?undefined:monthlySummarySql(ctx.runId,question,p,wired)??categorySummarySql(ctx.runId,p,wired)??inspectionSummarySql(ctx.runId,question,p,wired)??tractSummarySql(ctx.runId,question,p,wired,bridged);
+  const template=feedback?undefined:compiledSql(ctx.runId,question,p,wired,bridged);
   const { value } = template?{value:{sql:template,explain:"Compiled the plan against verified source schemas; independent checks and the Evaluator review the result."}}:await ctx.models.joiner.json(
     [
       {
@@ -86,6 +89,10 @@ Shape: {"sql": "...", "explain": "one sentence: what the query does"}`,
     for(const s of ctx.world.entities().filter((e)=>e.type==="source")) await ctx.world.relate({from:finding.id,type:"joins to",to:s.id,context:s.id,source});
   }
   return { sql, explain: value.explain, result };
+}
+
+export function compiledSql(runId:string,question:string,p:Plan,wired:Wired[],bridged:string[]):string|undefined {
+ return monthlySummarySql(runId,question,p,wired)??categorySummarySql(runId,p,wired)??inspectionSummarySql(runId,question,p,wired)??tractSummarySql(runId,question,p,wired,bridged);
 }
 
 export function monthlySummarySql(runId:string,question:string,p:Plan,wired:Wired[]):string|undefined {

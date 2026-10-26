@@ -15,7 +15,7 @@ vi.mock("../src/agents/planner.js",()=>({plan:vi.fn()}));
 vi.mock("../src/agents/finder.js",()=>({find:vi.fn()}));
 vi.mock("../src/agents/wirer.js",()=>({wire:vi.fn()}));
 vi.mock("../src/agents/joiner.js",()=>({join:vi.fn()}));
-vi.mock("../src/agents/evaluator.js",()=>({evaluate:vi.fn()}));
+vi.mock("../src/agents/evaluator.js",async(original)=>{const mod=await original<typeof import("../src/agents/evaluator.js")>();return {blockingCheck:mod.blockingCheck,evaluate:vi.fn()};});
 vi.mock("../src/agents/writer.js",()=>({write:vi.fn()}));
 vi.mock("../src/memory.js",()=>({learnFromRun:vi.fn(async()=>{})}));
 vi.mock("@fieldwork/hmem",async(original)=>{const mod=await original<typeof import("@fieldwork/hmem")>();return {...mod,loadMemory:async()=>new mod.HMEM()};});
@@ -56,4 +56,22 @@ test("three drafts receive exact previous problems and an approved result retain
  expect(result.status).toBe("answered");expect(result.answer?.points).toEqual(["A has 12 records."]);
  expect(result.removed_sentences).toEqual(["A has 5555 records."]);
  expect(result.drafts).toHaveLength(3);
+});
+
+test("a SQL revision that fails an independent check keeps the earlier checked query and says so",async()=>{
+ const checked={sql:"SELECT name, measure FROM result",result:{headers:["name","measure"],rows:[["A","12"]],total:1,ms:0,wallMs:0}};
+ vi.mocked(join).mockResolvedValueOnce(checked).mockResolvedValueOnce({sql:"SELECT measure, name FROM result",result:{headers:["measure","name"],rows:[["12","A"]],total:1,ms:0,wallMs:0}});
+ vi.mocked(evaluate).mockResolvedValueOnce({verdict:{verdict:"REVISE",target:"join",instruction:"Sort differently",reasons:[]},checks:[]})
+  .mockResolvedValueOnce({verdict:{verdict:"REVISE",target:"join",instruction:"Sort by the requested measure",reasons:[]},checks:[{id:"ranking_order",ok:false,detail:"Sort by the requested measure"}]});
+ vi.mocked(write).mockImplementation(async()=>({headline:"A has 12 records.",points:["A has 12 records."],how_sure:"A descriptive count.",caveats:[]}));
+ const result=await ask(cfg,db,"Count Montgomery records");
+ expect(evaluate).toHaveBeenCalledTimes(2);expect(result.status).toBe("answered");expect(result.joined?.sql).toBe(checked.sql);
+ expect(result.answer?.caveats.join(" ")).toContain("earlier query that passed every check");
+});
+test("a query from before a wiring change is never restored",async()=>{
+ vi.mocked(evaluate).mockResolvedValueOnce({verdict:{verdict:"REVISE",target:"wire",instruction:"Use the full date field",reasons:[]},checks:[]})
+  .mockResolvedValue({verdict:{verdict:"REVISE",target:"join",instruction:"Sort by the requested measure",reasons:[]},checks:[{id:"ranking_order",ok:false,detail:"Sort by the requested measure"}]});
+ const result=await ask(cfg,db,"Count Montgomery records");
+ expect(evaluate).toHaveBeenCalledTimes(3);expect(result.status).toBe("partial");
+ expect(result.answer?.caveats.join(" ")??"").not.toContain("earlier query that passed every check");
 });

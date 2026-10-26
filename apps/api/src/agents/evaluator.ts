@@ -128,7 +128,7 @@ Shape: {"verdict": "APPROVE" | "REVISE", "target": "join" | "wire" | "plan" | nu
     p.analysis?.relationship?4000:2000,
   );
   // An empty measure is never a valid answer, whatever the model thinks: the join goes back with the reason.
-  const empty = checks.find((c) => (["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","positive_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"].includes(c.id)||c.id.startsWith("rate_arithmetic_")) && !c.ok);
+  const empty = blockingCheck(checks);
   if (empty) {
     value.verdict = "REVISE";
     value.target = empty.id === "analysis_basis" ? "plan" : empty.id==="latest_source_selection"||(empty.id==="has_rows"&&wired.some(w=>w.sourceCount===0)) ? "wire" : "join";
@@ -202,6 +202,12 @@ export function categoryTotalsCheck(source:(string|null)[][],result:{headers:str
  const expected=new Map(source.map(r=>[r[0],Number(r[1])]));
  const ok=source.length<10000&&count>=0&&result.rows.length===expected.size&&new Set(result.rows.map(r=>r[0])).size===expected.size&&result.rows.every(r=>Number(r[count])===expected.get(r[0]));
  return {id:"category_totals",ok,detail:ok?`All ${expected.size} category totals match the independently aggregated source observations.`:`The source has ${expected.size} categories; return every category and its correct weighted total before describing shares or ranks.`};
+}
+
+const BLOCKING=["has_rows","measure_values", "analysis_basis", "relationship_rates", "ranking_order","zero_membership","positive_membership","latest_source_selection","latest_inspection_values","paired_membership","category_totals"];
+// The first failed check that no model verdict can override.
+export function blockingCheck(checks:CheckResult[]):CheckResult|undefined {
+ return checks.find((c)=>(BLOCKING.includes(c.id)||c.id.startsWith("rate_arithmetic_"))&&!c.ok);
 }
 
 export function positiveMembershipCheck(source:(string|null)[][],result:{headers:string[];rows:(string|null)[][]}):CheckResult {

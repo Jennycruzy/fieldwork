@@ -15,7 +15,7 @@ import { find, type Chosen } from "./agents/finder.js";
 import { wire, type Wired } from "./agents/wirer.js";
 import { bridgeEpa, bridgeToTracts, type Bridged } from "./agents/bridge.js";
 import { join, type Joined } from "./agents/joiner.js";
-import { evaluate } from "./agents/evaluator.js";
+import { blockingCheck, evaluate } from "./agents/evaluator.js";
 import { write } from "./agents/writer.js";
 
 // Model per role, in order of preference (served model is recorded on every call).
@@ -156,10 +156,21 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     let bridged = await timed("bridge",()=>bridgeAll(ctx, p, wired));
     let joined = await timed("joiner",()=>join(ctx, question, p, wired, bridged.map((b) => b.label)));
 
+    // The last query that passed every blocking code check, kept while only the SQL is being revised.
+    let verified:{joined:typeof joined;checks:CheckResult[]}|undefined;
+    let keptVerified=false;
     for (let round = 1; round <= 3; round++) {
       out.rounds = round;
       const ev = await timed("evaluator",()=>evaluate(ctx, question, p, wired, bridged, joined, round));
       out.checks = ev.checks;
+      const blocked=blockingCheck(ev.checks);
+      // A requested SQL change that breaks an independent check is not an improvement: keep the checked query.
+      if(blocked&&verified){
+        await trace.log({agent:"evaluator",action:"keep_verified",status:"info",note:`The revised query failed ${blocked.id}; keeping the earlier query, which passed every independent check. The reviewer's request is recorded in this trace.`,sql:verified.joined.sql});
+        joined=verified.joined;out.checks=verified.checks;out.status="answered";keptVerified=true;
+        break;
+      }
+      verified=blocked?undefined:{joined,checks:ev.checks};
       if (ev.verdict.verdict === "APPROVE" || round === 3) {
         out.status = ev.verdict.verdict === "APPROVE" ? "answered" : "partial";
         break;
@@ -172,6 +183,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         if (keys(reviewed) !== keys(p)) ev.verdict.target = "plan";
         else { p=reviewed; out.plan=p; }
       }
+      if (ev.verdict.target !== "join") verified=undefined;
       if (ev.verdict.target === "plan") {
         p = await timed("planner",()=>plan(ctx, question, why));
         out.plan = p;
@@ -226,6 +238,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     const text = [draft.headline, ...draft.points, draft.how_sure, ...draft.caveats].join(" ");
     if (coverage && !/incomplete|partial|missing|coverage|only \d+ (?:of \d+ )?(?:calendar )?months?/i.test(text)) draft.caveats.push(coverage.detail.slice(coverage.detail.search(/\bOnly \d+ calendar/)));
     if (out.status === "partial") draft.caveats.push(notice("PARTIAL", "Review the flagged checks below.").message);
+    if (keptVerified) draft.caveats.push("The reviewer asked for a different query, but that query failed an independent check, so this answer uses the earlier query that passed every check.");
     const final=finalizeDraft(draft,joined.result.headers,joined.result.rows,facts);
     draft=final.draft;
     if(final.removed.length)(out.removed_sentences??=[]).push(...final.removed);
