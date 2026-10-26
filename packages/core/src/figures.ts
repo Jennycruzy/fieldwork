@@ -12,6 +12,7 @@ export function computeFigureLedger(headers:string[],rows:(string|null)[][]):Com
  };
  const all=rows.map((_,i)=>i);
  add("row_count",rows.length,"COUNT(result rows)",all,"count");
+ add("calendar_months",12,"MONTHS_PER_CALENDAR_YEAR (calendar definition; not an observed-data count)",[],"count");
  for(const [j,h] of headers.entries()){
   if(/^(year|month|period)$/i.test(h)){
    add("distinct_"+h,new Set(rows.map(r=>r[j]).filter(v=>v!=null)).size,"COUNT(DISTINCT "+h+")",all,"count",h);continue;

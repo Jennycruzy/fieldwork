@@ -163,6 +163,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\b(\d+)(?=\s+(?:of\s+\d+\s+)?(?:[A-Za-z-]+\s+){0,2}(?:tracts?|months?|rows?|areas?|categories|types)\b)/gi,(match,n:string)=>cohorts.has(String(Number(n)))?" ":match)
         .replace(/\b(?:of|out of)\s+(\d+)(?=\s+(?:[A-Za-z-]+\s+){0,2}(?:tracts?|months?|rows?|areas?|categories|types)\b)/gi,(match,n:string)=>cohorts.has(String(Number(n)))?" ":match)
         .replace(/\b(?:at\s+)?rank(?:ed|s|ing)?\s+(?:at\s+)?\d{1,3}\b/gi," ranked ")
+        .replace(/\b(\d+)\s+tied\s+at\s+(-?\d+(?:\.\d+)?)/gi,(match,n:string,value:string)=>rows.filter(r=>r[columns[0]!] !=null&&Number(r[columns[0]!])===Number(value)).length===Number(n)?"tied at "+value:match)
         .replace(/\bfor\s+311\s+requests\b/gi,match=>headers.some(h=>/request|311/i.test(h))?"for service requests":match)
         .replace(/\b911(?=\s+calls\b)/gi,()=>facts.some(f=>/\b911\b|Call_Count_By_Origin/.test(f))?"":"911")
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
@@ -172,7 +173,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         f.kind==="count" && new RegExp("\\b"+raw.replace(".","\\.")+"\\s+(?:(?:distinct|calendar|census|total)\\s+)?(?:tracts?|months?|rows?|areas?|categories|types)\\b","i").test(content) ||
         (f.kind==="total" && /\b(total|sum|combined|together|across|recorded|accounted)\b/i.test(sentence) &&
           (named.length===0 || f.rows.length===rows.length || named.every(i=>f.rows.includes(i))))
-      ))&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[])&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower)\b/i.test(clause))))missing.push(n);
+      ))&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[],clause)&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower|above|below)\b/i.test(clause))))missing.push(n);
       }
     }
     }
@@ -201,8 +202,8 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       const j=valueColumns(headers)[0], count=Number(cohortTie[1]);
       const zeros=j===undefined?[]:rows.filter(r=>r[j]!=null&&Number(r[j])===0);
       const claim=claimedRank(t)??1;
-      const ascending=/ascending|fewest|lowest/i.test(t);
-      const rank=1+rows.filter(r=>r[j!]!=null&&(ascending?Number(r[j!])<0:Number(r[j!])>0)).length;
+      const ascending=/ascending|fewest|lowest/i.test(t),explicitDirection=/ascending|descending|fewest|lowest|most|highest/i.test(t);
+      const rank=explicitDirection?1+rows.filter(r=>r[j!]!=null&&(ascending?Number(r[j!])<0:Number(r[j!])>0)).length:1+rows.findIndex(r=>r[j!]!=null&&Number(r[j!])===0);
       if(count!==zeros.length||claim!==rank)order.push("The stated zero-valued tie group size or rank does not match the rows.");
       continue;
     }
@@ -276,9 +277,9 @@ function rowClauses(text: string, names: string[]): string[] {
 // Derived claims need a reproducible operation within one numeric measure column: the column total, or a
 // difference or percent change between the rows the sentence names (between the highest, lowest, first and
 // last rows when it names none). Any pair of 71 rows would make almost every small number "derived".
-function derivedNumber(text: string, headers: string[], rows: (string|null)[][], named: number[] = []): boolean {
+function derivedNumber(text: string, headers: string[], rows: (string|null)[][], named: number[] = [], context=""): boolean {
  const target=Number(text),places=(text.split(".")[1]??"").length;
- const equal=(x:number)=>Number.isFinite(x)&&Number(x.toFixed(places))===target;
+ const equal=(x:number)=>Number.isFinite(x)&&(Number(x.toFixed(places))===target||(target>0&&/decreas|drop|fell|fewer|less/i.test(context)&&Number((-x).toFixed(places))===target));
  for(const j of valueColumns(headers)) {
   const indexed=rows.map((r,i)=>({i,v:r[j]})).filter((x):x is {i:number;v:string}=>x.v!=null&&/^-?\d+(?:\.\d+)?$/.test(x.v)).map(x=>({i:x.i,v:Number(x.v)}));
   if(!indexed.length)continue;

@@ -53,3 +53,13 @@ test("an unproven share of an extreme gap is rejected without inventing a row ra
  expect(result.ok).toBe(false);expect(result.orderProblems.some(s=>s.includes("no supplied formula"))).toBe(true);
  expect(result.orderProblems.some(s=>s.includes("violation_count"))).toBe(false);
 });
+import{readFileSync}from"node:fs";
+test("calendar totals and exact named-period changes accept real arithmetic and reject wrong arithmetic",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261026_180eb2.run.json","utf8")).answer;
+ expect(checkDraft(["June 2026 had the highest count at 2,521, 277.4% above the February 2026 low of 668"],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["June 2026 had the highest count at 2,521, 279.4% above the February 2026 low of 668"],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["October 2026 count (694) is 66 fewer than January 2026 (760), an 8.7% decrease"],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["October 2026 count (694) is 66 fewer than January 2026 (760), a 9.7% decrease"],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft(["Data covers 10 of 12 calendar months."],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft(["Data covers 10 of 13 calendar months."],a.headers,a.rows).ok).toBe(false);
+});
