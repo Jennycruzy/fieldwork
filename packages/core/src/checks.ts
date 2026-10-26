@@ -71,6 +71,13 @@ export function runChecks(c: CheckInput): CheckResult[] {
 
   const partial = partialYear(c.years, c.today ?? new Date());
   if (partial) out.push({ id: "partial_period", ok: true, detail: partial });
+  if(c.result){
+    const now=c.today??new Date(),y=c.result.headers.findIndex(h=>/^year$/i.test(h)),m=c.result.headers.findIndex(h=>/^month$/i.test(h));
+    if(y>=0&&m>=0&&c.result.rows.some(r=>Number(r[y])===now.getUTCFullYear()&&Number(r[m])===now.getUTCMonth()+1)){
+      const month=["January","February","March","April","May","June","July","August","September","October","November","December"][now.getUTCMonth()];
+      out.push({id:"partial_month",ok:true,detail:"Partial month: "+month+" "+now.getUTCFullYear()+" is so far through "+now.toISOString().slice(0,10)+"; do not rank it against complete months."});
+    }
+  }
 
   if (c.excludedTestRecords) {
     out.push({ id: "test_records", ok: true, detail: `${c.excludedTestRecords} test records excluded from the city data` });
@@ -162,7 +169,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
         if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!ledger.some(f=>Number(f.value.toFixed((raw.split(".")[1]??"").length))===Number(raw)&&(
-        f.kind==="count" && /\b(tracts?|months?|rows?|records?|areas?|categories|types|with values|at 0|above zero)\b/i.test(sentence) ||
+        f.kind==="count" && new RegExp("\\b"+raw.replace(".","\\.")+"\\s+(?:(?:distinct|calendar|census|total)\\s+)?(?:tracts?|months?|rows?|areas?|categories|types)\\b","i").test(content) ||
         (f.kind==="total" && /\b(total|sum|combined|together|across|recorded|accounted)\b/i.test(sentence) &&
           (named.length===0 || f.rows.length===rows.length || named.every(i=>f.rows.includes(i))))
       ))&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[])&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower)\b/i.test(clause))))missing.push(n);
@@ -183,6 +190,10 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   for (const original of texts) {
     const t = normaliseText(original);
     if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
+    for(const f of facts) {
+      const partial=f.match(/^Partial month: ([A-Za-z]+) (\d{4})/);
+      if(partial&&new RegExp("\\b"+partial[1]+"\\b","i").test(t)&&/\b(highest|lowest|most|fewest|ranked|leads|led)\b/i.test(t))order.push("A partial month cannot be ranked against complete months.");
+    }
     const cohortTie=spellNumbers(t).match(/\b(?:all\s+)?(\d+)\s+(?:zero-[a-z]+\s+)?(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
     if(cohortTie && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
       const j=valueColumns(headers)[0], count=Number(cohortTie[1]);

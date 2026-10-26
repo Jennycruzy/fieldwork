@@ -32,3 +32,11 @@ test("zero cohort tie size and rank must both match",()=>{
  expect(checkDraft(["All 3 zero-pharmacy tracts are ranked 1st together in ascending order."],headers,rows).ok).toBe(false);
  expect(checkDraft(["All 2 zero-pharmacy tracts are ranked 2nd together in ascending order."],headers,rows).ok).toBe(false);
 });
+import {runChecks}from "../src/checks.js";
+test("the current month is code-labelled and cannot receive a comparative rank",()=>{
+ const h=["year","month","record_count"],rows=[["2026","9","100"],["2026","10","1"]];
+ const facts=runChecks({sourceCounts:[],resultRows:2,result:{headers:h,rows},today:new Date("2026-10-26")}).map(c=>c.detail);
+ expect(facts.some(f=>f.startsWith("Partial month: October 2026"))).toBe(true);
+ expect(checkDraft(["October 2026 has the lowest count at 1."],h,rows,facts).ok).toBe(false);
+ expect(checkDraft(["October 2026 has 1 record so far."],h,rows,facts).ok).toBe(true);
+});

@@ -13,6 +13,7 @@ export async function write(ctx: Ctx, question: string, p: Plan, wired: Wired[],
         role: "system",
         content: `${SYSTEM_BASE}
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
+Use exact figures only: never approximate to round thousands (use 44,752, never 45,000). Display counts as integers and rates or percentage changes to at most two decimals. Every number must come from a row cell or computed_figures. Never sum rates or call their sum an average. Never call a partial month or year the lowest/highest, or rank it against full periods. Never use rank words without naming the row, except a supplied tie group with its exact size and rank. Describe thresholds only when the actual checks establish them.
 Use only numbers in the rows or in computed_figures. For a total, difference, percent change or group size, copy it from computed_figures; never compute one yourself. The result_summary gives the full cohort size. For rankings the result table contains primary_rank, rank_text and tie_size computed in code for every row. Copy these fields exactly. Use only the supplied tie_groups: adjacent rows or rounded display values do not establish a tie. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
 For current listings give the retrieval date, and state when source publication or event dates are unknown. Keep the survey or estimate year distinct from a CDC release year; if the underlying year is not supplied, say it is not established here. Mention CDC or model-based health estimates only if a listed source is CDC. For relationship comparisons, report the correlation and paired sample size; do not introduce tract rankings or named examples.
 Use the supplied primary_measure_ranks exactly if you mention an ordinal rank; omit other rank claims.
@@ -40,6 +41,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
     const caveat="These are weighted call-center activity totals, not confirmed incidents or crime statistics.";
     if(!value.caveats.includes(caveat))value.caveats.push(caveat);
   }
+  for(const c of checks.filter(c=>c.ok&&c.id==="partial_month"))if(!value.caveats.includes(c.detail))value.caveats.push(c.detail);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });
