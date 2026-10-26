@@ -16,12 +16,17 @@ export interface Chosen {
 // Searches the catalogs live, then lets the model choose one dataset per measure, with a reason.
 export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
   const perMeasure: { id: string; describe: string; kind: string; candidates: Candidate[] }[] = [];
-  for (const m of p.measures) {
+  const discovered=await Promise.all(p.measures.map(async(m)=>{
     const seen = new Set<string>();
     const cands: Candidate[] = [];
     const searched:string[]=[];
+    const cached=rememberedCandidate(ctx,m);
+    if(cached){
+      cands.push(cached);seen.add(cached.id);
+      await ctx.trace.log({agent:"finder",action:"source_memory",status:"ok",note:"Reusing recently verified catalogue metadata for "+cached.title+"; schema and source counts are still checked live."});
+    }
     const terms = m.kind === "health_estimate" && p.geography === "tract" ? ["PLACES census tract", ...m.search_terms] : m.kind === "environmental_records" ? m.search_terms.slice(0,1) : m.search_terms;
-    for (const term of terms) {
+    for (const term of cached?[]:terms) {
       searched.push(term);
       const found =
         m.kind === "health_estimate"
@@ -42,8 +47,9 @@ export async function find(ctx: Ctx, p: Plan): Promise<Chosen[]> {
       }
     }
     await ctx.trace.log({ agent: "finder", action: "search", status: cands.length ? "ok" : "error", note: `${m.describe}: ${cands.length} candidates from ${m.kind === "health_estimate" ? "CDC's catalog" : "Montgomery's open data hub"} for ${searched.map((t) => `"${t}"`).join(", ")}` });
-    perMeasure.push({ id: m.id, describe: m.describe, kind: m.kind, candidates: cands.slice(0, 8) });
-  }
+    return { id: m.id, describe: m.describe, kind: m.kind, candidates: cands.slice(0, 8) };
+  }));
+  perMeasure.push(...discovered);
 
   const absent = perMeasure.find((m) => m.candidates.length === 0);
   if (absent) throw new FieldworkError("NO_SOURCE", absent.describe);
@@ -148,4 +154,23 @@ export function isNewestInSeries(c: Candidate, all: Candidate[]): boolean {
   const y = releaseYear(c.title);
   if (y === undefined) return true;
   return all.filter((o) => key(o.title) === key(c.title)).every((o) => (releaseYear(o.title) ?? 0) <= y);
+}
+
+export function rememberedCandidate(ctx:Ctx,m:Plan["measures"][number]):Candidate|undefined{
+ const key=(s:string)=>s.toLowerCase().replace(/\\s+/g," ").trim();
+ for(const record of ctx.memory.store.all()){
+  if(record.confidence<.75||record.supersededBy||!record.tags.includes("fw:choice"))continue;
+  try{
+   const data=JSON.parse(record.content) as {catalog_source?:{candidate:Candidate;kind:string;terms:string[];place:string;observed_at:string}};
+   const c=data.catalog_source;
+   if(!c||c.kind!==m.kind||c.place!==ctx.cfg.place.name)continue;
+   const age=ctx.today.getTime()-Date.parse(c.observed_at);
+   if(!Number.isFinite(age)||age<0||age>86400000)continue;
+   if(!m.search_terms.some(t=>c.terms.some(old=>key(t)===key(old))))continue;
+   if(c.candidate.kind==="socrata_resource"&&!c.candidate.title.includes(String(ctx.today.getUTCFullYear()))&&ctx.today.getUTCMonth()===0)continue;
+   ctx.recalled.push({id:record.id,content:record.content,confidence:record.confidence,relevance:1,kind:"choice",source:record.source});
+   return structuredClone(c.candidate);
+  }catch{/* Earlier prose memories cannot replace catalogue metadata. */}
+ }
+ return;
 }

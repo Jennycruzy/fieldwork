@@ -33,12 +33,12 @@ export const SYSTEM_BASE = [
 ].join("\n");
 
 export function dataBlock(label: string, value: unknown): string {
-  return `<data label="${label}">\n${typeof value === "string" ? value : JSON.stringify(value, null, 1)}\n</data>`;
+  return `<data label="${label}">\n${typeof value === "string" ? value : JSON.stringify(value)}\n</data>`;
 }
 
 export function shared(ctx: Ctx): string {
   if(!ctx.world) return "";
   const state=ctx.world.context();
-  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>e.type!=="tract"&&e.type!=="wiring"),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
+  return dataBlock("shared_world_state",{entities:state.entities.filter((e)=>!["tract","wiring","candidate"].includes(e.type)).map(e=>({...e,attrs:Object.fromEntries(Object.entries(e.attrs).filter(([k])=>!["fields","description","catalogDescription","analysis"].includes(k)))})),tract_count:state.entities.filter((e)=>e.type==="tract").length,edges:state.edges});
 }
 export function provenance(ctx: Ctx, role: string) { return {kind: role, at: ctx.today.toISOString(), run:ctx.runId}; }

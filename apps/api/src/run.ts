@@ -129,6 +129,12 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     await trace.log({ agent: "run", action: "start", status: "info", note: question });
     let p = await plan(ctx, question);
     out.plan = p;
+    if(!p.analysis?.relationship){
+      for(const role of ["joiner","evaluator"] as Role[]){
+        const routes=[...primary,...(cloud?[...MODELS[role]].reverse().map(model=>({provider:cloud,model})):[])];
+        models[role]=new ModelChain(routes,{budget,reasoning:REASONING[role],onCall:trace.modelCall(role),onSlow:seconds=>{void trace.log({agent:role,action:"MODEL_SLOW",status:"info",note:seconds+" s elapsed."});}});
+      }
+    }
     await trace.log({ agent: "planner", action: "plan", status: "ok", note: summarisePlan(p) });
     if (!p.in_scope) {
       out.status = "refused";

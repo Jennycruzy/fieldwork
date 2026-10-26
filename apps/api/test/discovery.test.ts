@@ -87,3 +87,19 @@ test("broadening tries every request word: 'building' alone matched Weather Sire
  expect(offered).toEqual(["Weather Sirens","Construction Permit Data"]);
  expect(result[0]?.candidate.title).toBe("Construction Permit Data");
 });
+
+import {remember} from "@fieldwork/hmem";
+import {rememberedCandidate}from "../src/agents/finder.js";
+test("a recent verified source memory skips catalogue searches while schema validation stays live",async()=>{
+ vi.mocked(searchMontgomeryHub).mockClear();vi.mocked(layerInfo).mockClear();
+ const fixture=JSON.parse(readFileSync("evidence/sources/live-probes.json","utf8"))[0],memory=new HMEM();
+ const content=JSON.stringify({catalog_source:{candidate:fixture.candidate,kind:"city_records",terms:["311"],place:"Montgomery, AL",observed_at:"2026-10-26T00:00:00Z"}});
+ remember(memory,{kind:"choice",runId:"previous",content,confidence:.8});
+ vi.mocked(layerInfo).mockResolvedValue({url:fixture.candidate.url,name:fixture.candidate.title,fields:fixture.fields,maxRecordCount:1000,geometryType:fixture.geometry});
+ const ctx={today:new Date("2026-10-26T01:00:00Z"),cfg:{place:{name:"Montgomery, AL"}},memory,recalled:[],trace:{log:vi.fn()},models:{finder:{json:vi.fn(async()=>({value:{choices:[{measure_id:"m",candidate_index:0,reason:"Live schema checked"}]}}))}}} as unknown as Ctx;
+ const m={id:"m",describe:"311 requests",kind:"city_records" as const,search_terms:["311"]};
+ const result=await find(ctx,{in_scope:true,geography:"tract",measures:[m],output:"ranking"});
+ expect(result[0]?.fields.length).toBeGreaterThan(0);expect(searchMontgomeryHub).not.toHaveBeenCalled();expect(layerInfo).toHaveBeenCalledTimes(1);
+ ctx.today=new Date("2026-10-28");expect(rememberedCandidate(ctx,m)).toBeUndefined();
+ expect(rememberedCandidate({...ctx,today:new Date("2026-10-26T01:00:00Z")},{...m,search_terms:["food"]})).toBeUndefined();
+});

@@ -35,6 +35,11 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
       }
       continue;
     }
+    if(ok){
+      const measure=ctx.world?.entities().find(e=>e.type==="measure"&&e.id.endsWith(":"+c.measureId));
+      const terms=measure?.attrs.search_terms;
+      if(Array.isArray(terms))added.push(remember(ctx.memory,{kind:"choice",runId:ctx.runId,content:JSON.stringify({catalog_source:{candidate:c.candidate,kind:measure?.attrs.kind,terms,place:ctx.cfg.place.name,observed_at:ctx.today.toISOString()}}),confidence:.8,refs:[c.candidate.url],datasetTitle:c.candidate.title}).id);
+    }
     added.push(remember(ctx.memory,{
       kind:"choice",runId:ctx.runId,
       content:`For "${c.measure}" in ${ctx.cfg.place.name}, dataset "${c.candidate.title}" (${c.candidate.url}) was read through Zetaris: ${verified.zetarisCount} records; fields ${verified.fields.join(", ")}. Catalog selection reasons are hypotheses, not verified capabilities.`,
