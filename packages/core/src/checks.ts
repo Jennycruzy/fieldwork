@@ -142,7 +142,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   const cohorts=new Set<string>([String(rows.length)]);
   for(const j of columns){const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
    cohorts.add(String(cells.filter(x=>x===0).length));cohorts.add(String(cells.filter(x=>x>0).length));
-   const by=new Map<number,number>();for(const x of cells)by.set(x,(by.get(x)??0)+1);if(by.size<=12)for(const n of by.values())cohorts.add(String(n));}
+   const by=new Map<number,number>();for(const x of cells)by.set(x,(by.get(x)??0)+1);for(const n of by.values())cohorts.add(String(n));}
   const ledger=computeFigureLedger(headers,rows);
   const missing: string[] = [];
   for (const original of texts) {
@@ -197,9 +197,24 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
     for(const f of facts) {
       const partial=f.match(/^Partial month: ([A-Za-z]+) (\d{4})/);
       if(partial&&new RegExp("\\b"+partial[1]+"\\b","i").test(t)&&/\b(highest|lowest|most|fewest|ranked|leads|led)\b/i.test(t))order.push("A partial month cannot be ranked against complete months.");
+      if(partial&&calendarRows&&!names.some(n=>mentions(t,n))&&/\b(highest|lowest|most|fewest|ranked)\b/i.test(t)){
+        const idx=names.findIndex(n=>n===partial[1]),numbers=numbersIn(t);
+        if(idx>=0&&columns.some(j=>rows[idx]![j]!=null&&numbers.includes(normaliseNumber(rows[idx]![j]!))))order.push("A partial month's value cannot be ranked against complete months.");
+      }
     }
     if (/\baccount\w*\b.*%.*\bgap\b/i.test(t)) order.push("A claimed share of an extreme gap has no supplied formula for that cohort.");
     if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
+    const statedGroup=spellNumbers(t).match(/\b(\d+)\s+(?:Montgomery\s+)?(?:census\s+)?tracts\s+(?:(?:are|were)\s+)?(?:tie|tied|share)\b/i);
+    if(statedGroup&&keyCol>=0){
+      const members=names.map((name,i)=>mentions(t,name)?i:-1).filter(i=>i>=0);
+      const statedValue=t.match(/\bat\s+(-?\d+(?:\.\d+)?)(?![\w.])/i)?.[1];
+      const rank=claimedRank(t);
+      const row=members[0]??(statedValue!==undefined?rows.findIndex(r=>r[keyCol]!=null&&Number(r[keyCol])===Number(statedValue)):rank!==undefined?rows.findIndex((_,i)=>rankOf(i)===rank):-1);
+      if(row>=0){
+       const value=rows[row]![keyCol],size=rows.filter(r=>r[keyCol]===value).length;
+       if(Number(statedGroup[1])!==size||members.some(i=>rows[i]![keyCol]!==value))order.push("The stated tie-group size or named members do not match the primary measure.");
+      }
+    }
     const cohortTie=spellNumbers(t).match(/\b(?:all\s+)?(\d+)\s+(?:zero-[a-z]+\s+)?(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
     if(cohortTie && !names.some(n=>mentions(t,n)) && !/[;!?]|\.(?=\s+[A-Z])/.test(t) && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
       const j=valueColumns(headers)[0], count=Number(cohortTie[1]);
@@ -452,7 +467,7 @@ export function claimedRank(t: string): number | undefined {
   if (ord) {
     const w = ord[1]!;
     const n = ORDINALS[w] ?? Number(w.replace(/\D/g, ""));
-    if (/\b(rank|ranks|ranked|ties?|tied|is|at|place|highest|lowest|most|fewest)\b/.test(s) && n >= 1 && n <= 10) return n;
+    if (/\b(rank|ranks|ranked|ties?|tied|is|at|place|highest|lowest|most|fewest)\b/.test(s) && n >= 1 && n <= 1000) return n;
   }
   if (/\b(follows|comes next|is next|runner-up)\b/.test(s)) return 2;
   if (/\b(leads|led|has the highest|has the most|tops)\b/.test(s)) return 1;

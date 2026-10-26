@@ -34,7 +34,7 @@ export function computeFigureLedger(headers:string[],rows:(string|null)[][],name
     if(values.every(v=>v!=null&&v!==""&&Number.isFinite(Number(v))))add(h+"_"+suffix+"_"+col+"_total",values.reduce<number>((a,v)=>a+Number(v),0),"SUM("+col+" WHERE "+condition+")",indices,"total",col);
    }
   }
-  if(groups.size<=12)for(const [value,indices]of groups)add(h+"_group_"+value,indices.length,"COUNT(rows WHERE "+h+" = "+value+")",indices,"count",h);
+  for(const [value,indices]of groups)if(indices.length>1||groups.size<=12)add(h+"_group_"+value,indices.length,"COUNT(rows WHERE "+h+" = "+value+")",indices,"count",h);
   const max=cells.reduce((a,b)=>b.v>a.v?b:a),min=cells.reduce((a,b)=>b.v<a.v?b:a);
   add(h+"_min",min.v,"MIN("+h+")",[min.i],"minimum",h);add(h+"_max",max.v,"MAX("+h+")",[max.i],"maximum",h);
   if(!rate)for(const n of [3,5,10])if(cells.length>=n)add(h+"_first_"+n+"_total",sum(cells.slice(0,n).map(c=>c.i)),"SUM("+h+" in first "+n+" result rows)",cells.slice(0,n).map(c=>c.i),"total",h);

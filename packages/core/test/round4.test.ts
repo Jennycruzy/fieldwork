@@ -38,6 +38,7 @@ test("the current month is code-labelled and cannot receive a comparative rank",
  const facts=runChecks({sourceCounts:[],resultRows:2,result:{headers:h,rows},today:new Date("2026-10-26")}).map(c=>c.detail);
  expect(facts.some(f=>f.startsWith("Partial month: October 2026"))).toBe(true);
  expect(checkDraft(["October 2026 has the lowest count at 1."],h,rows,facts).ok).toBe(false);
+ expect(checkDraft(["The lowest count is 1."],h,rows,facts).ok).toBe(false);
  expect(checkDraft(["October 2026 has 1 record so far."],h,rows,facts).ok).toBe(true);
 });
 import {finalizeDraft}from "../src/checks.js";
@@ -68,4 +69,11 @@ test("unknown identifiers in parenthesized or ordinary tract names never become 
  expect(checkDraft(["Two tracts (55.02, 57) each had 0 shelters."],h,rows).ok).toBe(true);
  expect(checkDraft(["Two tracts (55.02, 999) each had 0 shelters."],h,rows).ok).toBe(false);
  expect(checkDraft(["Tract 9 has 0 shelters."],h,rows).ok).toBe(false);
+});
+test("tie-group size is checked independently of ordinal rank with many distinct values",()=>{
+ const a=JSON.parse(readFileSync("evidence/runs/r_20261026_1c7227.run.json","utf8")).answer;
+ const sentence="Two tracts tie for 4th place at 13.1%: Tracts 56.14 and 24, with 44 and 515 violations respectively.";
+ expect(checkDraft([sentence],a.headers,a.rows).ok).toBe(true);
+ expect(checkDraft([sentence.replace("Two","Four")],a.headers,a.rows).ok).toBe(false);
+ expect(checkDraft([sentence.replace("4th","5th")],a.headers,a.rows).ok).toBe(false);
 });
