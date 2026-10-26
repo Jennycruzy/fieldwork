@@ -70,3 +70,16 @@ test("year-change rankings keep both source periods and sort the arithmetic diff
  expect(sql).toContain("AS count_2024");expect(sql).toContain("AS count_2025");expect(sql).toContain("ORDER BY count_change DESC");
  expect(tractSummarySql(id,"Which areas had the biggest increase?",p,[city],["m1_city"])).toBeUndefined();
 });
+test("a published health prevalence is retained directly rather than dividing it again",()=>{
+ const p={...plan,analysis:{...plan.analysis!,basis:"rates"as const,denominator:"adults"as const}};
+ const sql=tractSummarySql(id,"Which areas have highest estimated condition prevalence?",p,[health],[])!;
+ expect(sql).toContain("CAST(h.condition_crudeprev AS DOUBLE) AS condition_prevalence");
+ expect(sql).not.toContain("NULLIF");expect(sql).not.toContain("tract_counts");
+});
+test("source titles beginning with numbers get valid descriptive SQL identifiers",()=>{
+ const service={...city,title:"311 Service Requests",label:"service_city"};
+ const count=tractSummarySql(id,"Which areas have most requests?",plan,[service],["service_city"])!;
+ expect(count).toContain("AS source_311_service_requests_count");
+ const p={...plan,output:"comparison"as const,analysis:{...plan.analysis!,basis:"rates"as const,denominator:"residents"as const,relationship:true}};
+ expect(tractSummarySql(id,"Compare two service rates",p,[city,service,health],["m1_city","service_city"])).toContain("source_311_service_requests_count_per_1000_totalpopulation");
+});
