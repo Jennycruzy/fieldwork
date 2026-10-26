@@ -1,6 +1,6 @@
 import { WorldModel, type Entry } from "../../../packages/world/src/index.js";
 import { randomBytes } from "node:crypto";
-import { checkDraft, supportedDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
+import { computeFigureLedger, checkDraft, supportedDraft, notice, FieldworkError, type Answer, type CheckResult, type Plan, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider, ModelChain, OpenRouterProvider, BudgetExceeded, ProviderError, type Budget, type Route } from "@fieldwork/llm";
 import { ANSWER_CONTAINER, ZetarisClient, ZetarisError, createAnswerContainer, createAnswerView } from "@fieldwork/zetaris";
 import { loadMemory } from "@fieldwork/hmem";
@@ -44,6 +44,7 @@ export interface RunOutcome {
   providerFailed?: boolean; // the run stopped because a model provider failed, not because of the data
   view?: string; // the answer saved in Zetaris, e.g. fieldwork_answers.answer_b552f2
   message?: string;
+  computed_figures?: ReturnType<typeof computeFigureLedger>;
   drafts?: { headline: string; points: string[]; how_sure: string; caveats: string[]; problems: string[] }[]; // drafts the answer check sent back
 }
 
@@ -174,6 +175,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
     out.wired = wired;
     out.bridged = bridged;
     out.joined = joined;
+    out.computed_figures=computeFigureLedger(joined.result.headers,joined.result.rows);
     // The draft is checked against the rows; a slip goes back to the Writer once with the exact problems.
     const tractCount = world.entities().filter((e) => e.type === "tract").length;
     const asked = (question.match(/\d{1,3}(?:,\d{3})+|\d+(?:\.\d+)?/g) ?? []).map((n) => n.replace(/,/g, "")).filter((n) => !/^(?:19|20)\d\d$/.test(n));
@@ -232,7 +234,7 @@ async function askWithLease(cfg: Config, db: Db, question: string, opts: { onTra
         memoryWrites: ctx.writtenMemories, intervals: ctx.intervals, world: world.context(), tracts: ctx.tractShapes, memories: ctx.recalled.map(({ id, kind, content, confidence }) => ({ id, kind, content, confidence })),
         plan: out.plan,
         sql: out.joined?.sql,
-        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, drafts: out.drafts, message: out.message }),
+        view: out.view, headers: out.joined?.result.headers, rows: out.joined?.result.rows, checks: out.checks, computed_figures:out.computed_figures, drafts: out.drafts, message: out.message }),
     ]);
     await trace.log({ agent: "run", action: "finish", status: out.status === "answered" ? "ok" : "info", note: `status ${out.status} after ${out.rounds} round(s)` });
   }

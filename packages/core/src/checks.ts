@@ -1,3 +1,4 @@
+import {computeFigureLedger} from "./figures.js";
 // The Evaluator's code checks. A run is approved only if these pass (or each failure is explained in the answer).
 
 export interface CheckResult {
@@ -135,6 +136,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   for(const j of columns){const cells=rows.map(r=>r[j]).filter((v):v is string=>v!=null&&/^-?\d+(?:\.\d+)?$/.test(v)).map(Number);
    cohorts.add(String(cells.filter(x=>x===0).length));cohorts.add(String(cells.filter(x=>x>0).length));
    const by=new Map<number,number>();for(const x of cells)by.set(x,(by.get(x)??0)+1);if(by.size<=12)for(const n of by.values())cohorts.add(String(n));}
+  const ledger=computeFigureLedger(headers,rows);
   const missing: string[] = [];
   for (const original of texts) {
     const t = normaliseText(original);
@@ -159,7 +161,11 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
         .replace(/\b311(?=\s+service\s+requests)/gi,()=>facts.some(f=>/\b311\b/.test(f))?"":"311");
       for (const raw of numberTokens(content)) {
         const n=normaliseNumber(raw);
-        if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[])&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower)\b/i.test(clause))))missing.push(n);
+        if(!allowed.has(n)&&!quotable.has(n)&&!isYear(n)&&!(named.length===0&&isSmallCount(n))&&!nearAny(raw,allowed)&&!ledger.some(f=>Number(f.value.toFixed((raw.split(".")[1]??"").length))===Number(raw)&&(
+        f.kind==="count" && /\b(tracts?|months?|rows?|records?|areas?|categories|types|with values|at 0|above zero)\b/i.test(sentence) ||
+        (f.kind==="total" && /\b(total|sum|combined|together|across|recorded|accounted)\b/i.test(sentence) &&
+          (named.length===0 || f.rows.length===rows.length || named.every(i=>f.rows.includes(i))))
+      ))&&!(derivedNumber(raw,headers,rows,named.length?[...new Set([...named,...sentenceRows])]:[])&&(named.length===0||/\b(total|sum|combined|difference|change|increas\w*|decreas\w*|overall|across|rose|fell|range\w*|drop\w*|gap|net|more|fewer|less|higher|lower)\b/i.test(clause))))missing.push(n);
       }
     }
     }
@@ -176,6 +182,7 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
   };
   for (const original of texts) {
     const t = normaliseText(original);
+    if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     const cohortTie=spellNumbers(t).match(/\b(?:all\s+)?(\d+)\s+(?:zero-[a-z]+\s+)?(?:Montgomery\s+)?(?:census\s+)?tracts\b/i);
     if(cohortTie && /zero-|\bat 0\b|\b0 pharmacies/i.test(t) && /rank|fewest/i.test(t)) {
       const j=valueColumns(headers)[0], count=Number(cohortTie[1]);
@@ -186,7 +193,6 @@ export function checkDraft(texts: string[], headers: string[], rows: (string | n
       if(count!==zeros.length||claim!==rank)order.push("The stated zero-valued tie group size or rank does not match the rows.");
       continue;
     }
-    if (unsupportedCertainty(t)) order.push(`"${t}" overstates what these descriptive rows establish`);
     if (UNIVERSAL.test(t) && PATTERN.test(t) && !verifiedMetadata(t,headers,rows,facts)) order.push(`"${t}" says the pattern holds in every row; the rows don't show that, so describe the overall tendency instead`);
     if(/\b(tied|tie|ties|sharing|share|shares)\b/i.test(t)) {
       for(let i=0;i<names.length;i++) if(mentions(t,names[i]!)) {
