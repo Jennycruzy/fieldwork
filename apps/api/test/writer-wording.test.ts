@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { AnswerSchema, checkDraft, finalizeDraft } from "@fieldwork/core";
 import { ModelChain, type Provider, type ChatRequest } from "@fieldwork/llm";
-import { writerSchema, correlationFigures } from "../src/agents/writer.js";
+import { write, writerSchema, correlationFigures } from "../src/agents/writer.js";
 import type { Wired } from "../src/agents/wirer.js";
 
 const sources = [
@@ -184,6 +184,78 @@ test("release years cannot be invented as a geography vintage", () => {
   const answer = writerSchema(sources).parse({
     ...valid,
     caveats: ["Model-based asthma estimate; 2023 underlying data applied to 2025 geography."],
+  });
+  expect(answer.caveats).toEqual([]);
+});
+
+test("missing-month source evidence cannot be described as complete annual coverage", () => {
+  const text = "Code violations data comes from city registry records with complete annual 2025 coverage.";
+  const answer = writerSchema(sources, undefined, false, true).parse({
+    ...valid,
+    how_sure: text,
+    caveats: ["Complete annual coverage is not established; absent months are not confirmed zeros."],
+  });
+  expect(answer.how_sure).not.toContain("complete annual");
+  expect(answer.caveats).toContain(
+    "Complete annual coverage is not established; absent months are not confirmed zeros.",
+  );
+  expect(writerSchema(sources).parse({ ...valid, how_sure: text }).how_sure).toBe(text);
+});
+test("Writer always appends the source's exact missing-month caveat despite any other coverage wording", async () => {
+  const detail =
+    "City records: monthly coverage in the requested year. Only 11 calendar months contain records; 1 month has no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.";
+  const provider: Provider = {
+    id: "scripted",
+    async chat(req) {
+      return {
+        text: JSON.stringify({
+          headline: "The table describes city records.",
+          points: ["There is 1 record."],
+          how_sure: "City records have complete annual 2025 coverage.",
+          caveats: [],
+        }),
+        provider: "scripted",
+        modelRequested: req.model,
+        modelServed: req.model,
+        tokensIn: 1,
+        tokensOut: 1,
+        ms: 1,
+      };
+    },
+  };
+  const model = new ModelChain([{ provider, model: "test:free" }], { sequentialJsonRepair: true });
+  const ctx = {
+    cfg: { place: { region: "Example" } },
+    models: { writer: model },
+    trace: { log: async () => {} },
+  } as any;
+  const answer = await write(
+    ctx,
+    "Show city records",
+    { in_scope: true, geography: "tract", output: "list", measures: [] },
+    [],
+    {
+      sql: "SELECT 1",
+      result: { headers: ["name", "count"], rows: [["Area", "1"]], total: 1, ms: 0, wallMs: 0 },
+    },
+    [{ id: "source_dates_city", ok: true, detail }],
+    1,
+  );
+  expect(answer.caveats).toContain(
+    "Only 11 calendar months contain records; 1 month has no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.",
+  );
+  expect(answer.how_sure).not.toContain("complete annual");
+  expect(
+    checkDraft([answer.how_sure, ...answer.caveats], ["name", "count"], [["Area", "1"]], [detail]).ok,
+  ).toBe(true);
+});
+
+test("release year cannot be asserted as the underlying data vintage", () => {
+  const answer = writerSchema(sources).parse({
+    ...valid,
+    caveats: [
+      "The CDC PLACES release year (2025) reflects the data vintage; underlying population estimates are Census 2020.",
+    ],
   });
   expect(answer.caveats).toEqual([]);
 });

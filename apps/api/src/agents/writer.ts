@@ -23,6 +23,9 @@ export async function write(
   const callSources = wired.filter((w) => /^Call_Count_By_Origin$/i.test(w.valueField ?? ""));
   const callActivity = callSources.length > 0 || checks.some((c) => c.ok && c.id.startsWith("call_units_"));
   const omittedSentences: string[] = [];
+  const partialPeriods = checks.filter(
+    (c) => c.id.startsWith("source_dates_") && /\bOnly \d+ calendar months?\b/.test(c.detail),
+  );
   const correlationOnly =
     Boolean(p.analysis?.relationship) &&
     !joined.result.headers.some((h) => /slope|regression_coefficient|effect_per_unit/i.test(h));
@@ -38,7 +41,7 @@ For current listings give the retrieval date, and state when source publication 
 Only health measures explicitly described as model-based in source metadata are model-based estimates. Registry facilities, city records and inspection results are counts or observations, never model-based estimates. In mixed-source answers describe each measure separately; never call both variables model-based. For relationship comparisons, report the correlation and paired sample size; do not introduce tract rankings or named examples.
 Use the supplied primary_measure_ranks exactly if you mention an ordinal rank; omit other rank claims.
 The how_sure line is checked too: no claims of certainty, statistical significance, causation or a universal pattern. A correlation is a descriptive association, not proof. Correlation is unitless, not a slope: it cannot establish a change in one measure per additional unit of another. Do not infer per-unit effects. Quote the paired_tracts value for correlation sample size, not the preview length. State the plan's choice of counts or rates and correct denominator in the answer. Never treat a repeated correlation column as evidence of consistency. Do not add ranking claims for supporting measures.
-Keep the order of the result rows when you describe a ranking ("next" means the next row; equal values share a rank). Caveats must come from the checks listed or from the nature of the sources (e.g. CDC values are model-based estimates from survey data); never invent limits such as sample sizes that no check reported. If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
+Keep the order of the result rows when you describe a ranking ("next" means the next row; equal values share a rank). Caveats must come from the checks listed or from the nature of the sources (e.g. CDC values are model-based estimates from survey data); never invent limits such as sample sizes that no check reported. If a source_dates check reports missing months, annual coverage is incomplete: never claim complete annual coverage or treat absent months as confirmed zeros. If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
 Points must describe substantive findings for the reader. Never repeat internal wording such as "all checks passed", "subsample truncation", "measure column", SQL column names, or implementation details. Translate cohort coverage as "The comparison includes all eligible tracts." Do not invent significance thresholds.
 Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting facts with numbers"], "how_sure": "one nonempty sentence about source coverage and descriptive limits", "caveats": ["plain-language limits"]}`,
       },
@@ -131,7 +134,12 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
           (fix ? `\nYour previous draft had these problems; fix them: ${fix}` : ""),
       },
     ],
-    writerSchema(wired, (sentence) => omittedSentences.push(sentence), correlationOnly),
+    writerSchema(
+      wired,
+      (sentence) => omittedSentences.push(sentence),
+      correlationOnly,
+      partialPeriods.length > 0,
+    ),
     1500,
   );
   if (omittedSentences.length)
@@ -142,7 +150,8 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
       note: JSON.stringify({
         count: omittedSentences.length,
         text: omittedSentences,
-        reason: "Internal presentation, unsupported per-unit effects, or unestablished boundary vintage",
+        reason:
+          "Internal presentation, unsupported per-unit effects, unestablished boundary vintage, or unconfirmed annual coverage",
       }),
     });
   for (const w of wired.filter(
@@ -161,6 +170,17 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
         : "Population denominators come from " +
           w.title +
           "; their underlying vintage is not established here. The release year is not the population year.";
+      if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
+    }
+  }
+  for (const w of wired) {
+    for (const [field, definition] of Object.entries(w.fieldDefinitions ?? {})) {
+      if (!/_crudeprev$/i.test(field) || !/model[- ]based/i.test(definition)) continue;
+      const caveat =
+        w.title +
+        ": " +
+        definition.replace(/[.]$/, "") +
+        ". The release year differs from the underlying estimate year.";
       if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
     }
   }
@@ -191,6 +211,7 @@ export function writerSchema(
   wired: Pick<Wired, "fields" | "fieldDefinitions">[],
   onOmit?: (sentence: string) => void,
   correlationOnly = false,
+  partialCoverage = false,
 ) {
   return AnswerSchema.superRefine((a, ctx) => {
     const texts = [a.headline, ...a.points, a.how_sure, ...a.caveats];
@@ -270,7 +291,18 @@ export function writerSchema(
             ) &&
             /associated|effect|increase|decrease|change|points/i.test(sentence);
           const unprovenBoundaryYear = /\b(?:19|20)\d{2}\s+(?:geograph|boundar)/i.test(sentence);
-          if (!internal && !perUnit && !unprovenBoundaryYear) return true;
+          const unprovenCompleteYear =
+            partialCoverage &&
+            /\b(?:complete|full)\s+(?:(?:annual|calendar|year|20\d{2})\s+){0,3}coverage\b|\bcoverage\s+(?:is|was|has been)\s+(?:complete|full)\b/i.test(
+              sentence,
+            ) &&
+            !/\b(?:not|no|cannot|incomplete|unconfirmed|unestablished)\b|isn't/i.test(sentence);
+          const releaseAsVintage =
+            /\brelease year\b.*\b(?:reflects?|represents?|matches?|equals?|is)\b.*\b(?:data|source|underlying)\s+(?:year|vintage)\b/i.test(
+              sentence,
+            ) && !/\bnot\b|isn't/i.test(sentence);
+          if (!internal && !perUnit && !unprovenBoundaryYear && !unprovenCompleteYear && !releaseAsVintage)
+            return true;
           onOmit?.(sentence);
           return false;
         })
