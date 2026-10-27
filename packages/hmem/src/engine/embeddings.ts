@@ -1,11 +1,10 @@
 // Adapted from Meterless H-MEM reference implementation (engines/hmem/reference/src/embeddings.ts),
 // Copyright Meterless, Apache License 2.0. See THIRD_PARTY_NOTICES.md.
 
-// Deterministic mock embedder: FNV-1a hash per token into a 64-dim vector,
-// summed and L2-normalized. Pure function of the input text, so retrieval
-// scores are reproducible across runs and machines. Swap in a real provider
-// by replacing embed() in your own implementation; the contract is just
-// text -> number[].
+// Deterministic hashed-token embedder: FNV-1a hash per token into a 64-dim
+// vector, summed and L2-normalized. Pure function of the input text, so memory
+// recall is reproducible across runs and machines and needs no model call.
+// Dataset ranking uses Nemotron embeddings separately (packages/embeddings).
 
 const DIM = 64;
 

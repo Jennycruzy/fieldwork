@@ -4,7 +4,7 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **Live Desk:** https://fieldwork.38-49-216-59.sslip.io
 
-Latest full batch: **25/25** (median 46.7 s, p90 81.6 s) in batch 12 on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **24/25** (median 43.8 s, p90 82.4 s) in batch 13 on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
@@ -29,7 +29,8 @@ Answering this used to mean an analyst finding the datasets, cleaning them, geoc
 
 | Page | What it shows |
 | --- | --- |
-| **Desk** (`/`) | Ask anything, or pick a sample question. The latest answer is featured. |
+| **Home** (`/`) | What Fieldwork does, a live-data map from a real answer, and example questions. |
+| **Ask** (`/ask`) | Ask anything, or pick a sample question. Recent answers are listed below. |
 | **Live run** | Each agent's step as it happens: datasets considered, filters, record counts, SQL, check results, and which model served each request. |
 | **Answer** | Headline, supporting points, how sure Fieldwork is, caveats, a tract map, a chart, the result rows, the SQL, and the formula and source rows behind every computed figure. |
 | **History** (`/history`) | Earlier answers, replayable step by step. |
