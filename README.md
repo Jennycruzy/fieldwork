@@ -2,9 +2,9 @@
 
 Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find the public data that can answer it, register it in Zetaris, join it across sources, check the result in code, and show the record behind every number.
 
-**[Live Desk](https://fieldwork.38-49-216-59.sslip.io)** · [Ask a question](https://fieldwork.38-49-216-59.sslip.io/ask) · [Test results](https://fieldwork.38-49-216-59.sslip.io/evaluation) · [How it works](https://fieldwork.38-49-216-59.sslip.io/how-it-works) · [Check it yourself](https://fieldwork.38-49-216-59.sslip.io/check) · [Run it with no keys](#use-it)
+**[Live Desk](https://fieldwork.38-49-216-59.sslip.io)** · [Demo video](https://youtu.be/H_7eg92Cwdw) · [Ask a question](https://fieldwork.38-49-216-59.sslip.io/ask) · [Test results](https://fieldwork.38-49-216-59.sslip.io/evaluation) · [How it works](https://fieldwork.38-49-216-59.sslip.io/how-it-works) · [Check it yourself](https://fieldwork.38-49-216-59.sslip.io/check) · [Run it with no keys](#use-it)
 
-Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. A rerun of six questions after batch 15, with the same grading, passed both of batch 15's misses (Q01 and Q16) and 4 of the 6 in all ([`evidence/targeted/`](evidence/targeted/)). Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
