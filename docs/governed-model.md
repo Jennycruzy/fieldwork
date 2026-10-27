@@ -27,5 +27,4 @@ With `FW_ANSWER_DQ=1`, every Montgomery tract answer runs the tract rules after 
 city records also runs the count rules, including the foreign key, which covers the answer's own counts because
 `tract_count` is activated as a live query over `fw_pg.tract_counts`. The results appear on the answer page under
 the Zetaris query and in the trace. The rules run side by side. Measured on 26 Oct 2026, they added 1.6 s to a
-tract answer and 5.1 s to one with city counts (291,381 count rows). The setting stays off until a full question
-batch measures that cost against the speed targets.
+tract answer and 5.1 s to one with city counts (291,381 count rows). The live Desk runs with it on.

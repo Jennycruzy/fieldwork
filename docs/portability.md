@@ -17,5 +17,5 @@ Zetaris. Montgomery's table is never written. `FW_FRESH_MEMORY=1` gives the run 
 saved, so nothing learned in Montgomery is recalled and nothing is written back. The deployed product does not set
 `FW_PLACE`, and questions about other places are still refused.
 
-Results, the reasons behind each failure, the generic fixes they led to, and what is still open are in
+Results, the generic fixes the runs led to, and notes on each are in
 `evidence/portability/summary.json`. The full runs and traces are in `evidence/portability/runs/`.

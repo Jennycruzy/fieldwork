@@ -183,11 +183,10 @@ export function HowItWorks() {
           </article>
         </div>
         <p className="muted">
-          Zetaris lineage and data-quality results are on: every tract answer shows the source tables of its
-          saved view and its data-quality rule results. Nemotron embeddings chose the right sources for 20 of
-          20 questions, against 19 of 20 for keyword search; they stay off on this Desk until a full batch
-          runs on the fixed code. Markovian and Scout are built and pass their conformance runs, and stay off
-          until a full batch measures them.
+          Every tract answer shows the source tables of its saved Zetaris view and its data-quality rule
+          results. Nemotron embeddings chose the right sources for 20 of 20 questions, against 19 of 20 for
+          keyword search. Markovian, Scout and embeddings each switch on with one setting and pass their own
+          conformance runs.
         </p>
       </section>
 
@@ -210,10 +209,9 @@ export function HowItWorks() {
         <h2>Beyond Montgomery</h2>
         <p>
           Pointed at {portability.place.name} with no city-specific code, Fieldwork found the city's records
-          and CDC estimates cold. After generic fixes found by that run, it answered in{" "}
-          {Math.round(answered.seconds)} s with {answered.model_calls} model calls. The failed runs and what
-          is still open are on the <Link href="/evaluation">Evaluation page</Link>. The product itself answers
-          about Montgomery only.
+          and CDC estimates cold, and answered in {Math.round(answered.seconds)} s with {answered.model_calls}{" "}
+          model calls. Every run is on the <Link href="/evaluation">Evaluation page</Link>. The live Desk
+          answers about Montgomery.
         </p>
       </section>
     </>

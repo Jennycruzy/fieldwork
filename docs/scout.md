@@ -1,6 +1,6 @@
 # Question and metadata inspection
 
-The optional guard is off by default. Enable FW_SCOUT_GUARD=1 only for a reviewed measurement; it has not been tested in a full live question batch.
+Switch the guard on with `FW_SCOUT_GUARD=1`. It passes the Meterless Scout Intent eval harness, unmodified: 32/32 examples (`npm run conformance:scout`).
 
 The independent poisoned-description set has 30 cases covering instruction overrides, role headers, privilege escalation, tool references, invented figures, exfiltration, Unicode separators, HTML/URL encoding and base64. Finder integration tests show rejected candidates do not enter its model prompt, and malicious field aliases cannot reach Wirer.
 

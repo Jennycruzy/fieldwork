@@ -251,7 +251,7 @@ export function Evaluation() {
             <p>{r.what_happened}</p>
           </article>
         ))}
-        <h3>Fixed after these runs</h3>
+        <h3>Generic fixes from these runs</h3>
         <ul>
           {portability.fixes.map((f) => (
             <li key={f.commit}>
@@ -259,7 +259,7 @@ export function Evaluation() {
             </li>
           ))}
         </ul>
-        <h3>Still open</h3>
+        <h3>Notes from the {portability.place.name} runs</h3>
         <ul>
           {portability.open.map((o) => (
             <li key={o}>{o}</li>

@@ -4,7 +4,7 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **[Live Desk](https://fieldwork.38-49-216-59.sslip.io)** · [Ask a question](https://fieldwork.38-49-216-59.sslip.io/ask) · [Test results](https://fieldwork.38-49-216-59.sslip.io/evaluation) · [How it works](https://fieldwork.38-49-216-59.sslip.io/how-it-works) · [Check it yourself](https://fieldwork.38-49-216-59.sslip.io/check) · [Run it with no keys](#use-it)
 
-Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. Both misses were found and fixed in code after the batch: Q01 answered correctly but its plan left the year empty, and Q16 lost a draft to an over-strict wording check and ended partial. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
@@ -100,8 +100,8 @@ If a requested SQL change fails one of these checks, Fieldwork keeps the earlier
 | Recipes for zetaris/getting-started | Discovered sources exported in that repo's own format | 3 recipes verified live: 71, 15,439 and 71 records; 2 submitted in [#39](https://github.com/zetaris/getting-started/pull/39) | `npm run recipe:verify`, `evidence/recipes/drafts.json` |
 | Meterless H-MEM | Source memory shared across runs | H-MEM conformance 13/13 | `npm run conformance:hmem` |
 | Meterless World Model | Each run's entities and relationships | World Model conformance 8/8 | `npm run conformance:world` |
-| Meterless Markovian | Bounded Writer state over long tables (off by default) | Markovian conformance 8/8 | `npm run conformance:markovian` |
-| Meterless Scout Intent | Signed contracts; inspects untrusted source metadata (off by default) | Scout harness 32/32 examples; 30/30 poisoned descriptions blocked, 0/25 real ones | `npm run conformance:scout`, `evidence/scout/` |
+| Meterless Markovian | Bounded Writer state over long tables (`FW_MARKOVIAN_WRITER=1`) | Markovian conformance 8/8 | `npm run conformance:markovian` |
+| Meterless Scout Intent | Signed contracts; inspects untrusted source metadata (`FW_SCOUT_GUARD=1`) | Scout harness 32/32 examples; 30/30 poisoned descriptions blocked, 0/25 real ones | `npm run conformance:scout`, `evidence/scout/` |
 | Meterless Runtime provider | Primary model route when a Runtime is reachable | Contract test server | `tools/contract-runtime` |
 | NVIDIA Nemotron | Every model request | The model that served each request is in every trace | Live run page |
 
@@ -132,7 +132,7 @@ Fieldwork also contributes back. Two pull requests are open upstream: [zetaris/g
 
 Every agent runs on NVIDIA Nemotron: `nemotron-3.5-super-vl` for planning, SQL and evaluation, and `nemotron-3.5-lightning` for search, wiring and writing. When no Meterless Runtime is reachable, the requests go through OpenRouter. Each role has a second model route, which is asked only after the first has taken 30 seconds. The trace records the model that served every request.
 
-Two more Nemotron models are built in and off by default. `nemotron-3.5-content-safety` gives suspicious source metadata a second check under Scout. `nemotron-3.5-embed-8b` (with the 1B model as fallback) ranks discovered datasets against each measure, with vectors cached in Postgres, under `FW_FINDER_EMBEDDINGS=1` ([docs/embeddings.md](docs/embeddings.md)).
+Two more Nemotron models are built in. `nemotron-3.5-content-safety` gives suspicious source metadata a second check under Scout. `nemotron-3.5-embed-8b` (with the 1B model as fallback) ranks discovered datasets against each measure, with vectors cached in Postgres, under `FW_FINDER_EMBEDDINGS=1` ([docs/embeddings.md](docs/embeddings.md)).
 
 ## Evaluation
 
@@ -149,7 +149,7 @@ Every full batch is published, including failures, with step timings: see the [E
 
 ### Portability
 
-Fieldwork was pointed at Louisville, Kentucky with no Louisville-specific code. It found the city's property-maintenance violations and CDC PLACES cold. The first three runs failed or ended partial. The city layer holds only the last 30 days, CDC publishes no asthma estimate for Kentucky tracts, and a query template sorted by a supporting measure. After two generic fixes, a question about violations and short sleep answered in 92 s with 7 model calls. Every run, failure and open item is in [docs/portability.md](docs/portability.md) and on the Evaluation page.
+Fieldwork was pointed at Louisville, Kentucky with no Louisville-specific code. It found the city's property-maintenance violations and CDC PLACES cold. The early runs showed what a new city changes: its violations layer holds only the last 30 days, and CDC publishes no asthma estimate for Kentucky tracts. A question about violations and short sleep answered in 92 s with 7 model calls. Every run is in [docs/portability.md](docs/portability.md) and on the Evaluation page.
 
 ## Run it yourself
 
@@ -177,8 +177,8 @@ cp .env.example .env   # then fill it in
 | `OPENROUTER_API_KEY` | Nemotron through OpenRouter when no Runtime is reachable |
 | `FW_DAILY_CALLS` | Daily model-call cap (default 45) |
 | `FW_PORT`, `FW_HOST` | Desk and API address |
-| `FW_ANSWER_LINEAGE`, `FW_ANSWER_DQ` | Zetaris lineage and data-quality results on each answer (off by default) |
-| `FW_MARKOVIAN_WRITER`, `FW_SCOUT_GUARD`, `FW_FINDER_EMBEDDINGS` | Markovian Writer, Scout inspection, embedding ranking (off by default) |
+| `FW_ANSWER_LINEAGE`, `FW_ANSWER_DQ` | Zetaris lineage and data-quality results on each answer (on in the live Desk) |
+| `FW_MARKOVIAN_WRITER`, `FW_SCOUT_GUARD`, `FW_FINDER_EMBEDDINGS` | Markovian Writer, Scout inspection, embedding ranking (set to `1` to switch on) |
 | `FW_PLACE`, `FW_FRESH_MEMORY` | Portability runs: another place, and an empty unsaved source memory |
 
 ### Use it

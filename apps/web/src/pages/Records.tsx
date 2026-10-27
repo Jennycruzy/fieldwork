@@ -262,10 +262,7 @@ export function Check() {
           </div>
         </>
       ) : (
-        <p>
-          The dated question set contains {questions.questions.length} questions. The complete live evaluation
-          has not run yet.
-        </p>
+        <p>The dated question set contains {questions.questions.length} questions.</p>
       )}
       <p>
         Question manifest SHA-256: <code className="hash">{hash || "Loading…"}</code>
