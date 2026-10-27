@@ -1,0 +1,177 @@
+{
+  "id": "r_20261027_5d82cc",
+  "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
+  "created_at": "2026-10-27T10:00:55.489Z",
+  "finished_at": "2026-10-27T10:02:04.459Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": {
+        "to": 2025,
+        "from": 2025
+      },
+      "output": "comparison",
+      "analysis": {
+        "basis": "rates",
+        "reason": "The question asks whether code-violation rate is associated with high blood pressure prevalence across tracts, so compare city records per 1,000 residents with CDC adult prevalence percentages using totalpopulation as the denominator.",
+        "denominator": "residents",
+        "rank_measure": "2025 code-violation rate per 1,000 residents, descending",
+        "relationship": true
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "city_records",
+          "describe": "2025 code-violation records per 1,000 residents by Montgomery census tract",
+          "search_terms": [
+            "code violations",
+            "code enforcement"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "CDC PLACES adult high blood pressure prevalence by Montgomery census tract",
+          "search_terms": [
+            "high blood pressure",
+            "hypertension"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261027_5d82cc",
+          "type": "run",
+          "attrs": {
+            "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?"
+          },
+          "source": {
+            "at": "2026-10-27T10:00:56.651Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261027_5d82cc:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "city_records",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks whether code-violation rate is associated with high blood pressure prevalence across tracts, so compare city records per 1,000 residents with CDC adult prevalence percentages using totalpopulation as the denominator.",
+              "denominator": "residents",
+              "rank_measure": "2025 code-violation rate per 1,000 residents, descending",
+              "relationship": true
+            },
+            "describe": "2025 code-violation records per 1,000 residents by Montgomery census tract",
+            "search_terms": [
+              "code violations",
+              "code enforcement"
+            ]
+          },
+          "source": {
+            "at": "2026-10-27T10:00:56.651Z",
+            "run": "r_20261027_5d82cc",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261027_5d82cc:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks whether code-violation rate is associated with high blood pressure prevalence across tracts, so compare city records per 1,000 residents with CDC adult prevalence percentages using totalpopulation as the denominator.",
+              "denominator": "residents",
+              "rank_measure": "2025 code-violation rate per 1,000 residents, descending",
+              "relationship": true
+            },
+            "describe": "CDC PLACES adult high blood pressure prevalence by Montgomery census tract",
+            "search_terms": [
+              "high blood pressure",
+              "hypertension"
+            ]
+          },
+          "source": {
+            "at": "2026-10-27T10:00:56.651Z",
+            "run": "r_20261027_5d82cc",
+            "kind": "planner"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Source request to gis.montgomeryal.gov failed after 3 attempt(s): UND_ERR_CONNECT_TIMEOUT",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-971",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"licence\":\"No explicit license supplied in the catalog\",\"licenceUrl\":\"https://www.arcgis.com/home/item.html?id=e58056aeb8354e0d80483dab81ee2899\",\"catalog\":\"montgomery_hub\",\"id\":\"e58056aeb8354e0d80483dab81ee2899\",\"title\":\"Code Violations\",\"description\":\"This layer displays the locations of code violations across the city.\",\"url\":\"https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0\",\"kind\":\"arcgis_layer\",\"modified\":\"2025-07-18T18:45:07.000Z\"},\"kind\":\"city_records\",\"terms\":[\"code violations\",\"code enforcement\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-27T06:50:53.302Z\"}}",
+        "confidence": 0.8500000000000001
+      },
+      {
+        "id": "mem-972",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"catalog\":\"socrata\",\"id\":\"yjkw-uj5s\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"description\":\"This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"kind\":\"socrata_resource\",\"modified\":\"2026-09-22T23:23:00.000Z\",\"domain\":\"data.cdc.gov\",\"licence\":\"Public Domain\",\"licenceUrl\":\"https://data.cdc.gov/api/views/yjkw-uj5s.json\"},\"kind\":\"health_estimate\",\"terms\":[\"high blood pressure\",\"hypertension\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-27T08:51:21.562Z\"}}",
+        "confidence": 0.8200000000000001
+      },
+      {
+        "id": "mem-2",
+        "kind": "choice",
+        "content": "For \"count of code violations in 2025 by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): The code violations dataset is the only available candidate, offering census-tract-level violation counts updated in 2025.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-145",
+        "kind": "choice",
+        "content": "For \"Count of code violations in 2025 by census tract from City of Montgomery records\" in Montgomery, AL, Fieldwork chose the dataset \"Code Violations\" (https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0): Same dataset an earlier run chose and checked (memory mem-2, confidence 1).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-83",
+        "kind": "choice",
+        "content": "For \"adults with high blood pressure prevalence by tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-42, confidence 1).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 1
+      }
+    ],
+    "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
+    "memoryWrites": [
+      {
+        "id": "mem-506",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261027_5d82cc\",\"type\":\"run\",\"attrs\":{\"question\":\"Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-27T10:00:56.651Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-507",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261027_5d82cc:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"2025 code-violation records per 1,000 residents by Montgomery census tract\",\"kind\":\"city_records\",\"search_terms\":[\"code violations\",\"code enforcement\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks whether code-violation rate is associated with high blood pressure prevalence across tracts, so compare city records per 1,000 residents with CDC adult prevalence percentages using totalpopulation as the denominator.\",\"rank_measure\":\"2025 code-violation rate per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-27T10:00:56.651Z\",\"run\":\"r_20261027_5d82cc\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-508",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261027_5d82cc:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"CDC PLACES adult high blood pressure prevalence by Montgomery census tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"high blood pressure\",\"hypertension\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks whether code-violation rate is associated with high blood pressure prevalence across tracts, so compare city records per 1,000 residents with CDC adult prevalence percentages using totalpopulation as the denominator.\",\"rank_measure\":\"2025 code-violation rate per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-27T10:00:56.651Z\",\"run\":\"r_20261027_5d82cc\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
