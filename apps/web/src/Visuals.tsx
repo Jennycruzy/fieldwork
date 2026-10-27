@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { RunRecord } from "./api";
+import { label } from "./format";
 import { tractToGeo } from "../../../packages/sources/src/bridge";
 export function download(name: string, content: Blob) {
   const url = URL.createObjectURL(content);
@@ -102,7 +103,7 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
           const v = values.get(f.properties.geoid);
           el.textContent = `${names.get(f.properties.geoid) ?? f.properties.geoid}: ${
             v !== undefined && Number.isFinite(v) ? v : "no result"
-          } (${headers[col]?.replace(/_/g, " ")})`;
+          } (${label(headers[col] ?? "")})`;
           layer.bindTooltip(el);
           layer.on("click", () => onValue?.(f.properties.geoid));
         },
@@ -145,7 +146,7 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
         <select aria-label="Chart measure" value={col} onChange={(e) => setCol(Number(e.target.value))}>
           {numeric.map(({ h, i }) => (
             <option key={h} value={i}>
-              {h.replace(/_/g, " ")}
+              {label(h)}
             </option>
           ))}
         </select>
@@ -170,13 +171,13 @@ export function Visuals({ run, onValue }: { run: RunRecord; onValue?: (value: st
             </li>
           </ul>
           <p className="muted">
-            Darker means a higher {headers[col]?.replace(/_/g, " ")}; each shade holds about a fifth of the
-            tracts. Boundaries: US Census TIGERweb,{" "}
+            Darker means a higher {label(headers[col] ?? "")}; each shade holds about a fifth of the tracts.
+            Boundaries: US Census TIGERweb,{" "}
             {saved?.length ? "read through Zetaris for this run." : "saved with Fieldwork."}
           </p>
         </>
       ) : null}
-      <div ref={chart} className="chart" role="img" aria-label={`Bar chart of ${headers[col]}`}>
+      <div ref={chart} className="chart" role="img" aria-label={`Bar chart of ${label(headers[col] ?? "")}`}>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart
             margin={{ bottom: 65, left: 0, right: 8 }}

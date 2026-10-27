@@ -70,7 +70,7 @@ export function HowItWorks() {
           while you watch.
         </p>
         <div className="row">
-          <Link href="/" className="button">
+          <Link href="/ask" className="button">
             Ask a question
           </Link>
           <Link href="/evaluation" className="button ghost">

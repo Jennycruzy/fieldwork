@@ -28,7 +28,8 @@
     "check:claims": "tsx scripts/check-claims.ts",
     "governed-model": "tsx scripts/governed-model.ts",
     "conformance:markovian": "MARKOVIAN_IMPL=$PWD/packages/markovian/src/index.ts tsx packages/markovian/conformance/runner.ts",
-    "conformance:scout": "tsx scripts/scout-conformance.ts"
+    "conformance:scout": "tsx scripts/scout-conformance.ts",
+    "landing-data": "tsx scripts/landing-data.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.49.1",

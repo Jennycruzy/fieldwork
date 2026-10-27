@@ -110,7 +110,7 @@ export function RunView({ id }: { id: string }) {
       <section className="card">
         <h1>Run not found</h1>
         <p>
-          No run with id {id}. <Link href="/">Ask a question</Link>.
+          No run with id {id}. <Link href="/ask">Ask a question</Link>.
         </p>
       </section>
     );
@@ -291,7 +291,7 @@ function Outcome({
     );
   return (
     <p className="outcome bad">
-      {message ?? "This run stopped without an answer."} <Link href="/">Ask again</Link>
+      {message ?? "This run stopped without an answer."} <Link href="/ask">Ask again</Link>
     </p>
   );
 }

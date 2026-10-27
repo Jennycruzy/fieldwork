@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 
-// Routes without a router library: /, /run/<id>, /a/<id>, /how/<id> and the named pages below.
+// Routes without a router library: / (landing), /ask, /run/<id>, /a/<id>, /how/<id> and the named pages below.
 export type Route =
-  | { page: "home" }
+  | { page: "landing" }
+  | { page: "ask" }
   | { page: "run"; id: string }
   | { page: "answer"; id: string }
   | { page: "settings" }
@@ -14,7 +15,8 @@ export type Route =
   | { page: "missing" };
 
 export function parse(path: string): Route {
-  if (path === "/" || path === "") return { page: "home" };
+  if (path === "/" || path === "") return { page: "landing" };
+  if (path === "/ask") return { page: "ask" };
   if (path === "/settings") return { page: "settings" };
   if (path === "/history") return { page: "history" };
   if (path === "/evaluation") return { page: "evaluation" };

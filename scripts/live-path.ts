@@ -24,9 +24,10 @@ if (process.env.FW_TRACE_HTTP)
 const t0 = Date.now();
 const at = () => `${((Date.now() - t0) / 1000).toFixed(0)} s`;
 
-await page.goto(base, { waitUntil: "networkidle" });
+await page.goto(base + "/ask", { waitUntil: "networkidle" });
 await page.screenshot({ path: `${out}/1-home.png`, fullPage: true });
-await page.locator(".samples button").first().click();
+await page.locator(".desk-try .chip").first().click();
+await page.locator("form.composer button[type=submit]").click();
 await page.waitForURL(/\/run\/r_\d{8}_[0-9a-f]{6}$/, { timeout: 30_000 });
 console.log(`${at()} run view ${page.url()}`);
 await page.waitForSelector(".step", { timeout: 30_000 }).catch(async (e) => {

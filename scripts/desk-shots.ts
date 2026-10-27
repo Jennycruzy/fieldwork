@@ -11,7 +11,8 @@ mkdirSync(out, { recursive: true });
 const runs = (await (await fetch(`${base}/api/runs`)).json()) as { runs: { id: string; status: string }[] };
 const id = runs.runs.find((r) => r.status === "answered")?.id;
 const pages = [
-  ["home", "/"],
+  ["landing", "/"],
+  ["ask", "/ask"],
   ["answer", `/a/${id}`],
   ["run", `/run/${id}`],
   ["settings", "/settings"],

@@ -4,14 +4,10 @@ import { Link } from "../Link";
 import { Visuals, download } from "../Visuals";
 import { api as askApi } from "../api";
 import { go } from "../router";
-import { when } from "../format";
+import { when, label, figure } from "../format";
 
-// Column names from Zetaris ("crude_prevalence", "violations_2026") read better with spaces.
-const human = (h: string) => h.replace(/_/g, " ");
-
-// Zetaris returns counts cast to DOUBLE ("1125.0"); show whole numbers as 1,125 and keep decimals as they are.
-const cell = (v: string | null) =>
-  v === null ? "—" : /^-?\d+\.0+$/.test(v) && !/^0\d/.test(v) ? Number(v).toLocaleString("en-US") : v;
+const human = label;
+const cell = figure;
 
 export function AnswerPage({ id }: { id: string }) {
   const [run, setRun] = useState<RunRecord>();
@@ -44,7 +40,7 @@ export function AnswerPage({ id }: { id: string }) {
       <section className="card">
         <h1>Answer not found</h1>
         <p>
-          No answer with id {id}. <Link href="/">Ask a question</Link>.
+          No answer with id {id}. <Link href="/ask">Ask a question</Link>.
         </p>
       </section>
     );
@@ -152,7 +148,7 @@ export function AnswerPage({ id }: { id: string }) {
           <Link href={`/how/${run.id}`} className="button ghost">
             How it worked
           </Link>
-          <Link href="/" className="button ghost">
+          <Link href="/ask" className="button ghost">
             Ask another question
           </Link>
         </div>
@@ -414,27 +410,33 @@ export function AnswerPage({ id }: { id: string }) {
       {(run.answer?.checks?.length ?? 0) > 0 && (
         <section className="card">
           <h2>Checks</h2>
-          <ul className="checks">
-            {run.answer!.checks!.map((c) => (
-              <li
-                key={c.detail.replace(
-                  /m\d+_(?:city|cdc)(?:_v\d+)?/g,
-                  (label) =>
-                    run.answer?.sources?.find((s) => s.label === label)?.title ??
-                    (/cdc/.test(label) ? "CDC PLACES" : "City records"),
-                )}
-                className={c.ok ? "ok" : "bad"}
-              >
-                <span aria-hidden="true">{c.ok ? "✓" : "!"}</span>{" "}
-                {c.detail.replace(
-                  /m\d+_(?:city|cdc)(?:_v\d+)?/g,
-                  (label) =>
-                    run.answer?.sources?.find((s) => s.label === label)?.title ??
-                    (/cdc/.test(label) ? "CDC PLACES" : "City records"),
-                )}
-              </li>
-            ))}
-          </ul>
+          <details className="checks-fold">
+            <summary>
+              {run.answer!.checks!.filter((c) => c.ok).length} of {run.answer!.checks!.length} checks passed
+              before this answer was shown
+            </summary>
+            <ul className="checks">
+              {run.answer!.checks!.map((c) => (
+                <li
+                  key={c.detail.replace(
+                    /m\d+_(?:city|cdc)(?:_v\d+)?/g,
+                    (label) =>
+                      run.answer?.sources?.find((s) => s.label === label)?.title ??
+                      (/cdc/.test(label) ? "CDC PLACES" : "City records"),
+                  )}
+                  className={c.ok ? "ok" : "bad"}
+                >
+                  <span aria-hidden="true">{c.ok ? "✓" : "!"}</span>{" "}
+                  {c.detail.replace(
+                    /m\d+_(?:city|cdc)(?:_v\d+)?/g,
+                    (label) =>
+                      run.answer?.sources?.find((s) => s.label === label)?.title ??
+                      (/cdc/.test(label) ? "CDC PLACES" : "City records"),
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
         </section>
       )}
     </>
