@@ -177,16 +177,21 @@ export function writerSchema(wired: Pick<Wired, "fields" | "fieldDefinitions">[]
         });
     const texts = [a.headline, ...a.points, a.how_sure, ...a.caveats];
     for (const text of texts) {
-      for (const part of text.split(/[.;]|\b(?:while|whereas|but|and)\b/i)) {
+      for (const part of text.split(/[.;]|\b(?:while|whereas|but)\b/i)) {
         const clause = part.replace(
           /\b(?:not|never)\s+(?:model[- ](?:based|derived)|modelled|modeled)(?:\s+estimates?)?/gi,
           "",
         );
         if (
           /model[- ](?:based|derived)|modelled|modeled/i.test(clause) &&
-          /\b(both|all (?:variables|measures)|facilit\w*|registry|city records|violations|inspection scores|population)\b/i.test(
-            clause,
-          )
+          (!wired.some(
+            (w) =>
+              w.fields?.some((f) => /_crudeprev$/i.test(f)) ||
+              Object.values(w.fieldDefinitions ?? {}).some((d) => /model[- ]based/i.test(d)),
+          ) ||
+            /\b(both|all (?:variables|measures)|facilit\w*|registry|city records|violations|inspection scores|population)\b/i.test(
+              clause,
+            ))
         )
           ctx.addIssue({
             code: z.ZodIssueCode.custom,

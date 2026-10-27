@@ -6,7 +6,10 @@ import { writerSchema } from "../src/agents/writer.js";
 import type { Wired } from "../src/agents/wirer.js";
 
 const sources = [
-  { fields: ["totalpopulation"], fieldDefinitions: { totalpopulation: "Total population of Census 2020" } },
+  {
+    fields: ["totalpopulation", "casthma_crudeprev"],
+    fieldDefinitions: { totalpopulation: "Total population of Census 2020" },
+  },
 ] as Pick<Wired, "fields" | "fieldDefinitions">[];
 const valid = {
   headline: "A descriptive comparison.",
@@ -91,4 +94,24 @@ test("sentence filtering preserves nonempty confidence after rejecting unsupport
   expect(AnswerSchema.safeParse(result.draft).success).toBe(true);
   expect(result.removed).toContain("There are 999 records.");
   expect(checkDraft([result.draft.how_sure], ["tract_name", "count"], [["Area", "2"]]).ok).toBe(true);
+});
+
+test("population-only sources cannot be described as model-based health estimates", () => {
+  const population = [
+    { fields: ["totalpopulation"], fieldDefinitions: { totalpopulation: "Total population of Census 2020" } },
+  ];
+  expect(
+    writerSchema(population).safeParse({
+      ...valid,
+      caveats: [],
+      how_sure: "The PLACES release provides the population figures and is a model-based estimate.",
+    }).success,
+  ).toBe(false);
+  expect(
+    writerSchema(population).safeParse({
+      ...valid,
+      caveats: [],
+      how_sure: "These are Census population totals supplied by CDC PLACES.",
+    }).success,
+  ).toBe(true);
 });
