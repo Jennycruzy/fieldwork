@@ -139,7 +139,7 @@ export function RunView({ id }: { id: string }) {
         {provider && (
           <p className="muted">
             {/offline|isn't reachable/i.test(provider.note)
-              ? "Models: NVIDIA Nemotron through OpenRouter. No Meterless Runtime is connected; connect one in Settings."
+              ? "Models: NVIDIA Nemotron through OpenRouter. A Meterless Runtime linked in Settings is asked first."
               : provider.note}
             {budget && " " + budget.note}
           </p>

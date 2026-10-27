@@ -576,9 +576,9 @@
     "said": "911 Calls publishes no tract locations, so tract counts cannot be inferred."
   },
   "results": {
-    "passed": 25,
+    "passed": 23,
     "total": 25,
-    "median_s": 47,
-    "at": "2026-10-27T00:05:37.127Z"
+    "median_s": 66,
+    "at": "2026-10-27T10:30:32.717Z"
   }
 }
