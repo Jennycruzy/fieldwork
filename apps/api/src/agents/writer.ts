@@ -219,7 +219,7 @@ export function writerSchema(
     for (const text of texts) {
       for (const part of text.split(/[.;]|\b(?:while|whereas|but)\b/i)) {
         const clause = part.replace(
-          /\b(?:not|never)\s+(?:model[- ](?:based|derived)|modelled|modeled)(?:\s+estimates?)?/gi,
+          /\b(?:not|never)\s+(?:(?:a|an|the)\s+)?(?:model[- ](?:based|derived)|modelled|modeled)(?:\s+(?:health\s+)?estimates?)?/gi,
           "",
         );
         const model = /model[- ](?:based|derived)|modelled|modeled/i;
@@ -244,9 +244,11 @@ export function writerSchema(
             w.fields?.some((f) => /_crudeprev$/i.test(f)) ||
             Object.values(w.fieldDefinitions ?? {}).some((d) => /model[- ]based/i.test(d)),
         );
+        // Describing the CDC source itself as model-based is accurate even when only its population columns are used.
+        const sourceSubject = /\b(?:CDC|PLACES)\b/i.test(subject) && !nonModelled.test(subject);
         if (
           model.test(clause) &&
-          (!hasModelledMeasure ||
+          ((!hasModelledMeasure && !sourceSubject) ||
             /\bboth (?:variables|measures)|\ball (?:variables|measures|data)\b/i.test(clause) ||
             countsAsModifier ||
             nonModelled.test(subject))
