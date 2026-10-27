@@ -186,21 +186,41 @@ export function writerSchema(
           /\b(?:not|never)\s+(?:model[- ](?:based|derived)|modelled|modeled)(?:\s+estimates?)?/gi,
           "",
         );
+        const model = /model[- ](?:based|derived)|modelled|modeled/i;
+        const nonModelled =
+          /\b(?:facilit\w*|registry|city records|violations|inspection scores|population)\b/i;
+        const predicate =
+          /\b(?:is|are|was|were|as)\s+(?:(?:also|both|all|a|an)\s+)*(?:model[- ](?:based|derived)|modelled|modeled)/i.exec(
+            clause,
+          );
+        const subject = predicate
+          ? clause
+              .slice(0, predicate.index)
+              .split(/,|\b(?:compared|versus)\b/i)
+              .at(-1)!
+          : "";
+        const countsAsModifier =
+          /(?:model[- ](?:based|derived)|modelled|modeled)\s+(?:(?:estimates?|counts?|rates?|of|for|the)\s+){0,4}(?:facilit\w*|registry|city records|violations|inspection scores|population)\b/i.test(
+            clause,
+          );
+        const hasModelledMeasure = wired.some(
+          (w) =>
+            w.fields?.some((f) => /_crudeprev$/i.test(f)) ||
+            Object.values(w.fieldDefinitions ?? {}).some((d) => /model[- ]based/i.test(d)),
+        );
         if (
-          /model[- ](?:based|derived)|modelled|modeled/i.test(clause) &&
-          (!wired.some(
-            (w) =>
-              w.fields?.some((f) => /_crudeprev$/i.test(f)) ||
-              Object.values(w.fieldDefinitions ?? {}).some((d) => /model[- ]based/i.test(d)),
-          ) ||
-            /\b(both|all (?:variables|measures)|facilit\w*|registry|city records|violations|inspection scores|population)\b/i.test(
-              clause,
-            ))
+          model.test(clause) &&
+          (!hasModelledMeasure ||
+            /\bboth (?:variables|measures)|\ball (?:variables|measures|data)\b/i.test(clause) ||
+            countsAsModifier ||
+            nonModelled.test(subject))
         )
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message:
-              "Only the modelled health measure is model-based. Describe registry and city records as counts, and population by its published Census vintage.",
+              "This clause labels an unmodelled measure as model-based: " +
+              JSON.stringify(clause.trim()) +
+              ". Only the health estimate is model-based; registry and city records are counts, and population follows its published Census vintage. Write separate sentences for the source types.",
           });
       }
       const population = wired.filter((w) =>

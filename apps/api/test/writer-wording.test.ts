@@ -129,3 +129,18 @@ test("internal sentences are omitted while substantive facts in the same point s
   });
   expect(result.points).toEqual(["The correlation is -0.08."]);
 });
+
+test.each([
+  "The comparison uses facility counts and model-based adult asthma prevalence.",
+  "Model-based asthma estimates from CDC are compared with EPA facility counts.",
+  "Asthma prevalence is model-based, while facilities are registry counts.",
+  "Unlike model-based health estimates, facility listings are registry counts.",
+])("mixed-source comparisons do not label registry counts model-based: %s", (how_sure) => {
+  expect(writerSchema(sources).safeParse({ ...valid, how_sure }).success).toBe(true);
+});
+test("source-type repair names the rejected clause", () => {
+  const clause = "Facility counts are model-based estimates.";
+  const result = writerSchema(sources).safeParse({ ...valid, caveats: [clause] });
+  expect(result.success).toBe(false);
+  if (!result.success) expect(result.error.message).toContain("Facility counts are model-based estimates");
+});
