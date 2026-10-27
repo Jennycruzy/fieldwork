@@ -149,12 +149,7 @@ export async function evaluate(
     const c = w.coverage!;
     const period = (value: number | null) =>
       value == null ? "unknown" : `${Math.floor(value / 100)}-${String(value % 100).padStart(2, "0")}`;
-    const expected =
-      p.years?.from &&
-      (!p.years.to || p.years.from === p.years.to) &&
-      p.years.from < ctx.today.getUTCFullYear()
-        ? 12
-        : undefined;
+    const expected = expectedMonths(p.years, c, ctx.today);
     checks.push({
       id: `source_dates_${w.label}`,
       ok: true,
@@ -519,4 +514,18 @@ export function positiveMembershipCheck(
       ? "Listed tracts exactly match the distinct tracts with positive independently counted source records."
       : "Return each tract with positive source counts exactly once; exclude tracts without listed records.",
   };
+}
+
+/** Months a single past calendar year should hold: from the plan, or from the source's own span when the plan names no years. */
+export function expectedMonths(
+  years: { from?: number | null; to?: number | null } | null | undefined,
+  coverage: { firstPeriod: number | null; lastPeriod: number | null },
+  today: Date,
+): number | undefined {
+  const current = today.getUTCFullYear();
+  if (years?.from) return (!years.to || years.from === years.to) && years.from < current ? 12 : undefined;
+  const { firstPeriod: first, lastPeriod: last } = coverage;
+  if (first == null || last == null) return undefined;
+  const year = Math.floor(first / 100);
+  return year === Math.floor(last / 100) && year < current ? 12 : undefined;
 }

@@ -180,6 +180,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
   }
   for (const c of checks.filter((c) => c.ok && c.id === "partial_month"))
     if (!value.caveats.includes(c.detail)) value.caveats.push(c.detail);
+  applyCoverageCaveats(value, checks);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });
@@ -387,4 +388,32 @@ export function computedFigures(headers: string[], rows: (string | null)[][]) {
     rows_above_zero: cells.filter((c) => c.v > 0).length,
     ...(counts.size <= 12 ? { rows_per_value: [...counts].map(([value, rows]) => ({ value, rows })) } : {}),
   };
+}
+
+const INCOMPLETE = "Complete annual coverage is not established";
+const COMPLETE_CLAIM =
+  /\b(?:complete|full)\s+(?:annual\s+|calendar[- ]year\s+|12[- ]month\s+|year(?:ly)?\s+)?(?:\d{4}\s+)?coverage\b|\bcovers?\s+(?:all|every)\s+(?:12\s+)?months\b/i;
+
+/** When a source year is incomplete, state it from the checks and drop any sentence that claims the opposite. */
+export function applyCoverageCaveats(
+  value: { headline: string; points: string[]; how_sure: string; caveats: string[] },
+  checks: CheckResult[],
+) {
+  const notes = checks
+    .filter((c) => c.ok && c.id.startsWith("source_dates_") && c.detail.includes(INCOMPLETE))
+    .map((c) => c.detail.slice(c.detail.indexOf("Only ")));
+  if (!notes.length) return value;
+  const claims = (text: string) =>
+    text.split(/(?<=[.;])\s+/).some((s) => COMPLETE_CLAIM.test(s) && !/\bnot\b|\bno\b/i.test(s));
+  const strip = (text: string) =>
+    text
+      .split(/(?<=[.;])\s+/)
+      .filter((s) => !(COMPLETE_CLAIM.test(s) && !/\bnot\b|\bno\b/i.test(s)))
+      .join(" ")
+      .trim();
+  value.points = value.points.filter((t) => !claims(t));
+  value.caveats = value.caveats.filter((t) => !claims(t));
+  if (claims(value.how_sure)) value.how_sure = strip(value.how_sure) || notes[0]!;
+  for (const note of notes) if (!value.caveats.some((c) => c.includes(note))) value.caveats.push(note);
+  return value;
 }
