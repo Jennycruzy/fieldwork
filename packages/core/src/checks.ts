@@ -943,13 +943,41 @@ export function finalizeDraft<
       name && vc !== undefined
         ? " Result for " + name + ": " + headers[vc]!.replace(/_/g, " ") + " " + rows[0]![vc] + "."
         : "";
+    // Prefer a checked sentence the Writer already wrote; then a plain sentence about the first row;
+    // the row count only as a last resort.
+    const usable = draft.points
+      .flatMap((p) => p.split(/(?<=[.!?])\s+(?=[A-Z])/))
+      .filter((s) => s.length > 20 && !/^(?:the result|result for)\b/i.test(s) && pass(s));
+    // The headline leads with the top row: a checked sentence naming it, else a plain sentence built
+    // from it, else any other checked sentence, and the row count only as a last resort.
+    const runnerUp = /\b(?:second|third|fourth|fifth|next|followed|runner-up|lowest|fewest)\b/i;
+    const first = name ? String(name) : "";
+    const raw = vc !== undefined ? rows[0]?.[vc] : undefined;
+    const n = raw == null ? NaN : Number(raw);
+    const shown = Number.isFinite(n) ? n.toLocaleString("en-US", { maximumFractionDigits: 2 }) : raw;
+    const words = vc !== undefined ? headers[vc]!.replace(/_/g, " ").trim() : "";
+    const phrase = /\bcount$/i.test(words)
+      ? shown +
+        " " +
+        words
+          .replace(/\s*count$/i, "")
+          .replace(/y$/, "ie")
+          .replace(/s?$/, "s")
+      : words + " of " + shown;
+    const sentences = [
+      usable.find((s) => !!first && s.includes(first) && !runnerUp.test(s)),
+      // Calendar rows are in date order, so their first row is not a leader.
+      first && shown != null && calendar < 0 ? first + " comes first, with " + phrase + "." : undefined,
+      ...usable.filter((s) => !runnerUp.test(s)),
+    ].filter((x): x is string => !!x);
     const template = "The result contains " + count + " rows." + top;
-    headline = pass(template) ? template : "The result contains " + count + " rows.";
+    headline =
+      sentences.find(pass) ?? (pass(template) ? template : "The result contains " + count + " rows.");
   }
   let answer = {
     ...draft,
     headline,
-    points: draft.points.map(filter).filter(Boolean),
+    points: withoutHeadline(draft.points.map(filter).filter(Boolean), headline),
     how_sure: filter(draft.how_sure),
     caveats: draft.caveats.map(filter).filter(Boolean),
   };
@@ -1022,4 +1050,10 @@ export function figureLedgerForTexts(headers: string[], rows: (string | null)[][
     })
     .filter((g) => g.length > 1);
   return computeFigureLedger(headers, rows, groups);
+}
+
+// A point promoted to the headline is not repeated below it, unless it is the only point left.
+function withoutHeadline(points: string[], headline: string) {
+  const rest = points.filter((p) => p.trim() !== headline.trim());
+  return rest.length ? rest : points;
 }
