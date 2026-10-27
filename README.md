@@ -4,7 +4,7 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **Live Desk:** https://fieldwork.38-49-216-59.sslip.io
 
-Latest full batch: **21/25** (median 98.4 s, p90 198.6 s) on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **25/25** (median 46.7 s, p90 81.6 s) in batch 12 on a frozen set of 25 questions, graded in code. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
