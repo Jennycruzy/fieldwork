@@ -4,7 +4,7 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **Live Desk:** https://fieldwork.38-49-216-59.sslip.io
 
-Latest full batch: **22/25** (median 69.0 s, p90 96.4 s) in batch 14 on a frozen set of 25 questions, graded in code. Batch 14 tested Finder embeddings: two questions ran out of their call allowance because embedding requests were counted against it (fixed in `b55c166`), and one hit a city server timeout. The live Desk runs the batch-13 setup, embeddings off, which scored **24/25** (median 43.8 s, p90 82.4 s). Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. Both misses were found and fixed in code after the batch: Q01 answered correctly but its plan left the year empty, and Q16 lost a draft to an over-strict wording check and ended partial. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
