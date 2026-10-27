@@ -2,7 +2,7 @@
 
 Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find the public data that can answer it, register it in Zetaris, join it across sources, check the result in code, and show the record behind every number.
 
-**Live Desk:** https://fieldwork.38-49-216-59.sslip.io
+**[Live Desk](https://fieldwork.38-49-216-59.sslip.io)** · [Ask a question](https://fieldwork.38-49-216-59.sslip.io/ask) · [Test results](https://fieldwork.38-49-216-59.sslip.io/evaluation) · [How it works](https://fieldwork.38-49-216-59.sslip.io/how-it-works) · [Check it yourself](https://fieldwork.38-49-216-59.sslip.io/check) · [Run it with no keys](#use-it)
 
 Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. Both misses were found and fixed in code after the batch: Q01 answered correctly but its plan left the year empty, and Q16 lost a draft to an over-strict wording check and ended partial. Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
 
@@ -97,7 +97,7 @@ If a requested SQL change fails one of these checks, Fieldwork keeps the earlier
 | Zetaris Lightning | Every source record and every answer passes through it | Each run checks its row counts against the source's own count | Live run page, `evidence/runs/` |
 | Zetaris USL and data quality | The `montgomery_neighborhoods` model over Fieldwork's tract tables | 6/6 data-quality checks pass; 291,381/291,381 tract counts refer to a real tract | `npm run governed-model`, `evidence/governed-capabilities.json` |
 | Zetaris lineage | Source tables of each saved answer, from `INFER SQLTABLE SOURCES` | The saved view's sources matched the answer's query on a recorded run | `evidence/lineage-proof.json` |
-| Recipes for zetaris/getting-started | Discovered sources exported in that repo's own format | 3 recipes verified live: 71, 15,439 and 71 records | `npm run recipe:verify`, `evidence/recipes/drafts.json` |
+| Recipes for zetaris/getting-started | Discovered sources exported in that repo's own format | 3 recipes verified live: 71, 15,439 and 71 records; 2 submitted in [#39](https://github.com/zetaris/getting-started/pull/39) | `npm run recipe:verify`, `evidence/recipes/drafts.json` |
 | Meterless H-MEM | Source memory shared across runs | H-MEM conformance 13/13 | `npm run conformance:hmem` |
 | Meterless World Model | Each run's entities and relationships | World Model conformance 8/8 | `npm run conformance:world` |
 | Meterless Markovian | Bounded Writer state over long tables (off by default) | Markovian conformance 8/8 | `npm run conformance:markovian` |
@@ -118,7 +118,7 @@ All source data flows through Zetaris Lightning:
 - A Unified Semantic Layer model, `montgomery_neighborhoods`, is activated over the tract and tract-count tables. Its keys and data-quality rules check what every join relies on ([docs/governed-model.md](docs/governed-model.md)). With `FW_ANSWER_DQ=1`, the results appear on each tract answer.
 - With `FW_ANSWER_LINEAGE=1`, each answer shows the source tables Zetaris reports for its saved view.
 
-Fieldwork also contributes back. A verified recipe fix is open upstream: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36). Sources Fieldwork discovers can be exported as recipes in that repo's own format and verified against a live Zetaris instance ([docs/recipes.md](docs/recipes.md)).
+Fieldwork also contributes back. Two pull requests are open upstream: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36) moves the Singapore PM2.5 recipe out of known_to_fail after a verified live run, and [#39](https://github.com/zetaris/getting-started/pull/39) adds the CDC PLACES and Census TIGERweb sources Fieldwork discovered, both verified live. Sources Fieldwork discovers can be exported as recipes in that repo's own format and verified against a live Zetaris instance ([docs/recipes.md](docs/recipes.md)).
 
 ### Meterless: memory, world model and runtime
 
