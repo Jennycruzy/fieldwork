@@ -8,7 +8,9 @@ import {serializeRun} from "../apps/api/src/evidence.js";
 import {gradeQuestion,checkFrozen,type QuestionCase,type RecordedAnswer,type Reference} from "../packages/core/src/questionSet.js";
 import {ZetarisClient} from "../packages/zetaris/src/index.js";
 loadEnvFile();const cfg=config(),db=openDb(cfg.pgUrl);const raw=readFileSync("evidence/questions.json");const frozen=createHash("sha256").update(raw).digest("hex");const qs=JSON.parse(raw.toString()).questions as QuestionCase[];
-const dir="evidence/question-set";mkdirSync(dir,{recursive:true});mkdirSync("evidence/runs",{recursive:true});
+// --only Q01,Q16 reruns named questions with the same grading; results go to evidence/targeted, never a batch.
+const onlyAt=process.argv.indexOf("--only"),only=onlyAt<0?undefined:new Set(process.argv[onlyAt+1]!.split(","));
+const dir=only?"evidence/targeted":"evidence/question-set";mkdirSync(dir,{recursive:true});mkdirSync("evidence/runs",{recursive:true});
 const path=`${dir}/latest.json`;const resume=process.argv.includes("--resume");const validate=process.argv.includes("--validate");
 const original=JSON.parse(execFileSync("git",["show","58d7d7c:evidence/questions.json"],{encoding:"utf8"})).questions as QuestionCase[];
 const amendments=JSON.parse(readFileSync("evidence/question-amendments.json","utf8")).amendments as {id:string;from:{expected:string;answer_shape:string};to:{expected:string;answer_shape:string}}[];
@@ -18,15 +20,16 @@ const codeCommit=execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim
 const codeFiles=execFileSync("git",["ls-files","--cached","--others","--exclude-standard","apps","packages","scripts"],{encoding:"utf8"}).trim().split("\n").sort();
 const codeHash=createHash("sha256");for(const file of codeFiles){codeHash.update(file+"\0");codeHash.update(readFileSync(file));}
 const fingerprint=codeHash.digest("hex");
+const run=only?qs.filter(q=>only.has(q.id)):qs;if(only&&run.length!==only.size)throw new Error("Unknown question id in --only");
 if(validate){console.log(JSON.stringify({questions:qs.length,question_sha256:frozen,code_commit:codeCommit,code_sha256:fingerprint}));await db.end();process.exit(0);}
-if(!resume&&existsSync(path)){const prior=JSON.parse(readFileSync(path,"utf8"));writeFileSync(`${dir}/run-${prior.started_at.replace(/[:.]/g,"-")}.json`,JSON.stringify(prior,null,2)+"\n");}
-const report: {code_commit?:string;code_sha256?:string;started_at:string;finished_at?:string;question_sha256:string;complete:boolean;passed:number;total:number;rate:number;results:({question_id:string;question:string;expected:string;answer_shape:string;run_id:string;status:string;elapsed_ms:number;passed:boolean;reasons:string[];checks:{name:string;ok:boolean}[]})[]} = resume&&existsSync(path)?JSON.parse(readFileSync(path,"utf8")):{code_commit:codeCommit,code_sha256:fingerprint,started_at:new Date().toISOString(),question_sha256:frozen,complete:false,passed:0,total:qs.length,rate:0,results:[]};
+if(!only&&!resume&&existsSync(path)){const prior=JSON.parse(readFileSync(path,"utf8"));writeFileSync(`${dir}/run-${prior.started_at.replace(/[:.]/g,"-")}.json`,JSON.stringify(prior,null,2)+"\n");}
+const report: {code_commit?:string;code_sha256?:string;started_at:string;finished_at?:string;question_sha256:string;complete:boolean;passed:number;total:number;rate:number;results:({question_id:string;question:string;expected:string;answer_shape:string;run_id:string;status:string;elapsed_ms:number;passed:boolean;reasons:string[];checks:{name:string;ok:boolean}[]})[]} = resume&&existsSync(path)?JSON.parse(readFileSync(path,"utf8")):{code_commit:codeCommit,code_sha256:fingerprint,started_at:new Date().toISOString(),question_sha256:frozen,complete:false,passed:0,total:run.length,rate:0,results:[]};
 if(report.question_sha256!==frozen)throw new Error("Question file changed; the owner must approve question changes before continuing.");
 if(resume&&(report.complete||report.code_sha256!==fingerprint))throw new Error("Resume requires an incomplete run made with the same code. Start a fresh full run instead.");
 const archive=`${dir}/run-${report.started_at.replace(/[:.]/g,"-")}.json`;
-const save=()=>{report.passed=report.results.filter(r=>r.passed).length;report.rate=report.passed/report.total;report.complete=report.results.length===qs.length;if(report.complete)report.finished_at=new Date().toISOString();writeFileSync(path+".tmp",JSON.stringify(report,null,2)+"\n");renameSync(path+".tmp",path);writeFileSync(archive+".tmp",JSON.stringify(report,null,2)+"\n");renameSync(archive+".tmp",archive);};
+const save=()=>{report.passed=report.results.filter(r=>r.passed).length;report.rate=report.passed/report.total;report.complete=report.results.length===run.length;if(report.complete)report.finished_at=new Date().toISOString();writeFileSync(path+".tmp",JSON.stringify(report,null,2)+"\n");renameSync(path+".tmp",path);writeFileSync(archive+".tmp",JSON.stringify(report,null,2)+"\n");renameSync(archive+".tmp",archive);};
 try {
- for(const q of qs) {
+ for(const q of run) {
   if(report.results.some(r=>r.question_id===q.id))continue;
   if(createHash("sha256").update(readFileSync("evidence/questions.json")).digest("hex")!==frozen)throw new Error("Question file changed during evaluation");
   const active=await db.query("SELECT id FROM runs WHERE status='running' LIMIT 1");if(active.rows.length)throw new Error("Another Fieldwork question is running; resume after it finishes.");
