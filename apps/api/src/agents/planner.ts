@@ -78,6 +78,7 @@ Shape: ${SHAPE}`,
       }
     }
   }
+  fillNamedYear(question, value);
   if (value.analysis) {
     if (/\b(average|mean)\b.*\bscore/i.test(question)) {
       value.analysis.basis = "scores";
@@ -180,5 +181,17 @@ Shape: ${SHAPE}`,
         source: provenance(ctx, "planner"),
       });
   }
+  return value;
+}
+
+// A question that names one year ("in 2025") asks for that year even when the model leaves years empty.
+export function fillNamedYear(question: string, value: Pick<Plan, "in_scope" | "years">) {
+  const named = [
+    ...new Set(
+      [...question.matchAll(/\b(?:in|during|for|of)\s+((?:19|20)\d{2})\b/gi)].map((m) => Number(m[1])),
+    ),
+  ];
+  if (value.in_scope && named.length === 1 && value.years?.from == null && value.years?.to == null)
+    value.years = { from: named[0]!, to: named[0]! };
   return value;
 }

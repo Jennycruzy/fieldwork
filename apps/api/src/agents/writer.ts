@@ -245,7 +245,13 @@ export function writerSchema(
             Object.values(w.fieldDefinitions ?? {}).some((d) => /model[- ]based/i.test(d)),
         );
         // Describing the CDC source itself as model-based is accurate even when only its population columns are used.
-        const sourceSubject = /\b(?:CDC|PLACES)\b/i.test(subject) && !nonModelled.test(subject);
+        const sourceSubject =
+          /\b(?:CDC|PLACES)\b/i.test(predicate ? subject : clause) &&
+          !nonModelled.test(subject) &&
+          !countsAsModifier &&
+          !/(?:model[- ]based|modelled|modeled)\s+(?:\w+\s+){0,3}(?:counts?|records?|locations?|listings?|facilit\w*)\b/i.test(
+            clause,
+          );
         if (
           model.test(clause) &&
           ((!hasModelledMeasure && !sourceSubject) ||
