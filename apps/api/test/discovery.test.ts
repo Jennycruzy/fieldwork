@@ -358,3 +358,42 @@ test("a shared generic catalogue term cannot reuse a different measure's cached 
     })?.id,
   ).toBe(candidate.id);
 });
+
+test("temporary EPA query results are discovered again instead of recalling an expiring query ID", () => {
+  const memory = new HMEM();
+  remember(memory, {
+    kind: "choice",
+    runId: "old",
+    confidence: 0.9,
+    content: JSON.stringify({
+      catalog_source: {
+        candidate: {
+          kind: "epa_facilities",
+          catalog: "epa",
+          id: "246",
+          title: "County facilities",
+          url: "https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=246",
+        },
+        kind: "environmental_records",
+        terms: ["facilities"],
+        place: "Montgomery, AL",
+        observed_at: "2026-10-27T00:00:00Z",
+      },
+    }),
+  });
+  const ctx = {
+    memory,
+    today: new Date("2026-10-27T01:00:00Z"),
+    cfg: { place: { name: "Montgomery, AL" } },
+    recalled: [],
+  } as unknown as Ctx;
+  expect(
+    rememberedCandidate(ctx, {
+      id: "m",
+      kind: "environmental_records",
+      describe: "County facilities",
+      search_terms: ["facilities"],
+    }),
+  ).toBeUndefined();
+  expect(ctx.recalled).toEqual([]);
+});

@@ -345,6 +345,8 @@ export function rememberedCandidate(ctx: Ctx, m: Plan["measures"][number]): Cand
       };
       const c = data.catalog_source;
       if (!c || c.kind !== m.kind || c.place !== ctx.cfg.place.name) continue;
+      // EPA query IDs identify temporary result sets, not durable catalogue entries.
+      if (c.candidate.kind === "epa_facilities") continue;
       const age = ctx.today.getTime() - Date.parse(c.observed_at);
       if (!Number.isFinite(age) || age < 0 || age > 86400000) continue;
       if (JSON.stringify(m.search_terms.map(key).sort()) !== JSON.stringify(c.terms.map(key).sort()))
