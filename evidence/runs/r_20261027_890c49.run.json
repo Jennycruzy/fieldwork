@@ -1,0 +1,1111 @@
+{
+  "id": "r_20261027_890c49",
+  "question": "Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?",
+  "created_at": "2026-10-27T01:54:37.959Z",
+  "finished_at": "2026-10-27T01:54:59.807Z",
+  "status": "failed",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "comparison",
+      "analysis": {
+        "basis": "rates",
+        "reason": "The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.",
+        "denominator": "residents",
+        "rank_measure": "EPA-listed facilities per 1,000 residents, descending",
+        "relationship": true
+      },
+      "in_scope": true,
+      "measures": [
+        {
+          "id": "m1",
+          "kind": "environmental_records",
+          "describe": "Count of EPA-listed regulated facilities in each Montgomery tract",
+          "search_terms": [
+            "EPA",
+            "facility",
+            "registry"
+          ]
+        },
+        {
+          "id": "m2",
+          "kind": "health_estimate",
+          "describe": "CDC PLACES adult asthma prevalence percentage in each Montgomery tract",
+          "search_terms": [
+            "asthma"
+          ]
+        },
+        {
+          "id": "m3",
+          "kind": "health_estimate",
+          "describe": "Total population of each Montgomery tract used as the per-1,000-residents denominator",
+          "search_terms": [
+            "population"
+          ]
+        }
+      ],
+      "geography": "tract",
+      "scope_limit": null,
+      "out_of_scope_reason": null
+    },
+    "world": {
+      "edges": [
+        {
+          "id": "bfd808a8cb3d8bbee03d8566acdf2fb5c6801fca582d912f7fe93590381d5e6b",
+          "to": "candidate:r_20261027_890c49:m1:EPA ECHO facilities in Montgomery County, AL",
+          "from": "measure:r_20261027_890c49:m1",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-27T01:54:38.782Z"
+        },
+        {
+          "id": "cfa4c404da92587b48dfb2beeb0396f56ab243e4bd975de83b95b43cc08e23fa",
+          "to": "candidate:r_20261027_890c49:m2:yjkw-uj5s",
+          "from": "measure:r_20261027_890c49:m2",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-27T01:54:38.782Z"
+        },
+        {
+          "id": "19f53fcba110a790a47cad27ec5f1bccab0648a1707f900e820e34e963fb3c98",
+          "to": "candidate:r_20261027_890c49:m3:yjkw-uj5s",
+          "from": "measure:r_20261027_890c49:m3",
+          "type": "selected",
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          },
+          "validFrom": "2026-10-27T01:54:38.782Z"
+        }
+      ],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261027_890c49",
+          "type": "run",
+          "attrs": {
+            "question": "Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?"
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.781Z",
+            "kind": "run"
+          }
+        },
+        {
+          "id": "measure:r_20261027_890c49:m1",
+          "type": "measure",
+          "attrs": {
+            "id": "m1",
+            "kind": "environmental_records",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.",
+              "denominator": "residents",
+              "rank_measure": "EPA-listed facilities per 1,000 residents, descending",
+              "relationship": true
+            },
+            "describe": "Count of EPA-listed regulated facilities in each Montgomery tract",
+            "search_terms": [
+              "EPA",
+              "facility",
+              "registry"
+            ]
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261027_890c49:m2",
+          "type": "measure",
+          "attrs": {
+            "id": "m2",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.",
+              "denominator": "residents",
+              "rank_measure": "EPA-listed facilities per 1,000 residents, descending",
+              "relationship": true
+            },
+            "describe": "CDC PLACES adult asthma prevalence percentage in each Montgomery tract",
+            "search_terms": [
+              "asthma"
+            ]
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "measure:r_20261027_890c49:m3",
+          "type": "measure",
+          "attrs": {
+            "id": "m3",
+            "kind": "health_estimate",
+            "analysis": {
+              "basis": "rates",
+              "reason": "The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.",
+              "denominator": "residents",
+              "rank_measure": "EPA-listed facilities per 1,000 residents, descending",
+              "relationship": true
+            },
+            "describe": "Total population of each Montgomery tract used as the per-1,000-residents denominator",
+            "search_terms": [
+              "population"
+            ]
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "planner"
+          }
+        },
+        {
+          "id": "candidate:r_20261027_890c49:m1:EPA ECHO facilities in Montgomery County, AL",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=246&pageno=1&qcolumns=1,6,19,20,38,90,93",
+            "title": "EPA ECHO facilities in Montgomery County, AL",
+            "fields": [
+              {
+                "name": "FacName",
+                "type": "text"
+              },
+              {
+                "name": "RegistryID",
+                "type": "text"
+              },
+              {
+                "name": "FacLat",
+                "type": "text"
+              },
+              {
+                "name": "FacLong",
+                "type": "text"
+              },
+              {
+                "name": "FacComplianceStatus",
+                "type": "text"
+              },
+              {
+                "name": "FacAccuracyMeters",
+                "type": "text"
+              },
+              {
+                "name": "FacDerivedStctyFIPS",
+                "type": "text"
+              }
+            ],
+            "measure": "Count of EPA-listed regulated facilities in each Montgomery tract",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "candidate:r_20261027_890c49:m2:yjkw-uj5s",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              {
+                "name": "stateabbr",
+                "type": "text"
+              },
+              {
+                "name": "statedesc",
+                "type": "text"
+              },
+              {
+                "name": "countyname",
+                "type": "text"
+              },
+              {
+                "name": "countyfips",
+                "type": "text"
+              },
+              {
+                "name": "tractfips",
+                "type": "text"
+              },
+              {
+                "name": "totalpopulation",
+                "type": "text"
+              },
+              {
+                "name": "totalpop18plus",
+                "type": "text"
+              },
+              {
+                "name": "access2_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "access2_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "binge_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "binge_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "chd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "chd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "copd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "copd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "dental_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "dental_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "depression_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "depression_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "vision_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "vision_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crudeprev_",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "disability_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "disability_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "geolocation",
+                "type": "text"
+              }
+            ],
+            "measure": "CDC PLACES adult asthma prevalence percentage in each Montgomery tract",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          }
+        },
+        {
+          "id": "candidate:r_20261027_890c49:m3:yjkw-uj5s",
+          "type": "candidate",
+          "attrs": {
+            "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+            "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+            "fields": [
+              {
+                "name": "stateabbr",
+                "type": "text"
+              },
+              {
+                "name": "statedesc",
+                "type": "text"
+              },
+              {
+                "name": "countyname",
+                "type": "text"
+              },
+              {
+                "name": "countyfips",
+                "type": "text"
+              },
+              {
+                "name": "tractfips",
+                "type": "text"
+              },
+              {
+                "name": "totalpopulation",
+                "type": "text"
+              },
+              {
+                "name": "totalpop18plus",
+                "type": "text"
+              },
+              {
+                "name": "access2_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "access2_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "arthritis_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "binge_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "binge_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bphigh_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "bpmed_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cancer_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "casthma_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "chd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "chd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "checkup_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cholscreen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "colon_screen_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "copd_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "copd_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "csmoking_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "dental_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "dental_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "depression_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "depression_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "diabetes_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "ghlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "highchol_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lpa_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mammouse_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "mhlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "obesity_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "phlth_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "sleep_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "stroke_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "teethlost_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "hearing_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "vision_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "vision_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "cognition_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crudeprev_",
+                "type": "text"
+              },
+              {
+                "name": "mobility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "selfcare_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "indeplive_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "disability_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "disability_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "loneliness_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodstamp_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "foodinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "housinsecu_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "shututility_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "lacktrpt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crudeprev",
+                "type": "text"
+              },
+              {
+                "name": "emotionspt_crude95ci",
+                "type": "text"
+              },
+              {
+                "name": "geolocation",
+                "type": "text"
+              }
+            ],
+            "measure": "Total population of each Montgomery tract used as the per-1,000-residents denominator",
+            "selected": true,
+            "geometryType": null
+          },
+          "source": {
+            "at": "2026-10-27T01:54:38.782Z",
+            "run": "r_20261027_890c49",
+            "kind": "finder"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "No suitable public dataset was found for EPA returned 1 of 3436 records; incomplete registry coverage cannot support a tract ranking.",
+    "sources": [],
+    "memories": [
+      {
+        "id": "mem-1020",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"fields\":[\"FacName\",\"RegistryID\",\"FacLat\",\"FacLong\",\"FacComplianceStatus\",\"FacAccuracyMeters\",\"FacDerivedStctyFIPS\"],\"catalog\":\"epa\",\"id\":\"246\",\"title\":\"EPA ECHO facilities in Montgomery County, AL\",\"description\":\"Current regulated-facility registry; 3436 source records. Counts of listings do not measure emissions or exposure.\",\"url\":\"https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=246&pageno=1&qcolumns=1,6,19,20,38,90,93\",\"kind\":\"epa_facilities\",\"modified\":\"2026-10-26T08:04:08.991Z\"},\"kind\":\"environmental_records\",\"terms\":[\"EPA\",\"facility\",\"registry\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-26T08:03:54.257Z\"}}",
+        "confidence": 0.8
+      },
+      {
+        "id": "mem-1022",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"catalog\":\"socrata\",\"id\":\"yjkw-uj5s\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"description\":\"This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"kind\":\"socrata_resource\",\"modified\":\"2026-09-22T23:23:00.000Z\",\"domain\":\"data.cdc.gov\",\"licence\":\"Public Domain\",\"licenceUrl\":\"https://data.cdc.gov/api/views/yjkw-uj5s.json\"},\"kind\":\"health_estimate\",\"terms\":[\"asthma\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-27T00:05:38.877Z\"}}",
+        "confidence": 0.8500000000000001
+      },
+      {
+        "id": "mem-1160",
+        "kind": "choice",
+        "content": "{\"catalog_source\":{\"candidate\":{\"catalog\":\"socrata\",\"id\":\"yjkw-uj5s\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"description\":\"This dataset contains model-based census tract level estimates in GIS-friendly format. PLACES covers the entire United States—50 states and the District of Columbia—at county, place, census tract, and ZIP Code Tabulation Area levels. It provides information uniformly on this large scale for local areas at four geographic levels. Estimates were provided by the Centers for Disease Control and Preven\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"kind\":\"socrata_resource\",\"modified\":\"2026-09-22T23:23:00.000Z\",\"domain\":\"data.cdc.gov\",\"licence\":\"Public Domain\",\"licenceUrl\":\"https://data.cdc.gov/api/views/yjkw-uj5s.json\"},\"kind\":\"health_estimate\",\"terms\":[\"population\"],\"place\":\"Montgomery, AL\",\"observed_at\":\"2026-10-27T01:29:35.928Z\"}}",
+        "confidence": 0.8
+      },
+      {
+        "id": "mem-772",
+        "kind": "choice",
+        "content": "For \"Count of EPA-listed regulated facilities in each Montgomery tract\" in Montgomery, AL, dataset \"EPA ECHO facilities in Montgomery County, AL\" (https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=441&pageno=1&qcolumns=1,6,19,20,38,90,93) was read through Zetaris: 3436 records; fields FacName, RegistryID, FacLat, FacLong, FacComplianceStatus, FacAccuracyMeters, FacDerivedStctyFIPS. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-265",
+        "kind": "choice",
+        "content": "For \"EPA-listed facilities per 1,000 residents in Montgomery tract\" in Montgomery, AL, Fieldwork chose the dataset \"EPA ECHO facilities in Montgomery County, AL\" (https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=771&pageno=1&qcolumns=1,6,19,20,38,90,93): It is the most current EPA ECHO facility registry for Montgomery County, AL, providing the best available approximation of listed facilities per 1,000 residents at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-352",
+        "kind": "choice",
+        "content": "For \"EPA-listed regulated facilities per 1,000 residents in each Montgomery tract\" in Montgomery, AL, dataset \"EPA ECHO facilities in Montgomery County, AL\" (https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=806&pageno=1&qcolumns=1,6,19,20,38,90,93) was read through Zetaris: 3436 records; fields FacName, RegistryID, FacLat, FacLong, FacComplianceStatus, FacAccuracyMeters, FacDerivedStctyFIPS. Catalog selection reasons are hypotheses, not verified capabilities.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-42",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.82).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-19",
+        "kind": "choice",
+        "content": "For \"Adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): Same dataset an earlier run chose and checked (memory mem-1, confidence 0.77).",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-265",
+        "kind": "choice",
+        "content": "For \"EPA-listed facilities per 1,000 residents in Montgomery tract\" in Montgomery, AL, Fieldwork chose the dataset \"EPA ECHO facilities in Montgomery County, AL\" (https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=771&pageno=1&qcolumns=1,6,19,20,38,90,93): It is the most current EPA ECHO facility registry for Montgomery County, AL, providing the best available approximation of listed facilities per 1,000 residents at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-247",
+        "kind": "choice",
+        "content": "For \"Count of food establishments whose latest inspection score is below 85, grouped by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"Food Scores\" (https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer): Directly provides food inspection scores for Montgomery establishments grouped by census tract, matching the measure and marked newest in series.",
+        "confidence": 1
+      },
+      {
+        "id": "mem-1",
+        "kind": "choice",
+        "content": "For \"adult asthma prevalence rate by census tract\" in Montgomery, AL, Fieldwork chose the dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" (https://data.cdc.gov/resource/yjkw-uj5s.json): The 2025 PLACES release is the newest CDC PLACES census tract dataset for health measures, providing model-based adult asthma prevalence estimates at the tract level.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-354",
+        "kind": "wiring",
+        "content": "Dataset \"EPA ECHO facilities in Montgomery County, AL\" wires into Zetaris as epa_facilities; filter current county registry; fields FacName, RegistryID, FacLat, FacLong, FacComplianceStatus, FacAccuracyMeters, FacDerivedStctyFIPS; 3436 of 3436 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-266",
+        "kind": "wiring",
+        "content": "Dataset \"EPA ECHO facilities in Montgomery County, AL\" wires into Zetaris as epa_facilities; filter current county registry; fields FacName, RegistryID, FacLat, FacLong, FacComplianceStatus, FacAccuracyMeters, FacDerivedStctyFIPS; 3437 of 3437 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-13",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND diabetes_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, diabetes_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      },
+      {
+        "id": "mem-3",
+        "kind": "wiring",
+        "content": "Dataset \"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\" wires into Zetaris as socrata_list; filter countyfips = '01101' AND (stateabbr = 'AL' AND casthma_crudeprev IS NOT NULL); fields tractfips, countyfips, totalpopulation, casthma_crudeprev; 71 of 71 source records read.",
+        "confidence": 0.97
+      }
+    ],
+    "question": "Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?",
+    "memoryWrites": [
+      {
+        "id": "mem-634",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261027_890c49\",\"type\":\"run\",\"attrs\":{\"question\":\"Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-27T01:54:38.781Z\"}},\"relationships\":[]}"
+      },
+      {
+        "id": "mem-635",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261027_890c49:m1\",\"type\":\"measure\",\"attrs\":{\"id\":\"m1\",\"describe\":\"Count of EPA-listed regulated facilities in each Montgomery tract\",\"kind\":\"environmental_records\",\"search_terms\":[\"EPA\",\"facility\",\"registry\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.\",\"rank_measure\":\"EPA-listed facilities per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m1:EPA ECHO facilities in Montgomery County, AL\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"bfd808a8cb3d8bbee03d8566acdf2fb5c6801fca582d912f7fe93590381d5e6b\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      },
+      {
+        "id": "mem-636",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261027_890c49:m2\",\"type\":\"measure\",\"attrs\":{\"id\":\"m2\",\"describe\":\"CDC PLACES adult asthma prevalence percentage in each Montgomery tract\",\"kind\":\"health_estimate\",\"search_terms\":[\"asthma\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.\",\"rank_measure\":\"EPA-listed facilities per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m2\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m2:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"cfa4c404da92587b48dfb2beeb0396f56ab243e4bd975de83b95b43cc08e23fa\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      },
+      {
+        "id": "mem-1156",
+        "content": "{\"world_entity\":{\"id\":\"measure:r_20261027_890c49:m3\",\"type\":\"measure\",\"attrs\":{\"id\":\"m3\",\"describe\":\"Total population of each Montgomery tract used as the per-1,000-residents denominator\",\"kind\":\"health_estimate\",\"search_terms\":[\"population\"],\"analysis\":{\"basis\":\"rates\",\"denominator\":\"residents\",\"relationship\":true,\"reason\":\"The question asks about a cross-tract association: EPA facility counts must be converted to a per-1,000-residents rate using total population, then compared with CDC adult asthma prevalence percentages. Raw counts would favor more populous tracts, so population-adjusted rates are required.\",\"rank_measure\":\"EPA-listed facilities per 1,000 residents, descending\"}},\"source\":{\"kind\":\"planner\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m3\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m3:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"19f53fcba110a790a47cad27ec5f1bccab0648a1707f900e820e34e963fb3c98\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      },
+      {
+        "id": "mem-637",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261027_890c49:m1:EPA ECHO facilities in Montgomery County, AL\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Count of EPA-listed regulated facilities in each Montgomery tract\",\"title\":\"EPA ECHO facilities in Montgomery County, AL\",\"url\":\"https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=246&pageno=1&qcolumns=1,6,19,20,38,90,93\",\"fields\":[{\"name\":\"FacName\",\"type\":\"text\"},{\"name\":\"RegistryID\",\"type\":\"text\"},{\"name\":\"FacLat\",\"type\":\"text\"},{\"name\":\"FacLong\",\"type\":\"text\"},{\"name\":\"FacComplianceStatus\",\"type\":\"text\"},{\"name\":\"FacAccuracyMeters\",\"type\":\"text\"},{\"name\":\"FacDerivedStctyFIPS\",\"type\":\"text\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m1\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m1:EPA ECHO facilities in Montgomery County, AL\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"bfd808a8cb3d8bbee03d8566acdf2fb5c6801fca582d912f7fe93590381d5e6b\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      },
+      {
+        "id": "mem-638",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261027_890c49:m2:yjkw-uj5s\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"CDC PLACES adult asthma prevalence percentage in each Montgomery tract\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"fields\":[{\"name\":\"stateabbr\",\"type\":\"text\"},{\"name\":\"statedesc\",\"type\":\"text\"},{\"name\":\"countyname\",\"type\":\"text\"},{\"name\":\"countyfips\",\"type\":\"text\"},{\"name\":\"tractfips\",\"type\":\"text\"},{\"name\":\"totalpopulation\",\"type\":\"text\"},{\"name\":\"totalpop18plus\",\"type\":\"text\"},{\"name\":\"access2_crudeprev\",\"type\":\"text\"},{\"name\":\"access2_crude95ci\",\"type\":\"text\"},{\"name\":\"arthritis_crudeprev\",\"type\":\"text\"},{\"name\":\"arthritis_crude95ci\",\"type\":\"text\"},{\"name\":\"binge_crudeprev\",\"type\":\"text\"},{\"name\":\"binge_crude95ci\",\"type\":\"text\"},{\"name\":\"bphigh_crudeprev\",\"type\":\"text\"},{\"name\":\"bphigh_crude95ci\",\"type\":\"text\"},{\"name\":\"bpmed_crudeprev\",\"type\":\"text\"},{\"name\":\"bpmed_crude95ci\",\"type\":\"text\"},{\"name\":\"cancer_crudeprev\",\"type\":\"text\"},{\"name\":\"cancer_crude95ci\",\"type\":\"text\"},{\"name\":\"casthma_crudeprev\",\"type\":\"text\"},{\"name\":\"casthma_crude95ci\",\"type\":\"text\"},{\"name\":\"chd_crudeprev\",\"type\":\"text\"},{\"name\":\"chd_crude95ci\",\"type\":\"text\"},{\"name\":\"checkup_crudeprev\",\"type\":\"text\"},{\"name\":\"checkup_crude95ci\",\"type\":\"text\"},{\"name\":\"cholscreen_crudeprev\",\"type\":\"text\"},{\"name\":\"cholscreen_crude95ci\",\"type\":\"text\"},{\"name\":\"colon_screen_crudeprev\",\"type\":\"text\"},{\"name\":\"colon_screen_crude95ci\",\"type\":\"text\"},{\"name\":\"copd_crudeprev\",\"type\":\"text\"},{\"name\":\"copd_crude95ci\",\"type\":\"text\"},{\"name\":\"csmoking_crudeprev\",\"type\":\"text\"},{\"name\":\"csmoking_crude95ci\",\"type\":\"text\"},{\"name\":\"dental_crudeprev\",\"type\":\"text\"},{\"name\":\"dental_crude95ci\",\"type\":\"text\"},{\"name\":\"depression_crudeprev\",\"type\":\"text\"},{\"name\":\"depression_crude95ci\",\"type\":\"text\"},{\"name\":\"diabetes_crudeprev\",\"type\":\"text\"},{\"name\":\"diabetes_crude95ci\",\"type\":\"text\"},{\"name\":\"ghlth_crudeprev\",\"type\":\"text\"},{\"name\":\"ghlth_crude95ci\",\"type\":\"text\"},{\"name\":\"highchol_crudeprev\",\"type\":\"text\"},{\"name\":\"highchol_crude95ci\",\"type\":\"text\"},{\"name\":\"lpa_crudeprev\",\"type\":\"text\"},{\"name\":\"lpa_crude95ci\",\"type\":\"text\"},{\"name\":\"mammouse_crudeprev\",\"type\":\"text\"},{\"name\":\"mammouse_crude95ci\",\"type\":\"text\"},{\"name\":\"mhlth_crudeprev\",\"type\":\"text\"},{\"name\":\"mhlth_crude95ci\",\"type\":\"text\"},{\"name\":\"obesity_crudeprev\",\"type\":\"text\"},{\"name\":\"obesity_crude95ci\",\"type\":\"text\"},{\"name\":\"phlth_crudeprev\",\"type\":\"text\"},{\"name\":\"phlth_crude95ci\",\"type\":\"text\"},{\"name\":\"sleep_crudeprev\",\"type\":\"text\"},{\"name\":\"sleep_crude95ci\",\"type\":\"text\"},{\"name\":\"stroke_crudeprev\",\"type\":\"text\"},{\"name\":\"stroke_crude95ci\",\"type\":\"text\"},{\"name\":\"teethlost_crudeprev\",\"type\":\"text\"},{\"name\":\"teethlost_crude95ci\",\"type\":\"text\"},{\"name\":\"hearing_crudeprev\",\"type\":\"text\"},{\"name\":\"hearing_crude95ci\",\"type\":\"text\"},{\"name\":\"vision_crudeprev\",\"type\":\"text\"},{\"name\":\"vision_crude95ci\",\"type\":\"text\"},{\"name\":\"cognition_crudeprev\",\"type\":\"text\"},{\"name\":\"cognition_crude95ci\",\"type\":\"text\"},{\"name\":\"mobility_crudeprev_\",\"type\":\"text\"},{\"name\":\"mobility_crude95ci\",\"type\":\"text\"},{\"name\":\"selfcare_crudeprev\",\"type\":\"text\"},{\"name\":\"selfcare_crude95ci\",\"type\":\"text\"},{\"name\":\"indeplive_crudeprev\",\"type\":\"text\"},{\"name\":\"indeplive_crude95ci\",\"type\":\"text\"},{\"name\":\"disability_crudeprev\",\"type\":\"text\"},{\"name\":\"disability_crude95ci\",\"type\":\"text\"},{\"name\":\"loneliness_crudeprev\",\"type\":\"text\"},{\"name\":\"loneliness_crude95ci\",\"type\":\"text\"},{\"name\":\"foodstamp_crudeprev\",\"type\":\"text\"},{\"name\":\"foodstamp_crude95ci\",\"type\":\"text\"},{\"name\":\"foodinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"foodinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"housinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"housinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"shututility_crudeprev\",\"type\":\"text\"},{\"name\":\"shututility_crude95ci\",\"type\":\"text\"},{\"name\":\"lacktrpt_crudeprev\",\"type\":\"text\"},{\"name\":\"lacktrpt_crude95ci\",\"type\":\"text\"},{\"name\":\"emotionspt_crudeprev\",\"type\":\"text\"},{\"name\":\"emotionspt_crude95ci\",\"type\":\"text\"},{\"name\":\"geolocation\",\"type\":\"text\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m2\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m2:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"cfa4c404da92587b48dfb2beeb0396f56ab243e4bd975de83b95b43cc08e23fa\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      },
+      {
+        "id": "mem-1157",
+        "content": "{\"world_entity\":{\"id\":\"candidate:r_20261027_890c49:m3:yjkw-uj5s\",\"type\":\"candidate\",\"attrs\":{\"measure\":\"Total population of each Montgomery tract used as the per-1,000-residents denominator\",\"title\":\"PLACES: Census Tract Data (GIS Friendly Format), 2025 release\",\"url\":\"https://data.cdc.gov/resource/yjkw-uj5s.json\",\"fields\":[{\"name\":\"stateabbr\",\"type\":\"text\"},{\"name\":\"statedesc\",\"type\":\"text\"},{\"name\":\"countyname\",\"type\":\"text\"},{\"name\":\"countyfips\",\"type\":\"text\"},{\"name\":\"tractfips\",\"type\":\"text\"},{\"name\":\"totalpopulation\",\"type\":\"text\"},{\"name\":\"totalpop18plus\",\"type\":\"text\"},{\"name\":\"access2_crudeprev\",\"type\":\"text\"},{\"name\":\"access2_crude95ci\",\"type\":\"text\"},{\"name\":\"arthritis_crudeprev\",\"type\":\"text\"},{\"name\":\"arthritis_crude95ci\",\"type\":\"text\"},{\"name\":\"binge_crudeprev\",\"type\":\"text\"},{\"name\":\"binge_crude95ci\",\"type\":\"text\"},{\"name\":\"bphigh_crudeprev\",\"type\":\"text\"},{\"name\":\"bphigh_crude95ci\",\"type\":\"text\"},{\"name\":\"bpmed_crudeprev\",\"type\":\"text\"},{\"name\":\"bpmed_crude95ci\",\"type\":\"text\"},{\"name\":\"cancer_crudeprev\",\"type\":\"text\"},{\"name\":\"cancer_crude95ci\",\"type\":\"text\"},{\"name\":\"casthma_crudeprev\",\"type\":\"text\"},{\"name\":\"casthma_crude95ci\",\"type\":\"text\"},{\"name\":\"chd_crudeprev\",\"type\":\"text\"},{\"name\":\"chd_crude95ci\",\"type\":\"text\"},{\"name\":\"checkup_crudeprev\",\"type\":\"text\"},{\"name\":\"checkup_crude95ci\",\"type\":\"text\"},{\"name\":\"cholscreen_crudeprev\",\"type\":\"text\"},{\"name\":\"cholscreen_crude95ci\",\"type\":\"text\"},{\"name\":\"colon_screen_crudeprev\",\"type\":\"text\"},{\"name\":\"colon_screen_crude95ci\",\"type\":\"text\"},{\"name\":\"copd_crudeprev\",\"type\":\"text\"},{\"name\":\"copd_crude95ci\",\"type\":\"text\"},{\"name\":\"csmoking_crudeprev\",\"type\":\"text\"},{\"name\":\"csmoking_crude95ci\",\"type\":\"text\"},{\"name\":\"dental_crudeprev\",\"type\":\"text\"},{\"name\":\"dental_crude95ci\",\"type\":\"text\"},{\"name\":\"depression_crudeprev\",\"type\":\"text\"},{\"name\":\"depression_crude95ci\",\"type\":\"text\"},{\"name\":\"diabetes_crudeprev\",\"type\":\"text\"},{\"name\":\"diabetes_crude95ci\",\"type\":\"text\"},{\"name\":\"ghlth_crudeprev\",\"type\":\"text\"},{\"name\":\"ghlth_crude95ci\",\"type\":\"text\"},{\"name\":\"highchol_crudeprev\",\"type\":\"text\"},{\"name\":\"highchol_crude95ci\",\"type\":\"text\"},{\"name\":\"lpa_crudeprev\",\"type\":\"text\"},{\"name\":\"lpa_crude95ci\",\"type\":\"text\"},{\"name\":\"mammouse_crudeprev\",\"type\":\"text\"},{\"name\":\"mammouse_crude95ci\",\"type\":\"text\"},{\"name\":\"mhlth_crudeprev\",\"type\":\"text\"},{\"name\":\"mhlth_crude95ci\",\"type\":\"text\"},{\"name\":\"obesity_crudeprev\",\"type\":\"text\"},{\"name\":\"obesity_crude95ci\",\"type\":\"text\"},{\"name\":\"phlth_crudeprev\",\"type\":\"text\"},{\"name\":\"phlth_crude95ci\",\"type\":\"text\"},{\"name\":\"sleep_crudeprev\",\"type\":\"text\"},{\"name\":\"sleep_crude95ci\",\"type\":\"text\"},{\"name\":\"stroke_crudeprev\",\"type\":\"text\"},{\"name\":\"stroke_crude95ci\",\"type\":\"text\"},{\"name\":\"teethlost_crudeprev\",\"type\":\"text\"},{\"name\":\"teethlost_crude95ci\",\"type\":\"text\"},{\"name\":\"hearing_crudeprev\",\"type\":\"text\"},{\"name\":\"hearing_crude95ci\",\"type\":\"text\"},{\"name\":\"vision_crudeprev\",\"type\":\"text\"},{\"name\":\"vision_crude95ci\",\"type\":\"text\"},{\"name\":\"cognition_crudeprev\",\"type\":\"text\"},{\"name\":\"cognition_crude95ci\",\"type\":\"text\"},{\"name\":\"mobility_crudeprev_\",\"type\":\"text\"},{\"name\":\"mobility_crude95ci\",\"type\":\"text\"},{\"name\":\"selfcare_crudeprev\",\"type\":\"text\"},{\"name\":\"selfcare_crude95ci\",\"type\":\"text\"},{\"name\":\"indeplive_crudeprev\",\"type\":\"text\"},{\"name\":\"indeplive_crude95ci\",\"type\":\"text\"},{\"name\":\"disability_crudeprev\",\"type\":\"text\"},{\"name\":\"disability_crude95ci\",\"type\":\"text\"},{\"name\":\"loneliness_crudeprev\",\"type\":\"text\"},{\"name\":\"loneliness_crude95ci\",\"type\":\"text\"},{\"name\":\"foodstamp_crudeprev\",\"type\":\"text\"},{\"name\":\"foodstamp_crude95ci\",\"type\":\"text\"},{\"name\":\"foodinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"foodinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"housinsecu_crudeprev\",\"type\":\"text\"},{\"name\":\"housinsecu_crude95ci\",\"type\":\"text\"},{\"name\":\"shututility_crudeprev\",\"type\":\"text\"},{\"name\":\"shututility_crude95ci\",\"type\":\"text\"},{\"name\":\"lacktrpt_crudeprev\",\"type\":\"text\"},{\"name\":\"lacktrpt_crude95ci\",\"type\":\"text\"},{\"name\":\"emotionspt_crudeprev\",\"type\":\"text\"},{\"name\":\"emotionspt_crude95ci\",\"type\":\"text\"},{\"name\":\"geolocation\",\"type\":\"text\"}],\"geometryType\":null,\"selected\":true},\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"}},\"relationships\":[{\"from\":\"measure:r_20261027_890c49:m3\",\"type\":\"selected\",\"to\":\"candidate:r_20261027_890c49:m3:yjkw-uj5s\",\"source\":{\"kind\":\"finder\",\"at\":\"2026-10-27T01:54:38.782Z\",\"run\":\"r_20261027_890c49\"},\"id\":\"19f53fcba110a790a47cad27ec5f1bccab0648a1707f900e820e34e963fb3c98\",\"validFrom\":\"2026-10-27T01:54:38.782Z\"}]}"
+      }
+    ]
+  }
+}

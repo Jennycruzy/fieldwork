@@ -1,0 +1,168 @@
+{
+  "kind": "Three questions submitted through the public live app; separate from the full-batch score",
+  "verification_code_commit": "f3cb48cf3c82353e46ebf368d4bb9d8fc2e72e60",
+  "full_batch_preserved": {
+    "batch": 12,
+    "passed": 25,
+    "total": 25,
+    "median_seconds": 46.73,
+    "p90_seconds": 81.572,
+    "code_commit": "0f561bb"
+  },
+  "budget_before_any_live": 128,
+  "budget_before_post_rebase_checks": 237,
+  "daily_cap": 900,
+  "paid_models": false,
+  "questions": [
+    {
+      "question_id": "Q03",
+      "run_id": "r_20261027_6425dc",
+      "started_layout": "desktop",
+      "status": "answered",
+      "seconds": 51.542,
+      "answer_url": "https://fieldwork.38-49-216-59.sslip.io/a/r_20261027_6425dc",
+      "browser_errors": [],
+      "answer_widths": [
+        1280,
+        360
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "numeric_links_query_and_downloads": "passed",
+      "map_check": "passed",
+      "generation_code_commit": "f3cb48cf3c82353e46ebf368d4bb9d8fc2e72e60"
+    },
+    {
+      "question_id": "Q20",
+      "run_id": "r_20261027_8e48a0",
+      "started_layout": "phone",
+      "status": "answered",
+      "seconds": 58.649,
+      "answer_url": "https://fieldwork.38-49-216-59.sslip.io/a/r_20261027_8e48a0",
+      "browser_errors": [],
+      "answer_widths": [
+        1280,
+        360
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "numeric_links_query_and_downloads": "passed",
+      "map_check": "passed",
+      "generation_code_commit": "f2d1febabd8dc14a9e3f6d0ed572d93bcbca17a6"
+    },
+    {
+      "question_id": "Q07",
+      "run_id": "r_20261027_25efaf",
+      "started_layout": "desktop",
+      "status": "answered",
+      "seconds": 50.966,
+      "answer_url": "https://fieldwork.38-49-216-59.sslip.io/a/r_20261027_25efaf",
+      "browser_errors": [],
+      "answer_widths": [
+        1280,
+        360
+      ],
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "numeric_links_query_and_downloads": "passed",
+      "map_check": "not applicable to citywide monthly counts",
+      "generation_code_commit": "f3cb48cf3c82353e46ebf368d4bb9d8fc2e72e60"
+    }
+  ],
+  "earlier_submissions": [
+    {
+      "run_id": "r_20261027_b74524",
+      "note": "Population was still called model-based; source typing corrected."
+    },
+    {
+      "run_id": "r_20261027_0666db",
+      "note": "Source wording correct; retained as an earlier browser submission."
+    },
+    {
+      "run_id": "r_20261027_f57c73",
+      "note": "Failed on repeated internal-wording schema refusals and incomplete fallback JSON; presentation-only sentences are now omitted with trace evidence."
+    }
+  ],
+  "additional_earlier_submissions": [
+    {
+      "run_id": "r_20261027_9b874a",
+      "note": "Correct source wording, retained as an earlier submission."
+    },
+    {
+      "run_id": "r_20261027_b3a7a6",
+      "note": "Failed on source-type schema rejections and incomplete fallback JSON; generic predicate matching now distinguishes valid mixed-source comparisons and names the rejected clause."
+    }
+  ],
+  "additional_provider_failure": {
+    "run_id": "r_20261027_ed5bb1",
+    "note": "Slow query repair and an invalid Writer reply exhausted the unchanged run-call allowance; the next attempt used identical code."
+  },
+  "earlier_source_failure": {
+    "run_id": "r_20261027_890c49",
+    "note": "The remembered temporary EPA query ID returned one facility instead of the expected 3436; the source-count check refused it. Temporary EPA query IDs are now obtained live."
+  },
+  "earlier_completed_browser_sequence": [
+    {
+      "run_id": "r_20261027_621ce3",
+      "note": "Browser checks passed; manual reading found correlation misrepresented as a per-unit effect. Generic correlation-only prompt and sentence checks corrected this."
+    },
+    {
+      "run_id": "r_20261027_8f4cd5",
+      "note": "Correct population/coverage wording; retained as an earlier submission."
+    },
+    {
+      "run_id": "r_20261027_1a5d61",
+      "note": "Browser checks passed; a caveat invented release-year geography. Unsupported boundary-year wording is now omitted with trace evidence."
+    }
+  ],
+  "earlier_invalid_writer_response": {
+    "run_id": "r_20261027_0652f9",
+    "note": "Failed after invalid Writer JSON and repair/fallback. A Writer-only replay on its recorded rows then succeeded on one call; the next full question used unchanged code."
+  },
+  "writer_only_diagnostic": {
+    "model_calls": 1,
+    "kind": "Recorded-row component diagnostic, separate from new public questions"
+  },
+  "interleaved_failed_query": {
+    "run_id": "r_20261027_0220f6",
+    "note": "A model-written query referenced an unavailable table; the run failed honestly. Q20 had already passed on the same code; its browser checkpoint was preserved while Q03 was retried."
+  },
+  "later_manual_wording_review": [
+    {
+      "run_id": "r_20261027_994e1a",
+      "note": "Manual review rejected complete annual coverage despite 11 source months. The generic Writer now always appends the exact missing-month warning and omits contradictory coverage claims."
+    },
+    {
+      "run_id": "r_20261027_6e47db",
+      "note": "Manual review rejected release-year-as-data-vintage wording. Source model-estimate definitions are now disclosed verbatim and release/vintage conflation is omitted."
+    }
+  ],
+  "last_validation_loop_failure": {
+    "run_id": "r_20261027_f90fcf",
+    "note": "The normal validation loop exhausted the unchanged per-run call allowance. The independently verified earlier Q20 answer remains live; fresh Q03 and Q07 questions exercise the final coverage correction."
+  },
+  "generation_versions": {
+    "Q20": "f2d1feb",
+    "other_final_questions": "current g5 code commit",
+    "note": "Q20 was generated live before the later coverage-only and inherited UI updates; its wording was rechecked against the current public app. This is not a new full-batch score."
+  },
+  "additional_accuracy_findings": {
+    "run_id": "r_20261027_538db1",
+    "question_id": "Q01",
+    "note": "Browser wording checks passed, but manual review rejected the claim that Tract 12 had the largest violation count among the top 10 (Tract 11 has 1125 versus 818) and a citywide total of 15103 that omits 336 unlocated records. These additional accuracy findings are explicitly left for independent review; no supporting-rank checker or frozen grader was changed. The distinct frozen monthly question is the third verified example."
+  },
+  "project_budget_observations": {
+    "before_verified_Q20": 196,
+    "before_verified_Q03": 248,
+    "before_verified_Q07": 258,
+    "after": 266,
+    "scope": "Project-wide daily budget, shared with concurrent work; not an exclusive count of this session"
+  },
+  "finished_at": "2026-10-27T06:58:55.361312+00:00"
+}
