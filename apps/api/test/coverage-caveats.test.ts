@@ -46,3 +46,11 @@ test("expected months come from the plan, or from a one-year source span when th
   expect(expectedMonths(undefined, { firstPeriod: 202401, lastPeriod: 202512 }, today)).toBe(undefined);
   expect(expectedMonths(null, { firstPeriod: 202601, lastPeriod: 202609 }, today)).toBe(undefined);
 });
+
+test("the coverage note is not repeated when the Writer already stated the same month count", () => {
+  const own = "Code violation counts are raw registry totals; 11 of 12 calendar months in 2025 have records.";
+  const value = applyCoverageCaveats({ headline: "h", points: ["p"], how_sure: "s", caveats: [own] }, [
+    incomplete,
+  ]);
+  expect(value.caveats).toEqual([own]);
+});

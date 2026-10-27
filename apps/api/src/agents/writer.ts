@@ -414,6 +414,9 @@ export function applyCoverageCaveats(
   value.points = value.points.filter((t) => !claims(t));
   value.caveats = value.caveats.filter((t) => !claims(t));
   if (claims(value.how_sure)) value.how_sure = strip(value.how_sure) || notes[0]!;
-  for (const note of notes) if (!value.caveats.some((c) => c.includes(note))) value.caveats.push(note);
+  const months = (text: string) => /\b(\d+)\s+(?:of\s+12\s+)?calendar months\b/i.exec(text)?.[1];
+  for (const note of notes)
+    if (!value.caveats.some((c) => c.includes(note) || (months(c) && months(c) === months(note))))
+      value.caveats.push(note);
   return value;
 }
