@@ -171,7 +171,7 @@ it("Writer missing fields get one schema-error repair then a single next-free-mo
   expect(b.calls).toHaveLength(1);
   expect(a.calls[1]!.messages.at(-1)!.content).toContain("points: Required");
   expect(a.calls[1]!.messages.at(-1)!.content).toContain("how_sure: Required");
-  expect(a.calls[1]!.messages.at(-1)!.content).toContain("caveats: Required");
+  expect(a.calls[1]!.messages.at(-1)!.content).not.toContain("caveats: Required");
   expect(result.value.points).toEqual(["Evidence"]);
 });
 it("Writer refuses missing fields on every route instead of accepting incomplete answers", async () => {

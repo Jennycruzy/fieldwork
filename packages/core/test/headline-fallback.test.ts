@@ -24,3 +24,16 @@ for (const [id, expected] of Object.entries(runs))
     expect(out.draft.headline).toBe(expected);
     if (out.draft.points.length > 1) expect(out.draft.points).not.toContain(expected);
   });
+
+test("a count column named after data reads as records, not datas", () => {
+  const out = finalizeDraft(
+    { headline: "Census Tract 999 had 123456789 permits.", points: [], how_sure: "Counts.", caveats: [] },
+    ["tract_name", "construction_permit_data_count", "geoid"],
+    [
+      ["Census Tract 56.11", "376", "01101005611"],
+      ["Census Tract 1", "12", "01101000100"],
+    ],
+    [],
+  );
+  expect(out.draft.headline).toBe("Census Tract 56.11 comes first, with 376 construction permit records.");
+});

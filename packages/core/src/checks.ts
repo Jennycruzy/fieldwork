@@ -961,6 +961,8 @@ export function finalizeDraft<
         " " +
         words
           .replace(/\s*count$/i, "")
+          // "permit data" counts records; other nouns take a plural.
+          .replace(/\bdata$/i, "records")
           .replace(/y$/, "ie")
           .replace(/s?$/, "s")
       : words + " of " + shown;

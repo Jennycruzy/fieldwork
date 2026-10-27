@@ -99,7 +99,8 @@ export const AnswerSchema = z.object({
   headline: z.string(),
   points: z.array(z.string()).max(6),
   how_sure: z.string().trim().min(1, "Explain the confidence and limits of this answer."),
-  caveats: z.array(z.string()).max(6),
+  // A missing list means no caveats; it is not a reason to fail the answer.
+  caveats: z.array(z.string()).max(6).default([]),
 });
 export type Answer = z.infer<typeof AnswerSchema>;
 
