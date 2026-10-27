@@ -293,9 +293,15 @@ async function wireSocrata(
     : names.has("countyname") && names.has("stateabbr")
       ? `countyname = '${ctx.cfg.place.countyName}' AND stateabbr = '${ctx.cfg.place.stateAbbr}'`
       : undefined;
-  const parts = [county, modelWhere && modelWhere.trim() !== "1=1" ? `(${modelWhere})` : undefined].filter(
-    Boolean,
-  );
+  const own = county ? withoutCountyLabels(modelWhere) : modelWhere;
+  if (own !== modelWhere)
+    await ctx.trace.log({
+      agent: "wirer",
+      action: "filter_alignment",
+      status: "info",
+      note: "County and state name filters were dropped; the county code restriction is applied for this source.",
+    });
+  const parts = [county, own && own.trim() !== "1=1" ? `(${own})` : undefined].filter(Boolean);
   const where = parts.join(" AND ");
   const keyFields = [
     "tractfips",
@@ -625,4 +631,17 @@ async function wireEpa(ctx: Ctx, p: Plan, c: Chosen, label: string): Promise<Wir
     excludedTestRecords: 0,
     sourceUrl: c.candidate.url,
   };
+}
+
+/** Drop the Wirer's own county/state equality filters (name case varies by source) from a plain AND clause. */
+export function withoutCountyLabels(where: string) {
+  if (!where || /\bOR\b/i.test(where)) return where;
+  const label = /^\(*\s*(?:countyfips|countyname|stateabbr|statedesc|statefips)\s*=\s*'[^']*'\s*\)*$/i;
+  const parts = where
+    .replace(/^\s*\((.*)\)\s*$/s, "$1")
+    .split(/\s+AND\s+/i)
+    .map((p) => p.trim());
+  const kept = parts.filter((p) => !label.test(p));
+  if (kept.length === parts.length) return where;
+  return kept.join(" AND ") || "1=1";
 }
