@@ -183,8 +183,11 @@ export function HowItWorks() {
           </article>
         </div>
         <p className="muted">
-          Markovian, Scout, embeddings, lineage and the per-answer data-quality line ship behind settings that
-          stay off until a full question batch measures their effect on accuracy and speed.
+          Zetaris lineage and data-quality results are on: every tract answer shows the source tables of its
+          saved view and its data-quality rule results. Nemotron embeddings chose the right sources for 20 of
+          20 questions, against 19 of 20 for keyword search; they stay off on this Desk until a full batch
+          runs on the fixed code. Markovian and Scout are built and pass their conformance runs, and stay off
+          until a full batch measures them.
         </p>
       </section>
 
