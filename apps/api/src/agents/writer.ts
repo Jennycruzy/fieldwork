@@ -201,6 +201,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
   for (const c of checks.filter((c) => c.ok && c.id === "partial_month"))
     if (!value.caveats.includes(c.detail)) value.caveats.push(c.detail);
   applyCoverageCaveats(value, checks);
+  applyScopeFixes(value, checks);
   // The checks reach the Writer labelled PASS/FLAG; those labels are for it, not for readers.
   value.how_sure = value.how_sure.replace(/^\s*(PASS|FLAG)\s*:?\s*/i, "");
   await ctx.trace.log({ agent: "writer", action: "answer", status: "ok", note: value.headline });
@@ -450,5 +451,39 @@ export function applyCoverageCaveats(
   for (const note of notes)
     if (!value.caveats.some((c) => c.includes(note) || (months(c) && months(c) === months(note))))
       value.caveats.push(note);
+  return value;
+}
+
+// Ranks inside a subset ("the highest code violations among the top 10") are not checked against the rows,
+// and a total that leaves out unlocated records is not a citywide total. Remove or narrow both.
+const SUBSET_RANK =
+  /,?\s*(?:which is |making it )?(?:the |its )?(?:highest|largest|most|lowest|fewest|smallest|greatest)\b[^,.;]*?\bamong\s+(?:the\s+)?(?:top|first|leading|listed|these)\b[^,.;]*/gi;
+const CITYWIDE = /\b(?:citywide|city-wide|across (?:the )?city|in the city)\b/gi;
+
+export function applyScopeFixes(
+  value: { headline: string; points: string[]; how_sure: string; caveats: string[] },
+  checks: CheckResult[],
+) {
+  const narrow = (text: string) =>
+    text
+      .replace(SUBSET_RANK, "")
+      .replace(/\s+([,.;])/g, "$1")
+      .trim();
+  value.headline = narrow(value.headline);
+  value.points = value.points.map(narrow).filter(Boolean);
+  const placed = checks.find(
+    (c) => c.id === "bridge_match" && (c as { locationAccounting?: unknown }).locationAccounting,
+  ) as
+    | (CheckResult & { locationAccounting: { total: number; invalid: number; matched: number } })
+    | undefined;
+  const missing = placed ? placed.locationAccounting.total - placed.locationAccounting.matched : 0;
+  if (!placed || missing <= 0) return value;
+  const { matched, total } = placed.locationAccounting;
+  const fix = (text: string) => text.replace(CITYWIDE, "placed in a tract");
+  value.headline = fix(value.headline);
+  value.points = value.points.map(fix);
+  value.how_sure = fix(value.how_sure);
+  const note = `${missing.toLocaleString("en-US")} of ${total.toLocaleString("en-US")} source records had no usable location, so tract counts and totals cover ${matched.toLocaleString("en-US")} records.`;
+  if (!value.caveats.some((c) => c.includes(missing.toLocaleString("en-US")))) value.caveats.push(note);
   return value;
 }
