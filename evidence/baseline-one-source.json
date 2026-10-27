@@ -1,0 +1,557 @@
+{
+  "checked_at": "2026-10-27T18:13:41.496Z",
+  "mode": "One prompt per question to Nemotron with up to 200 records from the largest source Fieldwork used, as published; no agents, no tract placement, no join; compared with Fieldwork's passing run rows",
+  "models": [
+    "nvidia/nemotron-3.5-super-vl:free",
+    "nvidia/nemotron-3.5-lightning:free"
+  ],
+  "questions": 20,
+  "top_tract_matches": 1,
+  "declined": 18,
+  "numbers_given": 3,
+  "numbers_matching_rows": 3,
+  "results": [
+    {
+      "question_id": "Q01",
+      "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 15439
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 2,
+      "fieldwork": {
+        "run_id": "r_20261027_1cb293",
+        "top_tract": "12"
+      },
+      "seconds": 8.744,
+      "reply": {
+        "answer": "Cannot be determined from the provided records: the code violation data includes council districts, ZIP codes, parcel numbers, addresses, dates, and coordinates, but it contains no adult asthma rates and no census tract identifiers.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q02",
+      "question": "Which Montgomery census tracts had the most code violations in 2025?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 15439
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_956ba1",
+        "top_tract": "11"
+      },
+      "seconds": 7.477,
+      "reply": {
+        "answer": "The provided records do not include census tract information (only Council District, ZIP, address, and coordinates), so I cannot determine which Montgomery census tracts had the most code violations in 2025.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q03",
+      "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 15439
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 2,
+      "fieldwork": {
+        "run_id": "r_20261027_3885ef",
+        "top_tract": "12"
+      },
+      "seconds": 8.603,
+      "reply": {
+        "answer": "Cannot be determined from the provided records. The data includes Council District, address, and latitude/longitude, but it does not include census tract identifiers or resident population counts for any tract. Additionally, these are only 200 of 15,439 total records. Without census tract boundaries/assignments and population data, violations per 1,000 residents by census tract cannot be calculated.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q04",
+      "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 18768
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 2,
+      "fieldwork": {
+        "run_id": "r_20261027_41b47d",
+        "top_tract": "12"
+      },
+      "seconds": 6.768,
+      "reply": {
+        "answer": "Cannot answer from these records. The provided code violations data includes parcel numbers, council districts, ZIP codes, addresses, dates, and coordinates, but it does not include census tract identifiers or any data on adults with high blood pressure, so no correlation between code violations and high blood pressure by census tract can be determined.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q05",
+      "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 15439
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 3,
+      "fieldwork": {
+        "run_id": "r_20261027_9b67fc",
+        "top_tract": "12"
+      },
+      "seconds": 7.264,
+      "reply": {
+        "answer": "Cannot answer: the provided code-violation records do not include census tract identifiers, population denominators (needed for a per-1,000-residents rate), or adult high blood pressure prevalence data. The records only contain violation dates/types/statuses, parcel/council-district/ZIP location fields, and coordinates, with no linked health data, so a tract-level association cannot be computed.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q06",
+      "question": "Which Montgomery tracts had the biggest increase in code violations from 2024 to 2025?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 28947
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_2ce5c3",
+        "top_tract": "12"
+      },
+      "seconds": 6.733,
+      "reply": {
+        "answer": "Cannot answer: the provided records only contain code violations for 2024 (CaseDate ranges from 2024-01-18 to 2024-12-31, and every record has Year=\"2024\"). There are no 2025 records, so an increase from 2024 to 2025 cannot be calculated.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q07",
+      "question": "How many Montgomery code violations have been recorded each month so far in 2026?",
+      "source": {
+        "title": "Code Violations",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+        "records_in_source": 18768
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_9546dd",
+        "top_tract": "2026"
+      },
+      "seconds": 11.889,
+      "reply": {
+        "answer": "The provided records do not include census tract information, so tracts cannot be named. Based on the Year/Month fields in the 200 records, all 200 are recorded under Year 2026, Month 10 (October); no other 2026 months appear in this sample.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q08",
+      "question": "Which Montgomery census tracts had the most 311 service requests in 2025?",
+      "source": {
+        "title": "Received 311 Service Requests",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+        "records_in_source": 27817
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_73abac",
+        "top_tract": "1"
+      },
+      "seconds": 7.787,
+      "reply": {
+        "answer": "The provided records do not include census tract information. They contain council districts (1–9), addresses, and latitude/longitude coordinates, but no census tract fields, so census tracts cannot be identified or ranked from these records alone.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q09",
+      "question": "What were the most common types of Montgomery 311 requests in 2025?",
+      "source": {
+        "title": "Received 311 Service Requests",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+        "records_in_source": 27817
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_ed8e07",
+        "top_tract": null
+      },
+      "seconds": 7.087,
+      "reply": {
+        "answer": "The provided records do not include census tract information, so census tracts cannot be identified or counted from this data.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q10",
+      "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
+      "source": {
+        "title": "Received 311 Service Requests",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+        "records_in_source": 27817
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 3,
+      "fieldwork": {
+        "run_id": "r_20261027_e0f15c",
+        "top_tract": "1"
+      },
+      "seconds": 14.599,
+      "reply": {
+        "answer": "Cannot answer from these records. The provided 311 service requests include District (1–9), addresses, latitude/longitude, department, and request type, but they do not include census tract identifiers, resident population counts (needed to compute per-1,000-residents rates), or a separate code violations dataset. Code Enforcement requests appear within the same 311 file, but they cannot be assigned to census tracts or normalized by population using the available fields.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q11",
+      "question": "Which Montgomery census tracts had the most 911 calls in 2025?",
+      "source": null,
+      "records_given": 0,
+      "sources_fieldwork_joined": 0,
+      "fieldwork": {
+        "run_id": "r_20261027_bf7654",
+        "top_tract": null
+      },
+      "seconds": 0,
+      "reply": null,
+      "error": "no passing run to take a source from",
+      "declined": false,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q12",
+      "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+      "source": {
+        "title": "911 Calls",
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/911_Calls_Data/FeatureServer/0",
+        "records_in_source": 132
+      },
+      "records_given": 132,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_3b6106",
+        "top_tract": "2025"
+      },
+      "seconds": 11.043,
+      "reply": {
+        "answer": "The records contain no census tract information, so tracts cannot be named. Based on Emergency + Non-Emergency call counts by phone service provider (Other is zero), monthly totals were: January 34,625; February 32,161; March 36,289; April 35,563; May 38,897; June 37,653; July 42,714; August 40,733; September 38,561; October 34,569; November 33,253. Calls rose from January to a peak in July (42,714), then generally declined through November. December 2025 is not present in the records.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q13",
+      "question": "Which Montgomery census tracts have the lowest average latest food inspection scores?",
+      "source": {
+        "title": "Food Scores",
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0",
+        "records_in_source": 1336
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_548b7a",
+        "top_tract": "29.01"
+      },
+      "seconds": 5.495,
+      "reply": {
+        "answer": "Cannot answer: the provided records do not include census tract numbers or geographic boundary data needed to assign inspections to census tracts.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q14",
+      "question": "Which Montgomery tracts have the most food establishments with a latest inspection score below 85?",
+      "source": {
+        "title": "Food Scores",
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Food_Scoring/FeatureServer/0",
+        "records_in_source": 1336
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_496133",
+        "top_tract": "28"
+      },
+      "seconds": 4.544,
+      "reply": {
+        "answer": "The provided records do not include census tract information (no tract field is present), so it is not possible to determine which Montgomery tracts have the most food establishments with a latest inspection score below 85.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q15",
+      "question": "Which Montgomery census tracts have no listed pharmacies?",
+      "source": {
+        "title": "Pharmacy Locator",
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Pharmacy_Locator/FeatureServer/0",
+        "records_in_source": 33
+      },
+      "records_given": 33,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_a25241",
+        "top_tract": "1"
+      },
+      "seconds": 3.893,
+      "reply": {
+        "answer": "The provided pharmacy records contain addresses and coordinates but no census tract assignments or tract boundary data, so it is not possible to determine which Montgomery census tracts have no listed pharmacies from these records alone.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q16",
+      "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+      "source": {
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "records_in_source": 71
+      },
+      "records_given": 71,
+      "sources_fieldwork_joined": 2,
+      "fieldwork": {
+        "run_id": "r_20261027_9fea71",
+        "top_tract": "1"
+      },
+      "seconds": 10.018,
+      "reply": {
+        "answer": "The provided PLACES census tract records do not include any field for pharmacies per 10,000 residents (or pharmacy counts at all), so this cannot be determined from these records.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q17",
+      "question": "Which Montgomery census tracts contain listed emergency shelters?",
+      "source": {
+        "title": "Tornado Shelter",
+        "url": "https://services7.arcgis.com/xNUwUjOJqYE54USz/arcgis/rest/services/Tornado_Shelter/FeatureServer/0",
+        "records_in_source": 6
+      },
+      "records_given": 6,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_3ad000",
+        "top_tract": "18"
+      },
+      "seconds": 8.365,
+      "reply": {
+        "answer": "I cannot determine the specific Montgomery census tracts from the provided records alone; the data includes addresses and coordinates but no census tract field, and I cannot reliably perform a spatial join to tract numbers without a reference boundary layer.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q18",
+      "question": "Which Montgomery census tracts had the most building permits issued in 2025?",
+      "source": {
+        "title": "Construction Permit Data",
+        "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Construction_Permits/FeatureServer/0",
+        "records_in_source": 6286
+      },
+      "records_given": 200,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_23973a",
+        "top_tract": "56.11"
+      },
+      "seconds": 8.001,
+      "reply": {
+        "answer": "The provided records do not include census tract information, so it is not possible to determine which Montgomery census tracts had the most building permits issued in 2025.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    },
+    {
+      "question_id": "Q19",
+      "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+      "source": {
+        "title": "PLACES: Census Tract Data (GIS Friendly Format), 2025 release",
+        "url": "https://data.cdc.gov/resource/yjkw-uj5s.json",
+        "records_in_source": 71
+      },
+      "records_given": 71,
+      "sources_fieldwork_joined": 1,
+      "fieldwork": {
+        "run_id": "r_20261027_b5e99a",
+        "top_tract": "24"
+      },
+      "seconds": 15.368,
+      "reply": {
+        "answer": "The highest adult diabetes prevalence in Montgomery County is in Census Tract 24.00 (01101002400) at 31.5%, followed by Census Tract 6.00 (01101000600) at 28.5% and Census Tract 7.00 (01101000700) at 28.2%.",
+        "tracts": [
+          {
+            "tract": "Census Tract 24.00",
+            "value": 31.5
+          },
+          {
+            "tract": "Census Tract 6.00",
+            "value": 28.5
+          },
+          {
+            "tract": "Census Tract 7.00",
+            "value": 28.2
+          }
+        ]
+      },
+      "error": null,
+      "declined": false,
+      "numbers_given": 3,
+      "numbers_matching_rows": 3,
+      "top_tract_matches": true,
+      "named": [
+        {
+          "tract": "Census Tract 24.00",
+          "value": 31.5,
+          "value_matches_rows": true
+        },
+        {
+          "tract": "Census Tract 6.00",
+          "value": 28.5,
+          "value_matches_rows": true
+        },
+        {
+          "tract": "Census Tract 7.00",
+          "value": 28.2,
+          "value_matches_rows": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q20",
+      "question": "Do Montgomery tracts with more EPA-listed facilities per 1,000 residents also have higher adult asthma prevalence?",
+      "source": {
+        "title": "EPA ECHO facilities in Montgomery County, AL",
+        "url": "https://echodata.epa.gov/echo/echo_rest_services.get_qid?output=JSON&qid=441&pageno=1&qcolumns=1,6,19,20,38,90,93",
+        "records_in_source": 3436
+      },
+      "records_given": 0,
+      "sources_fieldwork_joined": 2,
+      "fieldwork": {
+        "run_id": "r_20261027_91c50a",
+        "top_tract": "56.04"
+      },
+      "seconds": 16.578,
+      "reply": {
+        "answer": "Cannot answer: the provided EPA ECHO facility records for Montgomery County, AL are empty (0 records), so there are no census tract facility counts per 1,000 residents or adult asthma prevalence values to compare.",
+        "tracts": []
+      },
+      "error": null,
+      "declined": true,
+      "numbers_given": 0,
+      "numbers_matching_rows": 0,
+      "top_tract_matches": false,
+      "named": []
+    }
+  ]
+}
