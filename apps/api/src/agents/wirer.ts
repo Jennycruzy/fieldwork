@@ -42,6 +42,7 @@ export interface Wired {
   accessedAt?: string;
   catalogUpdatedAt?: string;
   catalogDescription?: string;
+  fieldDefinitions?: Record<string, string>;
   coverage?: {
     earliest: string | null;
     latest: string | null;
@@ -309,6 +310,30 @@ async function wireSocrata(
     .flatMap((f) => (f.endsWith("_crudeprev") ? [f.replace(/_crudeprev$/, "_crude95ci")] : []))
     .filter((f) => names.has(f));
   const select = [...new Set([...keyFields, ...fields, ...intervals])];
+  let fieldDefinitions: Record<string, string> | undefined;
+  const resource = new URL(c.candidate.url);
+  if (resource.hostname === "data.cdc.gov") {
+    try {
+      const id = resource.pathname.match(/\/resource\/([a-z0-9-]+)\.json$/)?.[1];
+      if (id) {
+        const meta = (await getJson(new URL("/api/views/" + id + ".json", resource).href)) as {
+          columns?: { fieldName: string; description?: string }[];
+        };
+        fieldDefinitions = Object.fromEntries(
+          (meta.columns ?? [])
+            .filter((f) => select.includes(f.fieldName) && f.description)
+            .map((f) => [f.fieldName, f.description!]),
+        );
+      }
+    } catch {
+      await ctx.trace.log({
+        agent: "wirer",
+        action: "field_definitions",
+        status: "info",
+        note: "Source field descriptions unavailable; the underlying vintage is not established here.",
+      });
+    }
+  }
   const url = soqlUrl(c.candidate.url, { where: where || undefined, select: select.join(","), limit: 50000 });
   const sourceCount = await socrataCount(c.candidate.url, where || undefined);
   const table = tableName(ctx.runShort, label);
@@ -339,6 +364,7 @@ async function wireSocrata(
     shape: "socrata_list",
     tables: [table],
     fields: select,
+    fieldDefinitions,
     where,
     sourceCount,
     zetarisCount,

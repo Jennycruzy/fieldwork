@@ -98,7 +98,7 @@ export type Verdict = z.infer<typeof VerdictSchema>;
 export const AnswerSchema = z.object({
   headline: z.string(),
   points: z.array(z.string()).max(6),
-  how_sure: z.string(),
+  how_sure: z.string().trim().min(1, "Explain the confidence and limits of this answer."),
   caveats: z.array(z.string()).max(6),
 });
 export type Answer = z.infer<typeof AnswerSchema>;

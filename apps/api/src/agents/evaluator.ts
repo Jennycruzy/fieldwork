@@ -125,6 +125,12 @@ export async function evaluate(
         ok: true,
         detail: `${w.title}: retrieved ${w.accessedAt.slice(0, 10)}. Catalog updated ${w.catalogUpdatedAt?.slice(0, 10) ?? "date not published"}; retrieval is not an event or inspection date.`,
       });
+    for (const [field, definition] of Object.entries(w.fieldDefinitions ?? {}))
+      checks.push({
+        id: "source_field_" + w.label + "_" + field,
+        ok: true,
+        detail: w.title + " — " + field + ": " + definition,
+      });
     if (w.catalogDescription)
       checks.push({
         id: `source_definition_${w.label}`,
@@ -152,7 +158,7 @@ export async function evaluate(
     checks.push({
       id: `source_dates_${w.label}`,
       ok: true,
-      detail: `${w.title}: event dates ${c.earliest ?? "not published"} to ${c.latest ?? "not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected && c.periods < expected ? ` Only ${c.periods} calendar months contain records; ${expected - c.periods} have no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.` : ""}`,
+      detail: `${w.title}: event dates ${c.earliest ?? "not published"} to ${c.latest ?? "not published"}; monthly coverage ${period(c.firstPeriod)} through ${period(c.lastPeriod)} (${c.periods} distinct months).${expected && c.periods < expected ? ` Only ${c.periods} calendar months contain records; ${expected - c.periods} ${expected - c.periods === 1 ? "month has" : "months have"} no source rows. Complete annual coverage is not established; absent months are not confirmed zeros.` : ""}`,
     });
   }
   checks.push(...analysisChecks(p, joined.sql, joined.result));

@@ -981,6 +981,9 @@ export function finalizeDraft<
     if (JSON.stringify(next) === JSON.stringify(answer)) break;
     answer = next;
   }
+  if (!answer.how_sure.trim())
+    answer.how_sure =
+      "These comparisons describe the published records and do not establish cause and effect.";
   return { draft: answer, removed };
 }
 
