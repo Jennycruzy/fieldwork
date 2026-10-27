@@ -1,4 +1,4 @@
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -215,3 +215,39 @@ describe("starting a run", () => {
     expect(queries.some((q) => /^INSERT INTO runs/.test(q))).toBe(true);
   });
 });
+
+import { runChecks } from "@fieldwork/core";
+it.each(["modern", "legacy", "unbalanced"])(
+  "location accounting distinguishes legitimate outside records from legacy ambiguity: %s",
+  async (kind) => {
+    const dir = sampleDir();
+    const path = join(dir, "r_20261024_abcdef.run.json");
+    const run = JSON.parse(readFileSync(path, "utf8"));
+    const checks = runChecks({
+      bridge: { matched: 98, total: 100, unmatched: 2, invalid: 0 },
+      sourceCounts: [],
+      resultRows: 1,
+    });
+    const bridge = checks.find((c) => c.id === "bridge_match")!;
+    expect(bridge.locationAccounting).toEqual({ matched: 98, total: 100, unmatched: 2, invalid: 0 });
+    if (kind === "legacy") delete bridge.locationAccounting;
+    if (kind === "unbalanced") bridge.locationAccounting!.matched = 97;
+    run.answer = {
+      answer: {
+        headline: "The table describes facility counts.",
+        points: ["These are registry records."],
+        how_sure: "These are descriptive counts.",
+        caveats: [],
+      },
+      headers: ["name", "facility_count"],
+      rows: [["Area", "2"]],
+      checks,
+    };
+    writeFileSync(path, JSON.stringify(run));
+    const app = await buildServer({ sampleDir: dir });
+    const result = (await app.inject("/api/runs/r_20261024_abcdef")).json().run;
+    expect(result.status).toBe(kind === "modern" ? "answered" : "partial");
+    expect(Boolean(result.answer.answer)).toBe(kind === "modern");
+    await app.close();
+  },
+);

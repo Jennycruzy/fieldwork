@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import Fastify, { type FastifyInstance, type FastifyReply } from "fastify";
 import fastifyStatic from "@fastify/static";
-import { checkDraft, type RunEvent } from "@fieldwork/core";
+import { checkDraft, type CheckResult, type RunEvent } from "@fieldwork/core";
 import { MeterlessProvider } from "@fieldwork/llm";
 import type { Config } from "./config.js";
 import { migrate, type Db } from "./db.js";
@@ -329,9 +329,14 @@ function reviewRun(run: RunRecord): RunRecord {
     a.rows as (string | null)[][],
     facts,
   );
-  const oldLocation = ((a.checks ?? []) as { id?: string; detail: string }[]).some(
-    (c) => c.id === "bridge_match" && /[1-9]\d* outside, 0 without a location/.test(c.detail),
-  );
+  const oldLocation = ((a.checks ?? []) as CheckResult[]).some((c) => {
+    const counts = c.locationAccounting;
+    const documented =
+      counts &&
+      Object.values(counts).every((n) => Number.isInteger(n) && n >= 0) &&
+      counts.matched + counts.unmatched + counts.invalid === counts.total;
+    return c.id === "bridge_match" && !documented && /[1-9]\d* outside, 0 without a location/.test(c.detail);
+  });
   if (check.ok && !oldLocation) return run;
   return {
     ...run,

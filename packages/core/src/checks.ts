@@ -5,6 +5,7 @@ export interface CheckResult {
   id: string;
   ok: boolean;
   detail: string;
+  locationAccounting?: { matched: number; total: number; unmatched: number; invalid: number };
 }
 
 export interface CheckInput {
@@ -27,6 +28,7 @@ export function runChecks(c: CheckInput): CheckResult[] {
     const rate = c.bridge.matched / (c.bridge.total - c.bridge.invalid || 1);
     out.push({
       id: "bridge_match",
+      locationAccounting: { ...c.bridge },
       ok: rate >= 0.9,
       detail: `${c.bridge.matched.toLocaleString("en-US")} of ${(c.bridge.total - c.bridge.invalid).toLocaleString("en-US")} located records fell inside a tract (${pct(rate)}); ${c.bridge.unmatched} outside, ${c.bridge.invalid} without a location`,
     });
