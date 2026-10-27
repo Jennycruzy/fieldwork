@@ -13,7 +13,9 @@ if (!cfg.openrouterKey || process.env.FW_ALLOW_PAID_MODELS === "1")
   throw new Error("Free OpenRouter routes only");
 const ceiling = Number(process.argv[process.argv.indexOf("--ceiling") + 1]);
 if (!process.argv.includes("--ceiling") || !(ceiling > 0 && ceiling <= cfg.dailyCalls))
-  throw new Error("Usage: tsx scripts/baseline-one-source.ts --ceiling <absolute daily call count to stop at>");
+  throw new Error(
+    "Usage: tsx scripts/baseline-one-source.ts --ceiling <absolute daily call count to stop at>",
+  );
 
 const db = openDb(cfg.pgUrl);
 const daily = dbBudget(db, cfg.dailyCalls);
@@ -135,7 +137,9 @@ for (const q of questions) {
   results.push({
     question_id: q.id,
     question: q.question,
-    source: source ? { title: source.title, url: source.url, records_in_source: source.records ?? null } : null,
+    source: source
+      ? { title: source.title, url: source.url, records_in_source: source.records ?? null }
+      : null,
     records_given: records.length,
     sources_fieldwork_joined: sources.length,
     fieldwork: t ? { run_id: t.run, top_tract: topTruth ?? null } : null,
