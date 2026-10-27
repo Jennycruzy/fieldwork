@@ -1,0 +1,47 @@
+{
+  "id": "r_20261027_80cc12",
+  "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+  "created_at": "2026-10-27T00:23:51.843Z",
+  "finished_at": "2026-10-27T00:23:57.582Z",
+  "status": "refused",
+  "rounds": 0,
+  "mode": "live",
+  "answer": {
+    "plan": {
+      "years": null,
+      "output": "ranking",
+      "in_scope": false,
+      "measures": [],
+      "geography": "tract",
+      "scope_limit": "place",
+      "out_of_scope_reason": "The question asks about Birmingham, Alabama census tracts, but the available public data catalogs are scoped to Montgomery, Alabama only."
+    },
+    "world": {
+      "edges": [],
+      "entities": [
+        {
+          "id": "run:fieldwork:r_20261027_80cc12",
+          "type": "run",
+          "attrs": {
+            "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?"
+          },
+          "source": {
+            "at": "2026-10-27T00:23:52.344Z",
+            "kind": "run"
+          }
+        }
+      ]
+    },
+    "checks": [],
+    "message": "Fieldwork answers questions about Montgomery, AL from city, CDC and census data. This question needs The question asks about Birmingham, Alabama census tracts, but the available public data catalogs are scoped to Montgomery, Alabama only.",
+    "sources": [],
+    "memories": [],
+    "question": "Which Birmingham, Alabama census tracts had the most code violations in 2025?",
+    "memoryWrites": [
+      {
+        "id": "mem-645",
+        "content": "{\"world_entity\":{\"id\":\"run:fieldwork:r_20261027_80cc12\",\"type\":\"run\",\"attrs\":{\"question\":\"Which Birmingham, Alabama census tracts had the most code violations in 2025?\"},\"source\":{\"kind\":\"run\",\"at\":\"2026-10-27T00:23:52.344Z\"}},\"relationships\":[]}"
+      }
+    ]
+  }
+}
