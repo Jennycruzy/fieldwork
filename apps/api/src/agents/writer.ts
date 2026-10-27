@@ -22,6 +22,7 @@ export async function write(
       : undefined;
   const callSources = wired.filter((w) => /^Call_Count_By_Origin$/i.test(w.valueField ?? ""));
   const callActivity = callSources.length > 0 || checks.some((c) => c.ok && c.id.startsWith("call_units_"));
+  const omittedInternal: string[] = [];
   const { value } = await ctx.models.writer.json(
     [
       {
@@ -122,9 +123,16 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
           (fix ? `\nYour previous draft had these problems; fix them: ${fix}` : ""),
       },
     ],
-    writerSchema(wired),
+    writerSchema(wired, (sentence) => omittedInternal.push(sentence)),
     1500,
   );
+  if (omittedInternal.length)
+    await ctx.trace.log({
+      agent: "writer",
+      action: "plain_language",
+      status: "info",
+      note: JSON.stringify({ omitted_internal_sentences: omittedInternal }),
+    });
   for (const w of wired.filter(
     (w) => new URL(w.sourceUrl ?? "https://unknown.invalid").hostname === "data.cdc.gov",
   )) {
@@ -166,15 +174,11 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
   return value;
 }
 
-export function writerSchema(wired: Pick<Wired, "fields" | "fieldDefinitions">[]) {
+export function writerSchema(
+  wired: Pick<Wired, "fields" | "fieldDefinitions">[],
+  onOmit?: (sentence: string) => void,
+) {
   return AnswerSchema.superRefine((a, ctx) => {
-    for (const [i, point] of a.points.entries())
-      if (/all checks passed|subsample|truncation|measure column|paired_tracts/i.test(point))
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["points", i],
-          message: "Describe the finding in plain language, without internal check or column wording.",
-        });
     const texts = [a.headline, ...a.points, a.how_sure, ...a.caveats];
     for (const text of texts) {
       for (const part of text.split(/[.;]|\b(?:while|whereas|but)\b/i)) {
@@ -217,7 +221,22 @@ export function writerSchema(wired: Pick<Wired, "fields" | "fieldDefinitions">[]
           message: "Population vintage must match the source field definitions: " + years.join(", "),
         });
     }
-  });
+  }).transform((answer) => ({
+    ...answer,
+    points: answer.points
+      .map((point) =>
+        point
+          .split(/(?<=[.!?])\s+(?=[A-Z])/)
+          .filter((sentence) => {
+            if (!/all checks passed|subsample|truncation|measure column|paired_tracts/i.test(sentence))
+              return true;
+            onOmit?.(sentence);
+            return false;
+          })
+          .join(" "),
+      )
+      .filter(Boolean),
+  }));
 }
 
 export function primaryRankFacts(headers: string[], rows: (string | null)[][], rankMeasure: string) {

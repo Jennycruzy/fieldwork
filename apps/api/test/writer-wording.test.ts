@@ -69,9 +69,15 @@ test("recorded mixed-source errors fail wording validation while supported findi
 });
 
 test.each(["All checks passed.", "No subsample truncation.", "Every measure column has real values."])(
-  "internal answer wording enters repair: %s",
+  "internal answer wording is omitted without losing findings: %s",
   (point) => {
-    expect(writerSchema(sources).safeParse({ ...valid, points: [point] }).success).toBe(false);
+    const omitted: string[] = [];
+    const result = writerSchema(sources, (sentence) => omitted.push(sentence)).parse({
+      ...valid,
+      points: ["The comparison includes all eligible tracts.", point],
+    });
+    expect(result.points).toEqual(["The comparison includes all eligible tracts."]);
+    expect(omitted).toEqual([point]);
   },
 );
 
@@ -114,4 +120,12 @@ test("population-only sources cannot be described as model-based health estimate
       how_sure: "These are Census population totals supplied by CDC PLACES.",
     }).success,
   ).toBe(true);
+});
+
+test("internal sentences are omitted while substantive facts in the same point survive", () => {
+  const result = writerSchema(sources).parse({
+    ...valid,
+    points: ["The correlation is -0.08. Every measure column has real values and all checks passed."],
+  });
+  expect(result.points).toEqual(["The correlation is -0.08."]);
 });
