@@ -143,6 +143,8 @@ Fieldwork is measured on a frozen set of 25 questions ([`evidence/questions.json
 
 Each question is graded in code against an independent reference read from the sources: source choice, tract identifiers, sort order, recomputed rates and differences, membership, disclosures and refusals. The question file is fingerprinted, and any change to a question or to a grading rule is recorded as an amendment with its reason.
 
+**Nemotron alone, for comparison.** The same 20 answerable questions went to Nemotron 3.5 directly, one prompt each, with no agents and no data (`npx tsx scripts/baseline-alone.ts`, results in [`evidence/baseline-alone.json`](evidence/baseline-alone.json)). It answered none: all 20 replies said it has no tract-level data for Montgomery. In batch 15, Fieldwork passed 18 of the same 20 with numbers checked against source rows, including the honest stop on 911 calls, which carry no locations.
+
 Every full batch is published, including failures, with step timings: see the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation) or [`evidence/EVAL.md`](evidence/EVAL.md). The raw results and traces are under [`evidence/question-set/`](evidence/question-set/) and [`evidence/runs/`](evidence/runs/).
 
 ### Portability
