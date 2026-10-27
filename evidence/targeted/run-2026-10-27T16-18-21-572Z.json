@@ -1,0 +1,499 @@
+{
+  "code_commit": "84d82ffdf1113e2872d26c942816ba346945436d",
+  "code_sha256": "8edac3d8b24f8c1d95222b1cee7398c6c66939ccd389b6598512473a787b85f5",
+  "started_at": "2026-10-27T16:18:21.572Z",
+  "question_sha256": "a50a3dd1485eea9f5f6641c9083f5ad199bfc715763d5ded5980449dd0968983",
+  "complete": true,
+  "passed": 4,
+  "total": 6,
+  "rate": 0.6666666666666666,
+  "results": [
+    {
+      "question_id": "Q01",
+      "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending asthma prevalence table with tract identifier, percent, 2025 violation count, dates and match coverage; do not rank by violations.",
+      "run_id": "r_20261027_e125b6",
+      "status": "answered",
+      "elapsed_ms": 76441,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Asthma column",
+          "ok": true
+        },
+        {
+          "name": "Asthma ranking descending",
+          "ok": true
+        },
+        {
+          "name": "Violation counts",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent casthma_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q09",
+      "question": "What were the most common types of Montgomery 311 requests in 2025?",
+      "expected": "answered",
+      "answer_shape": "Request-type counts and shares with a stated denominator, missing-type category and descending count order.",
+      "run_id": "r_20261027_47de96",
+      "status": "partial",
+      "elapsed_ms": 88806,
+      "passed": false,
+      "reasons": [
+        "Failed check: Answered successfully",
+        "Actual status: partial. "
+      ],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": false
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Request type",
+          "ok": true
+        },
+        {
+          "name": "Type counts",
+          "ok": true
+        },
+        {
+          "name": "Request-type counts descending",
+          "ok": true
+        },
+        {
+          "name": "Shares with denominator",
+          "ok": true
+        },
+        {
+          "name": "Source dates stated",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        },
+        {
+          "name": "Category totals match independent source aggregation",
+          "ok": true
+        },
+        {
+          "name": "Category shares recompute",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q12",
+      "question": "How did the monthly number of Montgomery 911 calls change during 2025?",
+      "expected": "answered",
+      "answer_shape": "Chronological monthly aggregate counts, date coverage and explicit gaps; do not infer crime rates from calls.",
+      "run_id": "r_20261027_dac4f6",
+      "status": "answered",
+      "elapsed_ms": 58792,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Month column",
+          "ok": true
+        },
+        {
+          "name": "Monthly count",
+          "ok": true
+        },
+        {
+          "name": "Months chronological",
+          "ok": true
+        },
+        {
+          "name": "Call activity is not confirmed incidents or crime",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        },
+        {
+          "name": "Monthly totals match independent source aggregation",
+          "ok": true
+        },
+        {
+          "name": "Missing source months disclosed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q16",
+      "question": "Which Montgomery census tracts have the fewest listed pharmacies per 10,000 residents?",
+      "expected": "answered",
+      "answer_shape": "Ascending pharmacy rate with listing count, resident denominator and vintage; zero and missing values distinguished; no travel-distance claims.",
+      "run_id": "r_20261027_e7fb72",
+      "status": "answered",
+      "elapsed_ms": 75198,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Population-adjusted rate",
+          "ok": true
+        },
+        {
+          "name": "Rate ranking order",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw count",
+          "ok": true
+        },
+        {
+          "name": "Resident population used",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Pharmacy Locator tract totals",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic pharmacy_locator_count_per_10000_totalpopulation",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q18",
+      "question": "Which Montgomery census tracts had the most building permits issued in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending issued-permit counts by tract with issuance-date definition, duplicate handling, permit categories and coverage.",
+      "run_id": "r_20261027_792654",
+      "status": "answered",
+      "elapsed_ms": 82169,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Construction Permit Data tract totals",
+          "ok": true
+        },
+        {
+          "name": "Incomplete source year disclosed",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q19",
+      "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+      "expected": "answered",
+      "answer_shape": "Descending CDC prevalence estimates with measure definition, release and estimate dates, available uncertainty information and no fabricated patient counts.",
+      "run_id": "r_20261027_76fdca",
+      "status": "failed",
+      "elapsed_ms": 33457,
+      "passed": false,
+      "reasons": [
+        "Failed check: Answered successfully",
+        "Actual status: failed. model did not return valid JSON: caveats: Required",
+        "Failed check: Nonempty reproducible result",
+        "model did not return valid JSON: caveats: Required"
+      ],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": false
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": false
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-10-27T16:25:21.659Z"
+}
