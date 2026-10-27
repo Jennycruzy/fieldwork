@@ -247,7 +247,9 @@ async function askWithLease(
     recalled: [],
   };
 
-  ctx.finderEmbeddings = makeFinderEmbeddings(ctx, budget);
+  // Embedding requests are counted against the daily cap only: they rank datasets and must not use up
+  // the run allowance that the Planner, Wirer, Joiner, Evaluator and Writer need.
+  ctx.finderEmbeddings = makeFinderEmbeddings(ctx, dbBudget(db, cfg.dailyCalls));
   const out: RunOutcome = {
     runId,
     status: "failed",

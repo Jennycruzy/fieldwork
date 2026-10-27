@@ -48,11 +48,9 @@ test("blank confidence is repaired through the real model chain", async () => {
 });
 
 test("recorded mixed-source errors fail wording validation while supported findings pass", () => {
-  const report = JSON.parse(readFileSync("evidence/evaluation.json", "utf8"));
-  for (const question of ["Q03", "Q20"]) {
-    const result = report.latest.results.find((r: { question_id: string }) => r.question_id === question);
-    const recorded = JSON.parse(readFileSync("evidence/runs/" + result.run_id + ".run.json", "utf8")).answer
-      .answer;
+  // Batch 12's recorded Q03 and Q20 drafts, which carried the mixed-source wording errors.
+  for (const runId of ["r_20261027_91258e", "r_20261027_8dd81a"]) {
+    const recorded = JSON.parse(readFileSync("evidence/runs/" + runId + ".run.json", "utf8")).answer.answer;
     expect(writerSchema(sources).safeParse(recorded).success).toBe(false);
   }
   expect(writerSchema(sources).safeParse(valid).success).toBe(true);
