@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { readFileSync } from "node:fs";
 import { AnswerSchema, checkDraft, finalizeDraft } from "@fieldwork/core";
 import { ModelChain, type Provider, type ChatRequest } from "@fieldwork/llm";
-import { writerSchema } from "../src/agents/writer.js";
+import { writerSchema, correlationFigures } from "../src/agents/writer.js";
 import type { Wired } from "../src/agents/wirer.js";
 
 const sources = [
@@ -143,4 +143,47 @@ test("source-type repair names the rejected clause", () => {
   const result = writerSchema(sources).safeParse({ ...valid, caveats: [clause] });
   expect(result.success).toBe(false);
   if (!result.success) expect(result.error.message).toContain("Facility counts are model-based estimates");
+});
+
+test("correlation-only wording cannot convert a coefficient into a per-unit effect", () => {
+  const text =
+    "Each additional facility per 1,000 residents is associated with a 0.08 percentage point decrease in adult asthma prevalence.";
+  const omitted: string[] = [];
+  const answer = writerSchema(sources, (s) => omitted.push(s), true).parse({
+    ...valid,
+    points: ["The correlation is -0.08 across 71 tracts.", text],
+  });
+  expect(answer.points).toEqual(["The correlation is -0.08 across 71 tracts."]);
+  expect(omitted).toEqual([text]);
+  expect(writerSchema(sources, undefined, false).parse({ ...valid, points: [text] }).points).toEqual([text]);
+});
+test("correlation prompts supply the coefficient and paired cohort, without unrelated extremes or rankings", () => {
+  const facts = correlationFigures(
+    ["tract_name", "facility_rate", "asthma_prevalence", "correlation", "paired_tracts"],
+    [["Area", "249.6", "14", "-0.08", "71"]],
+  );
+  expect(facts.statistics).toEqual([
+    { field: "correlation", value: "-0.08" },
+    { field: "paired_tracts", value: "71" },
+  ]);
+  expect(JSON.stringify(facts)).not.toContain("249.6");
+  expect(facts.interpretation).toContain("not a slope");
+});
+test("omission cannot leave confidence empty or internal wording in caveats", () => {
+  const answer = writerSchema(sources, undefined, true).parse({
+    ...valid,
+    how_sure: "Each additional unit is associated with a decrease.",
+    caveats: ["No subsample truncation was applied."],
+  });
+  expect(AnswerSchema.safeParse(answer).success).toBe(true);
+  expect(answer.caveats).toEqual([]);
+  expect(answer.how_sure).not.toContain("additional");
+});
+
+test("release years cannot be invented as a geography vintage", () => {
+  const answer = writerSchema(sources).parse({
+    ...valid,
+    caveats: ["Model-based asthma estimate; 2023 underlying data applied to 2025 geography."],
+  });
+  expect(answer.caveats).toEqual([]);
 });

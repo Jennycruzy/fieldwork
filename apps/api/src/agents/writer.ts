@@ -22,7 +22,10 @@ export async function write(
       : undefined;
   const callSources = wired.filter((w) => /^Call_Count_By_Origin$/i.test(w.valueField ?? ""));
   const callActivity = callSources.length > 0 || checks.some((c) => c.ok && c.id.startsWith("call_units_"));
-  const omittedInternal: string[] = [];
+  const omittedSentences: string[] = [];
+  const correlationOnly =
+    Boolean(p.analysis?.relationship) &&
+    !joined.result.headers.some((h) => /slope|regression_coefficient|effect_per_unit/i.test(h));
   const { value } = await ctx.models.writer.json(
     [
       {
@@ -31,10 +34,10 @@ export async function write(
 You are the Writer. Write the answer for a local reporter or city analyst in plain US English.
 Use exact figures only: never approximate to round thousands (use 44,752, never 45,000). Display counts as integers and rates or percentage changes to at most two decimals. Every number must come from a row cell or computed_figures. Never sum rates or call their sum an average. Never call a partial month or year the lowest/highest, or rank it against full periods. Never use rank words without naming the row, except a supplied tie group with its exact size and rank. Describe thresholds only when the actual checks establish them.
 Use only numbers in the rows or in computed_figures. For a total, difference, percent change or group size, copy it from computed_figures; never compute one yourself. The result_summary gives the full cohort size. For rankings the result table contains primary_rank, rank_text and tie_size computed in code for every row. Copy these fields exactly. Use only the supplied tie_groups: adjacent rows or rounded display values do not establish a tie. Say "estimated" for CDC figures. Never claim one thing causes another; say "tracts with more X also have more Y" only if the rows show it.
-For current listings give the retrieval date, and state when source publication or event dates are unknown. Keep the survey or estimate year distinct from a CDC release year; if the underlying year is not supplied, say it is not established here. Use source_field_definitions for the underlying vintage: population is Census population, not a model-based health estimate. Never infer its year from plan years, CDC release year, or retrieval date. If field definitions do not establish a vintage, say it is not established here. Identify the CDC PLACES release separately.
+For current listings give the retrieval date, and state when source publication or event dates are unknown. Keep the survey or estimate year distinct from a CDC release year; if the underlying year is not supplied, say it is not established here. Use source_field_definitions for the underlying vintage: population is Census population, not a model-based health estimate. Never infer its year from plan years, CDC release year, or retrieval date. Do not assert a boundary or geography vintage: no boundary-year metadata is supplied to you. If field definitions do not establish a vintage, say it is not established here. Identify the CDC PLACES release separately.
 Only health measures explicitly described as model-based in source metadata are model-based estimates. Registry facilities, city records and inspection results are counts or observations, never model-based estimates. In mixed-source answers describe each measure separately; never call both variables model-based. For relationship comparisons, report the correlation and paired sample size; do not introduce tract rankings or named examples.
 Use the supplied primary_measure_ranks exactly if you mention an ordinal rank; omit other rank claims.
-The how_sure line is checked too: no claims of certainty, statistical significance, causation or a universal pattern. A correlation is a descriptive association, not proof. Quote the paired_tracts value for correlation sample size, not the preview length. State the plan's choice of counts or rates and correct denominator in the answer. Never treat a repeated correlation column as evidence of consistency. Do not add ranking claims for supporting measures.
+The how_sure line is checked too: no claims of certainty, statistical significance, causation or a universal pattern. A correlation is a descriptive association, not proof. Correlation is unitless, not a slope: it cannot establish a change in one measure per additional unit of another. Do not infer per-unit effects. Quote the paired_tracts value for correlation sample size, not the preview length. State the plan's choice of counts or rates and correct denominator in the answer. Never treat a repeated correlation column as evidence of consistency. Do not add ranking claims for supporting measures.
 Keep the order of the result rows when you describe a ranking ("next" means the next row; equal values share a rank). Caveats must come from the checks listed or from the nature of the sources (e.g. CDC values are model-based estimates from survey data); never invent limits such as sample sizes that no check reported. If a year is still in progress, say "so far". Mention test records excluded or records that could not be placed, if the checks list them.
 Points must describe substantive findings for the reader. Never repeat internal wording such as "all checks passed", "subsample truncation", "measure column", SQL column names, or implementation details. Translate cohort coverage as "The comparison includes all eligible tracts." Do not invent significance thresholds.
 Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting facts with numbers"], "how_sure": "one nonempty sentence about source coverage and descriptive limits", "caveats": ["plain-language limits"]}`,
@@ -54,7 +57,12 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
             ),
           }) +
           "\n" +
-          dataBlock("computed_figures", computedFigures(joined.result.headers, joined.result.rows)) +
+          dataBlock(
+            "computed_figures",
+            correlationOnly
+              ? correlationFigures(joined.result.headers, joined.result.rows)
+              : computedFigures(joined.result.headers, joined.result.rows),
+          ) +
           "\n" +
           dataBlock(
             "primary_measure_ranks",
@@ -123,15 +131,19 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
           (fix ? `\nYour previous draft had these problems; fix them: ${fix}` : ""),
       },
     ],
-    writerSchema(wired, (sentence) => omittedInternal.push(sentence)),
+    writerSchema(wired, (sentence) => omittedSentences.push(sentence), correlationOnly),
     1500,
   );
-  if (omittedInternal.length)
+  if (omittedSentences.length)
     await ctx.trace.log({
       agent: "writer",
-      action: "plain_language",
+      action: "removed_sentences",
       status: "info",
-      note: JSON.stringify({ omitted_internal_sentences: omittedInternal }),
+      note: JSON.stringify({
+        count: omittedSentences.length,
+        text: omittedSentences,
+        reason: "Internal presentation, unsupported per-unit effects, or unestablished boundary vintage",
+      }),
     });
   for (const w of wired.filter(
     (w) => new URL(w.sourceUrl ?? "https://unknown.invalid").hostname === "data.cdc.gov",
@@ -177,6 +189,7 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
 export function writerSchema(
   wired: Pick<Wired, "fields" | "fieldDefinitions">[],
   onOmit?: (sentence: string) => void,
+  correlationOnly = false,
 ) {
   return AnswerSchema.superRefine((a, ctx) => {
     const texts = [a.headline, ...a.points, a.how_sure, ...a.caveats];
@@ -241,22 +254,46 @@ export function writerSchema(
           message: "Population vintage must match the source field definitions: " + years.join(", "),
         });
     }
-  }).transform((answer) => ({
-    ...answer,
-    points: answer.points
-      .map((point) =>
-        point
-          .split(/(?<=[.!?])\s+(?=[A-Z])/)
-          .filter((sentence) => {
-            if (!/all checks passed|subsample|truncation|measure column|paired_tracts/i.test(sentence))
-              return true;
-            onOmit?.(sentence);
-            return false;
-          })
-          .join(" "),
-      )
-      .filter(Boolean),
-  }));
+  }).transform((answer) => {
+    const plain = (text: string) =>
+      text
+        .split(/(?<=[.!?])\s+(?=[A-Z])/)
+        .filter((sentence) => {
+          const internal = /all checks passed|subsample|truncation|measure column|paired_tracts/i.test(
+            sentence,
+          );
+          const perUnit =
+            correlationOnly &&
+            /\b(?:each|every)\s+(?:additional|extra|unit)|\bper[- ]unit\b|\bper (?:one|additional|extra)\b/i.test(
+              sentence,
+            ) &&
+            /associated|effect|increase|decrease|change|points/i.test(sentence);
+          const unprovenBoundaryYear = /\b(?:19|20)\d{2}\s+(?:geograph|boundar)/i.test(sentence);
+          if (!internal && !perUnit && !unprovenBoundaryYear) return true;
+          onOmit?.(sentence);
+          return false;
+        })
+        .join(" ");
+    return {
+      ...answer,
+      headline: plain(answer.headline),
+      points: answer.points.map(plain).filter(Boolean),
+      caveats: answer.caveats.map(plain).filter(Boolean),
+      how_sure:
+        plain(answer.how_sure).trim() ||
+        "These comparisons describe the published data and do not establish cause and effect.",
+    };
+  });
+}
+
+export function correlationFigures(headers: string[], rows: (string | null)[][]) {
+  return {
+    statistics: headers.flatMap((field, i) =>
+      /corr|paired/i.test(field) ? [{ field, value: rows[0]?.[i] ?? null }] : [],
+    ),
+    interpretation:
+      "Correlation is unitless and descriptive, not a slope or per-unit effect. No regression coefficient was computed.",
+  };
 }
 
 export function primaryRankFacts(headers: string[], rows: (string | null)[][], rankMeasure: string) {
