@@ -51,9 +51,22 @@ export function AnswerPage({ id }: { id: string }) {
   const rows = run.answer?.rows ?? [];
   const shown = all ? rows : rows.slice(0, 15);
 
+  // Only numbers that appear in the result rows link to them; years, dates and "per 1,000" stay plain text.
+  const inRows = new Set(
+    rows
+      .flatMap((r) => r.map((c) => (c == null ? NaN : Number(String(c).replace(/,/g, "")))))
+      .filter(Number.isFinite),
+  );
+  const traceable = (part: string) => {
+    const n = Number(part.replace(/[,%]/g, "").replace(/\.$/, ""));
+    return (
+      Number.isFinite(n) &&
+      [...inRows].some((v) => Math.abs(v - n) < 0.005 || Math.abs(v - n) / Math.abs(v || 1) < 0.0005)
+    );
+  };
   const evidence = (text: string) =>
-    text.split(/(\d[\d,.]*%?)/g).map((part, i) =>
-      /^\d/.test(part) ? (
+    text.split(/(\d{4}-\d{2}-\d{2}|\d[\d,.]*%?)/g).map((part, i) =>
+      /^\d/.test(part) && traceable(part) ? (
         <button
           key={i}
           className="number-link"
