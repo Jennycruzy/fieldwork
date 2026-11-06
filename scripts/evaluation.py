@@ -30,7 +30,7 @@ for b in history:lines.append("|"+"|".join(map(esc,[b["started_at"],str(b["passe
 lines+=["","## Latest questions","","|Question|Expected|Actual|Seconds|Result|Failed acceptance lines|Answer|","|---|---|---|---:|---|---|---|"]
 for r in latest["results"]:
  failed=[c["name"] for c in r.get("checks",[]) if not c["ok"]]
- lines.append("|"+"|".join(map(esc,[r["question"],r["expected"],r["status"],round(r["elapsed_ms"]/1000,3),"Passed"if r["passed"] else"Failed","; ".join(failed+r.get("reasons",[])),"[Run](https://fieldwork.38-49-216-59.sslip.io/a/"+r["run_id"]+")"]))+"|")
+ lines.append("|"+"|".join(map(esc,[r["question"],r["expected"],r["status"],round(r["elapsed_ms"]/1000,3),"Passed"if r["passed"] else"Failed","; ".join(failed+r.get("reasons",[])),"[Run](https://askfieldwork.space/a/"+r["run_id"]+")"]))+"|")
 lines+=["","## Step timings","",data["step_timings"]["method"],"","|Batch|Step|Request/check median s|p90 s|Step wall median s|Step wall p90 s|Models|","|---|---|---:|---:|---:|---:|---|"]
 for b in data["step_timings"]["batches"]:
  for s in b["steps"]:lines.append("|"+"|".join(map(esc,[b["started_at"],s["step"],s["median_seconds"],s["p90_seconds"],s.get("wall_median_seconds","Not recorded"),s.get("wall_p90_seconds","Not recorded"),", ".join(s["models"])or"Code"]))+"|")

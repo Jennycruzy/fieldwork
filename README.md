@@ -2,9 +2,9 @@
 
 Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find the public data that can answer it, register it in Zetaris, join it across sources, check the result in code, and show the record behind every number.
 
-**[Live Desk](https://fieldwork.38-49-216-59.sslip.io)** · [Demo video](https://youtu.be/H_7eg92Cwdw) · [Ask a question](https://fieldwork.38-49-216-59.sslip.io/ask) · [Test results](https://fieldwork.38-49-216-59.sslip.io/evaluation) · [How it works](https://fieldwork.38-49-216-59.sslip.io/how-it-works) · [Check it yourself](https://fieldwork.38-49-216-59.sslip.io/check) · [Run it with no keys](#use-it)
+**[Live Desk](https://askfieldwork.space)** · [Demo video](https://youtu.be/H_7eg92Cwdw) · [Ask a question](https://askfieldwork.space/ask) · [Test results](https://askfieldwork.space/evaluation) · [How it works](https://askfieldwork.space/how-it-works) · [Check it yourself](https://askfieldwork.space/check) · [Run it with no keys](#use-it)
 
-Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. A rerun of six questions after batch 15, with the same grading, passed both of batch 15's misses (Q01 and Q16) and 4 of the 6 in all ([`evidence/targeted/`](evidence/targeted/)). Every batch, failures included, is on the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation).
+Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. A rerun of six questions after batch 15, with the same grading, passed both of batch 15's misses (Q01 and Q16) and 4 of the 6 in all ([`evidence/targeted/`](evidence/targeted/)). Every batch, failures included, is on the [Evaluation page](https://askfieldwork.space/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
@@ -147,7 +147,7 @@ Each question is graded in code against an independent reference read from the s
 
 **Nemotron with one dataset, for comparison.** To check that the agents' joining is what does the work, each question also went to Nemotron with up to 200 records from the largest dataset Fieldwork used for it, exactly as the source publishes them, and no agents (`npx tsx scripts/baseline-one-source.ts`, results in [`evidence/baseline-one-source.json`](evidence/baseline-one-source.json)). It named the right top tract for 1 of the 19 questions with a passing Fieldwork run to compare against: Q19, adult diabetes, which the CDC already publishes by tract. For the others it said the records carry no census tract, or that the answer needs a second source.
 
-Every full batch is published, including failures, with step timings: see the [Evaluation page](https://fieldwork.38-49-216-59.sslip.io/evaluation) or [`evidence/EVAL.md`](evidence/EVAL.md). The raw results and traces are under [`evidence/question-set/`](evidence/question-set/) and [`evidence/runs/`](evidence/runs/).
+Every full batch is published, including failures, with step timings: see the [Evaluation page](https://askfieldwork.space/evaluation) or [`evidence/EVAL.md`](evidence/EVAL.md). The raw results and traces are under [`evidence/question-set/`](evidence/question-set/) and [`evidence/runs/`](evidence/runs/).
 
 ### Portability
 
@@ -243,7 +243,7 @@ evidence/       Question set, batch results, run traces, need sources
 
 ## Why this matters
 
-City staff, health departments and residents need neighborhood answers that combine city records with health data, and the work of finding, cleaning and joining those sources keeps them out of reach. [`evidence/need.md`](evidence/need.md) collects five primary documents, including Montgomery blight reporting and CDC guidance, that describe this need. Each has an exact quotation and its retrieval date, also linked from the Desk's [check page](https://fieldwork.38-49-216-59.sslip.io/check). They establish a use for public information; they do not measure Fieldwork's own adoption or benefit.
+City staff, health departments and residents need neighborhood answers that combine city records with health data, and the work of finding, cleaning and joining those sources keeps them out of reach. [`evidence/need.md`](evidence/need.md) collects five primary documents, including Montgomery blight reporting and CDC guidance, that describe this need. Each has an exact quotation and its retrieval date, also linked from the Desk's [check page](https://askfieldwork.space/check). They establish a use for public information; they do not measure Fieldwork's own adoption or benefit.
 
 ## License
 
