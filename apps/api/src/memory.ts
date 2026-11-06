@@ -122,6 +122,17 @@ export async function learnFromRun(ctx: Ctx, l: RunLessons, ledgerLoaded: number
         datasetTitle: w.title,
       }).id,
     );
+    if (w.period && w.period.byLabel !== w.period.byDate) {
+      added.push(
+        remember(ctx.memory, {
+          kind: "quality",
+          runId: ctx.runId,
+          content: `Dataset "${w.title}": its ${w.period.label} field is not the calendar year (${w.period.byLabel} records by ${w.period.label}, ${w.period.byDate} by ${w.period.field} for the same period); filter calendar years on ${w.period.field}.`,
+          confidence: 0.9,
+          datasetTitle: w.title,
+        }).id,
+      );
+    }
     if (w.excludedTestRecords > 0) {
       added.push(
         remember(ctx.memory, {

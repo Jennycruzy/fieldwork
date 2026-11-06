@@ -1,0 +1,5 @@
+{"tool": "list_tables", "sql": "SHOW LIGHTNING TABLES MONTGOMERY_READY", "ok": true, "secs": 0.21, "rows": 65}
+{"tool": "describe_table", "sql": "DESCRIBE MONTGOMERY_READY.tract_violations", "ok": true, "secs": 14.0, "rows": 9}
+{"tool": "describe_table", "sql": "DESCRIBE MONTGOMERY_READY.code_violations_2025", "ok": true, "secs": 0.49, "rows": 7}
+{"tool": "run_query", "sql": "SELECT COUNT(*) AS total_violations, MIN(case_date) AS min_date, MAX(case_date) AS max_date, SUM(CASE WHEN lon IS NULL OR lat IS NULL THEN 1 ELSE 0 END) AS missing_location FROM MONTGOMERY_READY.code_violations_2025", "ok": true, "secs": 1.38, "rows": 1}
+{"tool": "run_query", "sql": "SELECT geoid, tract_name, population, code_violations_2025, violations_per_1000 FROM MONTGOMERY_READY.tract_violations ORDER BY violations_per_1000 DESC LIMIT 5", "ok": true, "secs": 27.38, "rows": 5}

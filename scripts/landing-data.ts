@@ -3,8 +3,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const api = `http://127.0.0.1:${process.env.FW_PORT ?? 8795}/api/runs/`;
-const MAP_RUN = "r_20261027_8432d7"; // code violations per 1,000 residents, live-verified 27 Oct
-const EXAMPLE_RUNS = ["r_20261027_d432a4", "r_20261027_1e00fb", "r_20261027_7a26a0"];
+const MAP_RUN = "r_20261106_6ac75d"; // code violations per 1,000 residents, counted by case date
+const EXAMPLE_RUNS = ["r_20261106_bc1483", "r_20261106_98d6ab", "r_20261027_7a26a0"];
 const DECLINED = [
   { run: "r_20261027_704f06", why: "Predictions aren't in public records." },
   { run: "r_20261027_ba432b", why: "It never names people or shows private health details." },

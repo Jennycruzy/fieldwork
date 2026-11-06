@@ -1,15 +1,15 @@
 {
   "map": {
-    "run": "r_20261027_8432d7",
+    "run": "r_20261106_6ac75d",
     "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
-    "headline": "Census Tract 12 had the most code violations per 1,000 residents in 2025, at 562.20 per 1,000 residents (818 violations among 1,455 residents).",
+    "headline": "Census Tract 12 had the most code violations per 1,000 residents in 2025, with 651.55 violations per 1,000 residents.",
     "measure": "code violations per 1,000 residents",
-    "created_at": "2026-10-27T02:30:30.752Z",
-    "records": 15510,
+    "created_at": "2026-11-06T10:40:57.740Z",
+    "records": 17502,
     "sources": [
       {
         "title": "Code Violations",
-        "records": 15439,
+        "records": 17431,
         "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0"
       },
       {
@@ -22,428 +22,428 @@
       {
         "geoid": "01101001200",
         "name": "Census Tract 12",
-        "rate": 562.2,
-        "count": 818,
+        "rate": 651.5,
+        "count": 948,
         "residents": 1455
       },
       {
         "geoid": "01101000300",
         "name": "Census Tract 3",
-        "rate": 556.7,
-        "count": 702,
+        "rate": 619.3,
+        "count": 781,
         "residents": 1261
       },
       {
         "geoid": "01101001100",
         "name": "Census Tract 11",
-        "rate": 419.2,
-        "count": 1125,
+        "rate": 493.7,
+        "count": 1325,
         "residents": 2684
       },
       {
         "geoid": "01101002500",
         "name": "Census Tract 25",
-        "rate": 412.5,
-        "count": 955,
+        "rate": 449.7,
+        "count": 1041,
         "residents": 2315
       },
       {
         "geoid": "01101002400",
         "name": "Census Tract 24",
-        "rate": 292.9,
-        "count": 515,
+        "rate": 315.7,
+        "count": 555,
         "residents": 1758
-      },
-      {
-        "geoid": "01101002202",
-        "name": "Census Tract 22.02",
-        "rate": 264.7,
-        "count": 234,
-        "residents": 884
-      },
-      {
-        "geoid": "01101002300",
-        "name": "Census Tract 23",
-        "rate": 262.7,
-        "count": 657,
-        "residents": 2501
-      },
-      {
-        "geoid": "01101000700",
-        "name": "Census Tract 7",
-        "rate": 237.7,
-        "count": 237,
-        "residents": 997
       },
       {
         "geoid": "01101001000",
         "name": "Census Tract 10",
-        "rate": 220.8,
-        "count": 265,
+        "rate": 304.2,
+        "count": 365,
         "residents": 1200
+      },
+      {
+        "geoid": "01101002202",
+        "name": "Census Tract 22.02",
+        "rate": 289.6,
+        "count": 256,
+        "residents": 884
+      },
+      {
+        "geoid": "01101000700",
+        "name": "Census Tract 7",
+        "rate": 280.8,
+        "count": 280,
+        "residents": 997
+      },
+      {
+        "geoid": "01101002300",
+        "name": "Census Tract 23",
+        "rate": 274.3,
+        "count": 686,
+        "residents": 2501
       },
       {
         "geoid": "01101002201",
         "name": "Census Tract 22.01",
-        "rate": 203.8,
-        "count": 765,
+        "rate": 226.7,
+        "count": 851,
         "residents": 3754
       },
       {
         "geoid": "01101003000",
         "name": "Census Tract 30",
-        "rate": 164.4,
-        "count": 313,
+        "rate": 181.7,
+        "count": 346,
         "residents": 1904
-      },
-      {
-        "geoid": "01101000200",
-        "name": "Census Tract 2",
-        "rate": 127.1,
-        "count": 183,
-        "residents": 1440
-      },
-      {
-        "geoid": "01101001600",
-        "name": "Census Tract 16",
-        "rate": 123.5,
-        "count": 473,
-        "residents": 3830
-      },
-      {
-        "geoid": "01101001700",
-        "name": "Census Tract 17",
-        "rate": 122.5,
-        "count": 670,
-        "residents": 5469
       },
       {
         "geoid": "01101000400",
         "name": "Census Tract 4",
-        "rate": 120.7,
-        "count": 515,
+        "rate": 157.3,
+        "count": 671,
         "residents": 4267
+      },
+      {
+        "geoid": "01101001700",
+        "name": "Census Tract 17",
+        "rate": 143.7,
+        "count": 786,
+        "residents": 5469
+      },
+      {
+        "geoid": "01101001600",
+        "name": "Census Tract 16",
+        "rate": 141.5,
+        "count": 542,
+        "residents": 3830
+      },
+      {
+        "geoid": "01101000200",
+        "name": "Census Tract 2",
+        "rate": 139.6,
+        "count": 201,
+        "residents": 1440
       },
       {
         "geoid": "01101001300",
         "name": "Census Tract 13",
-        "rate": 107.9,
-        "count": 226,
+        "rate": 116,
+        "count": 243,
         "residents": 2094
       },
       {
         "geoid": "01101000600",
         "name": "Census Tract 6",
-        "rate": 104.9,
-        "count": 185,
+        "rate": 113.4,
+        "count": 200,
         "residents": 1763
       },
       {
         "geoid": "01101001500",
         "name": "Census Tract 15",
-        "rate": 85.1,
-        "count": 350,
+        "rate": 95.8,
+        "count": 394,
         "residents": 4112
+      },
+      {
+        "geoid": "01101005102",
+        "name": "Census Tract 51.02",
+        "rate": 90.6,
+        "count": 384,
+        "residents": 4239
       },
       {
         "geoid": "01101001800",
         "name": "Census Tract 18",
-        "rate": 81.2,
-        "count": 274,
+        "rate": 88.6,
+        "count": 299,
         "residents": 3375
       },
       {
         "geoid": "01101002600",
         "name": "Census Tract 26",
-        "rate": 68.5,
-        "count": 374,
+        "rate": 75.9,
+        "count": 414,
         "residents": 5458
       },
       {
         "geoid": "01101005402",
         "name": "Census Tract 54.02",
-        "rate": 66.4,
-        "count": 364,
+        "rate": 73.6,
+        "count": 404,
         "residents": 5486
-      },
-      {
-        "geoid": "01101005902",
-        "name": "Census Tract 59.02",
-        "rate": 65.7,
-        "count": 211,
-        "residents": 3212
       },
       {
         "geoid": "01101000500",
         "name": "Census Tract 5",
-        "rate": 65.1,
-        "count": 189,
+        "rate": 72.4,
+        "count": 210,
         "residents": 2902
       },
       {
         "geoid": "01101006100",
         "name": "Census Tract 61",
-        "rate": 62.1,
-        "count": 128,
+        "rate": 70.8,
+        "count": 146,
         "residents": 2062
+      },
+      {
+        "geoid": "01101005902",
+        "name": "Census Tract 59.02",
+        "rate": 70.7,
+        "count": 227,
+        "residents": 3212
       },
       {
         "geoid": "01101002100",
         "name": "Census Tract 21",
-        "rate": 61.5,
-        "count": 239,
+        "rate": 67.2,
+        "count": 261,
         "residents": 3886
       },
       {
         "geoid": "01101002902",
         "name": "Census Tract 29.02",
-        "rate": 59.4,
-        "count": 230,
+        "rate": 63.5,
+        "count": 246,
         "residents": 3875
-      },
-      {
-        "geoid": "01101005102",
-        "name": "Census Tract 51.02",
-        "rate": 58.5,
-        "count": 248,
-        "residents": 4239
-      },
-      {
-        "geoid": "01101001900",
-        "name": "Census Tract 19",
-        "rate": 49.2,
-        "count": 153,
-        "residents": 3110
-      },
-      {
-        "geoid": "01101005101",
-        "name": "Census Tract 51.01",
-        "rate": 48,
-        "count": 173,
-        "residents": 3604
-      },
-      {
-        "geoid": "01101000100",
-        "name": "Census Tract 1",
-        "rate": 46.8,
-        "count": 46,
-        "residents": 982
       },
       {
         "geoid": "01101005613",
         "name": "Census Tract 56.13",
-        "rate": 45.1,
-        "count": 218,
+        "rate": 60,
+        "count": 290,
         "residents": 4832
+      },
+      {
+        "geoid": "01101005101",
+        "name": "Census Tract 51.01",
+        "rate": 55.2,
+        "count": 199,
+        "residents": 3604
+      },
+      {
+        "geoid": "01101001900",
+        "name": "Census Tract 19",
+        "rate": 52.4,
+        "count": 163,
+        "residents": 3110
       },
       {
         "geoid": "01101003100",
         "name": "Census Tract 31",
-        "rate": 43.9,
-        "count": 151,
+        "rate": 51.5,
+        "count": 177,
         "residents": 3436
+      },
+      {
+        "geoid": "01101000100",
+        "name": "Census Tract 1",
+        "rate": 50.9,
+        "count": 50,
+        "residents": 982
+      },
+      {
+        "geoid": "01101005606",
+        "name": "Census Tract 56.06",
+        "rate": 46.1,
+        "count": 220,
+        "residents": 4770
       },
       {
         "geoid": "01101001400",
         "name": "Census Tract 14",
-        "rate": 43.9,
-        "count": 156,
+        "rate": 45.9,
+        "count": 163,
         "residents": 3555
       },
       {
         "geoid": "01101005410",
         "name": "Census Tract 54.10",
-        "rate": 43.2,
-        "count": 219,
+        "rate": 45.4,
+        "count": 230,
         "residents": 5070
-      },
-      {
-        "geoid": "01101005606",
-        "name": "Census Tract 56.06",
-        "rate": 42.8,
-        "count": 204,
-        "residents": 4770
-      },
-      {
-        "geoid": "01101003304",
-        "name": "Census Tract 33.04",
-        "rate": 41.1,
-        "count": 153,
-        "residents": 3723
-      },
-      {
-        "geoid": "01101005403",
-        "name": "Census Tract 54.03",
-        "rate": 39.9,
-        "count": 156,
-        "residents": 3905
       },
       {
         "geoid": "01101003301",
         "name": "Census Tract 33.01",
-        "rate": 39.8,
-        "count": 138,
+        "rate": 44.1,
+        "count": 153,
         "residents": 3470
+      },
+      {
+        "geoid": "01101005403",
+        "name": "Census Tract 54.03",
+        "rate": 43,
+        "count": 168,
+        "residents": 3905
+      },
+      {
+        "geoid": "01101003304",
+        "name": "Census Tract 33.04",
+        "rate": 42.4,
+        "count": 158,
+        "residents": 3723
       },
       {
         "geoid": "01101005409",
         "name": "Census Tract 54.09",
-        "rate": 39.1,
-        "count": 91,
+        "rate": 41.3,
+        "count": 96,
         "residents": 2325
-      },
-      {
-        "geoid": "01101005610",
-        "name": "Census Tract 56.10",
-        "rate": 36.4,
-        "count": 51,
-        "residents": 1400
       },
       {
         "geoid": "01101003200",
         "name": "Census Tract 32",
-        "rate": 36.2,
-        "count": 208,
+        "rate": 39,
+        "count": 224,
         "residents": 5741
       },
       {
         "geoid": "01101002800",
         "name": "Census Tract 28",
-        "rate": 34.6,
-        "count": 171,
+        "rate": 37.2,
+        "count": 184,
         "residents": 4948
       },
       {
-        "geoid": "01101002000",
-        "name": "Census Tract 20",
-        "rate": 34.3,
-        "count": 163,
-        "residents": 4750
+        "geoid": "01101005610",
+        "name": "Census Tract 56.10",
+        "rate": 37.1,
+        "count": 52,
+        "residents": 1400
       },
       {
         "geoid": "01101002700",
         "name": "Census Tract 27",
-        "rate": 34.3,
-        "count": 149,
+        "rate": 36.8,
+        "count": 160,
         "residents": 4349
+      },
+      {
+        "geoid": "01101002000",
+        "name": "Census Tract 20",
+        "rate": 36.4,
+        "count": 173,
+        "residents": 4750
       },
       {
         "geoid": "01101002901",
         "name": "Census Tract 29.01",
-        "rate": 32.3,
-        "count": 107,
+        "rate": 33.5,
+        "count": 111,
         "residents": 3313
       },
       {
         "geoid": "01101003303",
         "name": "Census Tract 33.03",
-        "rate": 28.7,
-        "count": 76,
+        "rate": 31.7,
+        "count": 84,
         "residents": 2652
       },
       {
         "geoid": "01101006000",
         "name": "Census Tract 60",
-        "rate": 25.2,
-        "count": 81,
+        "rate": 26.5,
+        "count": 85,
         "residents": 3209
-      },
-      {
-        "geoid": "01101005412",
-        "name": "Census Tract 54.12",
-        "rate": 23.8,
-        "count": 152,
-        "residents": 6381
-      },
-      {
-        "geoid": "01101005414",
-        "name": "Census Tract 54.14",
-        "rate": 21.8,
-        "count": 86,
-        "residents": 3945
       },
       {
         "geoid": "01101005904",
         "name": "Census Tract 59.04",
-        "rate": 21.5,
-        "count": 51,
+        "rate": 25.3,
+        "count": 60,
         "residents": 2369
+      },
+      {
+        "geoid": "01101005414",
+        "name": "Census Tract 54.14",
+        "rate": 24.8,
+        "count": 98,
+        "residents": 3945
+      },
+      {
+        "geoid": "01101005412",
+        "name": "Census Tract 54.12",
+        "rate": 24.4,
+        "count": 156,
+        "residents": 6381
       },
       {
         "geoid": "01101005605",
         "name": "Census Tract 56.05",
-        "rate": 19.4,
-        "count": 72,
+        "rate": 20.5,
+        "count": 76,
         "residents": 3712
-      },
-      {
-        "geoid": "01101005302",
-        "name": "Census Tract 53.02",
-        "rate": 19.1,
-        "count": 42,
-        "residents": 2198
       },
       {
         "geoid": "01101005614",
         "name": "Census Tract 56.14",
-        "rate": 15.7,
-        "count": 44,
+        "rate": 19.9,
+        "count": 56,
         "residents": 2808
+      },
+      {
+        "geoid": "01101005302",
+        "name": "Census Tract 53.02",
+        "rate": 19.6,
+        "count": 43,
+        "residents": 2198
       },
       {
         "geoid": "01101005609",
         "name": "Census Tract 56.09",
-        "rate": 13.9,
-        "count": 70,
+        "rate": 16.3,
+        "count": 82,
         "residents": 5034
       },
       {
         "geoid": "01101005413",
         "name": "Census Tract 54.13",
-        "rate": 13.6,
-        "count": 54,
+        "rate": 14.6,
+        "count": 58,
         "residents": 3973
       },
       {
         "geoid": "01101005612",
         "name": "Census Tract 56.12",
-        "rate": 11.7,
-        "count": 25,
+        "rate": 13.1,
+        "count": 28,
         "residents": 2131
       },
       {
         "geoid": "01101005407",
         "name": "Census Tract 54.07",
-        "rate": 11.5,
-        "count": 50,
+        "rate": 12.7,
+        "count": 55,
         "residents": 4335
       },
       {
         "geoid": "01101005503",
         "name": "Census Tract 55.03",
-        "rate": 9.7,
-        "count": 60,
+        "rate": 10.2,
+        "count": 63,
         "residents": 6176
       },
       {
         "geoid": "01101005411",
         "name": "Census Tract 54.11",
-        "rate": 8.7,
-        "count": 27,
+        "rate": 9.4,
+        "count": 29,
         "residents": 3092
       },
       {
         "geoid": "01101005611",
         "name": "Census Tract 56.11",
-        "rate": 5.8,
-        "count": 21,
+        "rate": 6,
+        "count": 22,
         "residents": 3644
       },
       {
         "geoid": "01101005607",
         "name": "Census Tract 56.07",
-        "rate": 3.9,
-        "count": 22,
+        "rate": 4.3,
+        "count": 24,
         "residents": 5640
       },
       {
@@ -520,24 +520,26 @@
   },
   "examples": [
     {
-      "run": "r_20261027_d432a4",
+      "run": "r_20261106_bc1483",
       "question": "Which Montgomery tracts had the biggest increase in code violations from 2024 to 2025?",
-      "headline": "Census Tract 12 had the largest increase in code violations from 2024 to 2025, with 347 additional violations (from 471 to 818).",
+      "headline": "Census Tract 12 had the largest increase in code violations from 2024 to 2025, rising by 477 violations.",
       "points": [
-        "Census Tract 12 led all tracts with a 347-violation increase, ranking 1st in count change.",
-        "The next largest increases were Census Tract 25 (+329) and Census Tract 24 (+266), ranking 2nd and 3rd respectively.",
-        "Count change totals 1,916 across all 71 tracts; 44 tracts saw positive changes while 27 saw declines.",
-        "Census Tract 51.02 had the largest decline at -163 violations (from 411 to 248), ranking 71st."
+        "Census Tract 12 increased from 471 violations in 2024 to 948 in 2025, a change of 477.",
+        "Census Tract 25 ranked second with an increase of 415 violations, from 626 to 1,041.",
+        "Census Tract 24 ranked third with an increase of 306 violations, from 249 to 555.",
+        "Census Tract 11 ranked fourth with an increase of 247 violations, from 1,078 to 1,325.",
+        "Census Tract 23 ranked fifth with an increase of 218 violations, from 468 to 686."
       ]
     },
     {
-      "run": "r_20261027_1e00fb",
+      "run": "r_20261106_98d6ab",
       "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
-      "headline": "Tracts with higher 311 request rates also have higher code violation rates, with a correlation of 0.46 across all 71 Montgomery census tracts in 2025.",
+      "headline": "Montgomery tracts with more 311 requests per 1,000 residents in 2025 also tended to have more code violations per 1,000 residents, with a positive correlation of 0.41 across all 71 tracts.",
       "points": [
-        "All 71 census tracts appear exactly once in the paired result, so the correlation is computed on the complete cohort with no subsample or ranking tier in effect.",
-        "The correlation of 0.46 shows a moderate positive association: as 311 requests per 1,000 residents increase, code violations per 1,000 residents also tend to increase.",
-        "The paired_tracts sample size of 71 is the full cohort size; every tract with a 311 rate also has a code violation rate, and vice versa."
+        "The correlation between 311 service requests per 1,000 residents and code violations per 1,000 residents across 71 Montgomery census tracts was 0.41 in 2025.",
+        "All 71 population-eligible tracts were included in the paired comparison.",
+        "Rates were computed per 1,000 residents using Census 2020 total population.",
+        "311 service requests covered January through December 2025, and code violations covered January through December 2025."
       ]
     },
     {

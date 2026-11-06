@@ -184,6 +184,10 @@ Shape: {"headline": "one sentence answer", "points": ["2-5 short supporting fact
       if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
     }
   }
+  for (const w of wired.filter((w) => w.period && w.period.byLabel !== w.period.byDate)) {
+    const caveat = `Years are counted by each record's own date (${w.period!.field}). The source's ${w.period!.label} field puts some records in a different year, so totals by ${w.period!.label} differ.`;
+    if (!value.caveats.includes(caveat)) value.caveats.push(caveat);
+  }
   if (callActivity) {
     const caveat =
       "These are weighted call-center activity totals, not confirmed incidents or crime statistics.";

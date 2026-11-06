@@ -4,7 +4,7 @@ Ask a question about a Montgomery, Alabama neighborhood. Fieldwork's agents find
 
 **[Live Desk](https://askfieldwork.space)** · [Demo video](https://youtu.be/H_7eg92Cwdw) · [Ask a question](https://askfieldwork.space/ask) · [Test results](https://askfieldwork.space/evaluation) · [How it works](https://askfieldwork.space/how-it-works) · [Check it yourself](https://askfieldwork.space/check) · [Run it with no keys](#use-it)
 
-Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. A rerun of six questions after batch 15, with the same grading, passed both of batch 15's misses (Q01 and Q16) and 4 of the 6 in all ([`evidence/targeted/`](evidence/targeted/)). Every batch, failures included, is on the [Evaluation page](https://askfieldwork.space/evaluation).
+Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a frozen set of 25 questions, graded in code. A rerun of six questions after batch 15, with the same grading, passed both of batch 15's misses (Q01 and Q16) and 4 of the 6 in all ([`evidence/targeted/`](evidence/targeted/)). Since then, years are counted by each record's own date instead of the city's `Year` field ([why](#calendar-years)); the 11 questions that involve a year were rerun with that change and all 11 passed. Every batch, failures included, is on the [Evaluation page](https://askfieldwork.space/evaluation).
 
 > "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have?"
 >
@@ -148,6 +148,12 @@ Each question is graded in code against an independent reference read from the s
 
 **Nemotron with one dataset, for comparison.** To check that the agents' joining is what does the work, each question also went to Nemotron with up to 200 records from the largest dataset Fieldwork used for it, exactly as the source publishes them, and no agents (`npx tsx scripts/baseline-one-source.ts`, results in [`evidence/baseline-one-source.json`](evidence/baseline-one-source.json)). It named the right top tract for 1 of the 19 questions with a passing Fieldwork run to compare against: Q19, adult diabetes, which the CDC already publishes by tract. For the others it said the records carry no census tract, or that the answer needs a second source.
 
+### Calendar years
+
+The City of Montgomery's `Year` field is not the calendar year. From 1 October 2025 the city labels new records Year 2026, so `Year = 2025` holds 311 requests from January to September only. Counted by each record's own date, calendar 2025 has 17,431 code violations and 33,842 311 requests; filtered on `Year = 2025`, batch 15 and the batches before it read 15,439 and 27,817. The city's own server shows this in [`evidence/period/montgomery-year-field.json`](evidence/period/montgomery-year-field.json), which `python3 scripts/year-field-check.py` rebuilds.
+
+Fieldwork now filters a requested year on the record's date field whenever a layer has one, keeps the `Year` field when a question asks for a fiscal year, and adds a caveat to the answer when the two counts differ. A grading check now fails any answer about a year that is filtered on a `Year` label ([`evidence/question-amendments.json`](evidence/question-amendments.json)). The 11 questions it applies to were rerun with the change, and all 11 passed: [`evidence/targeted/run-2026-11-06T10-38-49-770Z.json`](evidence/targeted/run-2026-11-06T10-38-49-770Z.json) and [`evidence/targeted/run-2026-11-06T10-49-49-118Z.json`](evidence/targeted/run-2026-11-06T10-49-49-118Z.json). Batch 15 was graded before the change; its results stay as recorded.
+
 Every full batch is published, including failures, with step timings: see the [Evaluation page](https://askfieldwork.space/evaluation) or [`evidence/EVAL.md`](evidence/EVAL.md). The raw results and traces are under [`evidence/question-set/`](evidence/question-set/) and [`evidence/runs/`](evidence/runs/).
 
 ### Portability
@@ -158,7 +164,7 @@ Fieldwork was pointed at Louisville, Kentucky with no Louisville-specific code. 
 
 After the hackathon, a second agent checked Fieldwork's numbers. The Cursor coding agent (Grok 4.7 model) was given five of the same questions, the same official city, CDC and Census sources, and one tool: a Zetaris connector ([Jennycruzy/zetaris-cursor](https://github.com/Jennycruzy/zetaris-cursor)). It was allowed only Zetaris calls, and it never queried Fieldwork's answers or tract counts.
 
-| Question | Cursor agent | Compared with Fieldwork |
+| Question | Cursor agent | Compared with Fieldwork's batch 15 answer |
 | --- | --- | --- |
 | Q02 Most code violations by tract, 2025 | 45 s, 2 Zetaris queries | Same 5 tracts, same counts |
 | Q03 Code violations per 1,000 residents, 2025 | 43 s, 2 Zetaris queries | Same 5 tracts, same rates |
@@ -169,6 +175,8 @@ After the hackathon, a second agent checked Fieldwork's numbers. The Cursor codi
 In that run the agent read tract tables built in Zetaris beforehand from the same city and Census sources, separately from Fieldwork's own pipeline. In a second run it started from the raw city and Census records instead: it wrote the point-in-polygon join itself as one Zetaris query, placed the 15,103 geocoded 2025 code violations in tracts, and matched Fieldwork's Q02 top five exactly (323 s, 23 Zetaris calls).
 
 Each prompt, the agent's full answer and every Zetaris call it made are in [`evidence/cursor/`](evidence/cursor/); [`evidence/cursor/comparison.json`](evidence/cursor/comparison.json) sets each figure beside the Fieldwork run it is compared with.
+
+Those answers, the agent's and Fieldwork's, both counted 2025 by the city's `Year` field. In three more runs the agent counted by each record's own date instead and got 17,431 code violations in 2025, with Tracts 12, 3, 11, 25 and 24 highest per 1,000 residents. That difference is how the [calendar-year](#calendar-years) problem came to light. After the fix, Fieldwork gives the same total and the same five tracts with the same counts and rates in all three (Tract 12: 948 violations, 651.5 per 1,000 residents): [`evidence/cursor/calendar-dates/`](evidence/cursor/calendar-dates/).
 
 ## Run it yourself
 

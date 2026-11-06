@@ -1,0 +1,96 @@
+{
+  "checked_at": "2026-11-06T10:36:43+00:00",
+  "finding": "The Year field is not the calendar year: Year 2026 starts on 1 October 2025 in both layers.",
+  "layers": [
+    {
+      "title": "Code violations",
+      "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Code_Violations/FeatureServer/0",
+      "date_field": "CaseDate",
+      "by_year_field": [
+        {
+          "where": "Year = '2024'",
+          "records": 13508,
+          "first_date": "2024-01-02",
+          "last_date": "2024-12-31"
+        },
+        {
+          "where": "Year = '2025'",
+          "records": 15439,
+          "first_date": "2025-01-02",
+          "last_date": "2025-12-31"
+        },
+        {
+          "where": "Year = '2026'",
+          "records": 18998,
+          "first_date": "2025-10-01",
+          "last_date": "2026-10-30"
+        }
+      ],
+      "by_record_date": [
+        {
+          "where": "CaseDate >= TIMESTAMP '2024-01-01 00:00:00' AND CaseDate < TIMESTAMP '2025-01-01 00:00:00'",
+          "records": 13508,
+          "first_date": "2024-01-02",
+          "last_date": "2024-12-31"
+        },
+        {
+          "where": "CaseDate >= TIMESTAMP '2025-01-01 00:00:00' AND CaseDate < TIMESTAMP '2026-01-01 00:00:00'",
+          "records": 17431,
+          "first_date": "2025-01-02",
+          "last_date": "2025-12-31"
+        },
+        {
+          "where": "CaseDate >= TIMESTAMP '2026-01-01 00:00:00' AND CaseDate < TIMESTAMP '2027-01-01 00:00:00'",
+          "records": 17006,
+          "first_date": "2026-01-02",
+          "last_date": "2026-10-30"
+        }
+      ]
+    },
+    {
+      "title": "311 service requests",
+      "url": "https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/Received_311_Service_Request/MapServer/0",
+      "date_field": "Create_Date",
+      "by_year_field": [
+        {
+          "where": "Year = 2024",
+          "records": 34839,
+          "first_date": "2024-01-01",
+          "last_date": "2024-12-31"
+        },
+        {
+          "where": "Year = 2025",
+          "records": 27817,
+          "first_date": "2025-01-01",
+          "last_date": "2025-09-30"
+        },
+        {
+          "where": "Year = 2026",
+          "records": 39119,
+          "first_date": "2025-10-01",
+          "last_date": "2026-10-29"
+        }
+      ],
+      "by_record_date": [
+        {
+          "where": "Create_Date >= TIMESTAMP '2024-01-01 00:00:00' AND Create_Date < TIMESTAMP '2025-01-01 00:00:00'",
+          "records": 34839,
+          "first_date": "2024-01-01",
+          "last_date": "2024-12-31"
+        },
+        {
+          "where": "Create_Date >= TIMESTAMP '2025-01-01 00:00:00' AND Create_Date < TIMESTAMP '2026-01-01 00:00:00'",
+          "records": 33842,
+          "first_date": "2025-01-01",
+          "last_date": "2025-12-31"
+        },
+        {
+          "where": "Create_Date >= TIMESTAMP '2026-01-01 00:00:00' AND Create_Date < TIMESTAMP '2027-01-01 00:00:00'",
+          "records": 33094,
+          "first_date": "2026-01-01",
+          "last_date": "2026-10-29"
+        }
+      ]
+    }
+  ]
+}

@@ -101,3 +101,56 @@ export function inspectionSourceWhere(where: string, request: string): string {
     },
   );
 }
+
+// A source "Year" field is the publisher's own label and need not be the calendar year: Montgomery codes
+// records from October 2025 as Year 2026 (a fiscal year). When a layer also has each record's own date,
+// a requested calendar year is filtered on that date instead. Fiscal-year requests keep the Year field.
+export function yearAsDateRange(
+  where: string,
+  fields: { name: string; type: string }[],
+  yearField: string | undefined,
+  dateField: string | undefined,
+  request = "",
+): string {
+  if (!yearField || !dateField || /\bfiscal\b|\bFY\s?\d/i.test(request)) return where;
+  const date = fields.find((f) => f.name === dateField);
+  if (!date || !/date/i.test(date.type)) return where;
+  const at = (y: number) => `TIMESTAMP '${y}-01-01 00:00:00'`;
+  const range = (from: number, to: number) =>
+    `(${dateField} >= ${at(from)} AND ${dateField} < ${at(to + 1)})`;
+  // Quoted text other than a bare year is set aside, so a category value that mentions a year is left alone.
+  const kept: string[] = [];
+  let text = where.replace(/'(?:[^']|'')*'/g, (literal) => {
+    if (/^'(?:19|20)\d{2}'$/.test(literal)) return literal;
+    kept.push(literal);
+    return `\u0000${kept.length - 1}\u0000`;
+  });
+  const name = yearField.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const year = `'?((?:19|20)\\d{2})'?`;
+  text = text
+    .replace(
+      new RegExp(`\\b${name}\\s+BETWEEN\\s+${year}\\s+AND\\s+${year}`, "gi"),
+      (_, a: string, b: string) => range(Math.min(+a, +b), Math.max(+a, +b)),
+    )
+    .replace(new RegExp(`\\b${name}\\s+IN\\s*\\(([^)]*)\\)`, "gi"), (all, list: string) => {
+      const years = list.split(",").map((v) => v.trim().replace(/^'|'$/g, ""));
+      if (!years.every((v) => /^(?:19|20)\d{2}$/.test(v))) return all;
+      const sorted = [...new Set(years.map(Number))].sort((x, y) => x - y);
+      const contiguous = sorted.every((y, i) => i === 0 || y === sorted[i - 1]! + 1);
+      return contiguous
+        ? range(sorted[0]!, sorted[sorted.length - 1]!)
+        : `(${sorted.map((y) => range(y, y)).join(" OR ")})`;
+    })
+    .replace(
+      new RegExp(`\\b${name}\\s*(>=|<=|=|>|<)\\s*${year}(?![\\w.])`, "gi"),
+      (_, op: string, y: string) => {
+        const n = Number(y);
+        if (op === "=") return range(n, n);
+        if (op === ">=") return `${dateField} >= ${at(n)}`;
+        if (op === ">") return `${dateField} >= ${at(n + 1)}`;
+        if (op === "<=") return `${dateField} < ${at(n + 1)}`;
+        return `${dateField} < ${at(n)}`;
+      },
+    );
+  return text.replace(/\u0000(\d+)\u0000/g, (_, i: string) => kept[Number(i)]!);
+}

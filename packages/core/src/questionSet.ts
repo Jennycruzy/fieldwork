@@ -40,6 +40,7 @@ export function gradeQuestion(q:QuestionCase,run:RecordedAnswer,reference?:Refer
  check("Tract membership is not narrowed by postal labels",!sources.some(s=>/\bCity\s*=/.test(s.filter)));
  const fullYear=["Q01","Q02","Q03","Q05","Q08","Q09","Q10","Q11","Q12","Q18"].includes(q.id);
  if(fullYear)check("Requested 2025 source period",sources.some(s=>/2025/.test(s.filter))&&a.plan?.years?.from===2025);
+ if(["Q01","Q02","Q03","Q04","Q05","Q06","Q07","Q08","Q09","Q10","Q18"].includes(q.id))check("Calendar year counted by record dates, not a Year label",!sources.some(s=>/\bYear\s*(?:=|>=|<=|>|<|IN\b|BETWEEN\b)/i.test(s.filter)));
  if(q.id==="Q01") {check("Asthma ranking descending",sorted(has("Asthma column",/asthma|casthma/i)));has("Violation counts",/violat|code_count/i);}
  if(["Q02","Q08","Q11","Q18"].includes(q.id))check("Requested counts descending",sorted(has("Count column",/violat|request|call|permit|count/i)));
  if(["Q03","Q16"].includes(q.id)) {const j=has("Population-adjusted rate",/per_?(?:1_?000|10_?000)|rate/i);check("Rate ranking order",sorted(j,q.id==="Q16"));has("Resident denominator",/population|residents|denominator/i);has("Raw count",/count|violat|pharmac/i);check("Resident population used",/totalpopulation/i.test(sql));}

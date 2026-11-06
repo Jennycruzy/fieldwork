@@ -1,0 +1,308 @@
+{
+  "code_commit": "4279660e75ece8fac2498e4b1cf5e9bb55fc25e4",
+  "code_sha256": "d2628d232d4aac9e673d0fd8e747b65326f87aa103a081aee0b67496b0097a4b",
+  "started_at": "2026-11-06T10:49:49.118Z",
+  "question_sha256": "a50a3dd1485eea9f5f6641c9083f5ad199bfc715763d5ded5980449dd0968983",
+  "complete": true,
+  "passed": 3,
+  "total": 3,
+  "rate": 1,
+  "results": [
+    {
+      "question_id": "Q04",
+      "question": "Do Montgomery census tracts with more code violations this year also have more adults with high blood pressure?",
+      "expected": "answered",
+      "answer_shape": "Explain choosing population-adjusted rates for comparing tracts; show violation counts, denominator and rate alongside adult hypertension prevalence, paired-set size and association statistic; distinguish the interpretation from estimated adult counts.",
+      "run_id": "r_20261106_8db44c",
+      "status": "answered",
+      "elapsed_ms": 85017,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent bphigh_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic code_violations_count_per_1000_totalpopulation",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
+          "ok": true
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q06",
+      "question": "Which Montgomery tracts had the biggest increase in code violations from 2024 to 2025?",
+      "expected": "answered",
+      "answer_shape": "Both full-year counts and absolute change, sorted descending by change; percent change only with valid baseline and explicit zero-baseline handling.",
+      "run_id": "r_20261106_bc1483",
+      "status": "answered",
+      "elapsed_ms": 52772,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "2024 count",
+          "ok": true
+        },
+        {
+          "name": "2025 count",
+          "ok": true
+        },
+        {
+          "name": "Absolute change",
+          "ok": true
+        },
+        {
+          "name": "Correct differences",
+          "ok": true
+        },
+        {
+          "name": "Changes descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Both years match independent tract counts",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q07",
+      "question": "How many Montgomery code violations have been recorded each month so far in 2026?",
+      "expected": "answered",
+      "answer_shape": "Chronological monthly counts with latest source date, incomplete-month warning, test-record exclusions and no projection to a full year.",
+      "run_id": "r_20261106_ff405a",
+      "status": "answered",
+      "elapsed_ms": 33844,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Month column",
+          "ok": true
+        },
+        {
+          "name": "Monthly count",
+          "ok": true
+        },
+        {
+          "name": "Months chronological",
+          "ok": true
+        },
+        {
+          "name": "Current period marked incomplete",
+          "ok": true
+        },
+        {
+          "name": "Monthly totals match independent source aggregation",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-11-06T10:52:43.235Z"
+}

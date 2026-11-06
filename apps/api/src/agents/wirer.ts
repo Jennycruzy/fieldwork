@@ -6,6 +6,7 @@ import {
   inspectionSourceWhere,
   typedWhere,
   withoutPostalFilters,
+  yearAsDateRange,
   getJson,
   layerCount,
   normaliseLayerUrl,
@@ -32,6 +33,8 @@ export interface Wired {
   groupField?: string;
   dateField?: string;
   yearField?: string;
+  /** Set when a requested calendar year was filtered on dateField instead of the source's Year label. */
+  period?: { field: string; label: string; byLabel: number; byDate: number };
   monthField?: string;
   categoryField?: string;
   valueField?: string;
@@ -101,7 +104,7 @@ export async function wire(
       role: "system",
       content: `${systemBase(ctx)}
 You are the Wirer. For each chosen dataset decide the filter and the fields needed to answer the plan.
-ArcGIS layers use SQL-92 where clauses on their own fields (e.g. Year = '2025' when Year is a string, CaseDate >= DATE '2025-01-01' for dates).
+ArcGIS layers use SQL-92 where clauses on their own fields. For a calendar year, filter the record's own date field when the layer has one (e.g. CaseDate >= TIMESTAMP '2025-01-01 00:00:00' AND CaseDate < TIMESTAMP '2026-01-01 00:00:00'); a Year field may be a fiscal year. Use a Year field only when the layer has no date field or the request asks for a fiscal year.
 Socrata (CDC) datasets use SoQL where clauses (e.g. countyfips = '01101'). The county restriction is added for you; do not add it.
 Do not add postal City/STATE restrictions: the spatial bridge determines county tract membership. Do not remove null statuses or categories unless the request explicitly asks for them.
 For latest-inspection questions, retrieve all inspections in the requested period. Apply any score threshold only after selecting the latest inspection per establishment in the analysis query. Choose only fields that exist in the dataset's field list. For city records include a field to group counts by if the question asks about kinds of records (e.g. a type field), else null.
@@ -171,6 +174,7 @@ Shape: {"sources": [{"measure_id": "m1", "where": "...", "fields": ["..."], "gro
               ? w.group_field
               : undefined,
             label,
+            request,
           )
         : await wireSocrata(ctx, c, w.where, fields, label);
   };
@@ -425,6 +429,7 @@ export async function wireArcgis(
   fields: string[],
   groupField: string | undefined,
   label: string,
+  request = "",
 ): Promise<Wired> {
   const layer = normaliseLayerUrl(c.candidate.url);
   const objectIdField = c.fields.find((f) => f.type === "oid")?.name ?? "OBJECTID";
@@ -439,6 +444,39 @@ export async function wireArcgis(
       status: "info",
       note: "Postal city/state labels do not define tract geography; membership is checked against the county tract boundaries.",
     });
+  }
+
+  const {
+    dateField,
+    yearField,
+    monthField,
+    categoryField,
+    valueField,
+    valueKind,
+    entityField,
+    entityLocationField,
+  } = observationRoles(c.fields, !!c.geometryType, groupField);
+  let period: Wired["period"];
+  const calendar = yearAsDateRange(where, c.fields, yearField, dateField, request);
+  if (calendar !== where && dateField && yearField) {
+    try {
+      const [byLabel, byDate] = await Promise.all([layerCount(layer, where), layerCount(layer, calendar)]);
+      period = { field: dateField, label: yearField, byLabel, byDate };
+      await ctx.trace.log({
+        agent: "wirer",
+        action: "period_definition",
+        status: "info",
+        note: `Years are counted by ${dateField}, each record's own date, not the source's ${yearField} label: ${byDate.toLocaleString("en-US")} records by date, ${byLabel.toLocaleString("en-US")} by ${yearField}.`,
+      });
+      where = calendar;
+    } catch (error) {
+      await ctx.trace.log({
+        agent: "wirer",
+        action: "period_definition",
+        status: "info",
+        note: `The source rejected a ${dateField} date range (${(error as Error).message.slice(0, 160)}); the ${yearField} filter is kept.`,
+      });
+    }
   }
 
   // Data-quality rule: exclude values that look like test records in status/type fields (one DEBUG_TEST record seen live).
@@ -468,16 +506,6 @@ export async function wireArcgis(
   const caseIdField = c.fields.find((f) =>
     /^(OffenceNum|CaseID|CaseNumber|CaseNo|Request_?ID|IncidentID|PermitNo)$/i.test(f.name),
   )?.name;
-  const {
-    dateField,
-    yearField,
-    monthField,
-    categoryField,
-    valueField,
-    valueKind,
-    entityField,
-    entityLocationField,
-  } = observationRoles(c.fields, !!c.geometryType, groupField);
   const roles = [
     dateField,
     yearField,
@@ -524,6 +552,7 @@ export async function wireArcgis(
     shape: c.geometryType ? "arcgis_features" : "arcgis_table",
     dateField,
     yearField,
+    period,
     monthField,
     categoryField,
     valueField,

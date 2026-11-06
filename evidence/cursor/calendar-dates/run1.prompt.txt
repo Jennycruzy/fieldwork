@@ -1,0 +1,5 @@
+QUESTION: How many code violations did the City of Montgomery record in 2025, and which 5 census tracts had the most code violations per 1,000 residents in 2025?
+
+Answer this question about Montgomery, Alabama using real public data only (never estimate or invent numbers). Official sources: City of Montgomery open data ArcGIS services at https://gis.montgomeryal.gov/server/rest/services/HostedDatasets/ (e.g. Code_Violations/FeatureServer/0, Received_311_Service_Request/MapServer/0), CDC PLACES tract data at https://data.cdc.gov/resource/yjkw-uj5s.json (countyfips 01101), and Census TIGERweb tract boundaries. Census tracts are those in Montgomery County (FIPS 01101). Give the total, then the top 5 rows as a table with tract name/GEOID and the figures, then one line saying how you got them. If you cannot get a reliable answer, say so instead of guessing.
+
+TOOLS: This project has a live Zetaris data platform connected as the zetaris MCP tools; follow the project rule.

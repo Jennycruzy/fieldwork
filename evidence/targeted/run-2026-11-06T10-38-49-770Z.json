@@ -1,0 +1,829 @@
+{
+  "code_commit": "4279660e75ece8fac2498e4b1cf5e9bb55fc25e4",
+  "code_sha256": "140c309acc397f5b10bac3780bbc9f9d222228189a4e249fc5fc96a13caa46b3",
+  "started_at": "2026-11-06T10:38:49.770Z",
+  "question_sha256": "a50a3dd1485eea9f5f6641c9083f5ad199bfc715763d5ded5980449dd0968983",
+  "complete": true,
+  "passed": 8,
+  "total": 8,
+  "rate": 1,
+  "results": [
+    {
+      "question_id": "Q01",
+      "question": "Which Montgomery census tracts have the highest adult asthma rates, and how many code violations did each have in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending asthma prevalence table with tract identifier, percent, 2025 violation count, dates and match coverage; do not rank by violations.",
+      "run_id": "r_20261106_bd9970",
+      "status": "answered",
+      "elapsed_ms": 83721,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Asthma column",
+          "ok": true
+        },
+        {
+          "name": "Asthma ranking descending",
+          "ok": true
+        },
+        {
+          "name": "Violation counts",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent casthma_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q02",
+      "question": "Which Montgomery census tracts had the most code violations in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending raw violation counts by tract; explain that counts measure workload rather than per-resident burden.",
+      "run_id": "r_20261106_126498",
+      "status": "answered",
+      "elapsed_ms": 42149,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q03",
+      "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending rates plus counts, total-resident denominators, population vintage and missing or zero-denominator handling.",
+      "run_id": "r_20261106_6ac75d",
+      "status": "answered",
+      "elapsed_ms": 107272,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Population-adjusted rate",
+          "ok": true
+        },
+        {
+          "name": "Rate ranking order",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw count",
+          "ok": true
+        },
+        {
+          "name": "Resident population used",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic code_violations_count_per_1000_totalpopulation",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q05",
+      "question": "Across Montgomery tracts, is the 2025 code-violation rate per 1,000 residents associated with adult high blood pressure prevalence?",
+      "expected": "answered",
+      "answer_shape": "Paired tract table and correlation computed across eligible tracts using the stated resident denominator; health prevalence already measures adults; describe overall association and limitations.",
+      "run_id": "r_20261106_e04e0c",
+      "status": "answered",
+      "elapsed_ms": 68450,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "CDC health source",
+          "ok": true
+        },
+        {
+          "name": "Health estimates labeled",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Health values match independent bphigh_crudeprev",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic code_violations_count_per_1000_totalpopulation",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
+          "ok": true
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q08",
+      "question": "Which Montgomery census tracts had the most 311 service requests in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending request counts by tract, request-date definition, source completeness, exclusions and spatial match coverage.",
+      "run_id": "r_20261106_b3b85b",
+      "status": "answered",
+      "elapsed_ms": 70413,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Received 311 Service Requests tract totals",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q09",
+      "question": "What were the most common types of Montgomery 311 requests in 2025?",
+      "expected": "answered",
+      "answer_shape": "Request-type counts and shares with a stated denominator, missing-type category and descending count order.",
+      "run_id": "r_20261106_c07bbe",
+      "status": "answered",
+      "elapsed_ms": 69555,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Request type",
+          "ok": true
+        },
+        {
+          "name": "Type counts",
+          "ok": true
+        },
+        {
+          "name": "Request-type counts descending",
+          "ok": true
+        },
+        {
+          "name": "Shares with denominator",
+          "ok": true
+        },
+        {
+          "name": "Source dates stated",
+          "ok": true
+        },
+        {
+          "name": "Category totals match independent source aggregation",
+          "ok": true
+        },
+        {
+          "name": "Category shares recompute",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q10",
+      "question": "Do Montgomery tracts with more 311 requests per 1,000 residents also have more code violations per 1,000 residents in 2025?",
+      "expected": "answered",
+      "answer_shape": "Paired rates, raw counts, resident denominator vintage, full paired-set correlation and coverage; identify differences in source definitions.",
+      "run_id": "r_20261106_98d6ab",
+      "status": "answered",
+      "elapsed_ms": 94321,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Rates chosen on purpose",
+          "ok": true
+        },
+        {
+          "name": "Resident denominator",
+          "ok": true
+        },
+        {
+          "name": "Raw source count",
+          "ok": true
+        },
+        {
+          "name": "Rate per resident",
+          "ok": true
+        },
+        {
+          "name": "Correlation statistic",
+          "ok": true
+        },
+        {
+          "name": "Full paired sample size",
+          "ok": true
+        },
+        {
+          "name": "Paired size agrees with full result",
+          "ok": true
+        },
+        {
+          "name": "Valid correlation range",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent health source captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Code Violations tract totals",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Received 311 Service Requests tract totals",
+          "ok": true
+        },
+        {
+          "name": "Resident denominators match source",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic received_311_service_requests_count_per_1000_totalpopulation",
+          "ok": true
+        },
+        {
+          "name": "Rate arithmetic code_violations_count_per_1000_totalpopulation",
+          "ok": true
+        },
+        {
+          "name": "Independent full-pair health reference captured",
+          "ok": true
+        },
+        {
+          "name": "Every eligible paired tract is included exactly once",
+          "ok": true
+        },
+        {
+          "name": "Correlation recomputes from displayed paired rates",
+          "ok": true
+        }
+      ]
+    },
+    {
+      "question_id": "Q18",
+      "question": "Which Montgomery census tracts had the most building permits issued in 2025?",
+      "expected": "answered",
+      "answer_shape": "Descending issued-permit counts by tract with issuance-date definition, duplicate handling, permit categories and coverage.",
+      "run_id": "r_20261106_b37b86",
+      "status": "answered",
+      "elapsed_ms": 38512,
+      "passed": true,
+      "reasons": [],
+      "checks": [
+        {
+          "name": "Exact frozen question",
+          "ok": true
+        },
+        {
+          "name": "Answered successfully",
+          "ok": true
+        },
+        {
+          "name": "Nonempty reproducible result",
+          "ok": true
+        },
+        {
+          "name": "Sources cited",
+          "ok": true
+        },
+        {
+          "name": "Full draft passes numeric and rank checks",
+          "ok": true
+        },
+        {
+          "name": "No failed accuracy checks",
+          "ok": true
+        },
+        {
+          "name": "No record-level identifiers exposed",
+          "ok": true
+        },
+        {
+          "name": "Tract identifiers included",
+          "ok": true
+        },
+        {
+          "name": "Requested source discovered",
+          "ok": true
+        },
+        {
+          "name": "Tract membership is not narrowed by postal labels",
+          "ok": true
+        },
+        {
+          "name": "Requested 2025 source period",
+          "ok": true
+        },
+        {
+          "name": "Calendar year counted by record dates, not a Year label",
+          "ok": true
+        },
+        {
+          "name": "Count column",
+          "ok": true
+        },
+        {
+          "name": "Requested counts descending",
+          "ok": true
+        },
+        {
+          "name": "Independent tract geography captured",
+          "ok": true
+        },
+        {
+          "name": "Independent requested tract counts captured",
+          "ok": true
+        },
+        {
+          "name": "Counts match independent Construction Permit Data tract totals",
+          "ok": true
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-11-06T10:48:31.840Z"
+}

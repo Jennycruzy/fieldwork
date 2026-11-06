@@ -40,6 +40,27 @@
       "reason": "The rate-arithmetic check treated correlation columns named after their rates (corr_epa_facilities_per_1000_residents_vs_adult_asthma_prevalence) as rates, and did not recognise an EPA count column named fac_count. Q20 r_20261025_f5b9ce displays correct rates (884 / 3541 x 1000 = 249.65), yet failed both lines.",
       "evidence": "evidence/runs/r_20261025_f5b9ce.run.json",
       "effect": "Grading correction only; question texts, order and expected outcomes are unchanged. Rate columns are still recomputed from their count and population."
+    },
+    {
+      "id": "calendar_year_by_record_date",
+      "question_ids": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06",
+        "Q07",
+        "Q08",
+        "Q09",
+        "Q10",
+        "Q18"
+      ],
+      "approved_by": "owner",
+      "approved_at": "2026-11-06",
+      "reason": "The City of Montgomery Year field is not the calendar year. On the city server, Year = 2026 starts on 1 October 2025 in both the code violation and 311 layers, and Year = 2025 holds 311 requests dated 1 January to 30 September 2025 only. Counted by each record's own date, calendar 2025 has 17,431 code violations (15,439 by Year) and 33,842 311 requests (27,817 by Year). Earlier batches filtered Year = 2025, and the reference followed the run's own records, so no check caught it. A question about a calendar year, a year-to-year change or months of a year, on a layer with record dates must now filter on those dates. The 911 summary (Q11, Q12) has no record dates and keeps its Year field.",
+      "evidence": "evidence/period/montgomery-year-field.json",
+      "effect": "Grading correction only; question texts, order and expected outcomes are unchanged. Batches graded before this correction keep their recorded results."
     }
   ]
 }

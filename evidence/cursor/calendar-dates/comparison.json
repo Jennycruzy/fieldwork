@@ -1,0 +1,214 @@
+{
+  "question": "How many code violations did the City of Montgomery record in 2025, and which 5 census tracts had the most code violations per 1,000 residents in 2025?",
+  "fieldwork_run": "r_20261106_6ac75d",
+  "fieldwork_filter": "CaseDate >= TIMESTAMP '2025-01-01 00:00:00' AND CaseDate < TIMESTAMP '2026-01-01 00:00:00'",
+  "runs": [
+    {
+      "run": 1,
+      "seconds": 52,
+      "zetaris_calls": 4,
+      "total_2025": 17431,
+      "rows": [
+        {
+          "tract": "Census Tract 12",
+          "fieldwork": [
+            948,
+            651.5
+          ],
+          "cursor": [
+            948,
+            651.5
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 3",
+          "fieldwork": [
+            781,
+            619.3
+          ],
+          "cursor": [
+            781,
+            619.3
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 11",
+          "fieldwork": [
+            1325,
+            493.7
+          ],
+          "cursor": [
+            1325,
+            493.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 25",
+          "fieldwork": [
+            1041,
+            449.7
+          ],
+          "cursor": [
+            1041,
+            449.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 24",
+          "fieldwork": [
+            555,
+            315.7
+          ],
+          "cursor": [
+            555,
+            315.7
+          ],
+          "same": true
+        }
+      ],
+      "all_same": true
+    },
+    {
+      "run": 2,
+      "seconds": 62,
+      "zetaris_calls": 5,
+      "total_2025": 17431,
+      "rows": [
+        {
+          "tract": "Census Tract 12",
+          "fieldwork": [
+            948,
+            651.5
+          ],
+          "cursor": [
+            948,
+            651.5
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 3",
+          "fieldwork": [
+            781,
+            619.3
+          ],
+          "cursor": [
+            781,
+            619.3
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 11",
+          "fieldwork": [
+            1325,
+            493.7
+          ],
+          "cursor": [
+            1325,
+            493.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 25",
+          "fieldwork": [
+            1041,
+            449.7
+          ],
+          "cursor": [
+            1041,
+            449.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 24",
+          "fieldwork": [
+            555,
+            315.7
+          ],
+          "cursor": [
+            555,
+            315.7
+          ],
+          "same": true
+        }
+      ],
+      "all_same": true
+    },
+    {
+      "run": 3,
+      "seconds": 69,
+      "zetaris_calls": 5,
+      "total_2025": 17431,
+      "rows": [
+        {
+          "tract": "Census Tract 12",
+          "fieldwork": [
+            948,
+            651.5
+          ],
+          "cursor": [
+            948,
+            651.5
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 3",
+          "fieldwork": [
+            781,
+            619.3
+          ],
+          "cursor": [
+            781,
+            619.3
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 11",
+          "fieldwork": [
+            1325,
+            493.7
+          ],
+          "cursor": [
+            1325,
+            493.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 25",
+          "fieldwork": [
+            1041,
+            449.7
+          ],
+          "cursor": [
+            1041,
+            449.7
+          ],
+          "same": true
+        },
+        {
+          "tract": "Census Tract 24",
+          "fieldwork": [
+            555,
+            315.7
+          ],
+          "cursor": [
+            555,
+            315.7
+          ],
+          "same": true
+        }
+      ],
+      "all_same": true
+    }
+  ]
+}

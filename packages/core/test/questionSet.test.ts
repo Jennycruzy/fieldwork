@@ -79,7 +79,7 @@ const rateRun: RecordedAnswer = {
       {
         title: "Code Violations",
         url: "https://example.invalid",
-        filter: "Year='2025'",
+        filter: "CaseDate >= TIMESTAMP '2025-01-01 00:00:00' AND CaseDate < TIMESTAMP '2026-01-01 00:00:00'",
         records: 5,
         sourceCount: 5,
       },
@@ -291,4 +291,16 @@ test("grader correction rate_columns: a correlation column is not a rate and fac
     },
   };
   expect(names(gradeQuestion(q, wrong, ref)).every((c) => c.ok)).toBe(false);
+});
+
+test("a calendar-year answer filtered on a Year label fails the period check", () => {
+  const labelled = structuredClone(rateRun);
+  labelled.answer.sources![0]!.filter = "Year=" + "\u00272025\u0027";
+  const name = "Calendar year counted by record dates, not a Year label";
+  expect(gradeQuestion(rateQuestion, labelled, sourceReference).checks.find((c) => c.name === name)?.ok).toBe(
+    false,
+  );
+  expect(gradeQuestion(rateQuestion, rateRun, sourceReference).checks.find((c) => c.name === name)?.ok).toBe(
+    true,
+  );
 });
