@@ -1,0 +1,2 @@
+{"tool": "describe_table", "sql": "DESCRIBE MONTGOMERY_READY.tract_311", "ok": true, "secs": 15.06, "rows": 9}
+{"tool": "run_query", "sql": "SELECT geoid, tract_name, requests_311_2025, requests_311_per_1000, population FROM MONTGOMERY_READY.tract_311 ORDER BY requests_311_2025 DESC LIMIT 5", "ok": true, "secs": 24.72, "rows": 5}

@@ -19,6 +19,7 @@ Latest full batch: **23/25** (median 65.7 s, p90 106.5 s) in batch 15 on a froze
 - [Checks that decide what you see](#checks-that-decide-what-you-see)
 - [Sponsor technology](#sponsor-technology)
 - [Evaluation](#evaluation)
+  - [Checked again with the Cursor agent](#checked-again-with-the-cursor-agent)
 - [Run it yourself](#run-it-yourself)
 - [Repository layout](#repository-layout)
 - [Privacy and scope](#privacy-and-scope)
@@ -118,7 +119,7 @@ All source data flows through Zetaris Lightning:
 - A Unified Semantic Layer model, `montgomery_neighborhoods`, is activated over the tract and tract-count tables. Its keys and data-quality rules check what every join relies on ([docs/governed-model.md](docs/governed-model.md)). With `FW_ANSWER_DQ=1`, the results appear on each tract answer.
 - With `FW_ANSWER_LINEAGE=1`, each answer shows the source tables Zetaris reports for its saved view.
 
-Fieldwork also contributes back. Two pull requests are open upstream: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36) moves the Singapore PM2.5 recipe out of known_to_fail after a verified live run, and [#39](https://github.com/zetaris/getting-started/pull/39) adds the CDC PLACES and Census TIGERweb sources Fieldwork discovered, both verified live. Sources Fieldwork discovers can be exported as recipes in that repo's own format and verified against a live Zetaris instance ([docs/recipes.md](docs/recipes.md)).
+Fieldwork also contributes back. Zetaris merged both of its pull requests to their getting-started repo: [zetaris/getting-started#36](https://github.com/zetaris/getting-started/pull/36) moves the Singapore PM2.5 recipe out of known_to_fail after a verified live run, and [#39](https://github.com/zetaris/getting-started/pull/39) adds the CDC PLACES and Census TIGERweb sources Fieldwork discovered, both verified live. A later pull request, [#43](https://github.com/zetaris/getting-started/pull/43), re-tested five more known_to_fail sources with the Cursor agent and moved them back to verified, taking that list from 6 sources to 1; it is merged too. Sources Fieldwork discovers can be exported as recipes in that repo's own format and verified against a live Zetaris instance ([docs/recipes.md](docs/recipes.md)).
 
 ### Meterless: memory, world model and runtime
 
@@ -152,6 +153,22 @@ Every full batch is published, including failures, with step timings: see the [E
 ### Portability
 
 Fieldwork was pointed at Louisville, Kentucky with no Louisville-specific code. It found the city's property-maintenance violations and CDC PLACES cold. The early runs showed what a new city changes: its violations layer holds only the last 30 days, and CDC publishes no asthma estimate for Kentucky tracts. A question about violations and short sleep answered in 92 s with 7 model calls. Every run is in [docs/portability.md](docs/portability.md) and on the Evaluation page.
+
+### Checked again with the Cursor agent
+
+After the hackathon, a second agent checked Fieldwork's numbers. The Cursor coding agent (Grok 4.7 model) was given five of the same questions, the same official city, CDC and Census sources, and one tool: a Zetaris connector ([Jennycruzy/zetaris-cursor](https://github.com/Jennycruzy/zetaris-cursor)). It was allowed only Zetaris calls, and it never queried Fieldwork's answers or tract counts.
+
+| Question | Cursor agent | Compared with Fieldwork |
+| --- | --- | --- |
+| Q02 Most code violations by tract, 2025 | 45 s, 2 Zetaris queries | Same 5 tracts, same counts |
+| Q03 Code violations per 1,000 residents, 2025 | 43 s, 2 Zetaris queries | Same 5 tracts, same rates |
+| Q08 Most 311 requests by tract, 2025 | 51 s, 2 Zetaris queries | Same 5 tracts; 3 counts differ by 1 or 2 (1,421 vs 1,419; 981 vs 980; 697 vs 696) |
+| Q09 Most common 311 request types, 2025 | 29 s, 5 Zetaris queries | Same 5 types, same counts |
+| Q19 Highest adult diabetes by tract | 29 s, 4 Zetaris queries | Same 5 tracts, same rates |
+
+In that run the agent read tract tables built in Zetaris beforehand from the same city and Census sources, separately from Fieldwork's own pipeline. In a second run it started from the raw city and Census records instead: it wrote the point-in-polygon join itself as one Zetaris query, placed the 15,103 geocoded 2025 code violations in tracts, and matched Fieldwork's Q02 top five exactly (323 s, 23 Zetaris calls).
+
+Each prompt, the agent's full answer and every Zetaris call it made are in [`evidence/cursor/`](evidence/cursor/); [`evidence/cursor/comparison.json`](evidence/cursor/comparison.json) sets each figure beside the Fieldwork run it is compared with.
 
 ## Run it yourself
 

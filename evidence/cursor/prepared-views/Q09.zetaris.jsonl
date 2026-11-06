@@ -1,0 +1,5 @@
+{"tool": "describe_table", "sql": "DESCRIBE MONTGOMERY_READY.requests_311_2025", "ok": true, "secs": 0.63, "rows": 7}
+{"tool": "list_tables", "sql": "SHOW LIGHTNING TABLES MONTGOMERY_READY", "ok": true, "secs": 0.08, "rows": 25}
+{"tool": "run_query", "sql": "SELECT request_type, COUNT(*) AS requests, ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1) AS pct_of_all FROM MONTGOMERY_READY.requests_311_2025 GROUP BY request_type ORDER BY requests DESC LIMIT 5", "ok": true, "secs": 2.27, "rows": 5}
+{"tool": "run_query", "sql": "SELECT COUNT(*) AS total_requests, COUNT(DISTINCT request_type) AS type_count FROM MONTGOMERY_READY.requests_311_2025", "ok": true, "secs": 1.68, "rows": 1}
+{"tool": "run_query", "sql": "SELECT request_type, COUNT(*) AS requests FROM MONTGOMERY_READY.requests_311_2025 GROUP BY request_type ORDER BY requests DESC LIMIT 8", "ok": true, "secs": 1.74, "rows": 8}

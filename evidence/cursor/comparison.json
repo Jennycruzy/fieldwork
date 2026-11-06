@@ -1,0 +1,430 @@
+{
+  "agent": "Cursor agent CLI",
+  "model": "Grok 4.7",
+  "runs": {
+    "prepared-views": {
+      "Q02": {
+        "question": "Which Montgomery census tracts had the most code violations in 2025?",
+        "fieldwork_run": "r_20261027_956ba1",
+        "seconds": 45,
+        "zetaris_calls": 2,
+        "rows": [
+          {
+            "cursor": [
+              "Census Tract 11",
+              1125.0
+            ],
+            "fieldwork": [
+              "Census Tract 11",
+              1125.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 25",
+              955.0
+            ],
+            "fieldwork": [
+              "Census Tract 25",
+              955.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 12",
+              818.0
+            ],
+            "fieldwork": [
+              "Census Tract 12",
+              818.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 22.01",
+              765.0
+            ],
+            "fieldwork": [
+              "Census Tract 22.01",
+              765.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 3",
+              702.0
+            ],
+            "fieldwork": [
+              "Census Tract 3",
+              702.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": true
+      },
+      "Q03": {
+        "question": "Which Montgomery census tracts had the most code violations per 1,000 residents in 2025?",
+        "fieldwork_run": "r_20261027_3885ef",
+        "seconds": 43,
+        "zetaris_calls": 2,
+        "rows": [
+          {
+            "cursor": [
+              "Census Tract 12",
+              562.2
+            ],
+            "fieldwork": [
+              "Census Tract 12",
+              562.2
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 3",
+              556.7
+            ],
+            "fieldwork": [
+              "Census Tract 3",
+              556.7
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 11",
+              419.2
+            ],
+            "fieldwork": [
+              "Census Tract 11",
+              419.2
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 25",
+              412.5
+            ],
+            "fieldwork": [
+              "Census Tract 25",
+              412.5
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 24",
+              292.9
+            ],
+            "fieldwork": [
+              "Census Tract 24",
+              292.9
+            ],
+            "same_row": true,
+            "difference": 0.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": true
+      },
+      "Q08": {
+        "question": "Which Montgomery census tracts had the most 311 service requests in 2025?",
+        "fieldwork_run": "r_20261027_73abac",
+        "seconds": 51,
+        "zetaris_calls": 2,
+        "rows": [
+          {
+            "cursor": [
+              "Census Tract 1",
+              1421.0
+            ],
+            "fieldwork": [
+              "Census Tract 1",
+              1419.0
+            ],
+            "same_row": true,
+            "difference": 2.0
+          },
+          {
+            "cursor": [
+              "Census Tract 25",
+              1071.0
+            ],
+            "fieldwork": [
+              "Census Tract 25",
+              1071.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 17",
+              981.0
+            ],
+            "fieldwork": [
+              "Census Tract 17",
+              980.0
+            ],
+            "same_row": true,
+            "difference": 1.0
+          },
+          {
+            "cursor": [
+              "Census Tract 3",
+              792.0
+            ],
+            "fieldwork": [
+              "Census Tract 3",
+              792.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 4",
+              697.0
+            ],
+            "fieldwork": [
+              "Census Tract 4",
+              696.0
+            ],
+            "same_row": true,
+            "difference": 1.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": false
+      },
+      "Q09": {
+        "question": "What were the most common types of Montgomery 311 requests in 2025?",
+        "fieldwork_run": "r_20261027_ed8e07",
+        "seconds": 29,
+        "zetaris_calls": 5,
+        "rows": [
+          {
+            "cursor": [
+              "Nuisance",
+              7170.0
+            ],
+            "fieldwork": [
+              "Nuisance",
+              7170.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Ask 3-1-1",
+              3321.0
+            ],
+            "fieldwork": [
+              "Ask 3-1-1",
+              3321.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Inquiries",
+              1229.0
+            ],
+            "fieldwork": [
+              "Inquiries",
+              1229.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Parking On Front Lawn",
+              1038.0
+            ],
+            "fieldwork": [
+              "Parking On Front Lawn",
+              1038.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Traffic Issues for Montgomery Police Dept",
+              681.0
+            ],
+            "fieldwork": [
+              "Traffic Issues for Montgomery Police Dept",
+              681.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": true
+      },
+      "Q19": {
+        "question": "Which Montgomery census tracts have the highest adult diabetes prevalence?",
+        "fieldwork_run": "r_20261027_b5e99a",
+        "seconds": 29,
+        "zetaris_calls": 4,
+        "rows": [
+          {
+            "cursor": [
+              "Census Tract 24",
+              31.5
+            ],
+            "fieldwork": [
+              "Census Tract 24",
+              31.5
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 6",
+              28.5
+            ],
+            "fieldwork": [
+              "Census Tract 6",
+              28.5
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 7",
+              28.2
+            ],
+            "fieldwork": [
+              "Census Tract 7",
+              28.2
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 12",
+              28.0
+            ],
+            "fieldwork": [
+              "Census Tract 12",
+              28.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 11",
+              27.6
+            ],
+            "fieldwork": [
+              "Census Tract 11",
+              27.6
+            ],
+            "same_row": true,
+            "difference": 0.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": true
+      }
+    },
+    "raw-tables": {
+      "Q02": {
+        "question": "Which Montgomery census tracts had the most code violations in 2025?",
+        "fieldwork_run": "r_20261027_956ba1",
+        "seconds": 323,
+        "zetaris_calls": 23,
+        "rows": [
+          {
+            "cursor": [
+              "Census Tract 11",
+              1125.0
+            ],
+            "fieldwork": [
+              "Census Tract 11",
+              1125.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 25",
+              955.0
+            ],
+            "fieldwork": [
+              "Census Tract 25",
+              955.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 12",
+              818.0
+            ],
+            "fieldwork": [
+              "Census Tract 12",
+              818.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 22.01",
+              765.0
+            ],
+            "fieldwork": [
+              "Census Tract 22.01",
+              765.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          },
+          {
+            "cursor": [
+              "Census Tract 3",
+              702.0
+            ],
+            "fieldwork": [
+              "Census Tract 3",
+              702.0
+            ],
+            "same_row": true,
+            "difference": 0.0
+          }
+        ],
+        "all_rows_same": true,
+        "all_figures_same": true
+      }
+    }
+  }
+}

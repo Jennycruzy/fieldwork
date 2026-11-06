@@ -1,0 +1,4 @@
+{"tool": "describe_table", "sql": "DESCRIBE montgomery_ready.tract_health", "ok": true, "secs": 0.19, "rows": 6}
+{"tool": "describe_table", "sql": "DESCRIBE montgomery_ready.tract_violations", "ok": true, "secs": 12.89, "rows": 9}
+{"tool": "describe_table", "sql": "DESCRIBE montgomery_ready.census_tracts", "ok": true, "secs": 0.09, "rows": 4}
+{"tool": "run_query", "sql": "SELECT c.tract_name, h.geoid, h.population, h.adults, h.diabetes_pct FROM montgomery_ready.tract_health h JOIN montgomery_ready.census_tracts c ON h.geoid = c.geoid ORDER BY h.diabetes_pct DESC LIMIT 5", "ok": true, "secs": 0.33, "rows": 5}

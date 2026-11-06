@@ -1,0 +1,2 @@
+{"tool": "describe_table", "sql": "DESCRIBE MONTGOMERY_READY.tract_violations", "ok": true, "secs": 12.8, "rows": 9}
+{"tool": "run_query", "sql": "SELECT geoid, tract_name, code_violations_2025, violations_per_1000, population FROM MONTGOMERY_READY.tract_violations ORDER BY code_violations_2025 DESC LIMIT 5", "ok": true, "secs": 21.39, "rows": 5}
